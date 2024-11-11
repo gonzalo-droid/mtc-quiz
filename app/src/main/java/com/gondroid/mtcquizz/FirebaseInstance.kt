@@ -8,20 +8,28 @@ import com.google.firebase.database.database
 
 class FirebaseInstance(context: Context) {
     private val database = Firebase.database
+    private val myRef = database.reference
 
     init {
         FirebaseApp.initializeApp(context)
     }
 
     fun writeOnFirebase(value: String) {
-        database.reference.setValue(value)
+        myRef.setValue(getGenericTodoTaskItem(value))
     }
 
     fun addEventListener(postListener: ValueEventListener) {
-        database.reference.addValueEventListener(postListener)
+        myRef.addValueEventListener(postListener)
     }
 
     fun removeEventListener(postListener: ValueEventListener) {
-        database.reference.removeEventListener(postListener)
+        myRef.removeEventListener(postListener)
+    }
+
+    private fun getGenericTodoTaskItem(randomValue: String): Todo {
+        return Todo(
+            title = "Time $randomValue",
+            description = "description"
+        )
     }
 }

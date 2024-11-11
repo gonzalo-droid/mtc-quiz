@@ -1,5 +1,7 @@
 package com.gondroid.mtcquizz
 
-class Todo {
-
-}
+class Todo(
+    val title: String? = "",
+    val description: String? = "",
+    val isDone: Boolean? = false
+)
