@@ -15,7 +15,8 @@ class FirebaseInstance(context: Context) {
     }
 
     fun writeOnFirebase(value: String) {
-        myRef.setValue(getGenericTodoTaskItem(value))
+        val newNode = myRef.push()
+        newNode.setValue(getGenericTodoTaskItem(value))
     }
 
     fun addEventListener(postListener: ValueEventListener) {
@@ -31,5 +32,14 @@ class FirebaseInstance(context: Context) {
             title = "Time $randomValue",
             description = "description"
         )
+    }
+
+    fun removedItem(reference: String) {
+        myRef.child(reference).removeValue()
+    }
+
+    fun updateItem(reference: String) {
+        // TODO: firebase change attribute name, why? IDW
+        myRef.child(reference).child("done").setValue(true)
     }
 }

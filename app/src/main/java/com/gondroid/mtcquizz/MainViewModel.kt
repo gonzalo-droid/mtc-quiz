@@ -21,6 +21,10 @@ class MainViewModel(firebaseInstance: FirebaseInstance) : ViewModel() {
 
     val data: StateFlow<String?> = _data
 
+    private val _list = MutableStateFlow<List<Pair<String, Todo>>?>(null)
+
+    val list: StateFlow<List<Pair<String, Todo>>?> = _list
+
     init {
         getRealTimeDatabase()
     }
@@ -28,13 +32,17 @@ class MainViewModel(firebaseInstance: FirebaseInstance) : ViewModel() {
     private fun getRealTimeDatabase() {
         viewModelScope.launch {
             collectDatabaseReference().collect {
-                val data = it.getValue(String::class.java)
-                _data.value = data
-                Log.i("SuccessDB", "${data}")
-
+                val data = getCleanSnapshot(it)
+                _list.value = data
             }
-
         }
+    }
+
+    private fun getCleanSnapshot(snapshot: DataSnapshot): List<Pair<String, Todo>> {
+        val list = snapshot.children.map { item ->
+            Pair(item.key.toString(), item.getValue(Todo::class.java)!!)
+        }
+        return list
     }
 
     fun writeOnFirebase(value: String) {
@@ -55,5 +63,14 @@ class MainViewModel(firebaseInstance: FirebaseInstance) : ViewModel() {
         }
         db.addEventListener(listener)
         awaitClose { db.removeEventListener(listener) }
+    }
+
+    fun removedItem(value: String) {
+        db.removedItem(value)
+    }
+
+    fun updateItem(value: String) {
+        db.updateItem(value)
+
     }
 }
