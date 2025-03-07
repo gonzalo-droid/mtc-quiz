@@ -21,7 +21,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -32,8 +31,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.compose.rememberNavController
+import com.gondroid.mtcquizz.presentation.navigation.NavigationRoot
 import com.gondroid.mtcquizz.ui.theme.MTCQuizzTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private lateinit var firebaseInstance: FirebaseInstance
@@ -41,20 +44,14 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        firebaseInstance = FirebaseInstance(this)
+        //firebaseInstance = FirebaseInstance(this)
+        // val viewModel = MainViewModel(firebaseInstance)
 
         enableEdgeToEdge()
-
-        val viewModel = MainViewModel(firebaseInstance)
-
         setContent {
             MTCQuizzTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        modifier = Modifier.padding(innerPadding),
-                        viewModel = viewModel
-                    )
-                }
+                val navController = rememberNavController()
+                NavigationRoot(navController)
             }
         }
     }
@@ -88,6 +85,7 @@ fun Greeting(
                     Actions.DELETE -> {
                         viewModel.removedItem(key)
                     }
+
                     else -> {
                         viewModel.updateItem(key)
                     }
