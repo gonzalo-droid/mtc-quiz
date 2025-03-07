@@ -1,4 +1,4 @@
-package com.gondroid.mtcquizz
+package com.gondroid.mtcquiz
 
 import android.util.Log
 import androidx.lifecycle.ViewModel

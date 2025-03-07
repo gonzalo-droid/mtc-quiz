@@ -1,4 +1,4 @@
-package com.gondroid.mtcquizz.data.local.quiz
+package com.gondroid.mtcquiz.data.local.quiz
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

@@ -1,4 +1,4 @@
-package com.gondroid.mtcquizz
+package com.gondroid.mtcquiz
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -32,8 +32,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.rememberNavController
-import com.gondroid.mtcquizz.presentation.navigation.NavigationRoot
-import com.gondroid.mtcquizz.ui.theme.MTCQuizzTheme
+import com.gondroid.mtcquiz.presentation.navigation.NavigationRoot
+import com.gondroid.mtcquiz.ui.theme.MTCQuizTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -49,7 +49,7 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge()
         setContent {
-            MTCQuizzTheme {
+            MTCQuizTheme {
                 val navController = rememberNavController()
                 NavigationRoot(navController)
             }

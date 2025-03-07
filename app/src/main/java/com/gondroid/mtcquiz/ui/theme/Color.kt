@@ -1,4 +1,4 @@
-package com.gondroid.mtcquizz.ui.theme
+package com.gondroid.mtcquiz.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

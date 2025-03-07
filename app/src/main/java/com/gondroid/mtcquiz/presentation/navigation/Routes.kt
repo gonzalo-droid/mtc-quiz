@@ -1,4 +1,4 @@
-package com.gondroid.mtcquizz.presentation.navigation
+package com.gondroid.mtcquiz.presentation.navigation
 
 import kotlinx.serialization.Serializable
 

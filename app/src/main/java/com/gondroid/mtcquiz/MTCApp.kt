@@ -1,4 +1,4 @@
-package com.gondroid.mtcquizz
+package com.gondroid.mtcquiz
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp

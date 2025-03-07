@@ -1,4 +1,4 @@
-package com.gondroid.mtcquizz.presentation.screens.home
+package com.gondroid.mtcquiz.presentation.screens.home
 
 
 import androidx.lifecycle.ViewModel

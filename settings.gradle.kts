@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "MTCQuizz"
+rootProject.name = "MTCQuiz"
 include(":app")
  

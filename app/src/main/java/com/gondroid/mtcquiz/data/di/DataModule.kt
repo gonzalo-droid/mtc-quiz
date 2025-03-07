@@ -1,8 +1,8 @@
-package com.gondroid.mtcquizz.data.di
+package com.gondroid.mtcquiz.data.di
 
 import android.content.Context
 import androidx.room.Room
-import com.gondroid.mtcquizz.data.MTCDatabase
+import com.gondroid.mtcquiz.data.MTCDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

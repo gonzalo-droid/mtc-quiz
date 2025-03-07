@@ -1,4 +1,4 @@
-package com.gondroid.mtcquizz
+package com.gondroid.mtcquiz
 
 import org.junit.Test
 

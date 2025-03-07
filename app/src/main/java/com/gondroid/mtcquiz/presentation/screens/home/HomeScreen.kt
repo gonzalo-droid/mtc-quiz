@@ -1,9 +1,11 @@
-package com.gondroid.mtcquizz.presentation.screens.home
+package com.gondroid.mtcquiz.presentation.screens.home
 
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -22,11 +24,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
-import com.gondroid.mtcquizz.ui.theme.MTCQuizzTheme
+import com.gondroid.mtcquiz.R
+import com.gondroid.mtcquiz.ui.theme.MTCQuizTheme
 import kotlin.math.absoluteValue
 
 @Composable
@@ -48,7 +53,7 @@ fun HomeScreen() {
             TopAppBar(
                 title = {
                     Text(
-                        text = "MTC",
+                        text = "MTC - Cuestionario",
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontWeight = FontWeight.Bold,
                     )
@@ -62,14 +67,28 @@ fun HomeScreen() {
             modifier =
             Modifier
                 .padding(paddingValues)
-                .padding(16.dp),
+                .padding(vertical = 16.dp),
         ) {
-            Text("Examen de conocimientos para postulantes a licencias de conducir")
+            Text(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                text = "Examen de conocimientos para postulantes a licencias de conducir"
+            )
+
+            Spacer(modifier = Modifier.height(30.dp))
+
+            Text(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .align(Alignment.CenterHorizontally),
+                text = "Selecciona tu categoria",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold
+            )
 
             val pagerState = rememberPagerState(pageCount = { 10 })
             HorizontalPager(
                 state = pagerState,
-                contentPadding = PaddingValues(50.dp)
+                contentPadding = PaddingValues(horizontal = 40.dp)
             ) { index ->
                 CardContent(pagerState, index)
             }
@@ -85,9 +104,9 @@ fun CardContent(pagerState: PagerState, index: Int) {
     val pageOffSet = (pagerState.currentPage - index) + pagerState.currentPageOffsetFraction
 
     Card(
-        colors = CardDefaults.cardColors(containerColor = Color.Blue),
+        colors = CardDefaults.cardColors(containerColor = Color.Gray),
         modifier = Modifier
-            .height(600.dp)
+            .height(400.dp)
             .graphicsLayer {
                 lerp(
                     start = 0.85f,
@@ -105,7 +124,33 @@ fun CardContent(pagerState: PagerState, index: Int) {
             },
     ) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text(text = "Card $index", color = Color.White)
+
+            Column(
+                modifier = Modifier
+                    .padding(top = 16.dp, start = 16.dp, end = 16.dp)
+                    .align(Alignment.TopStart)
+            ) {
+                Text(
+                    text = "CLASE A - CATEGORÍA I",
+                    color = Color.White,
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp),
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = "Vehículos de la categoría M1, M2 y N1",
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp),
+                )
+            }
+
+            Image(
+                painter = painterResource(id = R.drawable.card_background),
+                contentDescription = "card_background",
+                modifier = Modifier.align(Alignment.BottomEnd),
+                contentScale = ContentScale.Fit
+            )
         }
     }
 
@@ -116,7 +161,7 @@ fun CardContent(pagerState: PagerState, index: Int) {
 )
 @Composable
 fun PreviewHomeScreenRoot() {
-    MTCQuizzTheme {
+    MTCQuizTheme {
         HomeScreen()
     }
 }

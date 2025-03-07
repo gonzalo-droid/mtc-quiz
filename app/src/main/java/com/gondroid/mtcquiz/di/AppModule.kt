@@ -1,4 +1,4 @@
-package com.gondroid.mtcquizz.di
+package com.gondroid.mtcquiz.di
 
 import dagger.Module
 import dagger.Provides

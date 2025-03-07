@@ -1,8 +1,8 @@
-package com.gondroid.mtcquizz.data
+package com.gondroid.mtcquiz.data
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.gondroid.mtcquizz.data.local.quiz.QuestionResultEntity
+import com.gondroid.mtcquiz.data.local.quiz.QuestionResultEntity
 
 
 @Database(

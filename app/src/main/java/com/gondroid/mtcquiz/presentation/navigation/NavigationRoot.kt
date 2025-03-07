@@ -1,4 +1,4 @@
-package com.gondroid.mtcquizz.presentation.navigation
+package com.gondroid.mtcquiz.presentation.navigation
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,8 +8,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.gondroid.mtcquizz.presentation.screens.home.HomeScreenRoot
-import com.gondroid.mtcquizz.presentation.screens.home.HomeScreenViewModel
+import com.gondroid.mtcquiz.presentation.screens.home.HomeScreenRoot
+import com.gondroid.mtcquiz.presentation.screens.home.HomeScreenViewModel
 
 @Composable
 fun NavigationRoot(navController: NavHostController) {
