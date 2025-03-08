@@ -33,22 +33,36 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
 import com.gondroid.mtcquiz.R
+import com.gondroid.mtcquiz.domain.models.Category
 import com.gondroid.mtcquiz.ui.theme.MTCQuizTheme
 import kotlin.math.absoluteValue
 
 @Composable
 fun HomeScreenRoot(
     viewModel: HomeScreenViewModel,
-    navigateTo: (String?) -> Unit,
+    navigateTo: (String) -> Unit,
 ) {
 
-    HomeScreen()
+    val state = viewModel.state
+
+    HomeScreen(
+        state = state,
+        onAction = { action ->
+            when(action) {
+                is HomeScreenAction.OnClickCategory -> navigateTo(action.categoryId)
+            }
+
+        }
+    )
 
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    state: HomeDataState,
+    onAction: (HomeScreenAction) -> Unit
+) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -87,12 +101,46 @@ fun HomeScreen() {
                 fontWeight = FontWeight.Bold
             )
 
-            val pagerState = rememberPagerState(pageCount = { 10 })
+            val items = listOf(
+                Category(
+                    id = "1",
+                    title = "CLASE A - CATEGORIA I",
+                    category = "A1",
+                    type = "CLASE A",
+                    image = "a",
+                    description = "Es el más común y te permite manejar carros como sedanes, coupé , hatchback, convertibles, station wagon, SUV, Areneros, Pickup y furgones. Es necesaria para obtener las demás licencias de Clase A."
+                ),
+                Category(
+                    id = "1",
+                    title = "CLASE A - CATEGORIA I",
+                    category = "A2",
+                    type = "CLASE A",
+                    image = "a",
+                    description = "Es el más común y te permite manejar carros como sedanes, coupé , hatchback, convertibles, station wagon, SUV, Areneros, Pickup y furgones. Es necesaria para obtener las demás licencias de Clase A."
+                ),
+                Category(
+                    id = "1",
+                    title = "CLASE A - CATEGORIA I",
+                    category = "A3",
+                    type = "CLASE A",
+                    image = "a",
+                    description = "Es el más común y te permite manejar carros como sedanes, coupé , hatchback, convertibles, station wagon, SUV, Areneros, Pickup y furgones. Es necesaria para obtener las demás licencias de Clase A."
+                ),
+            )
+
+            val pagerState = rememberPagerState(pageCount = { items.size })
             HorizontalPager(
                 state = pagerState,
                 contentPadding = PaddingValues(horizontal = 40.dp)
             ) { index ->
-                CardContent(pagerState, index)
+
+                CardCategoryItem(
+                    pagerState = pagerState,
+                    index = index,
+                    item = items[index],
+                    onItemSelected = {
+                        onAction(HomeScreenAction.OnClickCategory(items[index].id))
+                    })
             }
 
         }
@@ -101,7 +149,12 @@ fun HomeScreen() {
 }
 
 @Composable
-fun CardContent(pagerState: PagerState, index: Int) {
+fun CardCategoryItem(
+    pagerState: PagerState,
+    index: Int,
+    item: Category,
+    onItemSelected: () -> Unit = {}
+) {
 
     val pageOffSet = (pagerState.currentPage - index) + pagerState.currentPageOffsetFraction
 
@@ -124,6 +177,7 @@ fun CardContent(pagerState: PagerState, index: Int) {
                     fraction = 1f - pageOffSet.absoluteValue.coerceIn(0f, 1f)
                 )
             },
+        onClick = onItemSelected
     ) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
 
@@ -133,7 +187,7 @@ fun CardContent(pagerState: PagerState, index: Int) {
                     .align(Alignment.TopStart)
             ) {
                 Text(
-                    text = "CLASE A",
+                    text = item.type,
                     fontSize = 15.sp,
                     color = Color.White,
                     modifier = Modifier
@@ -142,15 +196,16 @@ fun CardContent(pagerState: PagerState, index: Int) {
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = "A1",
+                    text = item.category,
                     color = Color.White,
                     modifier = Modifier
                         .padding(horizontal = 16.dp),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold
                 )
+                Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "Es el más común y te permite manejar carros como sedanes, coupé , hatchback, convertibles, station wagon, SUV, Areneros, Pickup y furgones. Es necesaria para obtener las demás licencias de Clase A.",
+                    text = item.description,
                     modifier = Modifier.padding(horizontal = 16.dp),
                     maxLines = 3,
                     fontSize = 12.sp,
@@ -176,6 +231,9 @@ fun CardContent(pagerState: PagerState, index: Int) {
 @Composable
 fun PreviewHomeScreenRoot() {
     MTCQuizTheme {
-        HomeScreen()
+        HomeScreen(
+            state = HomeDataState(),
+            onAction = {}
+        )
     }
 }

@@ -1,17 +1,28 @@
 package com.gondroid.mtcquiz.presentation.screens.detail
 
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Book
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.PlayCircle
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -19,28 +30,55 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.gondroid.mtcquiz.R
 import com.gondroid.mtcquiz.ui.theme.MTCQuizTheme
 
 @Composable
 fun DetailScreenRoot(
     viewModel: DetailScreenViewModel,
-    navigateTo: (String?) -> Unit,
+    navigateBack: () -> Boolean,
+    navigateToConfiguration: () -> Unit,
+    navigateToAllQuestions: () -> Unit,
+    navigateToShowPDF: () -> Unit,
+    navigateToEvaluation: () -> Unit,
 ) {
 
-    DetailScreen()
+    val state = viewModel.state
+
+    DetailScreen(
+        state = state,
+        onAction = { action ->
+            when (action) {
+                DetailScreenAction.Back -> navigateBack()
+                DetailScreenAction.GoToEvaluation -> navigateToEvaluation()
+                DetailScreenAction.ShowPDF -> navigateToShowPDF()
+                DetailScreenAction.AllQuestions -> navigateToAllQuestions()
+                DetailScreenAction.GoToConfiguration -> navigateToConfiguration()
+            }
+
+        }
+    )
 
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailScreen() {
+fun DetailScreen(
+    state: DetailDataState,
+    onAction: (DetailScreenAction) -> Unit,
+) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -59,7 +97,9 @@ fun DetailScreen() {
                         tint = MaterialTheme.colorScheme.onBackground,
                         modifier =
                         Modifier.clickable {
-
+                            onAction(
+                                DetailScreenAction.Back,
+                            )
                         },
                     )
                 },
@@ -69,6 +109,7 @@ fun DetailScreen() {
                         Modifier
                             .padding(8.dp)
                             .clickable {
+                                onAction(DetailScreenAction.GoToConfiguration)
                             },
                     ) {
                         Icon(
@@ -88,25 +129,32 @@ fun DetailScreen() {
                 .padding(paddingValues)
                 .padding(16.dp),
         ) {
-            Text(
-                text = "A1",
-                modifier = Modifier,
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold,
-                fontSize = 40.sp,
+            Row {
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(
+                        text = "A1",
+                        modifier = Modifier,
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 40.sp,
 
+                        )
+                    Text(
+                        modifier = Modifier,
+                        text = "CLASE A - CATEGORÍA I",
+                        fontSize = 15.sp,
+                    )
+
+                }
+                Image(
+                    painter = painterResource(id = R.drawable.card_background),
+                    contentDescription = "card_background",
+                    modifier = Modifier.weight(1f),
+                    contentScale = ContentScale.Fit
                 )
-            Text(
-                modifier = Modifier,
-                text = "CLASE A - CATEGORÍA I",
-                fontSize = 20.sp,
-            )
-
-            Text(
-                modifier = Modifier,
-                text = "* Licencia de conducir para conductores no profesionales",
-                fontSize = 12.sp,
-            )
+            }
 
             Spacer(modifier = Modifier.height(30.dp))
 
@@ -116,37 +164,91 @@ fun DetailScreen() {
                 fontSize = 15.sp,
 
                 )
+            Text(
+                modifier = Modifier,
+                text = "* Licencia de conducir para conductores no profesionales",
+                fontSize = 12.sp,
+            )
 
 
             Spacer(modifier = Modifier.weight(1f))
 
-            ButtonsAction()
+            ButtonsAction(
+                onGoToEvaluation = { onAction(DetailScreenAction.GoToEvaluation) },
+                onGoToAllQuestions = { onAction(DetailScreenAction.AllQuestions) },
+                onDownloadPdf = { onAction(DetailScreenAction.ShowPDF) }
+            )
         }
 
     }
 }
 
 @Composable
-fun ButtonsAction() {
+fun ButtonsAction(
+    onGoToEvaluation: () -> Unit = {},
+    onGoToAllQuestions: () -> Unit = {},
+    onDownloadPdf: () -> Unit = {},
+) {
+
+    // Creamos una transición infinita para animar el botón
+    val infiniteTransition = rememberInfiniteTransition()
+    // Animamos la escala para que varíe entre 0.95 y 1.05, generando un efecto de "latido"
+    val scale by infiniteTransition.animateFloat(
+        initialValue = 0.98f,
+        targetValue = 1.00f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 600, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        )
+    )
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        // Botón primario
         Button(
-            onClick = { /* Acción del botón primario */ },
-            modifier = Modifier.fillMaxWidth()
+            onClick = onGoToEvaluation,
+            modifier = Modifier
+                .fillMaxWidth()
+                .scale(scale)
+
         ) {
-            Text(text = "Ver video para acceso gratis")
+            Icon(
+                imageVector = Icons.Default.PlayCircle,
+                contentDescription = "PlayCircle",
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(text = "Simulacro")
+        }
+
+        OutlinedButton(
+            onClick = onGoToAllQuestions,
+            modifier = Modifier
+                .fillMaxWidth()
+                .scale(scale)
+
+        ) {
+            Icon(
+                imageVector = Icons.Default.PlayCircle,
+                contentDescription = "PlayCircle",
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(text = "Estudiar")
         }
         // Botón secundario
-        OutlinedButton(
-            onClick = { /* Acción del botón secundario */ },
+        TextButton(
+            onClick = onDownloadPdf,
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(text = "Descargar PDF")
+            Spacer(modifier = Modifier.width(8.dp))
+
+            Icon(
+                imageVector = Icons.Default.Book,
+                contentDescription = "PlayCircle",
+            )
         }
     }
 }
@@ -157,6 +259,9 @@ fun ButtonsAction() {
 @Composable
 fun PreviewDetailScreenRoot() {
     MTCQuizTheme {
-        DetailScreen()
+        DetailScreen(
+            state = DetailDataState(),
+            onAction = {}
+        )
     }
 }
