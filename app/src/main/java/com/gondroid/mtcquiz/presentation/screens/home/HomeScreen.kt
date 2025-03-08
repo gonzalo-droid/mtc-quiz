@@ -27,8 +27,10 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
 import com.gondroid.mtcquiz.R
 import com.gondroid.mtcquiz.ui.theme.MTCQuizTheme
@@ -131,7 +133,8 @@ fun CardContent(pagerState: PagerState, index: Int) {
                     .align(Alignment.TopStart)
             ) {
                 Text(
-                    text = "CLASE A - CATEGORÍA I",
+                    text = "CLASE A",
+                    fontSize = 15.sp,
                     color = Color.White,
                     modifier = Modifier
                         .padding(horizontal = 16.dp),
@@ -139,9 +142,20 @@ fun CardContent(pagerState: PagerState, index: Int) {
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = "Vehículos de la categoría M1, M2 y N1",
+                    text = "A1",
+                    color = Color.White,
                     modifier = Modifier
                         .padding(horizontal = 16.dp),
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = "Es el más común y te permite manejar carros como sedanes, coupé , hatchback, convertibles, station wagon, SUV, Areneros, Pickup y furgones. Es necesaria para obtener las demás licencias de Clase A.",
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    maxLines = 3,
+                    fontSize = 12.sp,
+                    color = Color.White,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
 
