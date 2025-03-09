@@ -2,6 +2,7 @@ package com.gondroid.mtcquiz.presentation.screens.home
 
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,9 +13,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -26,6 +30,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -40,7 +45,8 @@ import kotlin.math.absoluteValue
 @Composable
 fun HomeScreenRoot(
     viewModel: HomeScreenViewModel,
-    navigateTo: (String) -> Unit,
+    navigateToDetail: (String) -> Unit,
+    navigateToConfiguration: () -> Unit,
 ) {
 
     val state = viewModel.state
@@ -48,8 +54,9 @@ fun HomeScreenRoot(
     HomeScreen(
         state = state,
         onAction = { action ->
-            when(action) {
-                is HomeScreenAction.OnClickCategory -> navigateTo(action.categoryId)
+            when (action) {
+                is HomeScreenAction.OnClickCategory -> navigateToDetail(action.categoryId)
+                is HomeScreenAction.GoToConfiguration -> navigateToConfiguration()
             }
 
         }
@@ -69,12 +76,28 @@ fun HomeScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "MTC - Cuestionario",
+                        text = stringResource(R.string.practice_to_exam),
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontWeight = FontWeight.Bold,
+                        fontSize = MaterialTheme.typography.titleMedium.fontSize
                     )
                 },
                 actions = {
+                    Box(
+                        modifier =
+                        Modifier
+                            .padding(8.dp)
+                            .clickable {
+                                onAction(HomeScreenAction.GoToConfiguration)
+                            },
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Menu,
+                            contentDescription = "Add Task",
+                            tint = MaterialTheme.colorScheme.onSurface,
+                        )
+
+                    }
                 },
             )
         },
@@ -87,7 +110,8 @@ fun HomeScreen(
         ) {
             Text(
                 modifier = Modifier.padding(horizontal = 16.dp),
-                text = "Examen de conocimientos para postulantes a licencias de conducir"
+                text = "Examen de conocimientos para postulantes a licencias de conducir. ( Perú )",
+                fontSize = MaterialTheme.typography.bodyLarge.fontSize
             )
 
             Spacer(modifier = Modifier.height(30.dp))
@@ -96,8 +120,9 @@ fun HomeScreen(
                 modifier = Modifier
                     .padding(16.dp)
                     .align(Alignment.CenterHorizontally),
-                text = "Selecciona tu categoria",
-                style = MaterialTheme.typography.titleLarge,
+                text = "Selecciona tu categoría",
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.Bold
             )
 
@@ -159,7 +184,7 @@ fun CardCategoryItem(
     val pageOffSet = (pagerState.currentPage - index) + pagerState.currentPageOffsetFraction
 
     Card(
-        colors = CardDefaults.cardColors(containerColor = Color.Gray),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
         modifier = Modifier
             .height(400.dp)
             .graphicsLayer {
@@ -200,15 +225,15 @@ fun CardCategoryItem(
                     color = Color.White,
                     modifier = Modifier
                         .padding(horizontal = 16.dp),
-                    style = MaterialTheme.typography.titleLarge,
+                    style = MaterialTheme.typography.displayLarge,
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = item.description,
                     modifier = Modifier.padding(horizontal = 16.dp),
-                    maxLines = 3,
-                    fontSize = 12.sp,
+                    maxLines = 4,
+                    style = MaterialTheme.typography.bodySmall,
                     color = Color.White,
                     overflow = TextOverflow.Ellipsis
                 )

@@ -136,16 +136,18 @@ fun DetailScreen(
                     Text(
                         text = "A1",
                         modifier = Modifier,
-                        style = MaterialTheme.typography.titleLarge,
+                        style = MaterialTheme.typography.displayLarge,
+                        color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 40.sp,
-
-                        )
+                    )
                     Text(
                         modifier = Modifier,
                         text = "CLASE A - CATEGORÍA I",
-                        fontSize = 15.sp,
-                    )
+                        color = MaterialTheme.colorScheme.primary,
+
+                        style = MaterialTheme.typography.titleMedium,
+
+                        )
 
                 }
                 Image(
@@ -167,8 +169,10 @@ fun DetailScreen(
             Text(
                 modifier = Modifier,
                 text = "* Licencia de conducir para conductores no profesionales",
-                fontSize = 12.sp,
-            )
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.secondary,
+
+                )
 
 
             Spacer(modifier = Modifier.weight(1f))
@@ -227,8 +231,6 @@ fun ButtonsAction(
             onClick = onGoToAllQuestions,
             modifier = Modifier
                 .fillMaxWidth()
-                .scale(scale)
-
         ) {
             Icon(
                 imageVector = Icons.Default.PlayCircle,

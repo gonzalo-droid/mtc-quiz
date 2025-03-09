@@ -122,11 +122,11 @@ fun EvaluationScreen(
                             .clickable {
                             }
                             .clip(RoundedCornerShape(8.dp))
-                            .background(MaterialTheme.colorScheme.onSurface),
+                            .background(MaterialTheme.colorScheme.primary),
                     ) {
                         Text(
-                            modifier = Modifier.padding(horizontal = 4.dp),
-                            fontSize = 10.sp,
+                            modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp),
+                            style = MaterialTheme.typography.labelMedium,
                             color = Color.White,
                             text = "29:30"
                         )
@@ -177,7 +177,7 @@ fun EvaluationScreen(
                 }
 
                 val answers = listOf(
-                    Answer("1", "Recoger o dejar pasajeros o carga en cualquier lugar"),
+                    Answer("1", "a) Recoger o dejar pasajeros o carga en cualquier lugar"),
                     Answer(
                         "2",
                         "Dejar animales sueltos o situarlos de forma tal que obstaculicen solo un poco el tránsito"

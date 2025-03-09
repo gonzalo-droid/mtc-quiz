@@ -31,13 +31,18 @@ fun NavigationRoot(navController: NavHostController) {
                 val viewmodel = hiltViewModel<HomeScreenViewModel>()
                 HomeScreenRoot(
                     viewModel = viewmodel,
-                    navigateTo = { categoryId ->
+                    navigateToDetail = { categoryId ->
                         navController.navigate(
                             DetailScreenRoute(
                                 categoryId = categoryId
                             )
                         )
                     },
+                    navigateToConfiguration = {
+                        navController.navigate(
+                            ConfigurationScreenRoute
+                        )
+                    }
                 )
             }
 
