@@ -1,19 +1,11 @@
-package com.gondroid.mtcquiz.presentation.screens.evaluation
+package com.gondroid.mtcquiz.presentation.screens.questions
 
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,14 +17,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Downloading
 import androidx.compose.material.icons.filled.FullscreenExit
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -44,8 +34,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -54,26 +42,22 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.gondroid.mtcquiz.R
 import com.gondroid.mtcquiz.domain.models.Answer
+import com.gondroid.mtcquiz.domain.models.Question
 import com.gondroid.mtcquiz.ui.theme.MTCQuizTheme
 
 
 @Composable
-fun EvaluationScreenRoot(
-    viewModel: EvaluationScreenViewModel,
+fun QuestionsScreenRoot(
+    viewModel: QuestionsScreenViewModel,
     navigateBack: () -> Boolean,
 ) {
-
     val state = viewModel.state
-
-
-    EvaluationScreen(
+    QuestionsScreen(
         state = state,
         onAction = { action ->
             when (action) {
-                EvaluationScreenAction.Back -> navigateBack()
-                EvaluationScreenAction.StartEvaluation -> TODO()
+                QuestionsScreenAction.Back -> navigateBack()
             }
-
         }
     )
 
@@ -81,11 +65,11 @@ fun EvaluationScreenRoot(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EvaluationScreen(
-    state: EvaluationDataState,
-    onAction: (EvaluationScreenAction) -> Unit,
+fun QuestionsScreen(
+    state: QuestionsDataState,
+    onAction: (QuestionsScreenAction) -> Unit,
 ) {
-    var currentQuestion by remember { mutableStateOf(33) }
+    var currentQuestion by remember { mutableStateOf(30) }
     val totalQuestions = 40
     // Calcula el progreso como un valor float entre 0 y 1.
     val progress = currentQuestion / totalQuestions.toFloat()
@@ -110,128 +94,104 @@ fun EvaluationScreen(
                         modifier =
                         Modifier.clickable {
                             onAction(
-                                EvaluationScreenAction.Back,
+                                QuestionsScreenAction.Back,
                             )
                         },
                     )
                 },
                 actions = {
-                    Box(
-                        modifier =
-                        Modifier
-                            .padding(8.dp)
-                            .clickable {
-                            }
-                            .clip(RoundedCornerShape(8.dp))
-                            .background(MaterialTheme.colorScheme.primary),
-                    ) {
-                        Text(
-                            modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp),
-                            style = MaterialTheme.typography.labelMedium,
-                            color = Color.White,
-                            text = "29:30"
-                        )
 
-                    }
                 },
             )
         },
     ) { paddingValues ->
 
-        Column(
+        val answers = listOf(
+            Answer("1", "a) Recoger o dejar pasajeros o carga en cualquier lugar"),
+            Answer(
+                "2",
+                "Dejar animales sueltos o situarlos de forma tal que obstaculicen solo un poco el tránsito"
+            ),
+            Answer("3", "Recoger o dejar pasajeros en lugares autorizados."),
+            Answer("4", "Ejercer el comercio ambulatorio o estacionario"),
+        )
+
+        val questions = listOf(
+            Question(
+                id = "1",
+                title = "Respecto de los 100 de control o regulación del tránsito:",
+                topic = "",
+                answers = answers,
+                correctAnswer = "TODO()",
+            ),
+            Question(
+                id = "2",
+                title = "Respecto de los 200 de control o regulación del tránsito:",
+                topic = "",
+                answers = answers,
+                correctAnswer = "TODO()",
+            ),
+            Question(
+                id = "3",
+                title = "Respecto de los 300 de control o regulación del tránsito:",
+                topic = "",
+                answers = answers,
+                correctAnswer = "TODO()",
+            ),
+        )
+
+        LazyColumn(
             modifier =
             Modifier
                 .padding(paddingValues)
-                .padding(16.dp),
+                .padding(horizontal = 16.dp),
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                LinearProgressIndicator(
-                    progress = { progress },
-                    modifier = Modifier
-                        .height(8.dp)
-                        .weight(1f),
-                )
-                Text(
-                    text = "1/40",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiary),
-                shape = RoundedCornerShape(8.dp),
-            ) {
-                Column (
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
+            items(
+                items = questions,
+                key = { questions -> questions.id }
+            ) { question ->
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiary),
+                    shape = RoundedCornerShape(8.dp),
                 ) {
-                    Text(
-                        modifier = Modifier,
-                        text = "Respecto de los dispositivos de control o regulación del tránsito:",
-                        style = MaterialTheme.typography.titleSmall,
-
-                        )
-                    Image(
-                        painter = painterResource(id = R.drawable.card_background),
-                        contentDescription = "card_background",
+                    Column(
                         modifier = Modifier
-                            .height(150.dp)
                             .fillMaxWidth()
-                            .padding(8.dp),
-                        contentScale = ContentScale.Fit,
-                        alignment = Alignment.Center
-                    )
+                            .padding(16.dp)
+                    ) {
+                        Text(
+                            modifier = Modifier,
+                            text = question.title,
+                            style = MaterialTheme.typography.titleSmall,
+
+                            )
+                        Image(
+                            painter = painterResource(id = R.drawable.card_background),
+                            contentDescription = "card_background",
+                            modifier = Modifier
+                                .height(150.dp)
+                                .fillMaxWidth()
+                                .padding(8.dp),
+                            contentScale = ContentScale.Fit,
+                            alignment = Alignment.Center
+                        )
+                    }
                 }
-            }
+                Spacer(modifier = Modifier.height(8.dp))
 
-
-
-            LazyColumn(
-                modifier = Modifier.weight(1f), // Para empujar los items hacia abajo
-                verticalArrangement = Arrangement.Bottom
-            ) {
-
-                val answers = listOf(
-                    Answer("1", "a) Recoger o dejar pasajeros o carga en cualquier lugar"),
-                    Answer(
-                        "2",
-                        "Dejar animales sueltos o situarlos de forma tal que obstaculicen solo un poco el tránsito"
-                    ),
-                    Answer("3", "Recoger o dejar pasajeros en lugares autorizados."),
-                    Answer("4", "Ejercer el comercio ambulatorio o estacionario"),
-                )
-
-                items(
-                    items = answers,
-                    key = { answer -> answer.id }
-                ) { answer ->
-                    Spacer(modifier = Modifier.height(8.dp))
+                question.answers.forEach { answer ->
                     AnswerCard(
                         text = answer.title,
                         isCorrectAnswer = answer.id == "3",
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 8.dp)
                     )
-
                 }
+
+                Spacer(modifier = Modifier.height(20.dp))
             }
-            Spacer(modifier = Modifier.height(16.dp))
-
-            ButtonsAction(
-                modifier =
-                Modifier
-                    .fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
         }
     }
 }
@@ -311,10 +271,10 @@ fun ButtonsAction(
     showBackground = true,
 )
 @Composable
-fun PreviewEvaluationScreenRoot() {
+fun PreviewQuestionsScreenRoot() {
     MTCQuizTheme {
-        EvaluationScreen(
-            state = EvaluationDataState(),
+        QuestionsScreen(
+            state = QuestionsDataState(),
             onAction = {}
         )
     }

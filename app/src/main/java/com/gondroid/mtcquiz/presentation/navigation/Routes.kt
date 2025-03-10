@@ -16,7 +16,7 @@ object EvaluationScreenRoute
 
 
 @Serializable
-object AllQuestionScreenRoute
+object QuestionsScreenRoute
 
 
 @Serializable

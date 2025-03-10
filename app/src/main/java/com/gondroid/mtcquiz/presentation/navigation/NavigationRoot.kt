@@ -16,6 +16,8 @@ import com.gondroid.mtcquiz.presentation.screens.evaluation.EvaluationScreenRoot
 import com.gondroid.mtcquiz.presentation.screens.evaluation.EvaluationScreenViewModel
 import com.gondroid.mtcquiz.presentation.screens.home.HomeScreenRoot
 import com.gondroid.mtcquiz.presentation.screens.home.HomeScreenViewModel
+import com.gondroid.mtcquiz.presentation.screens.questions.QuestionsScreenRoot
+import com.gondroid.mtcquiz.presentation.screens.questions.QuestionsScreenViewModel
 
 @Composable
 fun NavigationRoot(navController: NavHostController) {
@@ -58,9 +60,9 @@ fun NavigationRoot(navController: NavHostController) {
                             EvaluationScreenRoute
                         )
                     },
-                    navigateToAllQuestions = {
+                    navigateToQuestions = {
                         navController.navigate(
-                            EvaluationScreenRoute
+                            QuestionsScreenRoute
                         )
                     },
                     navigateToShowPDF = {
@@ -87,6 +89,16 @@ fun NavigationRoot(navController: NavHostController) {
             composable<ConfigurationScreenRoute> {
                 val viewModel = hiltViewModel<ConfigurationScreenViewModel>()
                 ConfigurationScreenRoot(
+                    viewModel = viewModel,
+                    navigateBack = {
+                        navController.navigateUp()
+                    }
+                )
+            }
+
+            composable<QuestionsScreenRoute> {
+                val viewModel = hiltViewModel<QuestionsScreenViewModel>()
+                QuestionsScreenRoot(
                     viewModel = viewModel,
                     navigateBack = {
                         navController.navigateUp()

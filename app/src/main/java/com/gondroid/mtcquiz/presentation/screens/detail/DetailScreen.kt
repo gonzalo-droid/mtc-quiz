@@ -50,7 +50,7 @@ fun DetailScreenRoot(
     viewModel: DetailScreenViewModel,
     navigateBack: () -> Boolean,
     navigateToConfiguration: () -> Unit,
-    navigateToAllQuestions: () -> Unit,
+    navigateToQuestions: () -> Unit,
     navigateToShowPDF: () -> Unit,
     navigateToEvaluation: () -> Unit,
 ) {
@@ -64,7 +64,7 @@ fun DetailScreenRoot(
                 DetailScreenAction.Back -> navigateBack()
                 DetailScreenAction.GoToEvaluation -> navigateToEvaluation()
                 DetailScreenAction.ShowPDF -> navigateToShowPDF()
-                DetailScreenAction.AllQuestions -> navigateToAllQuestions()
+                DetailScreenAction.GoToQuestions -> navigateToQuestions()
                 DetailScreenAction.GoToConfiguration -> navigateToConfiguration()
             }
 
@@ -179,7 +179,7 @@ fun DetailScreen(
 
             ButtonsAction(
                 onGoToEvaluation = { onAction(DetailScreenAction.GoToEvaluation) },
-                onGoToAllQuestions = { onAction(DetailScreenAction.AllQuestions) },
+                onGoToQuestions = { onAction(DetailScreenAction.GoToQuestions) },
                 onDownloadPdf = { onAction(DetailScreenAction.ShowPDF) }
             )
         }
@@ -190,7 +190,7 @@ fun DetailScreen(
 @Composable
 fun ButtonsAction(
     onGoToEvaluation: () -> Unit = {},
-    onGoToAllQuestions: () -> Unit = {},
+    onGoToQuestions: () -> Unit = {},
     onDownloadPdf: () -> Unit = {},
 ) {
 
@@ -228,7 +228,7 @@ fun ButtonsAction(
         }
 
         OutlinedButton(
-            onClick = onGoToAllQuestions,
+            onClick = onGoToQuestions,
             modifier = Modifier
                 .fillMaxWidth()
         ) {

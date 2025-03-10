@@ -3,7 +3,7 @@ package com.gondroid.mtcquiz.presentation.screens.detail
 sealed interface DetailScreenAction {
     data object GoToEvaluation : DetailScreenAction
 
-    data object AllQuestions : DetailScreenAction
+    data object GoToQuestions : DetailScreenAction
 
     data object ShowPDF : DetailScreenAction
 

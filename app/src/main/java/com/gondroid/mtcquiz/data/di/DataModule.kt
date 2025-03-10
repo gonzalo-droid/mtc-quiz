@@ -26,9 +26,6 @@ class DataModule {
                 MTCDatabase::class.java,
                 "mtc_database",
             )
-            // Esto elimina y recrea la base de datos en cambios de esquema
-            // solo para entorno de prueba
-            .fallbackToDestructiveMigration()
             .build()
 
 }
