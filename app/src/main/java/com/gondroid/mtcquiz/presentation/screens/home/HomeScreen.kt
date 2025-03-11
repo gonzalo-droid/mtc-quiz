@@ -76,7 +76,7 @@ fun HomeScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = stringResource(R.string.practice_to_exam),
+                        text = "Simulacro de examen",
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontWeight = FontWeight.Bold,
                         fontSize = MaterialTheme.typography.titleMedium.fontSize
@@ -110,7 +110,16 @@ fun HomeScreen(
         ) {
             Text(
                 modifier = Modifier.padding(horizontal = 16.dp),
-                text = "Examen de conocimientos para postulantes a licencias de conducir. ( Perú )",
+                text = stringResource(R.string.practice_to_exam),
+                lineHeight = 30.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                fontWeight = FontWeight.Bold,
+                fontSize = MaterialTheme.typography.headlineLarge.fontSize
+            )
+
+            Text(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                text = "Examen de conocimientos para postulantes a licencias de conducir. \nPerú \uD83C\uDDF5\uD83C\uDDEA",
                 fontSize = MaterialTheme.typography.bodyLarge.fontSize
             )
 
@@ -118,8 +127,7 @@ fun HomeScreen(
 
             Text(
                 modifier = Modifier
-                    .padding(16.dp)
-                    .align(Alignment.CenterHorizontally),
+                    .padding(16.dp),
                 text = "Selecciona tu categoría",
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.primary,
