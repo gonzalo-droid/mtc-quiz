@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Book
+import androidx.compose.material.icons.filled.DirectionsCar
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.PlayCircle
 import androidx.compose.material3.Button
@@ -40,9 +41,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.gondroid.mtcquiz.R
+import com.gondroid.mtcquiz.presentation.screens.detail.providers.DetailScreenPreviewProvider
 import com.gondroid.mtcquiz.ui.theme.MTCQuizTheme
 
 @Composable
@@ -96,21 +99,21 @@ fun DetailScreen(
                         contentDescription = "Back",
                         tint = MaterialTheme.colorScheme.onBackground,
                         modifier =
-                        Modifier.clickable {
-                            onAction(
-                                DetailScreenAction.Back,
-                            )
-                        },
+                            Modifier.clickable {
+                                onAction(
+                                    DetailScreenAction.Back,
+                                )
+                            },
                     )
                 },
                 actions = {
                     Box(
                         modifier =
-                        Modifier
-                            .padding(8.dp)
-                            .clickable {
-                                onAction(DetailScreenAction.GoToConfiguration)
-                            },
+                            Modifier
+                                .padding(8.dp)
+                                .clickable {
+                                    onAction(DetailScreenAction.GoToConfiguration)
+                                },
                     ) {
                         Icon(
                             imageVector = Icons.Default.Menu,
@@ -125,16 +128,16 @@ fun DetailScreen(
     ) { paddingValues ->
         Column(
             modifier =
-            Modifier
-                .padding(paddingValues)
-                .padding(16.dp),
+                Modifier
+                    .padding(paddingValues)
+                    .padding(16.dp),
         ) {
             Row {
                 Column(
                     modifier = Modifier.weight(1f)
                 ) {
                     Text(
-                        text = "A1",
+                        text = state.category.category,
                         modifier = Modifier,
                         style = MaterialTheme.typography.displayLarge,
                         color = MaterialTheme.colorScheme.primary,
@@ -142,7 +145,7 @@ fun DetailScreen(
                     )
                     Text(
                         modifier = Modifier,
-                        text = "CLASE A - CATEGORÍA I",
+                        text = state.category.title,
                         color = MaterialTheme.colorScheme.primary,
 
                         style = MaterialTheme.typography.titleMedium,
@@ -162,7 +165,7 @@ fun DetailScreen(
 
             Text(
                 modifier = Modifier,
-                text = "Es el más común y te permite manejar carros como sedanes, coupé , hatchback, convertibles, station wagon, SUV, Areneros, Pickup y furgones. Es necesaria para obtener las demás licencias de Clase A.",
+                text = state.category.description,
                 fontSize = 15.sp,
 
                 )
@@ -233,7 +236,7 @@ fun ButtonsAction(
                 .fillMaxWidth()
         ) {
             Icon(
-                imageVector = Icons.Default.PlayCircle,
+                imageVector = Icons.Default.DirectionsCar,
                 contentDescription = "PlayCircle",
             )
             Spacer(modifier = Modifier.width(8.dp))
@@ -259,10 +262,12 @@ fun ButtonsAction(
     showBackground = true,
 )
 @Composable
-fun PreviewDetailScreenRoot() {
+fun PreviewDetailScreenRoot(
+    @PreviewParameter(DetailScreenPreviewProvider::class) state: DetailDataState,
+) {
     MTCQuizTheme {
         DetailScreen(
-            state = DetailDataState(),
+            state = state,
             onAction = {}
         )
     }

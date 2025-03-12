@@ -1,5 +1,7 @@
 package com.gondroid.mtcquiz.presentation.screens.home
 
+import com.gondroid.mtcquiz.domain.models.Category
+
 data class HomeDataState(
-    val date: String = ""
+    val categories: List<Category> = emptyList()
 )

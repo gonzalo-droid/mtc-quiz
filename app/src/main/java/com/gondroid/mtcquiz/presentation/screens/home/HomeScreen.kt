@@ -34,11 +34,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
 import com.gondroid.mtcquiz.R
 import com.gondroid.mtcquiz.domain.models.Category
+import com.gondroid.mtcquiz.presentation.screens.home.providers.HomeScreenPreviewProvider
 import com.gondroid.mtcquiz.ui.theme.MTCQuizTheme
 import kotlin.math.absoluteValue
 
@@ -58,7 +60,6 @@ fun HomeScreenRoot(
                 is HomeScreenAction.OnClickCategory -> navigateToDetail(action.categoryId)
                 is HomeScreenAction.GoToConfiguration -> navigateToConfiguration()
             }
-
         }
     )
 
@@ -85,11 +86,11 @@ fun HomeScreen(
                 actions = {
                     Box(
                         modifier =
-                        Modifier
-                            .padding(8.dp)
-                            .clickable {
-                                onAction(HomeScreenAction.GoToConfiguration)
-                            },
+                            Modifier
+                                .padding(8.dp)
+                                .clickable {
+                                    onAction(HomeScreenAction.GoToConfiguration)
+                                },
                     ) {
                         Icon(
                             imageVector = Icons.Default.Menu,
@@ -104,9 +105,9 @@ fun HomeScreen(
     ) { paddingValues ->
         Column(
             modifier =
-            Modifier
-                .padding(paddingValues)
-                .padding(vertical = 16.dp),
+                Modifier
+                    .padding(paddingValues)
+                    .padding(vertical = 16.dp),
         ) {
             Text(
                 modifier = Modifier.padding(horizontal = 16.dp),
@@ -134,34 +135,7 @@ fun HomeScreen(
                 fontWeight = FontWeight.Bold
             )
 
-            val items = listOf(
-                Category(
-                    id = "1",
-                    title = "CLASE A - CATEGORIA I",
-                    category = "A1",
-                    type = "CLASE A",
-                    image = "a",
-                    description = "Es el más común y te permite manejar carros como sedanes, coupé , hatchback, convertibles, station wagon, SUV, Areneros, Pickup y furgones. Es necesaria para obtener las demás licencias de Clase A."
-                ),
-                Category(
-                    id = "1",
-                    title = "CLASE A - CATEGORIA I",
-                    category = "A2",
-                    type = "CLASE A",
-                    image = "a",
-                    description = "Es el más común y te permite manejar carros como sedanes, coupé , hatchback, convertibles, station wagon, SUV, Areneros, Pickup y furgones. Es necesaria para obtener las demás licencias de Clase A."
-                ),
-                Category(
-                    id = "1",
-                    title = "CLASE A - CATEGORIA I",
-                    category = "A3",
-                    type = "CLASE A",
-                    image = "a",
-                    description = "Es el más común y te permite manejar carros como sedanes, coupé , hatchback, convertibles, station wagon, SUV, Areneros, Pickup y furgones. Es necesaria para obtener las demás licencias de Clase A."
-                ),
-            )
-
-            val pagerState = rememberPagerState(pageCount = { items.size })
+            val pagerState = rememberPagerState(pageCount = { state.categories.size })
             HorizontalPager(
                 state = pagerState,
                 contentPadding = PaddingValues(horizontal = 40.dp)
@@ -170,9 +144,9 @@ fun HomeScreen(
                 CardCategoryItem(
                     pagerState = pagerState,
                     index = index,
-                    item = items[index],
+                    item = state.categories[index],
                     onItemSelected = {
-                        onAction(HomeScreenAction.OnClickCategory(items[index].id))
+                        onAction(HomeScreenAction.OnClickCategory(state.categories[index].id))
                     })
             }
 
@@ -220,7 +194,7 @@ fun CardCategoryItem(
                     .align(Alignment.TopStart)
             ) {
                 Text(
-                    text = item.type,
+                    text = item.classType,
                     fontSize = 15.sp,
                     color = Color.White,
                     modifier = Modifier
@@ -241,7 +215,7 @@ fun CardCategoryItem(
                     text = item.description,
                     modifier = Modifier.padding(horizontal = 16.dp),
                     maxLines = 4,
-                    style = MaterialTheme.typography.bodySmall,
+                    style = MaterialTheme.typography.bodyMedium,
                     color = Color.White,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -262,10 +236,12 @@ fun CardCategoryItem(
     showBackground = true,
 )
 @Composable
-fun PreviewHomeScreenRoot() {
+fun PreviewHomeScreenRoot(
+    @PreviewParameter(HomeScreenPreviewProvider::class) state: HomeDataState,
+) {
     MTCQuizTheme {
         HomeScreen(
-            state = HomeDataState(),
+            state = state,
             onAction = {}
         )
     }
