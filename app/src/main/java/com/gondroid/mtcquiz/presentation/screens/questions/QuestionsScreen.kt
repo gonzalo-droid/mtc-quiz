@@ -1,5 +1,6 @@
 package com.gondroid.mtcquiz.presentation.screens.questions
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -142,7 +143,7 @@ fun QuestionsScreen(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 question.options.forEachIndexed { index, option ->
-                    AnswerCard(
+                    ItemAnswerCard(
                         text = option,
                         isCorrectAnswer = validationAnswer(index, question.answer),
                         modifier = Modifier
@@ -158,17 +159,19 @@ fun QuestionsScreen(
 }
 
 fun validationAnswer(index: Int, answer: String): Boolean {
+    Log.d("validationAnswer", "$index - $answer")
     val indexAnswer = when (answer) {
         "a" -> 0
         "b" -> 1
         "c" -> 2
         else -> 3
     }
+    Log.d("validationAnswer", "$index - $answer : $indexAnswer")
     return index == indexAnswer
 }
 
 @Composable
-fun AnswerCard(
+fun ItemAnswerCard(
     text: String,
     isCorrectAnswer: Boolean,
     modifier: Modifier = Modifier,
