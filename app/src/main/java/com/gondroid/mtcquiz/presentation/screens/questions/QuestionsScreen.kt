@@ -3,7 +3,6 @@ package com.gondroid.mtcquiz.presentation.screens.questions
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -11,14 +10,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.FullscreenExit
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -41,7 +37,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.gondroid.mtcquiz.R
-import com.gondroid.mtcquiz.domain.models.Answer
 import com.gondroid.mtcquiz.domain.models.Question
 import com.gondroid.mtcquiz.ui.theme.MTCQuizTheme
 
@@ -92,11 +87,11 @@ fun QuestionsScreen(
                         contentDescription = "Back",
                         tint = MaterialTheme.colorScheme.onBackground,
                         modifier =
-                        Modifier.clickable {
-                            onAction(
-                                QuestionsScreenAction.Back,
-                            )
-                        },
+                            Modifier.clickable {
+                                onAction(
+                                    QuestionsScreenAction.Back,
+                                )
+                            },
                     )
                 },
                 actions = {
@@ -106,48 +101,14 @@ fun QuestionsScreen(
         },
     ) { paddingValues ->
 
-        val answers = listOf(
-            Answer("1", "a) Recoger o dejar pasajeros o carga en cualquier lugar"),
-            Answer(
-                "2",
-                "Dejar animales sueltos o situarlos de forma tal que obstaculicen solo un poco el tránsito"
-            ),
-            Answer("3", "Recoger o dejar pasajeros en lugares autorizados."),
-            Answer("4", "Ejercer el comercio ambulatorio o estacionario"),
-        )
-
-        val questions = listOf(
-            Question(
-                id = "1",
-                title = "Respecto de los 100 de control o regulación del tránsito:",
-                topic = "",
-                answers = answers,
-                correctAnswer = "TODO()",
-            ),
-            Question(
-                id = "2",
-                title = "Respecto de los 200 de control o regulación del tránsito:",
-                topic = "",
-                answers = answers,
-                correctAnswer = "TODO()",
-            ),
-            Question(
-                id = "3",
-                title = "Respecto de los 300 de control o regulación del tránsito:",
-                topic = "",
-                answers = answers,
-                correctAnswer = "TODO()",
-            ),
-        )
-
         LazyColumn(
             modifier =
-            Modifier
-                .padding(paddingValues)
-                .padding(horizontal = 16.dp),
+                Modifier
+                    .padding(paddingValues)
+                    .padding(horizontal = 16.dp),
         ) {
             items(
-                items = questions,
+                items = state.questions,
                 key = { questions -> questions.id }
             ) { question ->
                 Card(
@@ -162,7 +123,7 @@ fun QuestionsScreen(
                     ) {
                         Text(
                             modifier = Modifier,
-                            text = question.title,
+                            text = "${question.id}.- ${question.title}",
                             style = MaterialTheme.typography.titleSmall,
 
                             )
@@ -180,10 +141,10 @@ fun QuestionsScreen(
                 }
                 Spacer(modifier = Modifier.height(8.dp))
 
-                question.answers.forEach { answer ->
+                question.options.forEachIndexed { index, option ->
                     AnswerCard(
-                        text = answer.title,
-                        isCorrectAnswer = answer.id == "3",
+                        text = option,
+                        isCorrectAnswer = validationAnswer(index, question.answer),
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(bottom = 8.dp)
@@ -196,34 +157,28 @@ fun QuestionsScreen(
     }
 }
 
+fun validationAnswer(index: Int, answer: String): Boolean {
+    val indexAnswer = when (answer) {
+        "a" -> 0
+        "b" -> 1
+        "c" -> 2
+        else -> 3
+    }
+    return index == indexAnswer
+}
 
 @Composable
 fun AnswerCard(
     text: String,
     isCorrectAnswer: Boolean,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit = {}
 ) {
-    // Estado para determinar si ya se hizo clic en la tarjeta
-    var clicked by remember { mutableStateOf(false) }
+    val backgroundColor = if (isCorrectAnswer) Color(0xFFC8E6C9) else Color.White
 
-    // Colores que varían según si se hizo clic y la corrección de la respuesta
-    val backgroundColor = if (clicked) {
-        if (isCorrectAnswer) Color(0xFFC8E6C9) // verde claro
-        else Color(0xFFFFCDD2) // rojo claro
-    } else Color.White
-
-    val borderColor = if (clicked) {
-        if (isCorrectAnswer) Color(0xFF388E3C) // verde oscuro
-        else Color(0xFFD32F2F) // rojo oscuro
-    } else Color.Gray
+    val borderColor = if (isCorrectAnswer) Color(0xFF388E3C) else Color.Gray
 
     Card(
-        modifier = modifier
-            .clickable {
-                clicked = true
-                onClick()
-            },
+        modifier = modifier,
         colors = CardDefaults.cardColors(containerColor = backgroundColor),
         shape = RoundedCornerShape(8.dp),
         border = BorderStroke(1.dp, borderColor)
@@ -239,42 +194,48 @@ fun AnswerCard(
 }
 
 
-@Composable
-fun ButtonsAction(
-    modifier: Modifier,
-    onClickAds: () -> Unit = {},
-    onDownloadPdf: () -> Unit = {},
-) {
-
-
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        Button(
-            onClick = onClickAds,
-            modifier = Modifier
-                .fillMaxWidth()
-        ) {
-            Icon(
-                imageVector = Icons.Default.FullscreenExit,
-                contentDescription = "PlayCircle",
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(text = "Siguiente")
-        }
-
-    }
-}
-
 @Preview(
     showBackground = true,
 )
 @Composable
 fun PreviewQuestionsScreenRoot() {
+    val answers = listOf(
+        "a) Recoger o dejar pasajeros o carga en cualquier lugar",
+        "b) Recoger o dejar pasajeros o carga en cualquier lugar",
+        "c) Recoger o dejar pasajeros o carga en cualquier lugar",
+        "d) Recoger o dejar pasajeros o carga en cualquier lugar"
+    )
+
+    val questions = listOf(
+        Question(
+            id = 1,
+            title = "Respecto de los 100 de control o regulación del tránsito:",
+            topic = "",
+            section = "",
+            options = answers,
+            answer = "a",
+        ),
+        Question(
+            id = 2,
+            title = "Respecto de los 100 de control o regulación del tránsito:",
+            topic = "",
+            section = "",
+            options = answers,
+            answer = "b",
+        ),
+        Question(
+            id = 3,
+            title = "Respecto de los 100 de control o regulación del tránsito:",
+            topic = "",
+            section = "",
+            options = answers,
+            answer = "c",
+        ),
+    )
+
     MTCQuizTheme {
         QuestionsScreen(
-            state = QuestionsDataState(),
+            state = QuestionsDataState(questions = questions),
             onAction = {}
         )
     }

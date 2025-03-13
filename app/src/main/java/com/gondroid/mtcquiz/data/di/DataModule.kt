@@ -37,6 +37,8 @@ class DataModule {
     fun provideQuizRepository(
         @Named("dispatcherIO")
         dispatcherIO: CoroutineDispatcher,
-    ): QuizRepository = QuizRepositoryImpl(dispatcherIO)
+        @ApplicationContext
+        context: Context,
+    ): QuizRepository = QuizRepositoryImpl(dispatcherIO,context)
 
 }
