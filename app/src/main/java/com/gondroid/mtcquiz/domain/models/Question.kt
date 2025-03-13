@@ -12,7 +12,17 @@ data class Question(
     val answer: String,
     val options: List<String>,
     val image: String? = null,
-)
+) {
+    fun validationAnswer(index: Int): Boolean {
+        val indexAnswer = when (answer) {
+            "a" -> 0
+            "b" -> 1
+            "c" -> 2
+            else -> 3
+        }
+        return index == indexAnswer
+    }
+}
 
 
 @Serializable

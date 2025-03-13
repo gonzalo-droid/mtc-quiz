@@ -21,3 +21,6 @@ object QuestionsScreenRoute
 
 @Serializable
 object ConfigurationScreenRoute
+
+@Serializable
+object PdfScreenRoute

@@ -145,7 +145,7 @@ fun QuestionsScreen(
                 question.options.forEachIndexed { index, option ->
                     ItemAnswerCard(
                         text = option,
-                        isCorrectAnswer = validationAnswer(index, question.answer),
+                        isCorrectAnswer = question.validationAnswer(index),
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(bottom = 8.dp)
@@ -158,17 +158,6 @@ fun QuestionsScreen(
     }
 }
 
-fun validationAnswer(index: Int, answer: String): Boolean {
-    Log.d("validationAnswer", "$index - $answer")
-    val indexAnswer = when (answer) {
-        "a" -> 0
-        "b" -> 1
-        "c" -> 2
-        else -> 3
-    }
-    Log.d("validationAnswer", "$index - $answer : $indexAnswer")
-    return index == indexAnswer
-}
 
 @Composable
 fun ItemAnswerCard(

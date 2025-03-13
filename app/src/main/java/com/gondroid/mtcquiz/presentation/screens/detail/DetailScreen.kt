@@ -183,7 +183,7 @@ fun DetailScreen(
             ButtonsAction(
                 onGoToEvaluation = { onAction(DetailScreenAction.GoToEvaluation) },
                 onGoToQuestions = { onAction(DetailScreenAction.GoToQuestions) },
-                onDownloadPdf = { onAction(DetailScreenAction.ShowPDF) }
+                onShowPdf = { onAction(DetailScreenAction.ShowPDF) }
             )
         }
 
@@ -194,7 +194,7 @@ fun DetailScreen(
 fun ButtonsAction(
     onGoToEvaluation: () -> Unit = {},
     onGoToQuestions: () -> Unit = {},
-    onDownloadPdf: () -> Unit = {},
+    onShowPdf: () -> Unit = {},
 ) {
 
     // Creamos una transición infinita para animar el botón
@@ -244,12 +244,11 @@ fun ButtonsAction(
         }
         // Botón secundario
         TextButton(
-            onClick = onDownloadPdf,
+            onClick = onShowPdf,
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(text = "Descargar PDF")
             Spacer(modifier = Modifier.width(8.dp))
-
             Icon(
                 imageVector = Icons.Default.Book,
                 contentDescription = "PlayCircle",
