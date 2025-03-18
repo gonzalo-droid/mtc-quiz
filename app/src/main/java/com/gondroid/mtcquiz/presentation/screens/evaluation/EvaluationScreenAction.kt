@@ -4,4 +4,5 @@ sealed interface EvaluationScreenAction {
     data object StartEvaluation : EvaluationScreenAction
 
     data object Back : EvaluationScreenAction
+    data object NextQuestion : EvaluationScreenAction
 }

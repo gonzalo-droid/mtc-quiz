@@ -4,13 +4,13 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Question(
-    val id: Int,
+    val id: Int = 1,
     val section: String? = "",
     val category: String? = "",
-    val topic: String,
-    val title: String,
-    val answer: String,
-    val options: List<String>,
+    val topic: String = "",
+    val title: String = "",
+    val answer: String = "",
+    val options: List<String> = arrayListOf(),
     val image: String? = null,
 ) {
     fun validationAnswer(index: Int): Boolean {
