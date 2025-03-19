@@ -45,6 +45,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.gondroid.mtcquiz.R
+import com.gondroid.mtcquiz.domain.models.Question
+import com.gondroid.mtcquiz.presentation.component.LinearProgressComponent
 import com.gondroid.mtcquiz.ui.theme.MTCQuizTheme
 
 
@@ -137,22 +139,14 @@ fun EvaluationScreen(
                     .padding(paddingValues)
                     .padding(16.dp),
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                LinearProgressIndicator(
-                    progress = { progress },
-                    modifier = Modifier
-                        .height(8.dp)
-                        .weight(1f),
-                )
-                Text(
-                    text = "${state.indexQuestion}/${state.questions.size}",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
+
+            LinearProgressComponent(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp),
+                progress = progress,
+                countProgress = "${state.indexQuestion}/${state.questions.size}"
+            )
 
             Spacer(modifier = Modifier.height(32.dp))
 
@@ -292,9 +286,29 @@ fun ButtonsAction(
 )
 @Composable
 fun PreviewEvaluationScreenRoot() {
+
+    val answers = listOf(
+        "a) Recoger o dejar pasajeros o carga en cualquier lugar",
+        "b) Recoger o dejar pasajeros o carga en cualquier lugar",
+        "c) Recoger o dejar pasajeros o carga en cualquier lugar",
+        "d) Recoger o dejar pasajeros o carga en cualquier lugar"
+    )
+
+    val question =  Question(
+        id = 1,
+        title = "Respecto de los 100 de control o regulación del tránsito:",
+        topic = "",
+        section = "",
+        options = answers,
+        answer = "a",
+    )
+
     MTCQuizTheme {
         EvaluationScreen(
-            state = EvaluationDataState(),
+            state = EvaluationDataState(
+                questions = listOf(question),
+                question = question
+            ),
             onAction = {}
         )
     }

@@ -44,6 +44,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.gondroid.mtcquiz.R
 import com.gondroid.mtcquiz.domain.models.Question
+import com.gondroid.mtcquiz.presentation.component.LinearProgressComponent
 import com.gondroid.mtcquiz.ui.theme.MTCQuizTheme
 
 
@@ -126,25 +127,14 @@ fun QuestionsScreen(
                     .padding(paddingValues)
                     .padding(horizontal = 16.dp),
         ) {
-            Row(
+
+            LinearProgressComponent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                LinearProgressIndicator(
-                    progress = { progress.value },
-                    modifier = Modifier
-                        .height(8.dp)
-                        .weight(1f),
-                )
-                Text(
-                    text = "${startItemVisible}/${state.questions.size}",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
+                progress = progress.value,
+                countProgress = "${startItemVisible}/${state.questions.size}"
+            )
 
             LazyColumn(
                 state = scrollState, modifier = Modifier.weight(1f)
