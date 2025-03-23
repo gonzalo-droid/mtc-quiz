@@ -5,5 +5,7 @@ import com.gondroid.mtcquiz.domain.models.Question
 data class EvaluationDataState(
     val questions: List<Question> = emptyList(),
     val question: Question = Question(),
-    val indexQuestion: Int = 0
+    val indexQuestion: Int = 0,
+    val answerWasSelected: Boolean = true,
+    val isVerifyAnswer: Boolean = true,
 )

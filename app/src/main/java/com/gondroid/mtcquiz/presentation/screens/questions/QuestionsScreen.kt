@@ -171,6 +171,7 @@ fun QuestionsScreen(
                             )
                         }
                     }
+
                     Spacer(modifier = Modifier.height(8.dp))
 
                     question.options.forEachIndexed { index, option ->

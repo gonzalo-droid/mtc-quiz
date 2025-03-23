@@ -7,30 +7,27 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.FullscreenExit
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,6 +38,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -81,9 +79,17 @@ fun EvaluationScreen(
     state: EvaluationDataState,
     onAction: (EvaluationScreenAction) -> Unit,
 ) {
-    var currentQuestion by remember { mutableStateOf(33) }
-    val totalQuestions = 40
-    val progress = currentQuestion / totalQuestions.toFloat()
+    val totalQuestions = state.questions.size
+
+    val progress = remember {
+        derivedStateOf {
+            if (totalQuestions > 0) {
+                state.indexQuestion.toFloat() / (totalQuestions - 1).coerceAtLeast(1)
+            } else {
+                0f
+            }
+        }
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -133,6 +139,10 @@ fun EvaluationScreen(
         },
     ) { paddingValues ->
 
+        var selectedOption by remember { mutableStateOf<String?>(null) }
+        val isCorrectAnswerSelected = selectedOption?.let { it == state.question.answer }
+
+
         Column(
             modifier =
                 Modifier
@@ -144,7 +154,7 @@ fun EvaluationScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 8.dp),
-                progress = progress,
+                progress = progress.value,
                 countProgress = "${state.indexQuestion}/${state.questions.size}"
             )
 
@@ -186,23 +196,35 @@ fun EvaluationScreen(
             ) {
                 val options = state.question.options
 
-                items(
-                    items = options,
-                ) { option ->
-                    Spacer(modifier = Modifier.height(8.dp))
+                itemsIndexed(options) { index, option ->
                     AnswerCard(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 8.dp),
                         text = option,
-                        isCorrectAnswer = false,
-                        modifier = Modifier.fillMaxWidth()
-                    )
+                        isCorrect = state.question.validationAnswer(index),
+                        isSelected = selectedOption == option,
+                        isCorrectAnswerSelected = isCorrectAnswerSelected,
+                        onClick = {
+                            selectedOption = option
 
+                            if (selectedOption.isNullOrEmpty()) {
+
+                            }
+
+                        }
+                    )
                 }
             }
+
             Spacer(modifier = Modifier.height(16.dp))
 
             ButtonsAction(
+                state = state,
                 modifier = Modifier.fillMaxWidth(),
-                onClickNextQuestion = { onAction(EvaluationScreenAction.NextQuestion) }
+                onClickNextQuestion = {
+                    onAction(EvaluationScreenAction.NextQuestion)
+                }
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -215,28 +237,29 @@ fun EvaluationScreen(
 @Composable
 fun AnswerCard(
     text: String,
-    isCorrectAnswer: Boolean,
+    isCorrect: Boolean,
+    isSelected: Boolean,
+    isCorrectAnswerSelected: Boolean?,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {}
 ) {
-    // Estado para determinar si ya se hizo clic en la tarjeta
-    var clicked by remember { mutableStateOf(false) }
+    val backgroundColor = when {
+        isSelected && isCorrect -> Color(0xFFC8E6C9) // Verde si es la correcta
+        isSelected -> Color(0xFFFFCDD2) // Rojo si es incorrecta
+        isCorrectAnswerSelected == false && isCorrect -> Color(0xFFC8E6C9) // Muestra la correcta si falló
+        else -> Color.White
+    }
 
-    // Colores que varían según si se hizo clic y la corrección de la respuesta
-    val backgroundColor = if (clicked) {
-        if (isCorrectAnswer) Color(0xFFC8E6C9) // verde claro
-        else Color(0xFFFFCDD2) // rojo claro
-    } else Color.White
-
-    val borderColor = if (clicked) {
-        if (isCorrectAnswer) Color(0xFF388E3C) // verde oscuro
-        else Color(0xFFD32F2F) // rojo oscuro
-    } else Color.Gray
+    val borderColor = when {
+        isSelected && isCorrect -> Color(0xFF388E3C)
+        isSelected -> Color(0xFFD32F2F)
+        isCorrectAnswerSelected == false && isCorrect -> Color(0xFF388E3C)
+        else -> Color.Gray
+    }
 
     Card(
         modifier = modifier
-            .clickable {
-                clicked = true
+            .clickable(enabled = isCorrectAnswerSelected == null) {
                 onClick()
             },
         colors = CardDefaults.cardColors(containerColor = backgroundColor),
@@ -256,26 +279,26 @@ fun AnswerCard(
 
 @Composable
 fun ButtonsAction(
+    state: EvaluationDataState,
     modifier: Modifier,
     onClickNextQuestion: () -> Unit = {},
 ) {
 
+    var selectedOption = if (state.isVerifyAnswer) stringResource(R.string.verify) else stringResource(R.string.next)
 
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Button(
-            onClick = onClickNextQuestion,
+            enabled = state.answerWasSelected,
+            onClick = {
+                onClickNextQuestion()
+            },
             modifier = Modifier
                 .fillMaxWidth()
         ) {
-            Icon(
-                imageVector = Icons.Default.FullscreenExit,
-                contentDescription = "PlayCircle",
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(text = "Siguiente")
+            Text(text = selectedOption)
         }
 
     }
@@ -294,7 +317,7 @@ fun PreviewEvaluationScreenRoot() {
         "d) Recoger o dejar pasajeros o carga en cualquier lugar"
     )
 
-    val question =  Question(
+    val question = Question(
         id = 1,
         title = "Respecto de los 100 de control o regulación del tránsito:",
         topic = "",
