@@ -1,5 +1,6 @@
 package com.gondroid.mtcquiz.presentation.screens.evaluation
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -58,19 +59,20 @@ fun EvaluationScreenRoot(
 
 
     EvaluationScreen(
-        state = state,
-        onAction = { action ->
+        state = state, onAction = { action ->
             when (action) {
                 EvaluationScreenAction.Back -> navigateBack()
-                EvaluationScreenAction.StartEvaluation -> TODO()
+                EvaluationScreenAction.VerifyAnswer -> viewModel.verifyAnswer()
                 EvaluationScreenAction.NextQuestion -> {
                     viewModel.nextQuestion()
                 }
+
+                is EvaluationScreenAction.SaveAnswer -> {
+                    viewModel.saveAnswer(isCorrect = action.isCorrect, option = action.option)
+                }
             }
 
-        }
-    )
-
+        })
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -108,23 +110,20 @@ fun EvaluationScreen(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Back",
                         tint = MaterialTheme.colorScheme.onBackground,
-                        modifier =
-                            Modifier.clickable {
-                                onAction(
-                                    EvaluationScreenAction.Back,
-                                )
-                            },
+                        modifier = Modifier.clickable {
+                            onAction(
+                                EvaluationScreenAction.Back,
+                            )
+                        },
                     )
                 },
                 actions = {
                     Box(
-                        modifier =
-                            Modifier
-                                .padding(8.dp)
-                                .clickable {
-                                }
-                                .clip(RoundedCornerShape(8.dp))
-                                .background(MaterialTheme.colorScheme.primary),
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .clickable {}
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(MaterialTheme.colorScheme.primary),
                     ) {
                         Text(
                             modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp),
@@ -141,13 +140,13 @@ fun EvaluationScreen(
 
         var selectedOption by remember { mutableStateOf<String?>(null) }
         val isCorrectAnswerSelected = selectedOption?.let { it == state.question.answer }
+        var isCorrectAnswer by remember { mutableStateOf(false) }
 
 
         Column(
-            modifier =
-                Modifier
-                    .padding(paddingValues)
-                    .padding(16.dp),
+            modifier = Modifier
+                .padding(paddingValues)
+                .padding(16.dp),
         ) {
 
             LinearProgressComponent(
@@ -191,44 +190,48 @@ fun EvaluationScreen(
 
 
             LazyColumn(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.Bottom
+                modifier = Modifier.weight(1f), verticalArrangement = Arrangement.Bottom
             ) {
                 val options = state.question.options
 
                 itemsIndexed(options) { index, option ->
                     AnswerCard(
+                        state = state,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(bottom = 8.dp),
                         text = option,
                         isCorrect = state.question.validationAnswer(index),
                         isSelected = selectedOption == option,
-                        isCorrectAnswerSelected = isCorrectAnswerSelected,
+                        isCorrectAnswerSelected = if (state.answerWasSelected) isCorrectAnswerSelected else null,
                         onClick = {
                             selectedOption = option
-
-                            if (selectedOption.isNullOrEmpty()) {
-
-                            }
-
-                        }
-                    )
+                            isCorrectAnswer = state.question.validationAnswer(index)
+                        })
                 }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
             ButtonsAction(
-                state = state,
-                modifier = Modifier.fillMaxWidth(),
-                onClickNextQuestion = {
-                    onAction(EvaluationScreenAction.NextQuestion)
-                }
-            )
+                state = state, modifier = Modifier.fillMaxWidth(), onClickNextQuestion = { type ->
+                    when (type) {
+                        "V" -> {
+                            onAction(EvaluationScreenAction.VerifyAnswer)
+                        }
 
+                        "N" -> {
+                            onAction(
+                                EvaluationScreenAction.SaveAnswer(
+                                    option = selectedOption.toString(),
+                                    isCorrect = isCorrectAnswer
+                                )
+                            )
+                            onAction(EvaluationScreenAction.NextQuestion)
+                        }
+                    }
+                })
             Spacer(modifier = Modifier.height(16.dp))
-
         }
     }
 }
@@ -236,6 +239,7 @@ fun EvaluationScreen(
 
 @Composable
 fun AnswerCard(
+    state: EvaluationDataState,
     text: String,
     isCorrect: Boolean,
     isSelected: Boolean,
@@ -243,25 +247,40 @@ fun AnswerCard(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {}
 ) {
-    val backgroundColor = when {
-        isSelected && isCorrect -> Color(0xFFC8E6C9) // Verde si es la correcta
-        isSelected -> Color(0xFFFFCDD2) // Rojo si es incorrecta
-        isCorrectAnswerSelected == false && isCorrect -> Color(0xFFC8E6C9) // Muestra la correcta si falló
-        else -> Color.White
-    }
+    var backgroundColor = Color.White
+    var borderColor = Color.Gray
 
-    val borderColor = when {
-        isSelected && isCorrect -> Color(0xFF388E3C)
-        isSelected -> Color(0xFFD32F2F)
-        isCorrectAnswerSelected == false && isCorrect -> Color(0xFF388E3C)
-        else -> Color.Gray
+    if (state.answerWasSelected) {
+        backgroundColor = when {
+            isSelected && isCorrect -> Color(0xFFC8E6C9)
+            isSelected && !isCorrect -> Color(0xFFFFCDD2)
+            isCorrectAnswerSelected == false && isCorrect -> Color(0xFFC8E6C9) // Muestra la correcta si falló
+            else -> Color.White
+        }
+
+        borderColor = when {
+            isSelected && isCorrect -> Color(0xFF388E3C)
+            isSelected && !isCorrect -> Color(0xFFD32F2F)
+            isCorrectAnswerSelected == false && isCorrect -> Color(0xFF388E3C)
+            else -> Color.Gray
+        }
+    } else {
+        backgroundColor = when {
+            isSelected -> MaterialTheme.colorScheme.tertiary
+            else -> Color.White
+        }
+
+        borderColor = when {
+            isSelected -> MaterialTheme.colorScheme.tertiary
+            else -> Color.Gray
+        }
     }
 
     Card(
-        modifier = modifier
-            .clickable(enabled = isCorrectAnswerSelected == null) {
-                onClick()
-            },
+        modifier = modifier.clickable(enabled = isCorrectAnswerSelected == null) {
+            onClick()
+            Log.d("onClickItem", "click item")
+        },
         colors = CardDefaults.cardColors(containerColor = backgroundColor),
         shape = RoundedCornerShape(8.dp),
         border = BorderStroke(1.dp, borderColor)
@@ -281,22 +300,19 @@ fun AnswerCard(
 fun ButtonsAction(
     state: EvaluationDataState,
     modifier: Modifier,
-    onClickNextQuestion: () -> Unit = {},
+    onClickNextQuestion: (type: String) -> Unit = {},
 ) {
 
-    var selectedOption = if (state.isVerifyAnswer) stringResource(R.string.verify) else stringResource(R.string.next)
+    var selectedOption =
+        if (!state.answerWasVerified) stringResource(R.string.verify) else stringResource(R.string.next)
 
     Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        modifier = modifier, verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Button(
-            enabled = state.answerWasSelected,
             onClick = {
-                onClickNextQuestion()
-            },
-            modifier = Modifier
-                .fillMaxWidth()
+                onClickNextQuestion(if (!state.answerWasVerified) "V" else "N")
+            }, modifier = Modifier.fillMaxWidth()
         ) {
             Text(text = selectedOption)
         }
@@ -329,10 +345,7 @@ fun PreviewEvaluationScreenRoot() {
     MTCQuizTheme {
         EvaluationScreen(
             state = EvaluationDataState(
-                questions = listOf(question),
-                question = question
-            ),
-            onAction = {}
-        )
+                questions = listOf(question), question = question
+            ), onAction = {})
     }
 }

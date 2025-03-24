@@ -6,6 +6,6 @@ data class EvaluationDataState(
     val questions: List<Question> = emptyList(),
     val question: Question = Question(),
     val indexQuestion: Int = 0,
-    val answerWasSelected: Boolean = true,
-    val isVerifyAnswer: Boolean = true,
+    val answerWasSelected: Boolean = false,
+    val answerWasVerified: Boolean = false,
 )
