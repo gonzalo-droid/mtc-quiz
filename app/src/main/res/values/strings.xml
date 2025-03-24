@@ -3,4 +3,6 @@
     <string name="practice_to_exam">Preparate para tu examen</string>
     <string name="next">Siguiente</string>
     <string name="verify">Verificar</string>
+    <string name="searching">Buscar...</string>
+    <string name="close_searching">Cerrar búsqueda</string>
 </resources>

@@ -16,7 +16,9 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.SearchOff
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -26,6 +28,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -39,7 +42,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.gondroid.mtcquiz.R
@@ -73,6 +78,7 @@ fun QuestionsScreen(
 ) {
     var isSearchExpanded by remember { mutableStateOf(false) }
     var searchText by remember { mutableStateOf("") }
+    val filteredItems = state.questions.filter { it.title.contains(searchText, ignoreCase = true) }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -83,16 +89,24 @@ fun QuestionsScreen(
                         TextField(
                             value = searchText,
                             onValueChange = { searchText = it },
-                            modifier = Modifier.fillMaxWidth(),
-                            placeholder = { Text("Buscar...") },
+                            textStyle = MaterialTheme.typography.titleSmall,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(end = 16.dp),
+                            placeholder = { Text(stringResource(R.string.searching)) },
                             singleLine = true,
+                            colors = TextFieldDefaults.colors(
+                                unfocusedContainerColor = Color.Transparent,
+                                focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+                            ),
                             leadingIcon = {
                                 IconButton(onClick = {
-                                    isSearchExpanded = false; searchText = ""
+                                    isSearchExpanded = false
+                                    searchText = ""
                                 }) {
                                     Icon(
-                                        Icons.AutoMirrored.Filled.ArrowBack,
-                                        contentDescription = "Cerrar búsqueda"
+                                        Icons.Default.Clear,
+                                        contentDescription = stringResource(R.string.close_searching)
                                     )
                                 }
                             }
@@ -109,7 +123,7 @@ fun QuestionsScreen(
 
                 },
                 navigationIcon = {
-                    if (isSearchExpanded) {
+                    if (!isSearchExpanded) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back",
@@ -154,65 +168,91 @@ fun QuestionsScreen(
                     .padding(horizontal = 16.dp),
         ) {
 
-            LinearProgressComponent(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 8.dp),
-                progress = progress.value,
-                countProgress = "${startItemVisible}/${state.questions.size}"
-            )
+            if (!isSearchExpanded) {
+                LinearProgressComponent(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp),
+                    progress = progress.value,
+                    countProgress = "${startItemVisible}/${state.questions.size}"
+                )
+            }
 
-            LazyColumn(
-                state = scrollState, modifier = Modifier.weight(1f)
-            ) {
-                items(
-                    items = state.questions,
-                    key = { questions -> questions.id }
-                ) { question ->
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiary),
-                        shape = RoundedCornerShape(8.dp),
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp)
+
+            if (filteredItems.isEmpty()) {
+                Spacer(modifier = Modifier.height(16.dp))
+                Icon(
+                    Icons.Default.SearchOff,
+                    contentDescription = "SearchOff",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(30.dp)
+                )
+                Text(
+                    text = "Sin resultados encontrados",
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth(),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = MaterialTheme.typography.titleSmall.fontSize
+                )
+
+            } else {
+                LazyColumn(
+                    state = scrollState, modifier = Modifier.weight(1f)
+                ) {
+                    items(
+                        items = filteredItems,
+                        key = { questions -> questions.id }
+                    ) { question ->
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiary),
+                            shape = RoundedCornerShape(8.dp),
                         ) {
-                            Text(
-                                modifier = Modifier,
-                                text = "${question.id}.- ${question.title}",
-                                style = MaterialTheme.typography.titleSmall,
-
-                                )
-                            Image(
-                                painter = painterResource(id = R.drawable.card_background),
-                                contentDescription = "card_background",
+                            Column(
                                 modifier = Modifier
-                                    .height(150.dp)
                                     .fillMaxWidth()
-                                    .padding(8.dp),
-                                contentScale = ContentScale.Fit,
-                                alignment = Alignment.Center
+                                    .padding(16.dp)
+                            ) {
+                                Text(
+                                    modifier = Modifier,
+                                    text = "${question.id}.- ${question.title}",
+                                    style = MaterialTheme.typography.titleSmall,
+
+                                    )
+                                Image(
+                                    painter = painterResource(id = R.drawable.card_background),
+                                    contentDescription = "card_background",
+                                    modifier = Modifier
+                                        .height(150.dp)
+                                        .fillMaxWidth()
+                                        .padding(8.dp),
+                                    contentScale = ContentScale.Fit,
+                                    alignment = Alignment.Center
+                                )
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        question.options.forEachIndexed { index, option ->
+                            ItemAnswerCard(
+                                text = option,
+                                isCorrectAnswer = question.validationAnswer(index),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(bottom = 8.dp)
                             )
                         }
+
+                        Spacer(modifier = Modifier.height(20.dp))
                     }
 
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    question.options.forEachIndexed { index, option ->
-                        ItemAnswerCard(
-                            text = option,
-                            isCorrectAnswer = question.validationAnswer(index),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = 8.dp)
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(20.dp))
                 }
             }
+
+
         }
     }
 }
