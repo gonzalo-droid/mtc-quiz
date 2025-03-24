@@ -83,15 +83,17 @@ fun EvaluationScreen(
 ) {
     val totalQuestions = state.questions.size
 
-    val progress = remember {
+    val progress by remember {
         derivedStateOf {
-            if (totalQuestions > 0) {
-                state.indexQuestion.toFloat() / (totalQuestions - 1).coerceAtLeast(1)
-            } else {
-                0f
-            }
+            if (totalQuestions > 0) state.indexQuestion.toFloat() / (totalQuestions - 1).coerceAtLeast(
+                1
+            )
+            else 0f
         }
     }
+
+    var selectedOption by remember { mutableStateOf<String?>(null) }
+    val isCorrectAnswerSelected = selectedOption?.let { it == state.question.answer }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -138,11 +140,6 @@ fun EvaluationScreen(
         },
     ) { paddingValues ->
 
-        var selectedOption by remember { mutableStateOf<String?>(null) }
-        val isCorrectAnswerSelected = selectedOption?.let { it == state.question.answer }
-        var isCorrectAnswer by remember { mutableStateOf(false) }
-
-
         Column(
             modifier = Modifier
                 .padding(paddingValues)
@@ -153,48 +150,19 @@ fun EvaluationScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 8.dp),
-                progress = progress.value,
+                progress = progress,
                 countProgress = "${state.indexQuestion}/${state.questions.size}"
             )
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiary),
-                shape = RoundedCornerShape(8.dp),
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                ) {
-                    Text(
-                        modifier = Modifier,
-                        text = "${state.question.id}.- ${state.question.title}",
-                        style = MaterialTheme.typography.titleSmall,
-
-                        )
-                    Image(
-                        painter = painterResource(id = R.drawable.card_background),
-                        contentDescription = "card_background",
-                        modifier = Modifier
-                            .height(150.dp)
-                            .fillMaxWidth()
-                            .padding(8.dp),
-                        contentScale = ContentScale.Fit,
-                        alignment = Alignment.Center
-                    )
-                }
-            }
+            QuestionCard(question = state.question, modifier = Modifier.fillMaxWidth())
 
 
             LazyColumn(
                 modifier = Modifier.weight(1f), verticalArrangement = Arrangement.Bottom
             ) {
-                val options = state.question.options
-
-                itemsIndexed(options) { index, option ->
+                itemsIndexed(state.question.options) { index, option ->
                     AnswerCard(
                         state = state,
                         modifier = Modifier
@@ -206,7 +174,6 @@ fun EvaluationScreen(
                         isCorrectAnswerSelected = if (state.answerWasSelected) isCorrectAnswerSelected else null,
                         onClick = {
                             selectedOption = option
-                            isCorrectAnswer = state.question.validationAnswer(index)
                         })
                 }
             }
@@ -214,6 +181,7 @@ fun EvaluationScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             ButtonsAction(
+                selectedOption = selectedOption,
                 state = state, modifier = Modifier.fillMaxWidth(), onClickNextQuestion = { type ->
                     when (type) {
                         "V" -> {
@@ -224,14 +192,47 @@ fun EvaluationScreen(
                             onAction(
                                 EvaluationScreenAction.SaveAnswer(
                                     option = selectedOption.toString(),
-                                    isCorrect = isCorrectAnswer
+                                    isCorrect = isCorrectAnswerSelected == true
                                 )
                             )
+                            selectedOption = null
                             onAction(EvaluationScreenAction.NextQuestion)
                         }
                     }
                 })
             Spacer(modifier = Modifier.height(16.dp))
+        }
+    }
+}
+
+@Composable
+fun QuestionCard(question: Question, modifier: Modifier) {
+    Card(
+        modifier = modifier,
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiary),
+        shape = RoundedCornerShape(8.dp),
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Text(
+                modifier = Modifier,
+                text = "${question.id}.- ${question.title}",
+                style = MaterialTheme.typography.titleSmall,
+
+                )
+            Image(
+                painter = painterResource(id = R.drawable.card_background),
+                contentDescription = "card_background",
+                modifier = Modifier
+                    .height(150.dp)
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                contentScale = ContentScale.Fit,
+                alignment = Alignment.Center
+            )
         }
     }
 }
@@ -247,33 +248,16 @@ fun AnswerCard(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {}
 ) {
-    var backgroundColor = Color.White
-    var borderColor = Color.Gray
-
-    if (state.answerWasSelected) {
-        backgroundColor = when {
-            isSelected && isCorrect -> Color(0xFFC8E6C9)
-            isSelected && !isCorrect -> Color(0xFFFFCDD2)
-            isCorrectAnswerSelected == false && isCorrect -> Color(0xFFC8E6C9) // Muestra la correcta si falló
-            else -> Color.White
+    val (backgroundColor, borderColor) = when {
+        state.answerWasSelected -> when {
+            isSelected && isCorrect -> Color(0xFFC8E6C9) to Color(0xFF388E3C)
+            isSelected && !isCorrect -> Color(0xFFFFCDD2) to Color(0xFFD32F2F)
+            isCorrectAnswerSelected == false && isCorrect -> Color(0xFFC8E6C9) to Color(0xFF388E3C)
+            else -> Color.White to Color.Gray
         }
 
-        borderColor = when {
-            isSelected && isCorrect -> Color(0xFF388E3C)
-            isSelected && !isCorrect -> Color(0xFFD32F2F)
-            isCorrectAnswerSelected == false && isCorrect -> Color(0xFF388E3C)
-            else -> Color.Gray
-        }
-    } else {
-        backgroundColor = when {
-            isSelected -> MaterialTheme.colorScheme.tertiary
-            else -> Color.White
-        }
-
-        borderColor = when {
-            isSelected -> MaterialTheme.colorScheme.tertiary
-            else -> Color.Gray
-        }
+        isSelected -> MaterialTheme.colorScheme.tertiary to MaterialTheme.colorScheme.tertiary
+        else -> Color.White to Color.Gray
     }
 
     Card(
@@ -301,20 +285,21 @@ fun ButtonsAction(
     state: EvaluationDataState,
     modifier: Modifier,
     onClickNextQuestion: (type: String) -> Unit = {},
+    selectedOption: String?,
 ) {
-
-    var selectedOption =
+    val buttonText =
         if (!state.answerWasVerified) stringResource(R.string.verify) else stringResource(R.string.next)
 
     Column(
         modifier = modifier, verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Button(
+            enabled = !selectedOption.isNullOrEmpty(),
             onClick = {
                 onClickNextQuestion(if (!state.answerWasVerified) "V" else "N")
             }, modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = selectedOption)
+            Text(text = buttonText)
         }
 
     }
