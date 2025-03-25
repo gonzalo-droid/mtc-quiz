@@ -150,11 +150,16 @@ fun QuestionsScreen(
 
         val scrollState = rememberLazyListState()
         var startItemVisible by remember { mutableIntStateOf(1) }
-        val progress = remember {
+        val progress by remember {
             derivedStateOf {
-                if (scrollState.layoutInfo.totalItemsCount > 0) {
-                    startItemVisible = scrollState.firstVisibleItemIndex.toInt() + 2
-                    scrollState.firstVisibleItemIndex.toFloat() / (scrollState.layoutInfo.totalItemsCount - 1)
+                val totalItems = scrollState.layoutInfo.totalItemsCount
+                val firstVisibleItem = scrollState.firstVisibleItemIndex
+                val lastVisibleItem = scrollState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
+
+                if (totalItems > 1) {
+                    startItemVisible = firstVisibleItem.toInt() + 2
+                    val normalizedProgress = lastVisibleItem.toFloat() / (totalItems - 1).coerceAtLeast(1)
+                    normalizedProgress.coerceIn(0f, 1f)
                 } else {
                     0f
                 }
@@ -173,7 +178,7 @@ fun QuestionsScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 8.dp),
-                    progress = progress.value,
+                    progress = progress,
                     countProgress = "${startItemVisible}/${state.questions.size}"
                 )
             }

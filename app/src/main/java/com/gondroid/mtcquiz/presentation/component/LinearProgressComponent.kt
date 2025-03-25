@@ -18,7 +18,7 @@ import com.gondroid.mtcquiz.ui.theme.MTCQuizTheme
 @Composable
 fun LinearProgressComponent(
     modifier: Modifier = Modifier,
-    progress: Float = 0f,
+    progress: Float = 1f,
     countProgress: String = "",
 ) {
     Row(

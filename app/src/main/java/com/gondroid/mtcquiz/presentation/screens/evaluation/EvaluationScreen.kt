@@ -85,9 +85,9 @@ fun EvaluationScreen(
 
     val progress by remember {
         derivedStateOf {
-            if (totalQuestions > 0) state.indexQuestion.toFloat() / (totalQuestions - 1).coerceAtLeast(
-                1
-            )
+            if (totalQuestions > 0)
+                (state.indexQuestion.toFloat() / (totalQuestions - 1).coerceAtLeast(2))
+                    .coerceIn(0f, 1f)
             else 0f
         }
     }
