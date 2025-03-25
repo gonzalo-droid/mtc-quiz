@@ -31,8 +31,6 @@ constructor(
     var state by mutableStateOf(EvaluationDataState())
         private set
 
-    private val _indexQuestion = MutableStateFlow<Int>(0)
-    val indexQuestion: StateFlow<Int> = _indexQuestion
 
     private val _resultsList = mutableListOf<QuestionResult>()
     val resultsList: List<QuestionResult> get() = _resultsList
@@ -41,14 +39,12 @@ constructor(
 
 
     init {
-        state = state.copy(indexQuestion = indexQuestion.value)
 
         data.categoryId.let {
             viewModelScope.launch {
                 repository.getCategoryById(it)?.let { category ->
                     state = state.copy(category = category)
                 }
-
             }
         }
 
@@ -56,18 +52,18 @@ constructor(
             repository.getQuestionsByCategory("categoryId")
                 .collect { questions ->
                     state =
-                        state.copy(questions = questions, question = questions[indexQuestion.value])
+                        state.copy(questions = questions, question = questions[state.indexQuestion])
                 }
         }
     }
 
     fun nextQuestion() {
-        _indexQuestion.value = indexQuestion.value.inc()
+        val index = state.indexQuestion.inc()
         state = state.copy(
             answerWasSelected = false,
             answerWasVerified = false,
-            indexQuestion = indexQuestion.value,
-            question = state.questions[indexQuestion.value]
+            indexQuestion = index,
+            question = state.questions[index]
         )
     }
 

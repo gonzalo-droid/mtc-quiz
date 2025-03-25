@@ -30,6 +30,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -57,7 +58,6 @@ fun EvaluationScreenRoot(
 
     val state = viewModel.state
 
-
     EvaluationScreen(
         state = state, onAction = { action ->
             when (action) {
@@ -83,12 +83,18 @@ fun EvaluationScreen(
 ) {
     val totalQuestions = state.questions.size
 
-    val progress by remember {
+    val progress by remember(state.indexQuestion) {  // <- Escucha cambios en state.indexQuestion
         derivedStateOf {
-            if (totalQuestions > 0)
-                (state.indexQuestion.toFloat() / (totalQuestions - 1).coerceAtLeast(2))
+            Log.d(
+                "ProgressDebug",
+                "indexQuestion: ${state.indexQuestion}, totalQuestions: $totalQuestions"
+            )
+            if (totalQuestions > 1) {
+                (state.indexQuestion.toFloat() / (totalQuestions - 1).coerceAtLeast(1))
                     .coerceIn(0f, 1f)
-            else 0f
+            } else {
+                0f
+            }
         }
     }
 
@@ -151,7 +157,7 @@ fun EvaluationScreen(
                     .fillMaxWidth()
                     .padding(bottom = 8.dp),
                 progress = progress,
-                countProgress = "${state.indexQuestion}/${state.questions.size}"
+                countProgress = "${state.indexQuestion + 1}/${state.questions.size}"
             )
 
             Spacer(modifier = Modifier.height(32.dp))
