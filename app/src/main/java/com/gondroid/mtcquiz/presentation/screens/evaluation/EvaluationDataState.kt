@@ -1,5 +1,6 @@
 package com.gondroid.mtcquiz.presentation.screens.evaluation
 
+import com.gondroid.mtcquiz.domain.models.Category
 import com.gondroid.mtcquiz.domain.models.Question
 
 data class EvaluationDataState(
@@ -8,4 +9,5 @@ data class EvaluationDataState(
     val indexQuestion: Int = 0,
     val answerWasSelected: Boolean = false,
     val answerWasVerified: Boolean = false,
+    val category: Category = Category()
 )

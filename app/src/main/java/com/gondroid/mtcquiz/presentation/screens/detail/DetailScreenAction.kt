@@ -1,9 +1,9 @@
 package com.gondroid.mtcquiz.presentation.screens.detail
 
 sealed interface DetailScreenAction {
-    data object GoToEvaluation : DetailScreenAction
+    data class GoToEvaluation(val categoryId: String) : DetailScreenAction
 
-    data object GoToQuestions : DetailScreenAction
+    data class GoToQuestions(val categoryId: String) : DetailScreenAction
 
     data object ShowPDF : DetailScreenAction
 

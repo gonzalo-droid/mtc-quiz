@@ -101,7 +101,7 @@ fun EvaluationScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "CLASE A - CATEGORÍA I",
+                        text = state.category.title,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontWeight = FontWeight.Bold,
                         fontSize = MaterialTheme.typography.titleSmall.fontSize

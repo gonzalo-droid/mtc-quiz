@@ -53,9 +53,9 @@ fun DetailScreenRoot(
     viewModel: DetailScreenViewModel,
     navigateBack: () -> Boolean,
     navigateToConfiguration: () -> Unit,
-    navigateToQuestions: () -> Unit,
+    navigateToQuestions: (String) -> Unit,
     navigateToShowPDF: () -> Unit,
-    navigateToEvaluation: () -> Unit,
+    navigateToEvaluation: (String) -> Unit,
 ) {
 
     val state = viewModel.state
@@ -64,11 +64,11 @@ fun DetailScreenRoot(
         state = state,
         onAction = { action ->
             when (action) {
-                DetailScreenAction.Back -> navigateBack()
-                DetailScreenAction.GoToEvaluation -> navigateToEvaluation()
-                DetailScreenAction.ShowPDF -> navigateToShowPDF()
-                DetailScreenAction.GoToQuestions -> navigateToQuestions()
-                DetailScreenAction.GoToConfiguration -> navigateToConfiguration()
+                is DetailScreenAction.Back -> navigateBack()
+                is DetailScreenAction.GoToConfiguration -> navigateToConfiguration()
+                is DetailScreenAction.GoToEvaluation -> navigateToEvaluation(action.categoryId)
+                is DetailScreenAction.GoToQuestions -> navigateToQuestions(action.categoryId)
+                is DetailScreenAction.ShowPDF -> navigateToShowPDF()
             }
 
         }
@@ -181,8 +181,8 @@ fun DetailScreen(
             Spacer(modifier = Modifier.weight(1f))
 
             ButtonsAction(
-                onGoToEvaluation = { onAction(DetailScreenAction.GoToEvaluation) },
-                onGoToQuestions = { onAction(DetailScreenAction.GoToQuestions) },
+                onGoToEvaluation = { onAction(DetailScreenAction.GoToEvaluation(state.category.id)) },
+                onGoToQuestions = { onAction(DetailScreenAction.GoToQuestions(state.category.id)) },
                 onShowPdf = { onAction(DetailScreenAction.ShowPDF) }
             )
         }

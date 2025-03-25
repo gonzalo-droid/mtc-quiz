@@ -57,14 +57,18 @@ fun NavigationRoot(navController: NavHostController) {
                     navigateBack = {
                         navController.navigateUp()
                     },
-                    navigateToEvaluation = {
+                    navigateToEvaluation = { categoryId ->
                         navController.navigate(
-                            EvaluationScreenRoute
+                            EvaluationScreenRoute(
+                                categoryId = categoryId
+                            )
                         )
                     },
-                    navigateToQuestions = {
+                    navigateToQuestions = { categoryId ->
                         navController.navigate(
-                            QuestionsScreenRoute
+                            QuestionsScreenRoute(
+                                categoryId = categoryId
+                            )
                         )
                     },
                     navigateToShowPDF = {

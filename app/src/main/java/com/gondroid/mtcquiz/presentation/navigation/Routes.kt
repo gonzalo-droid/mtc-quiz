@@ -12,12 +12,14 @@ data class DetailScreenRoute(
 )
 
 @Serializable
-object EvaluationScreenRoute
-
+data class EvaluationScreenRoute(
+    val categoryId: String
+)
 
 @Serializable
-object QuestionsScreenRoute
-
+data class QuestionsScreenRoute(
+    val categoryId: String
+)
 
 @Serializable
 object ConfigurationScreenRoute

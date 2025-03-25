@@ -8,8 +8,10 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.gondroid.mtcquiz.domain.models.QuestionResult
 import com.gondroid.mtcquiz.domain.repository.QuizRepository
+import com.gondroid.mtcquiz.presentation.navigation.EvaluationScreenRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -35,8 +37,21 @@ constructor(
     private val _resultsList = mutableListOf<QuestionResult>()
     val resultsList: List<QuestionResult> get() = _resultsList
 
+    private val data = savedStateHandle.toRoute<EvaluationScreenRoute>()
+
+
     init {
         state = state.copy(indexQuestion = indexQuestion.value)
+
+        data.categoryId.let {
+            viewModelScope.launch {
+                repository.getCategoryById(it)?.let { category ->
+                    state = state.copy(category = category)
+                }
+
+            }
+        }
+
         viewModelScope.launch {
             repository.getQuestionsByCategory("categoryId")
                 .collect { questions ->

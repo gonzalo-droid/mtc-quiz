@@ -113,7 +113,7 @@ fun QuestionsScreen(
                         )
                     } else {
                         Text(
-                            text = "CLASE A - CATEGORÍA I",
+                            text = state.category.title,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             fontWeight = FontWeight.Bold,
                             fontSize = MaterialTheme.typography.titleSmall.fontSize
@@ -154,11 +154,13 @@ fun QuestionsScreen(
             derivedStateOf {
                 val totalItems = scrollState.layoutInfo.totalItemsCount
                 val firstVisibleItem = scrollState.firstVisibleItemIndex
-                val lastVisibleItem = scrollState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
+                val lastVisibleItem =
+                    scrollState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
 
                 if (totalItems > 1) {
                     startItemVisible = firstVisibleItem.toInt() + 2
-                    val normalizedProgress = lastVisibleItem.toFloat() / (totalItems - 1).coerceAtLeast(1)
+                    val normalizedProgress =
+                        lastVisibleItem.toFloat() / (totalItems - 1).coerceAtLeast(1)
                     normalizedProgress.coerceIn(0f, 1f)
                 } else {
                     0f
