@@ -1,0 +1,2 @@
+json_key_file("/Users/gonzalo/AndroidStudioProjects/sign/quizzmtc-22c8303d73b2.json") # Path to the json secret file - Follow https://docs.fastlane.tools/actions/supply/#setup to get one
+package_name("com.gondroid.mtcquiz") # e.g. com.krausefx.app

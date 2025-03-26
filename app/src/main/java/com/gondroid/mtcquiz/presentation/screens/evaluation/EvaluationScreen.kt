@@ -83,12 +83,8 @@ fun EvaluationScreen(
 ) {
     val totalQuestions = state.questions.size
 
-    val progress by remember(state.indexQuestion) {  // <- Escucha cambios en state.indexQuestion
+    val progress by remember(state.indexQuestion) {
         derivedStateOf {
-            Log.d(
-                "ProgressDebug",
-                "indexQuestion: ${state.indexQuestion}, totalQuestions: $totalQuestions"
-            )
             if (totalQuestions > 1) {
                 (state.indexQuestion.toFloat() / (totalQuestions - 1).coerceAtLeast(1))
                     .coerceIn(0f, 1f)

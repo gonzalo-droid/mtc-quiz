@@ -15,12 +15,21 @@ room {
 
 android {
     namespace = "com.gondroid.mtcquiz"
-    compileSdk = 34
+    compileSdk = 35
+
+    signingConfigs {
+        create("release") {
+            storeFile = file(System.getenv("MTC_KEYSTORE_PATH") ?: project.findProperty("MTC_KEYSTORE_PATH") as String)
+            storePassword = System.getenv("MTC_KEYSTORE_PASSWORD") ?: project.findProperty("MTC_KEYSTORE_PASSWORD") as String
+            keyAlias = System.getenv("MTC_KEY_ALIAS") ?: project.findProperty("MTC_KEY_ALIAS") as String
+            keyPassword = System.getenv("MTC_KEY_PASSWORD") ?: project.findProperty("MTC_KEY_PASSWORD") as String
+        }
+    }
 
     defaultConfig {
         applicationId = "com.gondroid.mtcquiz"
-        minSdk = 24
-        targetSdk = 34
+        minSdk = 23
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -33,13 +42,31 @@ android {
     buildTypes {
         // keytool -list -v -keystore /Users/gonzalo/AndroidStudioProjects/keyPathMTC -alias keyMtcQuizz -> hash firebase
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
+            signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
+        debug {
+            versionNameSuffix = ".debug"
+        }
     }
+
+    flavorDimensions += listOf("environment")
+    productFlavors {
+        create("qa") {
+            dimension = "environment"
+            applicationId = "com.gondroid.mtcquiz"
+        }
+        create("prod") {
+            dimension = "environment"
+            applicationId = "com.gondroid.mtcquiz"
+        }
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
