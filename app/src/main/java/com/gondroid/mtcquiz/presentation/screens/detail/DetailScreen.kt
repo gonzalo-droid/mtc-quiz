@@ -222,12 +222,8 @@ fun ButtonsAction(
                 .scale(scale)
 
         ) {
-            Icon(
-                imageVector = Icons.Default.PlayCircle,
-                contentDescription = "PlayCircle",
-            )
             Spacer(modifier = Modifier.width(8.dp))
-            Text(text = "Simulacro")
+            Text(text = "Iniciar evalución")
         }
 
         OutlinedButton(

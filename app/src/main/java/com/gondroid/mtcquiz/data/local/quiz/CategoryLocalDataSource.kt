@@ -1,4 +1,4 @@
-package com.gondroid.mtcquiz.data.local.quiz.repository
+package com.gondroid.mtcquiz.data.local.quiz
 
 import com.gondroid.mtcquiz.domain.models.Category
 

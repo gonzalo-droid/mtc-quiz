@@ -22,8 +22,22 @@ data class Question(
         }
         return index == indexAnswer
     }
+
+    fun getOption(answer: String): String {
+        return when (answer) {
+            "a" -> options[0]
+            "b" -> options[1]
+            "c" -> options[2]
+            else -> options[3]
+        }
+    }
 }
 
+enum class TypeActionQuestion {
+    NEXT,
+    VERIFY,
+    FINISH,
+}
 
 @Serializable
 data class QuestionResponse(

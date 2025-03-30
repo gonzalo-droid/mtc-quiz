@@ -3,7 +3,8 @@ package com.gondroid.mtcquiz.data.di
 import android.content.Context
 import androidx.room.Room
 import com.gondroid.mtcquiz.data.MTCDatabase
-import com.gondroid.mtcquiz.data.local.quiz.repository.QuizRepositoryImpl
+import com.gondroid.mtcquiz.data.local.QuizRepositoryImpl
+import com.gondroid.mtcquiz.data.local.evaluation.EvaluationDao
 import com.gondroid.mtcquiz.domain.repository.QuizRepository
 import dagger.Module
 import dagger.Provides
@@ -33,12 +34,20 @@ class DataModule {
             .build()
 
     @Provides
+    fun provideEvaluationDao(database: MTCDatabase) = database.evaluationDao()
+
+    @Provides
     @Singleton
     fun provideQuizRepository(
+        evaluationDao: EvaluationDao,
         @Named("dispatcherIO")
         dispatcherIO: CoroutineDispatcher,
         @ApplicationContext
         context: Context,
-    ): QuizRepository = QuizRepositoryImpl(dispatcherIO,context)
+    ): QuizRepository = QuizRepositoryImpl(
+        evaluationDao = evaluationDao,
+        dispatcherIO = dispatcherIO,
+        context = context
+    )
 
 }

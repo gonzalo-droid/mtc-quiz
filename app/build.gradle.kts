@@ -28,7 +28,7 @@ android {
 
     defaultConfig {
         applicationId = "com.gondroid.mtcquiz"
-        minSdk = 23
+        minSdk = 26
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"

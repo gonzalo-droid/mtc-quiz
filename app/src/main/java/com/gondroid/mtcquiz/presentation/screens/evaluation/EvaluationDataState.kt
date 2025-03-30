@@ -9,5 +9,11 @@ data class EvaluationDataState(
     val indexQuestion: Int = 0,
     val answerWasSelected: Boolean = false,
     val answerWasVerified: Boolean = false,
-    val category: Category = Category()
+    val isFinishExam: Boolean = false,
+    val category: Category = Category(),
+
+    // summary
+    val date: String = "",
+    val correctAnswers: Int = 0,
+    val incorrectAnswers: Int = 0,
 )

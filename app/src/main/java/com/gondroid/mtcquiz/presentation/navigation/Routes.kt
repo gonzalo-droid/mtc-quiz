@@ -26,3 +26,9 @@ object ConfigurationScreenRoute
 
 @Serializable
 object PdfScreenRoute
+
+@Serializable
+data class SummaryScreenRoute(
+    val categoryId: String,
+    val evaluationId: String
+)
