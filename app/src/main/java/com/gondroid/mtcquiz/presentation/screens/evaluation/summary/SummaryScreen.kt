@@ -15,14 +15,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DirectionsCar
-import androidx.compose.material.icons.filled.PlayCircle
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -47,12 +42,16 @@ import com.gondroid.mtcquiz.ui.theme.MTCQuizTheme
 @Composable
 fun SummaryScreenRoot(
     viewModel: SummaryScreenViewModel,
+    navigateToDetail: (String) -> Boolean,
 ) {
     val state = viewModel.state
 
     SummaryScreen(
         state = state,
         onAction = { action ->
+            when (action) {
+                SummaryScreenAction.FinishExam -> navigateToDetail(state.category.id)
+            }
         }
     )
 
@@ -207,7 +206,7 @@ fun SummaryScreen(
                 modifier = Modifier.fillMaxWidth(),
                 label = stringResource(R.string.total_correct),
                 count = state.evaluation.totalCorrect.toString(),
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.primary
             )
             ItemTotal(
                 modifier = Modifier.fillMaxWidth(),
@@ -226,7 +225,7 @@ fun SummaryScreen(
             Spacer(modifier = Modifier.weight(1f))
 
             ButtonsAction(
-
+                onGoToDetail = { onAction(SummaryScreenAction.FinishExam) },
             )
         }
 
@@ -258,8 +257,7 @@ fun ItemTotal(modifier: Modifier, color: Color, label: String, count: String) {
 
 @Composable
 fun ButtonsAction(
-    onGoToEvaluation: () -> Unit = {},
-    onGoToQuestions: () -> Unit = {},
+    onGoToDetail: () -> Unit = {},
 ) {
 
     Column(
@@ -269,28 +267,11 @@ fun ButtonsAction(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Button(
-            onClick = onGoToEvaluation, modifier = Modifier
+            onClick = onGoToDetail, modifier = Modifier
                 .fillMaxWidth()
         ) {
-            Icon(
-                imageVector = Icons.Default.PlayCircle,
-                contentDescription = "PlayCircle",
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(text = "Finalizar")
+            Text(text = "Finalizar evaluación")
         }
-
-        OutlinedButton(
-            onClick = onGoToQuestions, modifier = Modifier.fillMaxWidth()
-        ) {
-            Icon(
-                imageVector = Icons.Default.DirectionsCar,
-                contentDescription = "PlayCircle",
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(text = "Estudiar")
-        }
-
     }
 }
 

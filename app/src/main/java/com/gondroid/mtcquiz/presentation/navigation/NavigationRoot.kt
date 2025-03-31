@@ -14,14 +14,14 @@ import com.gondroid.mtcquiz.presentation.screens.detail.DetailScreenRoot
 import com.gondroid.mtcquiz.presentation.screens.detail.DetailScreenViewModel
 import com.gondroid.mtcquiz.presentation.screens.evaluation.EvaluationScreenRoot
 import com.gondroid.mtcquiz.presentation.screens.evaluation.EvaluationScreenViewModel
+import com.gondroid.mtcquiz.presentation.screens.evaluation.summary.SummaryScreenRoot
+import com.gondroid.mtcquiz.presentation.screens.evaluation.summary.SummaryScreenViewModel
 import com.gondroid.mtcquiz.presentation.screens.home.HomeScreenRoot
 import com.gondroid.mtcquiz.presentation.screens.home.HomeScreenViewModel
 import com.gondroid.mtcquiz.presentation.screens.pdf.PdfScreenRoot
 import com.gondroid.mtcquiz.presentation.screens.pdf.PdfScreenViewModel
 import com.gondroid.mtcquiz.presentation.screens.questions.QuestionsScreenRoot
 import com.gondroid.mtcquiz.presentation.screens.questions.QuestionsScreenViewModel
-import com.gondroid.mtcquiz.presentation.screens.evaluation.summary.SummaryScreenRoot
-import com.gondroid.mtcquiz.presentation.screens.evaluation.summary.SummaryScreenViewModel
 
 @Composable
 fun NavigationRoot(navController: NavHostController) {
@@ -96,7 +96,11 @@ fun NavigationRoot(navController: NavHostController) {
                     navigateToSummary = { categoryId, evaluationId ->
                         navController.navigate(
                             SummaryScreenRoute(categoryId = categoryId, evaluationId = evaluationId)
-                        )
+                        ) {
+                            popUpTo(EvaluationScreenRoute(categoryId)) {
+                                inclusive = true
+                            }
+                        }
                     }
                 )
             }
@@ -135,9 +139,13 @@ fun NavigationRoot(navController: NavHostController) {
                 val viewModel = hiltViewModel<SummaryScreenViewModel>()
                 SummaryScreenRoot(
                     viewModel = viewModel,
+                    navigateToDetail = { categoryId ->
+                        navController.navigateUp()
+                    }
                 )
             }
 
         }
     }
 }
+

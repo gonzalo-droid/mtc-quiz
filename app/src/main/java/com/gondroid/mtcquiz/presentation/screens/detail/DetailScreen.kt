@@ -222,7 +222,6 @@ fun ButtonsAction(
                 .scale(scale)
 
         ) {
-            Spacer(modifier = Modifier.width(8.dp))
             Text(text = "Iniciar evalución")
         }
 
