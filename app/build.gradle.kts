@@ -109,6 +109,9 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    // Lotiee
+    // implementation("com.github.LottieFiles:dotlottie-android:0.5.0")
+    implementation("com.airbnb.android:lottie-compose:6.6.4")
     // Librerias Room
     implementation(libs.room.ktx)
     implementation(libs.room.runtime)

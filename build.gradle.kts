@@ -8,3 +8,9 @@ plugins {
     alias(libs.plugins.room) apply false
     alias(libs.plugins.com.google.gms.google.services) apply false
 }
+
+allprojects {
+    repositories {
+        maven { url = uri("https://oss.sonatype.org/content/repositories/snapshots/") }
+    }
+}

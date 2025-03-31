@@ -4,8 +4,10 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,8 +19,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -37,11 +46,19 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.gondroid.mtcquiz.R
+import com.gondroid.mtcquiz.domain.models.EvaluationState
 import com.gondroid.mtcquiz.ui.theme.MTCQuizTheme
+import kotlinx.coroutines.delay
 
 
 @Composable
@@ -78,14 +95,12 @@ fun SummaryScreen(
     val totalTask = state.evaluation.totalQuestions
 
     var startPercentageAnimation by remember { mutableStateOf(false) }
-
     val percentage = (completedTasks / totalTask.toFloat()).times(100).toInt()
     val animatedPercentageValue by animateIntAsState(
         targetValue = if (startPercentageAnimation) percentage else 0,
-        animationSpec = tween(durationMillis = 1000, easing = LinearEasing), // Duración 1s
+        animationSpec = tween(durationMillis = 1000, easing = LinearEasing),
         label = "Counter Animation"
     )
-
 
     LaunchedEffect(completedTasks, totalTask) {
         if (totalTask == 0) {
@@ -105,6 +120,17 @@ fun SummaryScreen(
         startPercentageAnimation = true
     }
 
+    val pathJson =
+        if (state.evaluation.state == EvaluationState.APPROVED) "approved_anim" else "reject_anim"
+    val animationExam by rememberLottieComposition(
+        spec = LottieCompositionSpec.Asset("anim/$pathJson.json")
+    )
+    var isVisible by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        delay(2000) // Espera 3 segundos
+        isVisible = false
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -163,81 +189,28 @@ fun SummaryScreen(
 
             Spacer(modifier = Modifier.height(30.dp))
 
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier =
-                    Modifier
-                        .width(200.dp)
-                        .padding(16.dp)
-                        .aspectRatio(1f)
-                        .weight(1f)
-                        .align(Alignment.CenterHorizontally),
-            ) {
-                val colorBase = MaterialTheme.colorScheme.inversePrimary
-                val progress = MaterialTheme.colorScheme.primary
-                val strokeWidth = 16.dp
-
-                Canvas(
-                    modifier = Modifier.aspectRatio(1f),
-                ) {
-                    drawArc(
-                        color = colorBase,
-                        startAngle = 0f,
-                        sweepAngle = 360f,
-                        useCenter = false,
-                        size = size,
-                        style =
-                            Stroke(
-                                width = strokeWidth.toPx(),
-                                cap = StrokeCap.Round,
-                            ),
-                    )
-
-                    if (completedTasks <= totalTask) {
-                        drawArc(
-                            color = progress,
-                            startAngle = 90f,
-                            sweepAngle = 360f * angleRatio.value,
-                            useCenter = false,
-                            size = size,
-                            style =
-                                Stroke(
-                                    width = strokeWidth.toPx(),
-                                    cap = StrokeCap.Round,
-                                ),
-                        )
-                    }
-                }
-
-                Text(
-                    text = "${animatedPercentageValue}%",
-                    style = MaterialTheme.typography.headlineLarge,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    fontWeight = FontWeight.Bold,
-                )
-            }
+            ProgressReport(
+                modifier = Modifier
+                    .width(200.dp)
+                    .padding(16.dp)
+                    .aspectRatio(1f)
+                    .weight(1f)
+                    .align(Alignment.CenterHorizontally),
+                state = state,
+                angleRatio = angleRatio.value,
+                animatedPercentageValue = animatedPercentageValue
+            )
 
             Spacer(modifier = Modifier.height(30.dp))
 
-            ItemTotal(
-                modifier = Modifier.fillMaxWidth(),
-                label = stringResource(R.string.total_correct),
-                count = state.evaluation.totalCorrect.toString(),
-                color = MaterialTheme.colorScheme.primary
-            )
-            ItemTotal(
-                modifier = Modifier.fillMaxWidth(),
-                label = stringResource(R.string.total_incorrect),
-                count = state.evaluation.totalIncorrect.toString(),
-                color = MaterialTheme.colorScheme.error
-            )
-            ItemTotal(
-                modifier = Modifier.fillMaxWidth(),
-                label = stringResource(R.string.total_question),
-                count = state.evaluation.totalQuestions.toString(),
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+            TitleResult(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                state = state,
             )
 
+            TotalSection(modifier = Modifier.fillMaxWidth(), state = state)
 
             Spacer(modifier = Modifier.weight(1f))
 
@@ -246,11 +219,172 @@ fun SummaryScreen(
             )
         }
 
+        if (isVisible) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.White),
+                contentAlignment = Alignment.Center
+            ) {
+                LottieAnimation(
+                    composition = animationExam,
+                    iterations = LottieConstants.IterateForever,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+        }
     }
 }
 
 @Composable
-fun ItemTotal(modifier: Modifier, color: Color, label: String, count: String) {
+fun ProgressReport(
+    modifier: Modifier,
+    state: SummaryDataState,
+    angleRatio: Float,
+    animatedPercentageValue: Int
+) {
+    val completedTasks = state.evaluation.totalCorrect
+    val totalTask = state.evaluation.totalQuestions
+
+    val color =
+        if (state.evaluation.state == EvaluationState.APPROVED) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = modifier,
+    ) {
+        val colorBase = MaterialTheme.colorScheme.inversePrimary
+        val progress = color
+        val strokeWidth = 16.dp
+
+        Canvas(
+            modifier = Modifier.aspectRatio(1f),
+        ) {
+            drawArc(
+                color = colorBase,
+                startAngle = 0f,
+                sweepAngle = 360f,
+                useCenter = false,
+                size = size,
+                style =
+                    Stroke(
+                        width = strokeWidth.toPx(),
+                        cap = StrokeCap.Round,
+                    ),
+            )
+
+            if (completedTasks <= totalTask) {
+                drawArc(
+                    color = progress,
+                    startAngle = 90f,
+                    sweepAngle = 360f * angleRatio,
+                    useCenter = false,
+                    size = size,
+                    style =
+                        Stroke(
+                            width = strokeWidth.toPx(),
+                            cap = StrokeCap.Round,
+                        ),
+                )
+            }
+        }
+
+        Text(
+            text = "${animatedPercentageValue}%",
+            style = MaterialTheme.typography.headlineLarge,
+            color = MaterialTheme.colorScheme.onSurface,
+            fontWeight = FontWeight.Bold,
+        )
+    }
+}
+
+@Composable
+fun TitleResult(
+    modifier: Modifier,
+    state: SummaryDataState,
+) {
+
+    val isApproved = state.evaluation.state == EvaluationState.APPROVED
+
+    val title =
+        if (isApproved) stringResource(R.string.approved) else stringResource(R.string.rejected)
+    val icon = if (isApproved) Icons.Default.CheckCircle else Icons.Default.Close
+    val color =
+        if (isApproved) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
+
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
+        Icon(
+            modifier = Modifier
+                .width(30.dp)
+                .height(30.dp),
+            imageVector = icon,
+            contentDescription = "PlayCircle",
+            tint = color
+        )
+        Spacer(modifier = Modifier.width(10.dp))
+        Text(
+            text = title,
+            modifier = Modifier,
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.headlineSmall,
+            color = color,
+            fontWeight = FontWeight.Bold,
+        )
+
+    }
+}
+
+@Composable
+fun TotalSection(
+    modifier: Modifier,
+    state: SummaryDataState,
+) {
+    Card(
+        modifier = modifier,
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        shape = RoundedCornerShape(8.dp),
+        border = BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.primary),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            ItemTotal(
+                modifier = modifier,
+                label = stringResource(R.string.total_correct),
+                count = state.evaluation.totalCorrect.toString(),
+                color = MaterialTheme.colorScheme.primary
+            )
+            ItemTotal(
+                modifier = modifier,
+                label = stringResource(R.string.total_incorrect),
+                count = state.evaluation.totalIncorrect.toString(),
+                color = MaterialTheme.colorScheme.error
+            )
+            ItemTotal(
+                modifier = modifier,
+                label = stringResource(R.string.total_question),
+                count = state.evaluation.totalQuestions.toString(),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textSize = MaterialTheme.typography.titleLarge
+            )
+        }
+    }
+}
+
+@Composable
+fun ItemTotal(
+    modifier: Modifier,
+    color: Color,
+    label: String,
+    count: String,
+    textSize: TextStyle = MaterialTheme.typography.titleMedium
+) {
     var startAnimation by remember { mutableStateOf(false) }
 
     val animatedValue by animateIntAsState(
@@ -264,9 +398,11 @@ fun ItemTotal(modifier: Modifier, color: Color, label: String, count: String) {
     }
     Row(
         modifier = modifier.padding(vertical = 4.dp),
+        verticalAlignment = Alignment.Bottom,
+        horizontalArrangement = Arrangement.Center
     ) {
         Text(
-            style = MaterialTheme.typography.titleMedium,
+            style = textSize,
             color = color,
             modifier = Modifier,
             text = label,
@@ -274,7 +410,7 @@ fun ItemTotal(modifier: Modifier, color: Color, label: String, count: String) {
         )
         Spacer(Modifier.weight(1f))
         Text(
-            style = MaterialTheme.typography.titleMedium,
+            style = textSize,
             fontWeight = FontWeight.ExtraBold,
             color = color,
             modifier = Modifier,
@@ -282,6 +418,7 @@ fun ItemTotal(modifier: Modifier, color: Color, label: String, count: String) {
         )
     }
 }
+
 
 @Composable
 fun ButtonsAction(
@@ -295,10 +432,11 @@ fun ButtonsAction(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Button(
-            onClick = onGoToDetail, modifier = Modifier
+            onClick = onGoToDetail,
+            modifier = Modifier
                 .fillMaxWidth()
         ) {
-            Text(text = "Finalizar evaluación")
+            Text(text = stringResource(R.string.finish_evaluation))
         }
     }
 }
