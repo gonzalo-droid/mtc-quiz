@@ -13,4 +13,6 @@ interface QuizRepository {
     suspend fun getQuestionsByCategory(categoryId: String): Flow<List<Question>>
 
     suspend fun saveEvaluation(evaluation: Evaluation)
+
+    suspend fun getEvaluationById(evaluationId: String): Evaluation?
 }

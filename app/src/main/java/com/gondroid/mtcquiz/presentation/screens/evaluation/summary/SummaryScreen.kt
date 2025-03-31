@@ -36,20 +36,17 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.gondroid.mtcquiz.R
-import com.gondroid.mtcquiz.presentation.screens.evaluation.EvaluationDataState
-import com.gondroid.mtcquiz.presentation.screens.evaluation.EvaluationScreenAction
-import com.gondroid.mtcquiz.presentation.screens.evaluation.EvaluationScreenViewModel
 import com.gondroid.mtcquiz.ui.theme.MTCQuizTheme
 
 
 @Composable
 fun SummaryScreenRoot(
-    viewModel: EvaluationScreenViewModel,
+    viewModel: SummaryScreenViewModel,
 ) {
     val state = viewModel.state
 
@@ -64,8 +61,8 @@ fun SummaryScreenRoot(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SummaryScreen(
-    state: EvaluationDataState,
-    onAction: (EvaluationScreenAction) -> Unit
+    state: SummaryDataState,
+    onAction: (SummaryScreenAction) -> Unit
 ) {
 
     val angleRatio =
@@ -73,8 +70,8 @@ fun SummaryScreen(
             Animatable(0f)
         }
 
-    val completedTasks = 30
-    val totalTask = 40
+    val completedTasks = state.evaluation.totalCorrect
+    val totalTask = state.evaluation.totalQuestions
 
     LaunchedEffect(completedTasks, totalTask) {
         if (totalTask == 0) {
@@ -126,7 +123,7 @@ fun SummaryScreen(
                         .fillMaxWidth()
                 ) {
                     Text(
-                        text = "Resultados",
+                        text = stringResource(R.string.results),
                         modifier = Modifier.fillMaxWidth(),
                         style = MaterialTheme.typography.displaySmall,
                         color = MaterialTheme.colorScheme.primary,
@@ -134,12 +131,10 @@ fun SummaryScreen(
                     )
                     Text(
                         modifier = Modifier,
-                        text = "Marc 9, 2023",
+                        text = state.date.toString(),
                         color = MaterialTheme.colorScheme.primary,
-
                         style = MaterialTheme.typography.titleMedium,
-
-                        )
+                    )
 
                 }
                 Image(
@@ -210,21 +205,21 @@ fun SummaryScreen(
 
             ItemTotal(
                 modifier = Modifier.fillMaxWidth(),
-                label = "Total correctas",
-                count = state.correctAnswers.toString(),
-                color = Color.Green
+                label = stringResource(R.string.total_correct),
+                count = state.evaluation.totalCorrect.toString(),
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             ItemTotal(
                 modifier = Modifier.fillMaxWidth(),
-                label = "Toral incorrectas",
-                count = state.incorrectAnswers.toString(),
-                color = Color.Red
+                label = stringResource(R.string.total_incorrect),
+                count = state.evaluation.totalIncorrect.toString(),
+                color = MaterialTheme.colorScheme.error
             )
             ItemTotal(
                 modifier = Modifier.fillMaxWidth(),
-                label = "Total",
-                count = state.questions.size.toString(),
-                color = Color.Red
+                label = stringResource(R.string.total_question),
+                count = state.evaluation.totalQuestions.toString(),
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
 
@@ -241,23 +236,23 @@ fun SummaryScreen(
 @Composable
 fun ItemTotal(modifier: Modifier, color: Color, label: String, count: String) {
     Row(
-        modifier = modifier
+        modifier = modifier.padding(vertical = 4.dp),
     ) {
         Text(
+            style = MaterialTheme.typography.titleMedium,
             color = color,
             modifier = Modifier,
             text = label,
-            fontSize = 15.sp,
-
-            )
+            fontWeight = FontWeight.Bold,
+        )
         Spacer(Modifier.weight(1f))
         Text(
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold,
             color = color,
             modifier = Modifier,
             text = count,
-            fontSize = 15.sp,
-
-            )
+        )
     }
 }
 
@@ -306,7 +301,7 @@ fun ButtonsAction(
 fun PreviewSummaryScreenRoot() {
     MTCQuizTheme {
         SummaryScreen(
-            state = EvaluationDataState(),
+            state = SummaryDataState(),
             onAction = {}
         )
     }

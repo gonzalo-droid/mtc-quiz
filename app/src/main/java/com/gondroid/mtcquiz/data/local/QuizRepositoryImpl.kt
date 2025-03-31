@@ -56,4 +56,8 @@ class QuizRepositoryImpl(
     override suspend fun saveEvaluation(evaluation: Evaluation) = withContext(dispatcherIO) {
         evaluationDao.upsertEvaluation(EvaluationEntity.fromEvaluation(evaluation))
     }
+
+    override suspend fun getEvaluationById(evaluationId: String): Evaluation? = withContext(dispatcherIO){
+        evaluationDao.getEvaluationById(evaluationId)?.toEvaluation()
+    }
 }

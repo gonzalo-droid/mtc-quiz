@@ -79,18 +79,13 @@ fun EvaluationScreenRoot(
             when (action) {
                 EvaluationScreenAction.Back -> navigateBack()
                 EvaluationScreenAction.VerifyAnswer -> viewModel.verifyAnswer()
-                EvaluationScreenAction.NextQuestion -> {
-                    viewModel.nextQuestion()
-                }
+                EvaluationScreenAction.NextQuestion -> viewModel.nextQuestion()
+                is EvaluationScreenAction.SaveAnswer -> viewModel.saveAnswer(
+                    isCorrect = action.isCorrect,
+                    option = action.option
+                )
 
-                is EvaluationScreenAction.SaveAnswer -> {
-                    viewModel.saveAnswer(isCorrect = action.isCorrect, option = action.option)
-                }
-
-                is EvaluationScreenAction.FinishExam -> TODO()
-                is EvaluationScreenAction.SummaryExam -> {
-                    viewModel.saveExam()
-                }
+                is EvaluationScreenAction.SummaryExam -> viewModel.saveExam()
             }
         })
 }

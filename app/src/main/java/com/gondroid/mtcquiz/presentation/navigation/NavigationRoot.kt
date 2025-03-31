@@ -21,6 +21,7 @@ import com.gondroid.mtcquiz.presentation.screens.pdf.PdfScreenViewModel
 import com.gondroid.mtcquiz.presentation.screens.questions.QuestionsScreenRoot
 import com.gondroid.mtcquiz.presentation.screens.questions.QuestionsScreenViewModel
 import com.gondroid.mtcquiz.presentation.screens.evaluation.summary.SummaryScreenRoot
+import com.gondroid.mtcquiz.presentation.screens.evaluation.summary.SummaryScreenViewModel
 
 @Composable
 fun NavigationRoot(navController: NavHostController) {
@@ -131,7 +132,7 @@ fun NavigationRoot(navController: NavHostController) {
             }
 
             composable<SummaryScreenRoute> {
-                val viewModel = hiltViewModel<EvaluationScreenViewModel>()
+                val viewModel = hiltViewModel<SummaryScreenViewModel>()
                 SummaryScreenRoot(
                     viewModel = viewModel,
                 )
