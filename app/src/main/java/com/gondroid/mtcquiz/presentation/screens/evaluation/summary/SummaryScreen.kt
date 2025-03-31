@@ -1,6 +1,8 @@
 package com.gondroid.mtcquiz.presentation.screens.evaluation.summary
 
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
@@ -23,7 +25,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -72,6 +77,16 @@ fun SummaryScreen(
     val completedTasks = state.evaluation.totalCorrect
     val totalTask = state.evaluation.totalQuestions
 
+    var startPercentageAnimation by remember { mutableStateOf(false) }
+
+    val percentage = (completedTasks / totalTask.toFloat()).times(100).toInt()
+    val animatedPercentageValue by animateIntAsState(
+        targetValue = if (startPercentageAnimation) percentage else 0,
+        animationSpec = tween(durationMillis = 1000, easing = LinearEasing), // Duración 1s
+        label = "Counter Animation"
+    )
+
+
     LaunchedEffect(completedTasks, totalTask) {
         if (totalTask == 0) {
             angleRatio.animateTo(
@@ -86,6 +101,8 @@ fun SummaryScreen(
                     durationMillis = 300,
                 ),
         )
+
+        startPercentageAnimation = true
     }
 
 
@@ -193,7 +210,7 @@ fun SummaryScreen(
                 }
 
                 Text(
-                    text = "${(completedTasks / totalTask.toFloat()).times(100).toInt()}%",
+                    text = "${animatedPercentageValue}%",
                     style = MaterialTheme.typography.headlineLarge,
                     color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.Bold,
@@ -234,6 +251,17 @@ fun SummaryScreen(
 
 @Composable
 fun ItemTotal(modifier: Modifier, color: Color, label: String, count: String) {
+    var startAnimation by remember { mutableStateOf(false) }
+
+    val animatedValue by animateIntAsState(
+        targetValue = if (startAnimation) count.toInt() else 0,
+        animationSpec = tween(durationMillis = 1000, easing = LinearEasing), // Duración 1s
+        label = "Counter Animation"
+    )
+
+    LaunchedEffect(Unit) {
+        startAnimation = true
+    }
     Row(
         modifier = modifier.padding(vertical = 4.dp),
     ) {
@@ -242,15 +270,15 @@ fun ItemTotal(modifier: Modifier, color: Color, label: String, count: String) {
             color = color,
             modifier = Modifier,
             text = label,
-            fontWeight = FontWeight.Bold,
+            fontWeight = FontWeight.ExtraBold,
         )
         Spacer(Modifier.weight(1f))
         Text(
             style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Bold,
+            fontWeight = FontWeight.ExtraBold,
             color = color,
             modifier = Modifier,
-            text = count,
+            text = animatedValue.toString(),
         )
     }
 }
