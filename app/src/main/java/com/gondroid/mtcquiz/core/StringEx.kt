@@ -12,7 +12,7 @@ fun String.normalizeText(): String {
 
 @SuppressLint("DefaultLocale")
 fun Int.toFormattedTime(): String {
-    val hours = this / 3600
-    val minutes = (this % 3600) / 60
-    return String.format("%02d:%02d", hours, minutes)
+    val minutes = this / 60
+    val seconds = this % 60
+    return String.format("%02d:%02d", minutes, seconds)
 }

@@ -118,7 +118,7 @@ fun EvaluationScreen(
     val isCorrectAnswerSelected =
         selectedOption?.equals(state.question.getOption(state.question.answer)) == true
 
-    val totalMinutes = 5
+    val totalMinutes = 1
 
     var timeLeft by remember { mutableIntStateOf(totalMinutes * 60) }
     var showModalFinishEvaluation by remember { mutableStateOf(false) }
@@ -128,7 +128,10 @@ fun EvaluationScreen(
             delay(1000L) // Espera 1 segundo
             timeLeft--
         }
-        showModalFinishEvaluation = true // Mostrar modal cuando llegue a 0
+
+        if (timeLeft == 0) {
+            showModalFinishEvaluation = true // Muestra el modal cuando el tiempo llegue a 0
+        }
         // onExamEnd()
     }
     
@@ -252,7 +255,7 @@ fun EvaluationScreen(
         }
 
         if (showModalFinishEvaluation) {
-            ExamEndDialog { /* Acción cuando el usuario presione "Finalizar" */ }
+            ExamEndDialog { showModalFinishEvaluation = false }
         }
 
     }
