@@ -1,5 +1,6 @@
 package com.gondroid.mtcquiz.presentation.screens.evaluation
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -17,6 +18,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -30,6 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -44,6 +47,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.gondroid.mtcquiz.R
+import com.gondroid.mtcquiz.core.toFormattedTime
 import com.gondroid.mtcquiz.domain.models.Category
 import com.gondroid.mtcquiz.domain.models.Question
 import com.gondroid.mtcquiz.domain.models.TypeActionQuestion
@@ -52,6 +56,7 @@ import com.gondroid.mtcquiz.domain.models.TypeActionQuestion.NEXT
 import com.gondroid.mtcquiz.domain.models.TypeActionQuestion.VERIFY
 import com.gondroid.mtcquiz.presentation.component.LinearProgressComponent
 import com.gondroid.mtcquiz.ui.theme.MTCQuizTheme
+import kotlinx.coroutines.delay
 
 
 @Composable
@@ -113,7 +118,20 @@ fun EvaluationScreen(
     val isCorrectAnswerSelected =
         selectedOption?.equals(state.question.getOption(state.question.answer)) == true
 
+    val totalMinutes = 5
 
+    var timeLeft by remember { mutableIntStateOf(totalMinutes * 60) }
+    var showModalFinishEvaluation by remember { mutableStateOf(false) }
+
+    LaunchedEffect(timeLeft) {
+        while (timeLeft > 0) {
+            delay(1000L) // Espera 1 segundo
+            timeLeft--
+        }
+        showModalFinishEvaluation = true // Mostrar modal cuando llegue a 0
+        // onExamEnd()
+    }
+    
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -150,7 +168,7 @@ fun EvaluationScreen(
                             modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp),
                             style = MaterialTheme.typography.labelMedium,
                             color = Color.White,
-                            text = "29:30"
+                            text = timeLeft.toFormattedTime()
                         )
 
                     }
@@ -232,6 +250,11 @@ fun EvaluationScreen(
                 })
             Spacer(modifier = Modifier.height(16.dp))
         }
+
+        if (showModalFinishEvaluation) {
+            ExamEndDialog { /* Acción cuando el usuario presione "Finalizar" */ }
+        }
+
     }
 }
 
@@ -349,6 +372,23 @@ fun ButtonsAction(
 
     }
 }
+
+
+@Composable
+fun ExamEndDialog(onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = {}, // No permitir cerrar sin acción
+        title = { Text("Tiempo Finalizado") },
+        text = { Text("Tu tiempo ha terminado. El examen se ha finalizado.") },
+        confirmButton = {
+            Button(onClick = onDismiss, modifier = Modifier.fillMaxWidth()) {
+                Text(stringResource(R.string.finish_evaluation))
+            }
+        },
+        dismissButton = null // No permitir cerrar manualmente
+    )
+}
+
 
 @Preview(
     showBackground = true,

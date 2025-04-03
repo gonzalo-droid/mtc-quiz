@@ -83,6 +83,26 @@ fun QuestionsScreen(
         it.title.normalizeText().contains(searchText.normalizeText(), ignoreCase = true)
     }
 
+    val scrollState = rememberLazyListState()
+    var startItemVisible by remember { mutableIntStateOf(1) }
+    val progress by remember {
+        derivedStateOf {
+            val totalItems = scrollState.layoutInfo.totalItemsCount
+            val firstVisibleItem = scrollState.firstVisibleItemIndex
+            val lastVisibleItem =
+                scrollState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
+
+            if (totalItems > 1) {
+                startItemVisible = firstVisibleItem.toInt() + 2
+                val normalizedProgress =
+                    lastVisibleItem.toFloat() / (totalItems - 1).coerceAtLeast(1)
+                normalizedProgress.coerceIn(0f, 1f)
+            } else {
+                0f
+            }
+        }
+    }
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -150,26 +170,6 @@ fun QuestionsScreen(
             )
         },
     ) { paddingValues ->
-
-        val scrollState = rememberLazyListState()
-        var startItemVisible by remember { mutableIntStateOf(1) }
-        val progress by remember {
-            derivedStateOf {
-                val totalItems = scrollState.layoutInfo.totalItemsCount
-                val firstVisibleItem = scrollState.firstVisibleItemIndex
-                val lastVisibleItem =
-                    scrollState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
-
-                if (totalItems > 1) {
-                    startItemVisible = firstVisibleItem.toInt() + 2
-                    val normalizedProgress =
-                        lastVisibleItem.toFloat() / (totalItems - 1).coerceAtLeast(1)
-                    normalizedProgress.coerceIn(0f, 1f)
-                } else {
-                    0f
-                }
-            }
-        }
 
         Column(
             modifier =
