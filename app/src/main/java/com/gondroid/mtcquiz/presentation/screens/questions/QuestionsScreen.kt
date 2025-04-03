@@ -48,6 +48,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.gondroid.mtcquiz.R
+import com.gondroid.mtcquiz.core.normalizeText
 import com.gondroid.mtcquiz.domain.models.Question
 import com.gondroid.mtcquiz.presentation.component.LinearProgressComponent
 import com.gondroid.mtcquiz.ui.theme.MTCQuizTheme
@@ -78,7 +79,9 @@ fun QuestionsScreen(
 ) {
     var isSearchExpanded by remember { mutableStateOf(false) }
     var searchText by remember { mutableStateOf("") }
-    val filteredItems = state.questions.filter { it.title.contains(searchText, ignoreCase = true) }
+    val filteredItems = state.questions.filter {
+        it.title.normalizeText().contains(searchText.normalizeText(), ignoreCase = true)
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
