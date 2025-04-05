@@ -1,6 +1,6 @@
 package com.gondroid.mtcquiz.presentation.screens.evaluation
 
-import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -8,11 +8,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -25,10 +27,13 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -46,6 +51,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.gondroid.mtcquiz.R
 import com.gondroid.mtcquiz.core.toFormattedTime
 import com.gondroid.mtcquiz.domain.models.Category
@@ -101,12 +109,11 @@ fun EvaluationScreen(
     state: EvaluationDataState,
     onAction: (EvaluationScreenAction) -> Unit,
 ) {
-    val totalQuestions = state.questions.size
 
     val progress by remember(state.indexQuestion) {
         derivedStateOf {
-            if (totalQuestions > 1) {
-                (state.indexQuestion.toFloat() / (totalQuestions - 1).coerceAtLeast(1))
+            if (state.questions.size > 1) {
+                (state.indexQuestion.toFloat() / (state.questions.size - 1).coerceAtLeast(1))
                     .coerceIn(0f, 1f)
             } else {
                 0f
@@ -118,23 +125,52 @@ fun EvaluationScreen(
     val isCorrectAnswerSelected =
         selectedOption?.equals(state.question.getOption(state.question.answer)) == true
 
-    val totalMinutes = 1
-
-    var timeLeft by remember { mutableIntStateOf(totalMinutes * 60) }
-    var showModalFinishEvaluation by remember { mutableStateOf(false) }
+    var timeLeft by remember { mutableIntStateOf(state.totalMinutes * 60) }
+    var showFinishEvaluationDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(timeLeft) {
         while (timeLeft > 0) {
-            delay(1000L) // Espera 1 segundo
+            delay(1000L)
             timeLeft--
         }
 
         if (timeLeft == 0) {
-            showModalFinishEvaluation = true // Muestra el modal cuando el tiempo llegue a 0
+            showFinishEvaluationDialog = true
         }
         // onExamEnd()
     }
-    
+
+
+    val lifecycleOwner = LocalLifecycleOwner.current
+    var showCancelDialog by remember { mutableStateOf(false) }
+
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            when (event) {
+                Lifecycle.Event.ON_START -> {
+                    Log.d("Compose", "ON_START")
+                }
+
+                Lifecycle.Event.ON_RESUME -> {
+                    Log.d("Compose", "ON_RESUME")
+                }
+
+                Lifecycle.Event.ON_PAUSE -> {
+                    Log.d("Compose", "ON_PAUSE")
+                    showCancelDialog = true
+                }
+
+                else -> {}
+            }
+        }
+
+        lifecycleOwner.lifecycle.addObserver(observer)
+
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -254,8 +290,22 @@ fun EvaluationScreen(
             Spacer(modifier = Modifier.height(16.dp))
         }
 
-        if (showModalFinishEvaluation) {
-            ExamEndDialog { showModalFinishEvaluation = false }
+        if (showFinishEvaluationDialog) {
+            ExamEndDialog { showFinishEvaluationDialog = false }
+        }
+
+        if (showCancelDialog) {
+            CancelEvaluation(
+                onConfirmCancel = {
+                    showCancelDialog = false
+                    onAction(
+                        EvaluationScreenAction.Back,
+                    )
+                },
+                onDismiss = {
+                    showCancelDialog = false
+                }
+            )
         }
 
     }
@@ -380,7 +430,7 @@ fun ButtonsAction(
 @Composable
 fun ExamEndDialog(onDismiss: () -> Unit) {
     AlertDialog(
-        onDismissRequest = {}, // No permitir cerrar sin acción
+        onDismissRequest = {},
         title = { Text("Tiempo Finalizado") },
         text = { Text("Tu tiempo ha terminado. El examen se ha finalizado.") },
         confirmButton = {
@@ -388,7 +438,43 @@ fun ExamEndDialog(onDismiss: () -> Unit) {
                 Text(stringResource(R.string.finish_evaluation))
             }
         },
-        dismissButton = null // No permitir cerrar manualmente
+        dismissButton = null
+    )
+}
+
+@Composable
+fun CancelEvaluation(
+    onConfirmCancel: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = {},
+        title = {
+            Text(
+                stringResource(R.string.cancel_evaluation),
+                style = MaterialTheme.typography.titleLarge
+            )
+        },
+        text = { Text("Si cancelas ahora, se perderá todo el progreso de tu evaluación.") },
+        confirmButton = {
+            Row(modifier = Modifier.fillMaxWidth()) {
+                TextButton(
+                    onClick = onConfirmCancel,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(stringResource(R.string.yes_cancel))
+                }
+
+                Spacer(modifier = Modifier.width(8.dp))
+                Button(
+                    onClick = onDismiss,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(stringResource(R.string.no))
+                }
+            }
+        },
+        dismissButton = null
     )
 }
 

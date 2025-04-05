@@ -13,4 +13,7 @@
     <string name="approved">Aprobado</string>
     <string name="rejected">Rechazado</string>
     <string name="finish_evaluation">Finalizar evaluación</string>
+    <string name="no">No</string>
+    <string name="yes_cancel">Sí, cancelar</string>
+    <string name="cancel_evaluation">¿Cancelar evaluación?</string>
 </resources>
