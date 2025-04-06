@@ -10,6 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.gondroid.mtcquiz.presentation.screens.configuration.ConfigurationScreenRoot
 import com.gondroid.mtcquiz.presentation.screens.configuration.ConfigurationScreenViewModel
+import com.gondroid.mtcquiz.presentation.screens.configuration.term.TermScreenRoot
 import com.gondroid.mtcquiz.presentation.screens.detail.DetailScreenRoot
 import com.gondroid.mtcquiz.presentation.screens.detail.DetailScreenViewModel
 import com.gondroid.mtcquiz.presentation.screens.evaluation.EvaluationScreenRoot
@@ -109,6 +110,31 @@ fun NavigationRoot(navController: NavHostController) {
                 val viewModel = hiltViewModel<ConfigurationScreenViewModel>()
                 ConfigurationScreenRoot(
                     viewModel = viewModel,
+                    navigateBack = {
+                        navController.navigateUp()
+                    },
+                    navigateToTerm = {
+                        navController.navigate(
+                            TermScreenRoute
+                        )
+                    },
+                    navigateToSetting = {
+
+                    },
+                    navigateToAbout = {
+
+                    },
+                    navigateToRating = {
+
+                    },
+                    navigateToLogout = {
+
+                    }
+                )
+            }
+
+            composable<TermScreenRoute> {
+                TermScreenRoot(
                     navigateBack = {
                         navController.navigateUp()
                     }

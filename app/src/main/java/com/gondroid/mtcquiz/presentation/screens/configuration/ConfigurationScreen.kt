@@ -1,5 +1,7 @@
 package com.gondroid.mtcquiz.presentation.screens.configuration
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -24,66 +26,88 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.gondroid.mtcquiz.presentation.screens.configuration.ConfigurationScreenAction
 
 
 @Composable
 fun ConfigurationScreenRoot(
-    viewModel : ConfigurationScreenViewModel,
-    navigateBack: () -> Unit
+    viewModel: ConfigurationScreenViewModel,
+    navigateBack: () -> Unit,
+    navigateToTerm: () -> Unit,
+    navigateToSetting: () -> Unit,
+    navigateToAbout: () -> Unit,
+    navigateToRating: () -> Unit,
+    navigateToLogout: () -> Unit,
 ) {
 
     ConfigurationScreen(
-        onNavigateUp = navigateBack
+        onNavigateUp = navigateBack,
+        onAction = { action ->
+            when (action) {
+                ConfigurationScreenAction.GoToAbout -> navigateToAbout()
+                ConfigurationScreenAction.GoToRating -> navigateToRating()
+                ConfigurationScreenAction.GoToSetting -> navigateToSetting()
+                ConfigurationScreenAction.GoToTerm -> navigateToTerm()
+                ConfigurationScreenAction.Logout -> navigateToLogout()
+            }
+
+        }
     )
 }
 
 @Composable
 fun ItemList(
+    modifier: Modifier,
     icon: ImageVector,
     title: String,
     onItemClick: () -> Unit,
-    modifier: Modifier
 ) {
-    Row(
-        modifier = modifier
-    ) {
-        Column(modifier = Modifier.weight(1f)) {
-            Row(modifier = Modifier) {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = "Back",
-                    tint = MaterialTheme.colorScheme.onSurface,
-                )
-                Spacer(modifier = Modifier.width(20.dp))
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-            Spacer(modifier = Modifier.height(16.dp))
-            HorizontalDivider()
-        }
-        IconButton(onClick = onItemClick, modifier = Modifier) {
+
+    Column(modifier = modifier.clickable {
+        onItemClick()
+    }) {
+        Row(
+            modifier = Modifier,
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Icon(
-                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                imageVector = icon,
                 contentDescription = "Back",
                 tint = MaterialTheme.colorScheme.onSurface,
             )
+            Spacer(modifier = Modifier.width(20.dp))
+            Text(
+                text = title,
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onBackground,
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            IconButton(onClick = onItemClick, modifier = Modifier) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                    contentDescription = "Back",
+                    tint = MaterialTheme.colorScheme.onSurface,
+                )
+            }
         }
+
+        HorizontalDivider()
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ConfigurationScreen(
-    onNavigateUp: () -> Unit
+    onNavigateUp: () -> Unit,
+    onAction: (ConfigurationScreenAction) -> Unit
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -110,19 +134,22 @@ fun ConfigurationScreen(
                 .padding(16.dp),
         ) {
             Text(
-                text = "Hola,",
+                text = "Configuraciones",
                 style = MaterialTheme.typography.headlineMedium,
                 color = MaterialTheme.colorScheme.onBackground,
                 fontWeight = FontWeight.Bold
             )
-            Text(
-                text = "Eren",
-                style = MaterialTheme.typography.headlineSmall,
-                color = MaterialTheme.colorScheme.onBackground,
-                fontWeight = FontWeight.Bold
-            )
+
             Spacer(modifier = Modifier.height(50.dp))
 
+            ItemList(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                icon = Icons.Default.Star,
+                title = "Personalización",
+                onItemClick = { }
+            )
 
             ItemList(
                 modifier = Modifier
@@ -130,7 +157,11 @@ fun ConfigurationScreen(
                     .padding(vertical = 8.dp),
                 icon = Icons.Default.Favorite,
                 title = "Términos & Condiciones",
-                onItemClick = {  }
+                onItemClick = {
+                    onAction(
+                        ConfigurationScreenAction.GoToTerm
+                    )
+                }
             )
 
             ItemList(
@@ -139,9 +170,8 @@ fun ConfigurationScreen(
                     .padding(vertical = 8.dp),
                 icon = Icons.Default.Star,
                 title = "Califica la aplicación",
-                onItemClick = {  }
+                onItemClick = { }
             )
-
 
             Spacer(modifier = Modifier.weight(1f))
 
@@ -184,6 +214,7 @@ fun ConfigurationScreen(
 @Composable
 fun ConfigurationScreenRootPreview() {
     ConfigurationScreen(
-        onNavigateUp = {}
+        onNavigateUp = {},
+        onAction = {}
     )
 }
