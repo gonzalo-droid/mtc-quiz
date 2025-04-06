@@ -1,6 +1,7 @@
 package com.gondroid.mtcquiz.presentation.screens.evaluation
 
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -40,6 +41,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -143,32 +145,24 @@ fun EvaluationScreen(
 
     val lifecycleOwner = LocalLifecycleOwner.current
     var showCancelDialog by remember { mutableStateOf(false) }
+    var blockExit by remember { mutableStateOf(false) }
 
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
-            when (event) {
-                Lifecycle.Event.ON_START -> {
-                    Log.d("Compose", "ON_START")
-                }
-
-                Lifecycle.Event.ON_RESUME -> {
-                    Log.d("Compose", "ON_RESUME")
-                }
-
-                Lifecycle.Event.ON_PAUSE -> {
-                    Log.d("Compose", "ON_PAUSE")
-                    showCancelDialog = true
-                }
-
-                else -> {}
+            if (event == Lifecycle.Event.ON_PAUSE && !blockExit) {
+                Log.d("Compose", "ON_PAUSE")
+                showCancelDialog = true
+                blockExit = true // Bloquea futuras salidas hasta que usuario confirme
             }
         }
-
         lifecycleOwner.lifecycle.addObserver(observer)
-
         onDispose {
             lifecycleOwner.lifecycle.removeObserver(observer)
         }
+    }
+
+    BackHandler(enabled = !blockExit) {
+        showCancelDialog = true
     }
 
     Scaffold(
@@ -298,12 +292,11 @@ fun EvaluationScreen(
             CancelEvaluation(
                 onConfirmCancel = {
                     showCancelDialog = false
-                    onAction(
-                        EvaluationScreenAction.Back,
-                    )
+                    onAction(EvaluationScreenAction.Back)
                 },
                 onDismiss = {
                     showCancelDialog = false
+                    blockExit = false
                 }
             )
         }
@@ -342,7 +335,6 @@ fun QuestionCard(question: Question, modifier: Modifier) {
         }
     }
 }
-
 
 @Composable
 fun AnswerCard(
@@ -432,7 +424,7 @@ fun ExamEndDialog(onDismiss: () -> Unit) {
     AlertDialog(
         onDismissRequest = {},
         title = { Text("Tiempo Finalizado") },
-        text = { Text("Tu tiempo ha terminado. El examen se ha finalizado.") },
+        text = { Text("Tu tiempo ha terminado. El evaluación se ha finalizado.") },
         confirmButton = {
             Button(onClick = onDismiss, modifier = Modifier.fillMaxWidth()) {
                 Text(stringResource(R.string.finish_evaluation))
