@@ -33,6 +33,9 @@ object PdfScreenRoute
 object TermScreenRoute
 
 @Serializable
+object CustomizeScreenRoute
+
+@Serializable
 data class SummaryScreenRoute(
     val categoryId: String,
     val evaluationId: String

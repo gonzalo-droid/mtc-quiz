@@ -1,5 +1,9 @@
 package com.gondroid.mtcquiz.presentation.screens.configuration
 
+import android.content.ActivityNotFoundException
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,7 +18,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.AccountBalance
+import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -29,10 +34,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.gondroid.mtcquiz.presentation.screens.configuration.ConfigurationScreenAction
+import com.gondroid.mtcquiz.R
+import com.gondroid.mtcquiz.ui.theme.MTCQuizTheme
 
 
 @Composable
@@ -40,21 +48,26 @@ fun ConfigurationScreenRoot(
     viewModel: ConfigurationScreenViewModel,
     navigateBack: () -> Unit,
     navigateToTerm: () -> Unit,
-    navigateToSetting: () -> Unit,
+    navigateToCustomize: () -> Unit,
     navigateToAbout: () -> Unit,
-    navigateToRating: () -> Unit,
-    navigateToLogout: () -> Unit,
 ) {
+
+    val content = LocalContext.current
 
     ConfigurationScreen(
         onNavigateUp = navigateBack,
         onAction = { action ->
             when (action) {
                 ConfigurationScreenAction.GoToAbout -> navigateToAbout()
-                ConfigurationScreenAction.GoToRating -> navigateToRating()
-                ConfigurationScreenAction.GoToSetting -> navigateToSetting()
+                ConfigurationScreenAction.GoToRating -> {
+                    openAppInPlayStore(content)
+                }
+
+                ConfigurationScreenAction.GoToSCustomize -> navigateToCustomize()
                 ConfigurationScreenAction.GoToTerm -> navigateToTerm()
-                ConfigurationScreenAction.Logout -> navigateToLogout()
+                ConfigurationScreenAction.Logout -> {
+
+                }
             }
 
         }
@@ -146,17 +159,21 @@ fun ConfigurationScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp),
-                icon = Icons.Default.Star,
-                title = "Personalización",
-                onItemClick = { }
+                icon = Icons.Default.Category,
+                title = stringResource(R.string.custom_values),
+                onItemClick = {
+                    onAction(
+                        ConfigurationScreenAction.GoToSCustomize
+                    )
+                }
             )
 
             ItemList(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp),
-                icon = Icons.Default.Favorite,
-                title = "Términos & Condiciones",
+                icon = Icons.Default.AccountBalance,
+                title = stringResource(R.string.term_and_conditions),
                 onItemClick = {
                     onAction(
                         ConfigurationScreenAction.GoToTerm
@@ -169,8 +186,12 @@ fun ConfigurationScreen(
                     .fillMaxWidth()
                     .padding(vertical = 8.dp),
                 icon = Icons.Default.Star,
-                title = "Califica la aplicación",
-                onItemClick = { }
+                title = stringResource(R.string.ranting_app),
+                onItemClick = {
+                    onAction(
+                        ConfigurationScreenAction.GoToRating
+                    )
+                }
             )
 
             Spacer(modifier = Modifier.weight(1f))
@@ -210,11 +231,34 @@ fun ConfigurationScreen(
 }
 
 
+fun openAppInPlayStore(context: Context) {
+    val packageName: String = context.packageName
+    val uri = Uri.parse("market://details?id=$packageName")
+    val goToMarketIntent = Intent(Intent.ACTION_VIEW, uri).apply {
+        addFlags(
+            Intent.FLAG_ACTIVITY_NO_HISTORY or
+                    Intent.FLAG_ACTIVITY_NEW_DOCUMENT or
+                    Intent.FLAG_ACTIVITY_MULTIPLE_TASK
+        )
+    }
+
+    try {
+        context.startActivity(goToMarketIntent)
+    } catch (e: ActivityNotFoundException) {
+        // Si no tiene Play Store, abrir en el navegador
+        val webUri = Uri.parse("https://play.google.com/store/apps/details?id=$packageName")
+        context.startActivity(Intent(Intent.ACTION_VIEW, webUri))
+    }
+}
+
+
 @Preview(showBackground = true)
 @Composable
 fun ConfigurationScreenRootPreview() {
-    ConfigurationScreen(
-        onNavigateUp = {},
-        onAction = {}
-    )
+    MTCQuizTheme {
+        ConfigurationScreen(
+            onNavigateUp = {},
+            onAction = {}
+        )
+    }
 }

@@ -8,8 +8,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.gondroid.mtcquiz.presentation.screens.Customize.customize.CustomizeScreenRoot
 import com.gondroid.mtcquiz.presentation.screens.configuration.ConfigurationScreenRoot
 import com.gondroid.mtcquiz.presentation.screens.configuration.ConfigurationScreenViewModel
+import com.gondroid.mtcquiz.presentation.screens.configuration.customize.CustomizeScreenViewModel
 import com.gondroid.mtcquiz.presentation.screens.configuration.term.TermScreenRoot
 import com.gondroid.mtcquiz.presentation.screens.detail.DetailScreenRoot
 import com.gondroid.mtcquiz.presentation.screens.detail.DetailScreenViewModel
@@ -118,16 +120,12 @@ fun NavigationRoot(navController: NavHostController) {
                             TermScreenRoute
                         )
                     },
-                    navigateToSetting = {
-
+                    navigateToCustomize = {
+                        navController.navigate(
+                            CustomizeScreenRoute
+                        )
                     },
                     navigateToAbout = {
-
-                    },
-                    navigateToRating = {
-
-                    },
-                    navigateToLogout = {
 
                     }
                 )
@@ -135,6 +133,16 @@ fun NavigationRoot(navController: NavHostController) {
 
             composable<TermScreenRoute> {
                 TermScreenRoot(
+                    navigateBack = {
+                        navController.navigateUp()
+                    }
+                )
+            }
+
+            composable<CustomizeScreenRoute> {
+                val viewmodel = hiltViewModel<CustomizeScreenViewModel>()
+                CustomizeScreenRoot(
+                    viewModel = viewmodel,
                     navigateBack = {
                         navController.navigateUp()
                     }

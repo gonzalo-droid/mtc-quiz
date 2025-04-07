@@ -16,4 +16,7 @@
     <string name="no">No</string>
     <string name="yes_cancel">Sí, cancelar</string>
     <string name="cancel_evaluation">¿Cancelar evaluación?</string>
+    <string name="term_and_conditions"><![CDATA[Términos & Condiciones]]></string>
+    <string name="ranting_app">Califica la aplicación</string>
+    <string name="custom_values">Personalización</string>
 </resources>
