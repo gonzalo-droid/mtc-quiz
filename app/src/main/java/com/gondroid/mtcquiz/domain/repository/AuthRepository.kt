@@ -1,5 +1,6 @@
 package com.gondroid.mtcquiz.domain.repository
 
+import android.app.Activity
 import androidx.credentials.GetCredentialResponse
 
 interface AuthRepository {
@@ -10,6 +11,6 @@ interface AuthRepository {
 
     fun isUserLoggedIn(): Boolean
 
-    suspend fun getGoogleClient(): GetCredentialResponse
+    suspend fun getGoogleClient(activity : Activity?): GetCredentialResponse
 
 }

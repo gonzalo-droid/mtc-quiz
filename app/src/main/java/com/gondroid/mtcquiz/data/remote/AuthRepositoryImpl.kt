@@ -1,5 +1,6 @@
 package com.gondroid.mtcquiz.data.remote
 
+import android.app.Activity
 import android.content.Context
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
@@ -20,7 +21,7 @@ class AuthRepositoryImpl @Inject constructor(
     override fun isUserLoggedIn(): Boolean = firebaseAuth.currentUser != null
     override fun logout(): Unit = firebaseAuth.signOut()
 
-    override suspend fun getGoogleClient(): GetCredentialResponse {
+    override suspend fun getGoogleClient(activity : Activity?): GetCredentialResponse {
         val googleIdOption = GetGoogleIdOption.Builder()
             .setServerClientId(context.getString(R.string.default_web_client_id))
             .setFilterByAuthorizedAccounts(true)
@@ -30,7 +31,7 @@ class AuthRepositoryImpl @Inject constructor(
             .addCredentialOption(googleIdOption)
             .build()
 
-        return credentialManager.getCredential(context, request)
+        return credentialManager.getCredential(activity!!, request)
     }
 
     override fun signInWithGoogle(idToken: String, onResult: (Boolean, String?) -> Unit) {

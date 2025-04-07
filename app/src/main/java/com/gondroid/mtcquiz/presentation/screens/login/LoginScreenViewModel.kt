@@ -1,11 +1,9 @@
 package com.gondroid.mtcquiz.presentation.screens.login
 
 
+import android.app.Activity
 import android.content.Context
-import android.credentials.GetCredentialException
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -47,10 +45,10 @@ class LoginScreenViewModel @Inject constructor(
         }
     }
 
-    fun launchGoogleSignIn() {
+    fun launchGoogleSignIn(activity: Activity?) {
         viewModelScope.launch {
             try {
-                val result = authRepository.getGoogleClient()
+                val result = authRepository.getGoogleClient(activity)
                 val credential = result.credential
 
                 if (credential is CustomCredential && credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
