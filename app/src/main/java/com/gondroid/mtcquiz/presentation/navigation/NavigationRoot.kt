@@ -21,6 +21,8 @@ import com.gondroid.mtcquiz.presentation.screens.evaluation.summary.SummaryScree
 import com.gondroid.mtcquiz.presentation.screens.evaluation.summary.SummaryScreenViewModel
 import com.gondroid.mtcquiz.presentation.screens.home.HomeScreenRoot
 import com.gondroid.mtcquiz.presentation.screens.home.HomeScreenViewModel
+import com.gondroid.mtcquiz.presentation.screens.login.LoginScreenRoot
+import com.gondroid.mtcquiz.presentation.screens.login.LoginScreenViewModel
 import com.gondroid.mtcquiz.presentation.screens.pdf.PdfScreenRoot
 import com.gondroid.mtcquiz.presentation.screens.pdf.PdfScreenViewModel
 import com.gondroid.mtcquiz.presentation.screens.questions.QuestionsScreenRoot
@@ -33,7 +35,7 @@ fun NavigationRoot(navController: NavHostController) {
     ) {
         NavHost(
             navController = navController,
-            startDestination = HomeScreenRoute,
+            startDestination = if (true) LoginScreenRoute else HomeScreenRoute,
         ) {
 
             composable<HomeScreenRoute> {
@@ -175,6 +177,15 @@ fun NavigationRoot(navController: NavHostController) {
                     viewModel = viewModel,
                     navigateToDetail = { categoryId ->
                         navController.navigateUp()
+                    }
+                )
+            }
+
+            composable<LoginScreenRoute> {
+                val viewModel = hiltViewModel<LoginScreenViewModel>()
+                LoginScreenRoot(
+                    viewModel = viewModel,
+                    navigateToDetail = {
                     }
                 )
             }

@@ -4,6 +4,8 @@ import androidx.navigation.NavBackStackEntry
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
+@Serializable
+object LoginScreenRoute
 
 @Serializable
 object HomeScreenRoute

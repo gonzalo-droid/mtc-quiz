@@ -39,14 +39,8 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private lateinit var firebaseInstance: FirebaseInstance
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        //firebaseInstance = FirebaseInstance(this)
-        // val viewModel = MainViewModel(firebaseInstance)
-
         enableEdgeToEdge()
         setContent {
             MTCQuizTheme {
