@@ -2,6 +2,9 @@ package com.gondroid.mtcquiz.data.remote
 
 import android.app.Activity
 import android.content.Context
+import android.util.Log
+import androidx.credentials.ClearCredentialStateRequest
+import androidx.credentials.ClearCredentialStateRequest.Companion.TYPE_CLEAR_RESTORE_CREDENTIAL
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.GetCredentialResponse
@@ -20,19 +23,14 @@ class AuthRepositoryImpl @Inject constructor(
 ) : AuthRepository {
 
     override fun isUserLoggedIn(): Boolean = firebaseAuth.currentUser != null
-    override fun logout(): Unit = firebaseAuth.signOut()
+    override suspend fun logout() {
+        firebaseAuth.signOut()
 
-    override suspend fun getGoogleClient(activity: Activity?): GetCredentialResponse {
-        val googleIdOption = GetGoogleIdOption.Builder()
-            .setServerClientId(context.getString(R.string.default_web_client_id))
-            .setFilterByAuthorizedAccounts(true)
-            .build()
+        // Create a ClearCredentialStateRequest object
+        val clearRequest = ClearCredentialStateRequest(TYPE_CLEAR_RESTORE_CREDENTIAL)
 
-        val request = GetCredentialRequest.Builder()
-            .addCredentialOption(googleIdOption)
-            .build()
-
-        return credentialManager.getCredential(activity!!, request)
+        // On user log-out, clear the restore key
+        credentialManager.clearCredentialState(clearRequest)
     }
 
     override fun signInWithGoogle(idToken: String, onResult: (Boolean, String?) -> Unit) {
@@ -40,6 +38,10 @@ class AuthRepositoryImpl @Inject constructor(
         firebaseAuth.signInWithCredential(credential)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
+                    Log.d("LoginVM", task.result?.user?.email.toString())
+                    Log.d("LoginVM", task.result?.user?.displayName.toString())
+                    Log.d("LoginVM", task.result?.user?.photoUrl.toString())
+                    Log.d("LoginVM", task.result?.user.toString())
                     onResult(true, null)
                 } else {
                     onResult(false, task.exception?.message)
@@ -47,13 +49,11 @@ class AuthRepositoryImpl @Inject constructor(
             }
     }
 
-    override suspend fun signWithGoogle(context: Context): GetCredentialResponse {
+    override suspend fun getGoogleClient(context: Context): GetCredentialResponse {
         val signInWithGoogleOption: GetSignInWithGoogleOption =
             GetSignInWithGoogleOption.Builder(
-                context.getString(R.string.default_web_client_id)
-            )
-                .setNonce("nonce")
-                .build()
+                "949408476336-mk6sb9oqvrpd2fq7fvd2vnu7k70dcadj.apps.googleusercontent.com"
+            ).build()
 
         val request = GetCredentialRequest.Builder()
             .addCredentialOption(signInWithGoogleOption)

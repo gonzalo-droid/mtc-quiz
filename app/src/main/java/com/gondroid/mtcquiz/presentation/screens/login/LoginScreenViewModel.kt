@@ -7,11 +7,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.credentials.CustomCredential
+import androidx.credentials.GetCredentialResponse
+import androidx.credentials.exceptions.GetCredentialException
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gondroid.mtcquiz.domain.repository.AuthRepository
 import com.gondroid.mtcquiz.presentation.screens.configuration.ConfigurationDataState
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
+import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
@@ -47,23 +50,44 @@ class LoginScreenViewModel @Inject constructor(
     fun launchGoogleSignIn(context: Context) {
         viewModelScope.launch {
             try {
-                val result = authRepository.signWithGoogle(context)
-                val credential = result.credential
-
-                if (credential is CustomCredential && credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
-                    val googleIdTokenCredential =
-                        GoogleIdTokenCredential.createFrom(credential.data)
-
-                    signInWithGoogle(googleIdTokenCredential.idToken)
-                }
-            } catch (e: Exception) {
+                handleSignIn(authRepository.getGoogleClient(context))
+            } catch (e: GetCredentialException) {
                 Log.e("LoginVM", "Error: ${e.localizedMessage} ${e.message}")
             }
         }
     }
 
+    fun handleSignIn(result: GetCredentialResponse) {
+        val credential = result.credential
+
+        when (credential) {
+            is CustomCredential -> {
+                if (credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
+                    try {
+                        val googleIdTokenCredential = GoogleIdTokenCredential
+                            .createFrom(credential.data)
+
+                        signInWithGoogle(googleIdTokenCredential.idToken)
+
+
+                    } catch (e: GoogleIdTokenParsingException) {
+                        Log.e("LoginVM", "Received an invalid google id token response", e)
+                    }
+                } else {
+                    Log.e("LoginVM", "Unexpected type of credential")
+                }
+            }
+
+            else -> {
+                Log.e("LoginVM", "Unexpected type of credential")
+            }
+        }
+    }
+
     fun logout() {
-        authRepository.logout()
-        isLoggedIn = false
+        viewModelScope.launch {
+            authRepository.logout()
+            isLoggedIn = false
+        }
     }
 }

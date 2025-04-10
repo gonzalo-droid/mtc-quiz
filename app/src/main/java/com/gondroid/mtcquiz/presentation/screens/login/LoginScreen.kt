@@ -47,6 +47,8 @@ fun LoginScreenRoot(
                 LoginScreenAction.GoogleSignOn -> {
                     viewModel.launchGoogleSignIn(context)
                 }
+
+                LoginScreenAction.Logout -> viewModel.logout()
             }
         }
     )
@@ -123,7 +125,11 @@ fun LoginScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
-                onClick = { },
+                onClick = {
+                    onAction(
+                        LoginScreenAction.Logout
+                    )
+                },
             ) {
                 Text("Más tarde")
             }
