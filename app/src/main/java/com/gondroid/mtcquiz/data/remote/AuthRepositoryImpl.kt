@@ -8,6 +8,7 @@ import androidx.credentials.GetCredentialResponse
 import com.gondroid.mtcquiz.R
 import com.gondroid.mtcquiz.domain.repository.AuthRepository
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
+import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import javax.inject.Inject
@@ -21,7 +22,7 @@ class AuthRepositoryImpl @Inject constructor(
     override fun isUserLoggedIn(): Boolean = firebaseAuth.currentUser != null
     override fun logout(): Unit = firebaseAuth.signOut()
 
-    override suspend fun getGoogleClient(activity : Activity?): GetCredentialResponse {
+    override suspend fun getGoogleClient(activity: Activity?): GetCredentialResponse {
         val googleIdOption = GetGoogleIdOption.Builder()
             .setServerClientId(context.getString(R.string.default_web_client_id))
             .setFilterByAuthorizedAccounts(true)
@@ -44,6 +45,21 @@ class AuthRepositoryImpl @Inject constructor(
                     onResult(false, task.exception?.message)
                 }
             }
+    }
+
+    override suspend fun signWithGoogle(context: Context): GetCredentialResponse {
+        val signInWithGoogleOption: GetSignInWithGoogleOption =
+            GetSignInWithGoogleOption.Builder(
+                context.getString(R.string.default_web_client_id)
+            )
+                .setNonce("nonce")
+                .build()
+
+        val request = GetCredentialRequest.Builder()
+            .addCredentialOption(signInWithGoogleOption)
+            .build()
+
+        return credentialManager.getCredential(context, request)
     }
 
 }

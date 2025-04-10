@@ -44,7 +44,9 @@ fun LoginScreenRoot(
         navigateToDetail = {},
         onAction = { action ->
             when (action) {
-                LoginScreenAction.GoogleSignOn -> viewModel.launchGoogleSignIn(activity)
+                LoginScreenAction.GoogleSignOn -> {
+                    viewModel.launchGoogleSignIn(context)
+                }
             }
         }
     )
