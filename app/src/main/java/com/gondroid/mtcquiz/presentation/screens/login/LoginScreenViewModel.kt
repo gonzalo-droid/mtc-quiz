@@ -8,10 +8,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.credentials.CustomCredential
+import androidx.credentials.GetCredentialRequest
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gondroid.mtcquiz.R
 import com.gondroid.mtcquiz.domain.repository.AuthRepository
 import com.gondroid.mtcquiz.presentation.screens.configuration.ConfigurationDataState
+import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -58,7 +61,7 @@ class LoginScreenViewModel @Inject constructor(
                     signInWithGoogle(googleIdTokenCredential.idToken)
                 }
             } catch (e: Exception) {
-                Log.e("LoginVM", "Error: ${e.localizedMessage}")
+                Log.e("LoginVM", "Error: ${e.localizedMessage} ${e.message}")
             }
         }
     }
