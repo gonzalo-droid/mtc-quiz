@@ -23,6 +23,7 @@ class AuthRepositoryImpl @Inject constructor(
 ) : AuthRepository {
 
     override fun isUserLoggedIn(): Boolean = firebaseAuth.currentUser != null
+
     override suspend fun logout() {
         firebaseAuth.signOut()
 

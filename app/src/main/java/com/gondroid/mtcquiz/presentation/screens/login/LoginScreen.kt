@@ -4,29 +4,32 @@ import android.app.Activity
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.gondroid.mtcquiz.R
 import com.gondroid.mtcquiz.ui.theme.MTCQuizTheme
 
@@ -62,76 +65,73 @@ fun LoginScreen(
     onAction: (LoginScreenAction) -> Unit
 ) {
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = "",
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        fontWeight = FontWeight.Bold,
-                    )
-                },
-                navigationIcon = { },
-                actions = { },
-            )
-        },
+        containerColor = MaterialTheme.colorScheme.primary
     ) { paddingValues ->
-        Column(
+        Box(
             modifier =
                 Modifier
+                    .fillMaxSize()
                     .padding(paddingValues)
-                    .padding(16.dp),
         ) {
-            Text(
-                modifier = Modifier.padding(horizontal = 16.dp),
-                text = stringResource(R.string.practice_to_exam),
-                lineHeight = 30.sp,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                fontWeight = FontWeight.Bold,
-                fontSize = MaterialTheme.typography.headlineLarge.fontSize
-            )
 
-            Text(
-                modifier = Modifier.padding(horizontal = 16.dp),
-                text = "Inicia sesión para continuar",
-                fontSize = MaterialTheme.typography.bodyLarge.fontSize
-            )
-
-
-            Spacer(modifier = Modifier.weight(1f))
-
-            Button(
-                onClick = {
-                    onAction(
-                        LoginScreenAction.GoogleSignOn
-                    )
-                },
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
+                    .align(Alignment.BottomCenter)
+                    .clip(RoundedCornerShape(topEnd = 16.dp, topStart = 16.dp))
+                    .background(MaterialTheme.colorScheme.surfaceContainer)
+                    .padding(horizontal = 16.dp, vertical = 32.dp)
+
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.google),
-                    contentDescription = "Google Logo",
-                    modifier = Modifier.size(24.dp)
+
+                Text(
+                    modifier = Modifier,
+                    text = "Es hora de cambiar de asiento",
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
-                Spacer(modifier = Modifier.width(8.dp))
 
-                Text("Iniciar sesión con Google")
-            }
+                Text(
+                    modifier = Modifier,
+                    text = "Prepárate y toma el volante",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.displayMedium,
+                    fontWeight = FontWeight.Bold,
+                )
 
-            TextButton(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                onClick = {
-                    onAction(
-                        LoginScreenAction.Logout
+                Spacer(modifier = Modifier.height(200.dp))
+
+                Button(
+                    onClick = {
+                        onAction(
+                            LoginScreenAction.GoogleSignOn
+                        )
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.google),
+                        contentDescription = "Google Logo",
+                        modifier = Modifier.size(24.dp)
                     )
-                },
-            ) {
-                Text("Más tarde")
+                    Spacer(modifier = Modifier.width(8.dp))
+
+                    Text("Iniciar sesión con Google")
+                }
+
+                TextButton(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    onClick = {
+                        onAction(
+                            LoginScreenAction.Logout
+                        )
+                    },
+                ) {
+                    Text("Más tarde")
+                }
             }
         }
     }
