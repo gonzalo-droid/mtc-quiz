@@ -1,6 +1,7 @@
 [versions]
 agp = "8.9.0"
 credentialsPlayServicesAuth = "1.5.0"
+datastorePreferences = "1.1.4"
 googleid = "1.1.1"
 kotlin = "2.0.0"
 coreKtx = "1.13.1"
@@ -32,13 +33,15 @@ androidx-credentials-play-services-auth = { module = "androidx.credentials:crede
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 
+#DataStore
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
+
 #Firebase
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics"}
 firebase-database = { module = "com.google.firebase:firebase-database" }
 firebase-auth = { module = "com.google.firebase:firebase-auth"}
-
 
 #Compose
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }

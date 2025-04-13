@@ -1,4 +1,4 @@
-package com.gondroid.mtcquiz.di
+package com.gondroid.mtcquiz.data.di
 
 import android.content.Context
 import androidx.credentials.CredentialManager
@@ -21,5 +21,5 @@ class FirebaseModule {
     @Provides
     @Singleton
     fun provideCredentialManager(@ApplicationContext context: Context): CredentialManager =
-        CredentialManager.create(context)
+        CredentialManager.Companion.create(context)
 }

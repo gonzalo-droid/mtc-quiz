@@ -46,6 +46,7 @@ android {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
+            isDebuggable = false
             signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -53,6 +54,7 @@ android {
             )
         }
         debug {
+            isDebuggable = true
             versionNameSuffix = ".debug"
         }
     }
@@ -81,6 +83,7 @@ android {
         buildConfig = true
         compose = true
     }
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -145,6 +148,8 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.firebase.crashlytics)
 
+    // DataStore
+    implementation(libs.androidx.datastore.preferences)
 
     // Also add the dependencies for the Credential Manager libraries and specify their versions
     implementation(libs.androidx.credentials)

@@ -1,6 +1,5 @@
 package com.gondroid.mtcquiz.data.remote
 
-import android.app.Activity
 import android.content.Context
 import android.util.Log
 import androidx.credentials.ClearCredentialStateRequest
@@ -8,9 +7,7 @@ import androidx.credentials.ClearCredentialStateRequest.Companion.TYPE_CLEAR_RES
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.GetCredentialResponse
-import com.gondroid.mtcquiz.R
 import com.gondroid.mtcquiz.domain.repository.AuthRepository
-import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
