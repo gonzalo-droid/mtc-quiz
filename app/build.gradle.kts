@@ -106,7 +106,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.timber)
-
+    implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.navigation.compose)
 
     // https://material-foundation.github.io/material-theme-builder/

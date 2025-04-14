@@ -1,8 +1,6 @@
 package com.gondroid.mtcquiz.presentation.screens.login
 
-import android.os.Build
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -34,13 +32,11 @@ import androidx.compose.ui.unit.dp
 import com.gondroid.mtcquiz.R
 import com.gondroid.mtcquiz.ui.theme.MTCQuizTheme
 
-@RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
 @Composable
 fun LoginScreenRoot(
     viewModel: LoginScreenViewModel,
-    navigateToDetail: () -> Unit
+    navigateToHome: () -> Unit
 ) {
-
     val context = LocalContext.current
     val event = viewModel.event
 
@@ -53,6 +49,7 @@ fun LoginScreenRoot(
 
                 LoginEvent.Success -> {
                     Toast.makeText(context, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show()
+                    navigateToHome()
                 }
             }
         }
@@ -63,7 +60,7 @@ fun LoginScreenRoot(
         onAction = { action ->
             when (action) {
                 LoginScreenAction.GoogleSignOn -> {
-                    throw RuntimeException("Test Crash")  // viewModel.launchGoogleSignIn(context)
+                    viewModel.launchGoogleSignIn(context)
                 }
 
                 LoginScreenAction.Logout -> viewModel.logout()

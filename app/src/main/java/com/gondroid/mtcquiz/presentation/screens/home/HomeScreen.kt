@@ -88,7 +88,7 @@ fun HomeScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Simulacro de examen",
+                        text = stringResource(R.string.test_evaluation),
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontWeight = FontWeight.Bold,
                         fontSize = MaterialTheme.typography.titleMedium.fontSize
@@ -122,17 +122,24 @@ fun HomeScreen(
         ) {
             Text(
                 modifier = Modifier.padding(horizontal = 16.dp),
-                text = stringResource(R.string.practice_to_exam),
-                lineHeight = 30.sp,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                fontWeight = FontWeight.Bold,
-                fontSize = MaterialTheme.typography.headlineLarge.fontSize
+                text = stringResource(R.string.hi_name, state.userName),
+                style =  MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Bold
             )
+            Spacer(modifier = Modifier.height(8.dp))
 
             Text(
                 modifier = Modifier.padding(horizontal = 16.dp),
-                text = "Examen de conocimientos para postulantes a licencias de conducir. \nPerú \uD83C\uDDF5\uD83C\uDDEA",
-                fontSize = MaterialTheme.typography.bodyLarge.fontSize
+                text = stringResource(R.string.practice_to_evaluation),
+                lineHeight = 30.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.headlineLarge
+            )
+            Text(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                text = stringResource(R.string.subtitle_message_home),
+                style = MaterialTheme.typography.bodyLarge
             )
 
             Spacer(modifier = Modifier.height(30.dp))
@@ -140,7 +147,7 @@ fun HomeScreen(
             Text(
                 modifier = Modifier
                     .padding(16.dp),
-                text = "Selecciona tu categoría",
+                text = stringResource(R.string.selected_category),
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.Bold

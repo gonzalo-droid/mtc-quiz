@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">MTCQuiz</string>
-    <string name="practice_to_exam">Preparate para tu examen</string>
+    <string name="practice_to_evaluation">Preparate para tu evaluación</string>
     <string name="next">Siguiente</string>
-    <string name="finish">Terminar examen</string>
+    <string name="finish">Terminar evaluación</string>
     <string name="verify">Verificar</string>
     <string name="searching">Buscar...</string>
     <string name="close_searching">Cerrar búsqueda</string>
@@ -21,4 +21,8 @@
     <string name="custom_values">Personalización</string>
     <string name="custimize_setting">Personaliza tu configuración y sigue estudiando</string>
     <string name="default_web_client_id">949408476336-mk6sb9oqvrpd2fq7fvd2vnu7k70dcadj.apps.googleusercontent.com</string>
+    <string name="subtitle_message_home">Evaluación de conocimientos para postulantes a licencias de conducir.</string>
+    <string name="selected_category">Selecciona tu categoría</string>
+    <string name="hi_name">👋 Hola, %s</string>
+    <string name="test_evaluation">Simulacro de evaluación - Perú 🇵🇪</string>
 </resources>

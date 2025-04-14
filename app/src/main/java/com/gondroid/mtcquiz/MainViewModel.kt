@@ -1,76 +1,40 @@
 package com.gondroid.mtcquiz
 
-import android.util.Log
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
+import com.gondroid.mtcquiz.domain.repository.PreferenceRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import javax.inject.Inject
 
-class MainViewModel(firebaseInstance: FirebaseInstance) : ViewModel() {
 
-    private val db = firebaseInstance
+@HiltViewModel
+class MainViewModel
+@Inject
+constructor(
+    private val preferenceRepository: PreferenceRepository
+) : ViewModel() {
 
-    private val _data = MutableStateFlow<String?>(null)
-
-    val data: StateFlow<String?> = _data
-
-    private val _list = MutableStateFlow<List<Pair<String, Todo>>?>(null)
-
-    val list: StateFlow<List<Pair<String, Todo>>?> = _list
+    private val _state = MutableStateFlow(AuthState())
+    val state: StateFlow<AuthState> = _state
 
     init {
-        getRealTimeDatabase()
-    }
-
-    private fun getRealTimeDatabase() {
-        viewModelScope.launch {
-            collectDatabaseReference().collect {
-                val data = getCleanSnapshot(it)
-                _list.value = data
+        preferenceRepository.isLoggedInFlow
+            .onEach { isLoggedIn ->
+                _state.value = AuthState(
+                    isLoggedIn = isLoggedIn,
+                    isLoading = false
+                )
             }
-        }
-    }
-
-    private fun getCleanSnapshot(snapshot: DataSnapshot): List<Pair<String, Todo>> {
-        val list = snapshot.children.map { item ->
-            Pair(item.key.toString(), item.getValue(Todo::class.java)!!)
-        }
-        return list
-    }
-
-    fun writeOnFirebase(value: String) {
-        db.writeOnFirebase(value)
-    }
-
-    private fun collectDatabaseReference(): Flow<DataSnapshot> = callbackFlow {
-        val listener = object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                Log.i("SuccessDB", "onDataChange")
-                trySend(snapshot).isSuccess
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                Log.e("Error", "onCancelled ${error.details}")
-                close(error.toException())
-            }
-        }
-        db.addEventListener(listener)
-        awaitClose { db.removeEventListener(listener) }
-    }
-
-    fun removedItem(value: String) {
-        db.removedItem(value)
-    }
-
-    fun updateItem(value: String) {
-        db.updateItem(value)
-
+            .launchIn(viewModelScope)
     }
 }
+
+data class AuthState(
+    val isLoggedIn: Boolean = false,
+    val isLoading: Boolean = true
+)

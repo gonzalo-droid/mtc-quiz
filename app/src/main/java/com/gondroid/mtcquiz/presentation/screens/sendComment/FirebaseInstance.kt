@@ -1,4 +1,4 @@
-package com.gondroid.mtcquiz
+package com.gondroid.mtcquiz.presentation.screens.sendComment
 
 import android.content.Context
 import com.google.firebase.Firebase

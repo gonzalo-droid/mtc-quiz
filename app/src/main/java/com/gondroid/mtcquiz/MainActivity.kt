@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,21 +32,41 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
 import com.gondroid.mtcquiz.presentation.navigation.NavigationRoot
+import com.gondroid.mtcquiz.presentation.screens.sendComment.SendCommentViewModel
+import com.gondroid.mtcquiz.presentation.screens.sendComment.Todo
 import com.gondroid.mtcquiz.ui.theme.MTCQuizTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+    private val viewModel: MainViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        val splashScreen = installSplashScreen()
+        var keepSplashScreen = true
+
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        splashScreen.setKeepOnScreenCondition{keepSplashScreen}
+
         setContent {
+            val authState by viewModel.state.collectAsState()
             MTCQuizTheme {
                 val navController = rememberNavController()
-                NavigationRoot(navController)
+                when {
+                    authState.isLoading -> {
+                        keepSplashScreen = false
+                    }
+
+                    authState.isLoggedIn -> {
+                        NavigationRoot(navController, authState.isLoggedIn)
+
+                    }
+                }
             }
         }
     }
@@ -54,7 +75,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Greeting(
     modifier: Modifier = Modifier,
-    viewModel: MainViewModel,
+    viewModel: SendCommentViewModel,
 ) {
     val list by viewModel.list.collectAsState()
 
@@ -179,7 +200,7 @@ fun TodoItem(
 }
 
 
-fun writeOnFirebase(viewModel: MainViewModel) {
+fun writeOnFirebase(viewModel: SendCommentViewModel) {
     val time = System.currentTimeMillis()
     viewModel.writeOnFirebase(time.toString())
 }

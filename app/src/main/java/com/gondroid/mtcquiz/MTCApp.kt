@@ -16,7 +16,7 @@ class MTCApp : Application() {
     }
 
     private class CrashReportingTree : Timber.Tree() {
-        protected override fun log(
+        override fun log(
             priority: Int,
             tag: String?,
             message: String,

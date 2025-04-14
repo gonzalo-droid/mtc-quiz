@@ -29,13 +29,13 @@ import com.gondroid.mtcquiz.presentation.screens.questions.QuestionsScreenRoot
 import com.gondroid.mtcquiz.presentation.screens.questions.QuestionsScreenViewModel
 
 @Composable
-fun NavigationRoot(navController: NavHostController) {
+fun NavigationRoot(navController: NavHostController, isLoggedIn: Boolean) {
     Box(
         modifier = Modifier.fillMaxSize(),
     ) {
         NavHost(
             navController = navController,
-            startDestination = if (true) LoginScreenRoute else HomeScreenRoute,
+            startDestination = if (!isLoggedIn) LoginScreenRoute else HomeScreenRoute,
         ) {
 
             composable<HomeScreenRoute> {
@@ -185,7 +185,12 @@ fun NavigationRoot(navController: NavHostController) {
                 val viewModel = hiltViewModel<LoginScreenViewModel>()
                 LoginScreenRoot(
                     viewModel = viewModel,
-                    navigateToDetail = {
+                    navigateToHome = {
+                        navController.navigate(HomeScreenRoute) {
+                            popUpTo(LoginScreenRoute) {
+                                inclusive = true
+                            }
+                        }
                     }
                 )
             }
