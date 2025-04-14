@@ -5,7 +5,7 @@ import androidx.credentials.GetCredentialResponse
 
 interface AuthRepository {
 
-    fun signInWithGoogle(idToken: String, onResult: (Boolean, String?) -> Unit)
+    suspend fun signInWithGoogle(idToken: String): Boolean
 
     suspend fun logout()
 

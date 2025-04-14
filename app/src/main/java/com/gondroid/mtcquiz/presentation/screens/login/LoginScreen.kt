@@ -1,7 +1,7 @@
 package com.gondroid.mtcquiz.presentation.screens.login
 
-import android.app.Activity
 import android.os.Build
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -22,6 +22,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,14 +42,28 @@ fun LoginScreenRoot(
 ) {
 
     val context = LocalContext.current
-    val activity = context as? Activity
+    val event = viewModel.event
+
+    LaunchedEffect(true) {
+        event.collect { event ->
+            when (event) {
+                LoginEvent.Fail -> {
+                    Toast.makeText(context, "Error al iniciar sesión", Toast.LENGTH_SHORT).show()
+                }
+
+                LoginEvent.Success -> {
+                    Toast.makeText(context, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
 
     LoginScreen(
         navigateToDetail = {},
         onAction = { action ->
             when (action) {
                 LoginScreenAction.GoogleSignOn -> {
-                    viewModel.launchGoogleSignIn(context)
+                    throw RuntimeException("Test Crash")  // viewModel.launchGoogleSignIn(context)
                 }
 
                 LoginScreenAction.Logout -> viewModel.logout()

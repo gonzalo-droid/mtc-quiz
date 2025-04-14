@@ -15,6 +15,7 @@ import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
@@ -23,7 +24,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-class RepositoryModule {
+object RepositoryModule {
 
     @Provides
     @Singleton
@@ -44,12 +45,11 @@ class RepositoryModule {
     fun provideAuthRepository(
         firebaseAuth: FirebaseAuth,
         credentialManager: CredentialManager,
-        @ApplicationContext
-        context: Context,
+        preferenceRepository: PreferenceRepository
     ): AuthRepository = AuthRepositoryImpl(
         firebaseAuth = firebaseAuth,
         credentialManager = credentialManager,
-        context = context
+        preferenceRepository = preferenceRepository
     )
 
     @Provides
@@ -59,5 +59,4 @@ class RepositoryModule {
     ): PreferenceRepository = PreferenceRepositoryImpl(
         dataStore = dataStore
     )
-
 }

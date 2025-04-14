@@ -7,50 +7,57 @@ import androidx.credentials.ClearCredentialStateRequest.Companion.TYPE_CLEAR_RES
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.GetCredentialResponse
+import com.gondroid.mtcquiz.R
 import com.gondroid.mtcquiz.domain.repository.AuthRepository
+import com.gondroid.mtcquiz.domain.repository.PreferenceRepository
 import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
     private val credentialManager: CredentialManager,
-    private val context: Context
+    private val preferenceRepository: PreferenceRepository,
 ) : AuthRepository {
 
     override fun isUserLoggedIn(): Boolean = firebaseAuth.currentUser != null
 
     override suspend fun logout() {
         firebaseAuth.signOut()
-
         // Create a ClearCredentialStateRequest object
         val clearRequest = ClearCredentialStateRequest(TYPE_CLEAR_RESTORE_CREDENTIAL)
-
         // On user log-out, clear the restore key
         credentialManager.clearCredentialState(clearRequest)
     }
 
-    override fun signInWithGoogle(idToken: String, onResult: (Boolean, String?) -> Unit) {
-        val credential = GoogleAuthProvider.getCredential(idToken, null)
-        firebaseAuth.signInWithCredential(credential)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Log.d("LoginVM", task.result?.user?.email.toString())
-                    Log.d("LoginVM", task.result?.user?.displayName.toString())
-                    Log.d("LoginVM", task.result?.user?.photoUrl.toString())
-                    Log.d("LoginVM", task.result?.user.toString())
-                    onResult(true, null)
-                } else {
-                    onResult(false, task.exception?.message)
-                }
+    override suspend fun signInWithGoogle(idToken: String) : Boolean {
+        return try {
+            val credential = GoogleAuthProvider.getCredential(idToken, null)
+            val result = firebaseAuth.signInWithCredential(credential).await()
+            result?.user?.let { user ->
+                saveUserData(user)
             }
+            true
+        } catch (e: Exception) {
+            Log.e("AuthRepository", "Error en signInWithGoogle", e)
+            false
+        }
+    }
+
+    private suspend fun saveUserData(user: FirebaseUser?) {
+        preferenceRepository.setUserName(user?.displayName ?: "")
+        preferenceRepository.setUserName(user?.displayName ?: "")
+        preferenceRepository.setPhotoUrl(user?.photoUrl.toString())
+        preferenceRepository.setIsLoggedIn(true)
     }
 
     override suspend fun getGoogleClient(context: Context): GetCredentialResponse {
         val signInWithGoogleOption: GetSignInWithGoogleOption =
             GetSignInWithGoogleOption.Builder(
-                "949408476336-mk6sb9oqvrpd2fq7fvd2vnu7k70dcadj.apps.googleusercontent.com"
+                context.getString(R.string.default_web_client_id)
             ).build()
 
         val request = GetCredentialRequest.Builder()

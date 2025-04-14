@@ -2,13 +2,46 @@ package com.gondroid.mtcquiz
 
 import android.app.Application
 import android.util.Log
-import com.google.firebase.FirebaseApp
+import com.google.firebase.Firebase
+import com.google.firebase.crashlytics.crashlytics
 import dagger.hilt.android.HiltAndroidApp
+import timber.log.Timber
 
 @HiltAndroidApp
 class MTCApp : Application() {
     override fun onCreate() {
         super.onCreate()
-        Log.d("MTCApp", applicationContext.packageName)
+        // Plant appropriate Timber tree based on build type
+        Timber.plant(if (BuildConfig.DEBUG) Timber.DebugTree() else CrashReportingTree())
+    }
+
+    private class CrashReportingTree : Timber.Tree() {
+        protected override fun log(
+            priority: Int,
+            tag: String?,
+            message: String,
+            throwable: Throwable?
+        ) {
+            if (priority == Log.VERBOSE || priority == Log.DEBUG) {
+                return
+            }
+            val exception = throwable ?: Exception(message)
+
+            // Crashlytics
+            val crashlytics = Firebase.crashlytics
+            crashlytics.setCustomKey(KEY_PRIORITY, priority)
+            crashlytics.setCustomKey(KEY_TAG, tag.orEmpty())
+            crashlytics.setCustomKey(KEY_MESSAGE, message)
+
+            // Firebase Crash Reporting
+            crashlytics.log("$priority $tag $message")
+            crashlytics.recordException(exception)
+        }
+
+        companion object {
+            private const val KEY_PRIORITY = "priority"
+            private const val KEY_TAG = "tag"
+            private const val KEY_MESSAGE = "message"
+        }
     }
 }

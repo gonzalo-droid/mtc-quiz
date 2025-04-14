@@ -3,6 +3,7 @@ package com.gondroid.mtcquiz.data.di
 import android.content.Context
 import androidx.room.Room
 import com.gondroid.mtcquiz.data.MTCDatabase
+import com.gondroid.mtcquiz.data.local.evaluation.EvaluationDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,7 +14,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-class DataModule {
+object DataModule {
     @Provides
     @Singleton
     fun provideDataBase(
@@ -29,5 +30,5 @@ class DataModule {
             .build()
 
     @Provides
-    fun provideEvaluationDao(database: MTCDatabase) = database.evaluationDao()
+    fun provideEvaluationDao(database: MTCDatabase) : EvaluationDao = database.evaluationDao()
 }

@@ -17,6 +17,8 @@ import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,22 +29,23 @@ class LoginScreenViewModel @Inject constructor(
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
-
     var state by mutableStateOf(ConfigurationDataState())
         private set
 
     var isLoggedIn by mutableStateOf(authRepository.isUserLoggedIn())
         private set
 
-    var errorMessage by mutableStateOf<String?>(null)
+    private var eventChannel = Channel<LoginEvent>()
+    val event = eventChannel.receiveAsFlow()
+
 
     fun signInWithGoogle(idToken: String) {
-        authRepository.signInWithGoogle(idToken) { success, error ->
-            if (success) {
-                isLoggedIn = true
-                errorMessage = null
+        viewModelScope.launch {
+            val isSuccessful = authRepository.signInWithGoogle(idToken)
+            if (isSuccessful) {
+                eventChannel.send(LoginEvent.Success)
             } else {
-                errorMessage = error
+                eventChannel.send(LoginEvent.Fail)
             }
         }
     }
@@ -52,6 +55,7 @@ class LoginScreenViewModel @Inject constructor(
             try {
                 handleSignIn(authRepository.getGoogleClient(context))
             } catch (e: GetCredentialException) {
+                eventChannel.send(LoginEvent.Fail)
                 Log.e("LoginVM", "Error: ${e.localizedMessage} ${e.message}")
             }
         }
@@ -68,7 +72,6 @@ class LoginScreenViewModel @Inject constructor(
                             .createFrom(credential.data)
 
                         signInWithGoogle(googleIdTokenCredential.idToken)
-
 
                     } catch (e: GoogleIdTokenParsingException) {
                         Log.e("LoginVM", "Received an invalid google id token response", e)
