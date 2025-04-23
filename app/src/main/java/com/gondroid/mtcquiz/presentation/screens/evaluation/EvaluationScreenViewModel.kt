@@ -43,15 +43,14 @@ constructor(
 
     init {
 
-        data.categoryId.let {
-            viewModelScope.launch {
+        viewModelScope.launch {
+
+            data.categoryId.let {
                 repository.getCategoryById(it)?.let { category ->
                     state = state.copy(category = category)
                 }
             }
-        }
 
-        viewModelScope.launch {
             repository.getQuestionsByCategory("categoryId")
                 .collect { questions ->
                     state =
