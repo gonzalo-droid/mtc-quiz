@@ -78,9 +78,11 @@ fun NavigationRoot(navController: NavHostController, isLoggedIn: Boolean) {
                             )
                         )
                     },
-                    navigateToShowPDF = {
+                    navigateToShowPDF = { categoryId ->
                         navController.navigate(
-                            PdfScreenRoute
+                            PdfScreenRoute(
+                                categoryId = categoryId
+                            )
                         )
                     },
                     navigateToConfiguration = {

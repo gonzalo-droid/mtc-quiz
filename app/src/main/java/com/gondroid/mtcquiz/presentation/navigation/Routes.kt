@@ -26,10 +26,12 @@ data class QuestionsScreenRoute(
 )
 
 @Serializable
-object ConfigurationScreenRoute
+data class PdfScreenRoute(
+    val categoryId: String
+)
 
 @Serializable
-object PdfScreenRoute
+object ConfigurationScreenRoute
 
 @Serializable
 object TermScreenRoute

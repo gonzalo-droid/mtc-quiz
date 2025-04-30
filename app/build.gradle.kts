@@ -108,17 +108,17 @@ dependencies {
     implementation(libs.timber)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.navigation.compose)
-
-    // https://material-foundation.github.io/material-theme-builder/
     implementation(libs.androidx.ui.text.google.fonts)
     implementation(libs.androidx.foundation.android)
     implementation(libs.androidx.foundation.android)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    implementation(libs.coil.compose)
+
+
     // Lotiee
-    // implementation("com.github.LottieFiles:dotlottie-android:0.5.0")
-    implementation("com.airbnb.android:lottie-compose:6.6.4")
+    implementation(libs.lottie.compose)
     // Librerias Room
     implementation(libs.room.ktx)
     implementation(libs.room.runtime)

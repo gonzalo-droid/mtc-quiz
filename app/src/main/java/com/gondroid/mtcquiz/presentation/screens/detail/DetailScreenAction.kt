@@ -5,7 +5,7 @@ sealed interface DetailScreenAction {
 
     data class GoToQuestions(val categoryId: String) : DetailScreenAction
 
-    data object ShowPDF : DetailScreenAction
+    data class ShowPDF(val categoryId: String) : DetailScreenAction
 
     data object GoToConfiguration : DetailScreenAction
 

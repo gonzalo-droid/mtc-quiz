@@ -1,11 +1,5 @@
 package com.gondroid.mtcquiz.presentation.screens.detail
 
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -24,7 +18,6 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Book
 import androidx.compose.material.icons.filled.DirectionsCar
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.PlayCircle
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -35,16 +28,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.gondroid.mtcquiz.R
 import com.gondroid.mtcquiz.presentation.screens.detail.providers.DetailScreenPreviewProvider
 import com.gondroid.mtcquiz.ui.theme.MTCQuizTheme
@@ -55,7 +46,7 @@ fun DetailScreenRoot(
     navigateBack: () -> Boolean,
     navigateToConfiguration: () -> Unit,
     navigateToQuestions: (String) -> Unit,
-    navigateToShowPDF: () -> Unit,
+    navigateToShowPDF: (String) -> Unit,
     navigateToEvaluation: (String) -> Unit,
 ) {
 
@@ -69,12 +60,10 @@ fun DetailScreenRoot(
                 is DetailScreenAction.GoToConfiguration -> navigateToConfiguration()
                 is DetailScreenAction.GoToEvaluation -> navigateToEvaluation(action.categoryId)
                 is DetailScreenAction.GoToQuestions -> navigateToQuestions(action.categoryId)
-                is DetailScreenAction.ShowPDF -> navigateToShowPDF()
+                is DetailScreenAction.ShowPDF -> navigateToShowPDF(action.categoryId)
             }
-
         }
     )
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -148,11 +137,8 @@ fun DetailScreen(
                         modifier = Modifier,
                         text = state.category.title,
                         color = MaterialTheme.colorScheme.primary,
-
                         style = MaterialTheme.typography.titleMedium,
-
-                        )
-
+                    )
                 }
                 Image(
                     painter = painterResource(id = R.drawable.card_background),
@@ -167,16 +153,14 @@ fun DetailScreen(
             Text(
                 modifier = Modifier,
                 text = state.category.description,
-                fontSize = 15.sp,
-
-                )
+                style = MaterialTheme.typography.bodyLarge,
+            )
             Text(
                 modifier = Modifier,
                 text = "* Licencia de conducir para conductores no profesionales",
-                style = MaterialTheme.typography.labelSmall,
+                style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.secondary,
-
-                )
+            )
 
 
             Spacer(modifier = Modifier.weight(1f))
@@ -184,7 +168,7 @@ fun DetailScreen(
             ButtonsAction(
                 onGoToEvaluation = { onAction(DetailScreenAction.GoToEvaluation(state.category.id)) },
                 onGoToQuestions = { onAction(DetailScreenAction.GoToQuestions(state.category.id)) },
-                onShowPdf = { onAction(DetailScreenAction.ShowPDF) }
+                onShowPdf = { onAction(DetailScreenAction.ShowPDF(state.category.id)) }
             )
         }
 
@@ -197,19 +181,6 @@ fun ButtonsAction(
     onGoToQuestions: () -> Unit = {},
     onShowPdf: () -> Unit = {},
 ) {
-
-    // Creamos una transición infinita para animar el botón
-    val infiniteTransition = rememberInfiniteTransition()
-    // Animamos la escala para que varíe entre 0.95 y 1.05, generando un efecto de "latido"
-    val scale by infiniteTransition.animateFloat(
-        initialValue = 0.98f,
-        targetValue = 1.00f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 600, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Reverse
-        )
-    )
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -220,10 +191,8 @@ fun ButtonsAction(
             onClick = onGoToEvaluation,
             modifier = Modifier
                 .fillMaxWidth()
-                .scale(scale)
-
         ) {
-            Text(text = "Iniciar evalución")
+            Text(text = stringResource(R.string.start_evaluation))
         }
 
         OutlinedButton(
@@ -237,14 +206,14 @@ fun ButtonsAction(
                 contentDescription = "PlayCircle",
             )
             Spacer(modifier = Modifier.width(8.dp))
-            Text(text = "Estudiar")
+            Text(text = stringResource(R.string.study))
         }
-        // Botón secundario
+
         TextButton(
             onClick = onShowPdf,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "Descargar PDF")
+            Text(text = stringResource(R.string.download_pdf))
             Spacer(modifier = Modifier.width(8.dp))
             Icon(
                 imageVector = Icons.Default.Book,

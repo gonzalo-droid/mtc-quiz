@@ -7,5 +7,5 @@ data class Category(
     val classType: String = "",
     val description: String = "",
     val image: String? = "",
-    val pdf: String? = "",
+    val pdf: String = "",
 )

@@ -132,18 +132,6 @@ fun LoginScreen(
                     Text("Iniciar sesión con Google")
                 }
 
-                TextButton(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                    onClick = {
-                        onAction(
-                            LoginScreenAction.Logout
-                        )
-                    },
-                ) {
-                    Text("Más tarde")
-                }
             }
         }
     }
