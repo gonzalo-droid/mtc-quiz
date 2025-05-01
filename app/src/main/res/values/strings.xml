@@ -30,4 +30,6 @@
     <string name="download_pdf">Descargar PDF</string>
     <string name="success_download_pdf">PDF guardado en Descargas</string>
     <string name="failure_download_pdf">Error al guardar PDF</string>
+    <string name="time_evaluation_to_finished">Tiempo Finalizado</string>
+    <string name="subtitle_to_finished_evaluation">Tu tiempo ha terminado. El evaluación se ha finalizado.</string>
 </resources>

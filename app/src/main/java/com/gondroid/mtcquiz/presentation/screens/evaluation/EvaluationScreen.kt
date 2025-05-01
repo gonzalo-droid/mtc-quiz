@@ -1,6 +1,5 @@
 package com.gondroid.mtcquiz.presentation.screens.evaluation
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -76,6 +75,8 @@ fun EvaluationScreenRoot(
 
     val state = viewModel.state
     val event = viewModel.event
+    var showCancelDialog by remember { mutableStateOf(false) }
+    var blockExit by remember { mutableStateOf(true) }
 
     LaunchedEffect(true) {
         event.collect { event ->
@@ -87,20 +88,43 @@ fun EvaluationScreenRoot(
         }
     }
 
+    BackHandler(enabled = blockExit) {
+        showCancelDialog = true
+    }
+
     EvaluationScreen(
         state = state, onAction = { action ->
             when (action) {
-                EvaluationScreenAction.Back -> navigateBack()
+                EvaluationScreenAction.Back -> {
+                    showCancelDialog = true
+                    blockExit = false
+                }
+
                 EvaluationScreenAction.VerifyAnswer -> viewModel.verifyAnswer()
                 EvaluationScreenAction.NextQuestion -> viewModel.nextQuestion()
                 is EvaluationScreenAction.SaveAnswer -> viewModel.saveAnswer(
-                    isCorrect = action.isCorrect,
-                    option = action.option
+                    isCorrect = action.isCorrect, option = action.option
                 )
 
-                is EvaluationScreenAction.SummaryExam -> viewModel.saveExam()
+                is EvaluationScreenAction.SummaryExam -> {
+                    viewModel.saveExam()
+                    showCancelDialog = false
+                    blockExit = false
+                }
+
+                EvaluationScreenAction.ConfirmCancel -> {
+                    showCancelDialog = false
+                    blockExit = false
+                    navigateBack()
+                }
+
+                EvaluationScreenAction.DismissDialog -> {
+                    showCancelDialog = false
+                    blockExit = true
+                }
             }
-        })
+        }, showCancelDialog = showCancelDialog
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -108,13 +132,16 @@ fun EvaluationScreenRoot(
 fun EvaluationScreen(
     state: EvaluationDataState,
     onAction: (EvaluationScreenAction) -> Unit,
+    showCancelDialog: Boolean,
 ) {
 
     val progress by remember(state.indexQuestion) {
         derivedStateOf {
             if (state.questions.size > 1) {
-                (state.indexQuestion.toFloat() / (state.questions.size - 1).coerceAtLeast(1))
-                    .coerceIn(0f, 1f)
+                (state.indexQuestion.toFloat() / (state.questions.size - 1).coerceAtLeast(1)).coerceIn(
+                    0f,
+                    1f
+                )
             } else {
                 0f
             }
@@ -137,30 +164,6 @@ fun EvaluationScreen(
         if (timeLeft == 0) {
             showFinishEvaluationDialog = true
         }
-        // onExamEnd()
-    }
-
-
-    val lifecycleOwner = LocalLifecycleOwner.current
-    var showCancelDialog by remember { mutableStateOf(false) }
-    var blockExit by remember { mutableStateOf(false) }
-
-    DisposableEffect(lifecycleOwner) {
-        val observer = LifecycleEventObserver { _, event ->
-            if (event == Lifecycle.Event.ON_PAUSE && !blockExit) {
-                Log.d("Compose", "ON_PAUSE")
-                showCancelDialog = true
-                blockExit = true // Bloquea futuras salidas hasta que usuario confirme
-            }
-        }
-        lifecycleOwner.lifecycle.addObserver(observer)
-        onDispose {
-            lifecycleOwner.lifecycle.removeObserver(observer)
-        }
-    }
-
-    BackHandler(enabled = !blockExit) {
-        showCancelDialog = true
     }
 
     Scaffold(
@@ -250,7 +253,9 @@ fun EvaluationScreen(
 
             ButtonsAction(
                 selectedOption = selectedOption,
-                state = state, modifier = Modifier.fillMaxWidth(), onClickNextQuestion = { type ->
+                state = state,
+                modifier = Modifier.fillMaxWidth(),
+                onClickNextQuestion = { type ->
                     when (type) {
                         VERIFY -> {
                             onAction(EvaluationScreenAction.VerifyAnswer)
@@ -283,20 +288,19 @@ fun EvaluationScreen(
         }
 
         if (showFinishEvaluationDialog) {
-            ExamEndDialog { showFinishEvaluationDialog = false }
+            FinishedTimeDialog { showFinishEvaluationDialog = false }
         }
 
         if (showCancelDialog) {
-            CancelEvaluation(
-                onConfirmCancel = {
-                    showCancelDialog = false
-                    onAction(EvaluationScreenAction.Back)
-                },
-                onDismiss = {
-                    showCancelDialog = false
-                    blockExit = false
-                }
-            )
+            CancelEvaluation(onConfirmCancel = {
+                onAction(
+                    EvaluationScreenAction.ConfirmCancel
+                )
+            }, onDismiss = {
+                onAction(
+                    EvaluationScreenAction.DismissDialog
+                )
+            })
         }
 
     }
@@ -405,8 +409,7 @@ fun ButtonsAction(
         modifier = modifier, verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Button(
-            enabled = !selectedOption.isNullOrEmpty(),
-            onClick = {
+            enabled = !selectedOption.isNullOrEmpty(), onClick = {
                 onClickNextQuestion(typeQuestion)
             }, modifier = Modifier.fillMaxWidth()
         ) {
@@ -418,11 +421,11 @@ fun ButtonsAction(
 
 
 @Composable
-fun ExamEndDialog(onDismiss: () -> Unit) {
+fun FinishedTimeDialog(onDismiss: () -> Unit) {
     AlertDialog(
         onDismissRequest = {},
-        title = { Text("Tiempo Finalizado") },
-        text = { Text("Tu tiempo ha terminado. El evaluación se ha finalizado.") },
+        title = { Text(stringResource(R.string.time_evaluation_to_finished)) },
+        text = { Text(stringResource(R.string.subtitle_to_finished_evaluation)) },
         confirmButton = {
             Button(onClick = onDismiss, modifier = Modifier.fillMaxWidth()) {
                 Text(stringResource(R.string.finish_evaluation))
@@ -434,8 +437,7 @@ fun ExamEndDialog(onDismiss: () -> Unit) {
 
 @Composable
 fun CancelEvaluation(
-    onConfirmCancel: () -> Unit,
-    onDismiss: () -> Unit
+    onConfirmCancel: () -> Unit, onDismiss: () -> Unit
 ) {
     AlertDialog(
         onDismissRequest = {},
@@ -449,16 +451,14 @@ fun CancelEvaluation(
         confirmButton = {
             Row(modifier = Modifier.fillMaxWidth()) {
                 TextButton(
-                    onClick = onConfirmCancel,
-                    modifier = Modifier.weight(1f)
+                    onClick = onConfirmCancel, modifier = Modifier.weight(1f)
                 ) {
                     Text(stringResource(R.string.yes_cancel))
                 }
 
                 Spacer(modifier = Modifier.width(8.dp))
                 Button(
-                    onClick = onDismiss,
-                    modifier = Modifier.weight(1f)
+                    onClick = onDismiss, modifier = Modifier.weight(1f)
                 ) {
                     Text(stringResource(R.string.no))
                 }
@@ -494,11 +494,10 @@ fun PreviewEvaluationScreenRoot() {
     MTCQuizTheme {
         EvaluationScreen(
             state = EvaluationDataState(
-                questions = listOf(question),
-                question = question,
-                category = Category(
+                questions = listOf(question), question = question, category = Category(
                     title = "CLASE A - CATEGORIA I"
                 )
-            ), onAction = {})
+            ), onAction = {}, showCancelDialog = true
+        )
     }
 }

@@ -99,7 +99,6 @@ constructor(
     }
 
     fun saveExam() {
-
         val correctAnswers = _resultsList.count { it.isCorrect }
         val incorrectAnswers = _resultsList.count { !it.isCorrect }
         val totalTask = state.questions.size
