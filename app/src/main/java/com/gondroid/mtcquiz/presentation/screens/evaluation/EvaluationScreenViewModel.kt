@@ -40,18 +40,15 @@ constructor(
 
     private val data = savedStateHandle.toRoute<EvaluationScreenRoute>()
 
-
     init {
-
         viewModelScope.launch {
-
             data.categoryId.let {
                 repository.getCategoryById(it)?.let { category ->
                     state = state.copy(category = category)
                 }
             }
 
-            repository.getQuestionsByCategory("categoryId")
+            repository.getQuestionsByCategory(data.categoryId)
                 .collect { questions ->
                     state =
                         state.copy(questions = questions, question = questions[state.indexQuestion])
@@ -88,20 +85,12 @@ constructor(
             )
             _resultsList.add(result)
         }
-
-        val correctAnswers = _resultsList.count { it.isCorrect }
-        val incorrectAnswers = _resultsList.count { !it.isCorrect }
-
-        state = state.copy(
-            correctAnswers = correctAnswers,
-            incorrectAnswers = incorrectAnswers,
-        )
     }
 
     fun saveExam() {
         val correctAnswers = _resultsList.count { it.isCorrect }
-        val incorrectAnswers = _resultsList.count { !it.isCorrect }
         val totalTask = state.questions.size
+        val incorrectAnswers = totalTask - correctAnswers
 
         val percentage = (correctAnswers / totalTask.toFloat()).times(100).toInt()
 

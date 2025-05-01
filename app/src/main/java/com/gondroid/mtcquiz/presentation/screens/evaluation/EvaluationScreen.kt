@@ -32,7 +32,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -50,9 +49,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.gondroid.mtcquiz.R
 import com.gondroid.mtcquiz.core.toFormattedTime
 import com.gondroid.mtcquiz.domain.models.Category
@@ -288,7 +284,10 @@ fun EvaluationScreen(
         }
 
         if (showFinishEvaluationDialog) {
-            FinishedTimeDialog { showFinishEvaluationDialog = false }
+            FinishedTimeDialog {
+                showFinishEvaluationDialog = false
+                onAction(EvaluationScreenAction.SummaryExam(state.category.id))
+            }
         }
 
         if (showCancelDialog) {

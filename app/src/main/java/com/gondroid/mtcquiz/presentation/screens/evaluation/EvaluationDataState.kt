@@ -12,9 +12,5 @@ data class EvaluationDataState(
     val isFinishExam: Boolean = false,
     val category: Category = Category(),
 
-    // summary
-    val date: String = "",
-    val correctAnswers: Int = 0,
-    val incorrectAnswers: Int = 0,
     val totalMinutes : Int = 1
 )
