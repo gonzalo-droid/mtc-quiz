@@ -10,10 +10,10 @@ data class Question(
     val topic: String = "",
     val title: String = "",
     val answer: String = "",
-    val options: List<String> = arrayListOf(),
+    val options: List<String> = listOf(),
     val image: String? = null,
 ) {
-    fun validationAnswer(index: Int): Boolean {
+    fun isCorrectAnswer(index: Int): Boolean {
         val indexAnswer = when (answer) {
             "a" -> 0
             "b" -> 1
@@ -23,13 +23,15 @@ data class Question(
         return index == indexAnswer
     }
 
-    fun getOption(answer: String): String {
-        return when (answer) {
-            "a" -> options[0]
-            "b" -> options[1]
-            "c" -> options[2]
-            else -> options[3]
+    fun getOption(letter: String): String {
+        val index = when (letter.lowercase()) {
+            "a" -> 0
+            "b" -> 1
+            "c" -> 2
+            "d" -> 3
+            else -> -1
         }
+        return options.getOrNull(index) ?: "Opción no disponible"
     }
 }
 

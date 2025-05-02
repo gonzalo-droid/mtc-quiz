@@ -2,7 +2,6 @@ package com.gondroid.mtcquiz.data.local
 
 import android.content.Context
 import com.gondroid.mtcquiz.data.local.evaluation.EvaluationDao
-import com.gondroid.mtcquiz.data.local.evaluation.EvaluationEntity
 import com.gondroid.mtcquiz.data.local.quiz.categoriesLocalDataSource
 import com.gondroid.mtcquiz.domain.models.Category
 import com.gondroid.mtcquiz.domain.models.Evaluation
@@ -54,10 +53,11 @@ class QuizRepositoryImpl(
         }
 
     override suspend fun saveEvaluation(evaluation: Evaluation) = withContext(dispatcherIO) {
-        evaluationDao.upsertEvaluation(EvaluationEntity.fromEvaluation(evaluation))
+        evaluationDao.upsertEvaluation(evaluation.toEntity())
     }
 
-    override suspend fun getEvaluationById(evaluationId: String): Evaluation? = withContext(dispatcherIO){
-        evaluationDao.getEvaluationById(evaluationId)?.toEvaluation()
-    }
+    override suspend fun getEvaluationById(evaluationId: String): Evaluation? =
+        withContext(dispatcherIO) {
+            evaluationDao.getEvaluationById(evaluationId)?.toDomain()
+        }
 }

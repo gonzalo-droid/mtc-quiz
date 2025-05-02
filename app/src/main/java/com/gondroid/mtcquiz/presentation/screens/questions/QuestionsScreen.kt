@@ -249,7 +249,7 @@ fun QuestionsScreen(
                         question.options.forEachIndexed { index, option ->
                             ItemAnswerCard(
                                 text = option,
-                                isCorrectAnswer = question.validationAnswer(index),
+                                isCorrectAnswer = question.isCorrectAnswer(index),
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(bottom = 8.dp)

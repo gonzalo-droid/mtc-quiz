@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -97,14 +98,14 @@ fun LoginScreen(
 
                 Text(
                     modifier = Modifier,
-                    text = "Es hora de cambiar de asiento",
+                    text = stringResource(R.string.small_title_header),
                     style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
 
                 Text(
                     modifier = Modifier,
-                    text = "Prepárate y toma el volante",
+                    text = stringResource(R.string.medium_title_header),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.displayMedium,
                     fontWeight = FontWeight.Bold,
@@ -129,7 +130,7 @@ fun LoginScreen(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
 
-                    Text("Iniciar sesión con Google")
+                    Text(stringResource(R.string.singing_google))
                 }
 
             }

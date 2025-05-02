@@ -1,6 +1,5 @@
 package com.gondroid.mtcquiz.presentation.screens.questions
 
-
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -13,7 +12,6 @@ import com.gondroid.mtcquiz.presentation.navigation.QuestionsScreenRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
 
 @HiltViewModel
 class QuestionsScreenViewModel @Inject constructor(

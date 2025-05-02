@@ -15,8 +15,6 @@ coroutines = "1.9.0"
 composeBom = "2025.02.00"
 lottieCompose = "6.6.4"
 materialIconsExtended = "1.7.7"
-navigationCompose = "2.8.1"
-navigationComposeHilt = "1.2.0"
 room = "2.6.1"
 uiTextGoogleFonts = "1.7.5"
 moshi = "1.15.1"
@@ -30,6 +28,19 @@ googleService = "4.4.2"
 googleFirebaseCrashlytics = "3.0.3"
 timber = "5.0.1"
 coilCompose = "3.1.0"
+
+junit = "4.13.2"
+junitVersion = "1.2.1"
+espressoCore = "3.6.1"
+mockk = "1.13.17"
+mockwebserver = "4.11.0"
+turbine = "0.7.0" # coroutines
+truth = "1.1.3"
+
+# Navigation
+navigationCompose = "2.8.1"
+navigationTesting = "2.8.1"
+navigationComposeHilt = "1.2.0"
 
 [libraries]
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
@@ -61,10 +72,10 @@ androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
-androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 
 #Navigation
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
+androidx-navigation-testing = { group = "androidx.navigation", name = "navigation-testing", version.ref = "navigationTesting" }
 
 #Hilt (DI)
 dagger-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "navigationComposeHilt" }
@@ -99,6 +110,18 @@ okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okkht
 okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okkhttp" }
 androidx-foundation-android = { group = "androidx.compose.foundation", name = "foundation-android", version.ref = "foundationAndroid" }
 androidx-foundation-layout-android = { group = "androidx.compose.foundation", name = "foundation-layout-android", version.ref = "foundationLayoutAndroid" }
+
+#Testing
+junit = { group = "junit", name = "junit", version.ref = "junit" } # unit test
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" } # test compose
+androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" } # test compose
+mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
+mockwebserver = { group = "com.squareup.okhttp3", name = "mockwebserver", version.ref = "mockwebserver" } # test service
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" } # runtest runblocking
+turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" } # test flow
+truth = { group = "com.google.truth", name = "truth", version.ref = "truth" } # assetions
 
 
 [plugins]

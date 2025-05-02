@@ -25,22 +25,7 @@ data class EvaluationEntity(
     val state: String,
     val date: Long,
 ) {
-    companion object {
-
-        fun fromEvaluation(evaluation: Evaluation): EvaluationEntity = EvaluationEntity(
-            id = evaluation.id,
-            categoryId = evaluation.categoryId,
-            categoryTitle = evaluation.categoryTitle,
-            totalCorrect = evaluation.totalCorrect,
-            totalIncorrect = evaluation.totalIncorrect,
-            total = evaluation.totalQuestions,
-            state = evaluation.state.name,
-            date = evaluation.date.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
-        )
-
-    }
-
-    fun toEvaluation(): Evaluation = Evaluation(
+    fun toDomain(): Evaluation = Evaluation(
         id = id,
         categoryId = categoryId,
         categoryTitle = categoryTitle,

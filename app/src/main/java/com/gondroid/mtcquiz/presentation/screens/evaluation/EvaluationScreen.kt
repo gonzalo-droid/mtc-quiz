@@ -236,7 +236,7 @@ fun EvaluationScreen(
                             .fillMaxWidth()
                             .padding(bottom = 8.dp),
                         text = option,
-                        isCorrect = state.question.validationAnswer(index),
+                        isCorrect = state.question.isCorrectAnswer(index),
                         isSelected = selectedOption == option,
                         isCorrectAnswerSelected = if (state.answerWasSelected) isCorrectAnswerSelected else null,
                         onClick = {

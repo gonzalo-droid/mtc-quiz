@@ -32,4 +32,7 @@
     <string name="failure_download_pdf">Error al guardar PDF</string>
     <string name="time_evaluation_to_finished">Tiempo Finalizado</string>
     <string name="subtitle_to_finished_evaluation">Tu tiempo ha terminado. El evaluación se ha finalizado.</string>
+    <string name="singing_google">Iniciar sesión con Google</string>
+    <string name="small_title_header">Es hora de cambiar de asiento</string>
+    <string name="medium_title_header">Prepárate y\ntoma el volante</string>
 </resources>
