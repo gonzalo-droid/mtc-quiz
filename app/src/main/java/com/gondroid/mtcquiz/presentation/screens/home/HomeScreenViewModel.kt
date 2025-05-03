@@ -1,16 +1,16 @@
 package com.gondroid.mtcquiz.presentation.screens.home
 
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gondroid.mtcquiz.domain.repository.PreferenceRepository
 import com.gondroid.mtcquiz.domain.repository.QuizRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 
@@ -22,17 +22,18 @@ constructor(
     private val preferenceRepository: PreferenceRepository
 ) : ViewModel() {
 
-    var state by mutableStateOf(HomeDataState())
-        private set
+    private var _state = MutableStateFlow(HomeDataState())
+    val state = _state.asStateFlow()
 
     init {
         repository.categoriesFlow.onEach { categories ->
-            state = state.copy(categories = categories)
+            _state.value = _state.value.copy(categories = categories)
         }.launchIn(viewModelScope)
 
         preferenceRepository.userNameFlow.onEach { userName ->
-            state = state.copy(userName = userName)
+            _state.update {
+                it.copy(userName = userName)
+            }
         }.launchIn(viewModelScope)
-
     }
 }

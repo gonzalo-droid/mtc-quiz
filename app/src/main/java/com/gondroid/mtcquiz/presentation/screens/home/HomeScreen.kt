@@ -24,6 +24,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -43,6 +44,7 @@ import com.gondroid.mtcquiz.domain.models.Category
 import com.gondroid.mtcquiz.presentation.screens.home.providers.HomeScreenPreviewProvider
 import com.gondroid.mtcquiz.ui.theme.MTCQuizTheme
 import kotlin.math.absoluteValue
+import androidx.compose.runtime.getValue
 
 @Composable
 fun HomeScreenRoot(
@@ -51,7 +53,7 @@ fun HomeScreenRoot(
     navigateToConfiguration: () -> Unit,
 ) {
 
-    val state = viewModel.state
+    val state by viewModel.state.collectAsState()
 
     HomeScreen(
         state = state,
