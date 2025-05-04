@@ -321,7 +321,6 @@ fun QuestionCard(question: Question, modifier: Modifier) {
                 modifier = Modifier,
                 text = "${question.id}.- ${question.title}",
                 style = MaterialTheme.typography.titleSmall,
-
                 )
             Image(
                 painter = painterResource(id = R.drawable.card_background),
@@ -496,7 +495,7 @@ fun PreviewEvaluationScreenRoot() {
                 questions = listOf(question), question = question, category = Category(
                     title = "CLASE A - CATEGORIA I"
                 )
-            ), onAction = {}, showCancelDialog = true
+            ), onAction = {}, showCancelDialog = false
         )
     }
 }

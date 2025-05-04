@@ -45,6 +45,8 @@ import com.gondroid.mtcquiz.presentation.screens.home.providers.HomeScreenPrevie
 import com.gondroid.mtcquiz.ui.theme.MTCQuizTheme
 import kotlin.math.absoluteValue
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 
 @Composable
 fun HomeScreenRoot(
@@ -75,7 +77,10 @@ fun HomeScreen(
 ) {
 
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize()
+            .semantics{
+                contentDescription = "home_screen"
+            },
         topBar = {
             TopAppBar(
                 title = {
@@ -97,7 +102,7 @@ fun HomeScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Menu,
-                            contentDescription = "Add Task",
+                            contentDescription = "menu_button",
                             tint = MaterialTheme.colorScheme.onSurface,
                         )
 
@@ -209,7 +214,7 @@ fun CardCategoryItem(
                     modifier = Modifier
                         .padding(horizontal = 16.dp),
                     style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
                 Text(
                     text = item.category,
@@ -232,7 +237,7 @@ fun CardCategoryItem(
 
             Image(
                 painter = painterResource(id = R.drawable.card_background),
-                contentDescription = "card_background",
+                contentDescription = "image_category",
                 modifier = Modifier.align(Alignment.BottomEnd),
                 contentScale = ContentScale.Fit
             )

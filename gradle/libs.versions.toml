@@ -36,6 +36,7 @@ mockk = "1.13.17"
 mockwebserver = "4.11.0"
 turbine = "0.7.0" # coroutines
 truth = "1.1.3"
+robolectric = "4.11.1"
 
 # Navigation
 navigationCompose = "2.8.1"
@@ -81,7 +82,7 @@ androidx-navigation-testing = { group = "androidx.navigation", name = "navigatio
 dagger-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "navigationComposeHilt" }
 dagger-hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
-
+dagger-hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hilt" }
 
 #Serialization
 googleid = { module = "com.google.android.libraries.identity.googleid:googleid", version.ref = "googleid" }
@@ -113,16 +114,19 @@ androidx-foundation-layout-android = { group = "androidx.compose.foundation", na
 
 #Testing
 junit = { group = "junit", name = "junit", version.ref = "junit" } # unit test
-androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
-androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
-androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" } # test compose
-androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" } # test compose
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 mockwebserver = { group = "com.squareup.okhttp3", name = "mockwebserver", version.ref = "mockwebserver" } # test service
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" } # runtest runblocking
 turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" } # test flow
 truth = { group = "com.google.truth", name = "truth", version.ref = "truth" } # assetions
 
+#Android Testing
+robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
+androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" } # test compose
+androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" } # test compose
+androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+androidx-test-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+mockk-android = { group = "io.mockk", name = "mockk-android", version.ref = "mockk" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

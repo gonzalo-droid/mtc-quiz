@@ -35,7 +35,7 @@ android {
         versionCode = 1
         versionName = "1.0.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "androidx.test.runner.CustomTestRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -88,6 +88,8 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "/META-INF/LICENSE*"
+            excludes += "/META-INF/NOTICE*"
         }
     }
 }
@@ -158,26 +160,33 @@ dependencies {
     implementation(libs.googleid)
 
 
-    // Test dependencies
+    //Testing
     testImplementation(libs.junit)
-    testImplementation(libs.truth)
     testImplementation(libs.mockk)
     testImplementation(libs.mockwebserver)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.turbine)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.truth)
 
-    // Android Test dependencies
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    //Android Testing
     androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
-    androidTestImplementation(libs.truth)
-    androidTestImplementation(libs.mockk)
+    androidTestImplementation(libs.junit)
+    androidTestImplementation(libs.mockk.android)
+    androidTestImplementation(libs.mockwebserver)
     androidTestImplementation(libs.kotlinx.coroutines.test)
+    androidTestImplementation(libs.turbine)
+    androidTestImplementation(libs.truth)
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    androidTestImplementation(libs.androidx.ui.test.manifest)
+    androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(libs.androidx.test.espresso.core)
     androidTestImplementation(libs.androidx.navigation.testing)
 
+    // Hilt Testing
+    androidTestImplementation(libs.dagger.hilt.android.testing)
+    kspAndroidTest(libs.dagger.hilt.compiler)
+
     // Debug dependencies
-    debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
     testImplementation(kotlin("test"))
 }

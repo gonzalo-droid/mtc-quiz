@@ -32,6 +32,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -73,7 +75,9 @@ fun DetailScreen(
     onAction: (DetailScreenAction) -> Unit,
 ) {
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().semantics{
+            contentDescription = "detail_screen"
+        },
         topBar = {
             TopAppBar(
                 title = {
@@ -93,6 +97,8 @@ fun DetailScreen(
                                 onAction(
                                     DetailScreenAction.Back,
                                 )
+                            }.semantics{
+                                contentDescription = "back_button"
                             },
                     )
                 },
@@ -191,6 +197,9 @@ fun ButtonsAction(
             onClick = onGoToEvaluation,
             modifier = Modifier
                 .fillMaxWidth()
+                .semantics{
+                contentDescription = "start_evaluation"
+            }
         ) {
             Text(text = stringResource(R.string.start_evaluation))
         }
@@ -198,7 +207,10 @@ fun ButtonsAction(
         OutlinedButton(
             onClick = onGoToQuestions,
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .semantics{
+                    contentDescription = "study"
+                },
             border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
         ) {
             Icon(
@@ -212,6 +224,9 @@ fun ButtonsAction(
         TextButton(
             onClick = onShowPdf,
             modifier = Modifier.fillMaxWidth()
+                .semantics{
+                    contentDescription = "download_pdf"
+                },
         ) {
             Text(text = stringResource(R.string.download_pdf))
             Spacer(modifier = Modifier.width(8.dp))
