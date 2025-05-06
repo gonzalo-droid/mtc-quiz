@@ -25,13 +25,15 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -44,9 +46,6 @@ import com.gondroid.mtcquiz.domain.models.Category
 import com.gondroid.mtcquiz.presentation.screens.home.providers.HomeScreenPreviewProvider
 import com.gondroid.mtcquiz.ui.theme.MTCQuizTheme
 import kotlin.math.absoluteValue
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.semantics
 
 @Composable
 fun HomeScreenRoot(
@@ -210,15 +209,14 @@ fun CardCategoryItem(
                 Text(
                     text = item.classType,
                     fontSize = 15.sp,
-                    color = Color.White,
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp),
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    modifier = Modifier.padding(horizontal = 16.dp),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                 )
                 Text(
                     text = item.category,
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier
                         .padding(horizontal = 16.dp),
                     style = MaterialTheme.typography.displayLarge,
@@ -230,7 +228,7 @@ fun CardCategoryItem(
                     modifier = Modifier.padding(horizontal = 16.dp),
                     maxLines = 4,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.onPrimary,
                     overflow = TextOverflow.Ellipsis
                 )
             }

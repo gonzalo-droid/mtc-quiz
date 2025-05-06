@@ -51,6 +51,7 @@ import androidx.compose.ui.unit.dp
 import com.gondroid.mtcquiz.R
 import com.gondroid.mtcquiz.core.normalizeText
 import com.gondroid.mtcquiz.domain.models.Question
+import com.gondroid.mtcquiz.presentation.component.CardQuestion
 import com.gondroid.mtcquiz.presentation.component.LinearProgressComponent
 import com.gondroid.mtcquiz.ui.theme.MTCQuizTheme
 
@@ -217,34 +218,10 @@ fun QuestionsScreen(
                         items = filteredItems,
                         key = { questions -> questions.id }
                     ) { question ->
-                        Card(
+                        CardQuestion(
                             modifier = Modifier.fillMaxWidth(),
-                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiary),
-                            shape = RoundedCornerShape(8.dp),
-                        ) {
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(16.dp)
-                            ) {
-                                Text(
-                                    modifier = Modifier,
-                                    text = "${question.id}.- ${question.title}",
-                                    style = MaterialTheme.typography.titleSmall,
-
-                                    )
-                                Image(
-                                    painter = painterResource(id = R.drawable.card_background),
-                                    contentDescription = "card_background",
-                                    modifier = Modifier
-                                        .height(150.dp)
-                                        .fillMaxWidth()
-                                        .padding(8.dp),
-                                    contentScale = ContentScale.Fit,
-                                    alignment = Alignment.Center
-                                )
-                            }
-                        }
+                            question = question
+                        )
 
                         Spacer(modifier = Modifier.height(8.dp))
 
@@ -291,7 +268,11 @@ fun ItemAnswerCard(
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            Text(text = text, style = MaterialTheme.typography.titleSmall)
+            Text(
+                text = text,
+                style = MaterialTheme.typography.titleSmall,
+                color = Color.Black,
+            )
         }
     }
 }

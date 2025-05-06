@@ -58,6 +58,7 @@ import com.gondroid.mtcquiz.domain.models.TypeActionQuestion
 import com.gondroid.mtcquiz.domain.models.TypeActionQuestion.FINISH
 import com.gondroid.mtcquiz.domain.models.TypeActionQuestion.NEXT
 import com.gondroid.mtcquiz.domain.models.TypeActionQuestion.VERIFY
+import com.gondroid.mtcquiz.presentation.component.CardQuestion
 import com.gondroid.mtcquiz.presentation.component.LinearProgressComponent
 import com.gondroid.mtcquiz.ui.theme.MTCQuizTheme
 import kotlinx.coroutines.delay
@@ -224,7 +225,10 @@ fun EvaluationScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            QuestionCard(question = state.question, modifier = Modifier.fillMaxWidth())
+            CardQuestion(
+                modifier = Modifier.fillMaxWidth(),
+                question = state.question
+            )
 
 
             LazyColumn(
@@ -307,37 +311,6 @@ fun EvaluationScreen(
 }
 
 @Composable
-fun QuestionCard(question: Question, modifier: Modifier) {
-    Card(
-        modifier = modifier,
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiary),
-        shape = RoundedCornerShape(8.dp),
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            Text(
-                modifier = Modifier,
-                text = "${question.id}.- ${question.title}",
-                style = MaterialTheme.typography.titleSmall,
-                )
-            Image(
-                painter = painterResource(id = R.drawable.card_background),
-                contentDescription = "card_background",
-                modifier = Modifier
-                    .height(150.dp)
-                    .fillMaxWidth()
-                    .padding(8.dp),
-                contentScale = ContentScale.Fit,
-                alignment = Alignment.Center
-            )
-        }
-    }
-}
-
-@Composable
 fun AnswerCard(
     state: EvaluationDataState,
     text: String,
@@ -372,7 +345,8 @@ fun AnswerCard(
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            Text(text = text, style = MaterialTheme.typography.titleSmall)
+            Text(text = text, style = MaterialTheme.typography.titleSmall,                color = Color.Black,
+            )
         }
     }
 }

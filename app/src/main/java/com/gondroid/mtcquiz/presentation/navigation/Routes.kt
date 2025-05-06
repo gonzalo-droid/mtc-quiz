@@ -44,8 +44,3 @@ data class SummaryScreenRoute(
     val categoryId: String,
     val evaluationId: String
 )
-
-inline fun <reified T : Any> NavBackStackEntry.toRoute(): T {
-    val json = arguments?.getString("json") ?: error("Route data missing")
-    return Json.decodeFromString<T>(json)
-}

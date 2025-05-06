@@ -48,6 +48,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -58,6 +59,7 @@ import com.gondroid.mtcquiz.presentation.screens.util.Permissions.RequestPermiss
 import com.gondroid.mtcquiz.ui.theme.MTCQuizTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.io.File
 import java.io.FileOutputStream
 
@@ -89,7 +91,7 @@ fun PdfScreenRoot(
             try {
                 renderedPages = pdfBitmapConverter.pdfToBitmaps(uri)
             } catch (e: Exception) {
-                Log.e("PDF_RENDER", "Error al convertir PDF a Bitmaps", e)
+                Timber.e(e, "Error al convertir PDF a Bitmaps")
                 renderedPages = emptyList()
             }
         }
@@ -200,7 +202,7 @@ fun PdfScreen(
                         },
                     ) {
                         Text(
-                            text = "Descargar",
+                            text = stringResource(R.string.download),
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             fontWeight = FontWeight.Bold,
                             fontSize = MaterialTheme.typography.titleMedium.fontSize
@@ -292,7 +294,7 @@ fun CircularProgress() {
             .fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center), color = MaterialTheme.colorScheme.primary)
     }
 }
 
