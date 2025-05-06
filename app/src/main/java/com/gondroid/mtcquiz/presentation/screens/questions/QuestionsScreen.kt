@@ -51,6 +51,7 @@ import androidx.compose.ui.unit.dp
 import com.gondroid.mtcquiz.R
 import com.gondroid.mtcquiz.core.normalizeText
 import com.gondroid.mtcquiz.domain.models.Question
+import com.gondroid.mtcquiz.presentation.component.CardAnswer
 import com.gondroid.mtcquiz.presentation.component.CardQuestion
 import com.gondroid.mtcquiz.presentation.component.LinearProgressComponent
 import com.gondroid.mtcquiz.ui.theme.MTCQuizTheme
@@ -257,24 +258,12 @@ fun ItemAnswerCard(
 
     val borderColor = if (isCorrectAnswer) Color(0xFF388E3C) else Color.Gray
 
-    Card(
-        modifier = modifier,
-        colors = CardDefaults.cardColors(containerColor = backgroundColor),
-        shape = RoundedCornerShape(8.dp),
-        border = BorderStroke(1.dp, borderColor)
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            Text(
-                text = text,
-                style = MaterialTheme.typography.titleSmall,
-                color = Color.Black,
-            )
-        }
-    }
+    CardAnswer(
+        modifier= modifier,
+        backgroundColor= backgroundColor,
+        borderColor= borderColor,
+        text= text
+    )
 }
 
 

@@ -58,6 +58,7 @@ import com.gondroid.mtcquiz.domain.models.TypeActionQuestion
 import com.gondroid.mtcquiz.domain.models.TypeActionQuestion.FINISH
 import com.gondroid.mtcquiz.domain.models.TypeActionQuestion.NEXT
 import com.gondroid.mtcquiz.domain.models.TypeActionQuestion.VERIFY
+import com.gondroid.mtcquiz.presentation.component.CardAnswer
 import com.gondroid.mtcquiz.presentation.component.CardQuestion
 import com.gondroid.mtcquiz.presentation.component.LinearProgressComponent
 import com.gondroid.mtcquiz.ui.theme.MTCQuizTheme
@@ -332,23 +333,14 @@ fun AnswerCard(
         else -> Color.White to Color.Gray
     }
 
-    Card(
-        modifier = modifier.clickable(enabled = isCorrectAnswerSelected == null) {
+    CardAnswer(
+        modifier= modifier.clickable(enabled = isCorrectAnswerSelected == null) {
             onClick()
         },
-        colors = CardDefaults.cardColors(containerColor = backgroundColor),
-        shape = RoundedCornerShape(8.dp),
-        border = BorderStroke(1.dp, borderColor)
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            Text(text = text, style = MaterialTheme.typography.titleSmall,                color = Color.Black,
-            )
-        }
-    }
+        backgroundColor= backgroundColor,
+        borderColor= borderColor,
+        text= text
+    )
 }
 
 
