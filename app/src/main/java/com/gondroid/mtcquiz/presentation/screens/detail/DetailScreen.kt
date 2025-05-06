@@ -28,6 +28,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -52,7 +54,8 @@ fun DetailScreenRoot(
     navigateToEvaluation: (String) -> Unit,
 ) {
 
-    val state = viewModel.state
+    val state by viewModel.state.collectAsState()
+
 
     DetailScreen(
         state = state,

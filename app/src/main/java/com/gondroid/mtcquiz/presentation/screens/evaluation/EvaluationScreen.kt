@@ -33,6 +33,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -68,8 +69,8 @@ fun EvaluationScreenRoot(
     navigateBack: () -> Boolean,
     navigateToSummary: (String, String) -> Unit,
 ) {
+    val state by viewModel.state.collectAsState()
 
-    val state = viewModel.state
     val event = viewModel.event
     var showCancelDialog by remember { mutableStateOf(false) }
     var blockExit by remember { mutableStateOf(true) }

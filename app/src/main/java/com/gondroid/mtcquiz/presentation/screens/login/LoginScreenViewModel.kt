@@ -13,13 +13,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gondroid.mtcquiz.domain.repository.AuthRepository
 import com.gondroid.mtcquiz.presentation.screens.configuration.ConfigurationDataState
+import com.gondroid.mtcquiz.presentation.screens.questions.QuestionsDataState
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -29,11 +34,12 @@ class LoginScreenViewModel @Inject constructor(
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
-    var state by mutableStateOf(ConfigurationDataState())
-        private set
+    private var _state = MutableStateFlow(ConfigurationDataState())
+    val state = _state.asStateFlow()
 
-    var isLoggedIn by mutableStateOf(authRepository.isUserLoggedIn())
-        private set
+
+    private var _isLoggedIn = MutableStateFlow(authRepository.isUserLoggedIn())
+    val isLoggedIn = _isLoggedIn.asStateFlow()
 
     private var eventChannel = Channel<LoginEvent>()
     val event = eventChannel.receiveAsFlow()
@@ -56,7 +62,7 @@ class LoginScreenViewModel @Inject constructor(
                 handleSignIn(authRepository.getGoogleClient(context))
             } catch (e: GetCredentialException) {
                 eventChannel.send(LoginEvent.Fail)
-                Log.e("LoginVM", "Error: ${e.localizedMessage} ${e.message}")
+                Timber.e("Error: ${e.localizedMessage} ${e.message}")
             }
         }
     }
@@ -74,15 +80,15 @@ class LoginScreenViewModel @Inject constructor(
                         signInWithGoogle(googleIdTokenCredential.idToken)
 
                     } catch (e: GoogleIdTokenParsingException) {
-                        Log.e("LoginVM", "Received an invalid google id token response", e)
+                        Timber.tag("LoginVM").e(e, "Received an invalid google id token response")
                     }
                 } else {
-                    Log.e("LoginVM", "Unexpected type of credential")
+                    Timber.tag("LoginVM").e("Unexpected type of credential")
                 }
             }
 
             else -> {
-                Log.e("LoginVM", "Unexpected type of credential")
+                Timber.tag("LoginVM").e("Unexpected type of credential")
             }
         }
     }
@@ -90,7 +96,7 @@ class LoginScreenViewModel @Inject constructor(
     fun logout() {
         viewModelScope.launch {
             authRepository.logout()
-            isLoggedIn = false
+            _isLoggedIn.update { false }
         }
     }
 }

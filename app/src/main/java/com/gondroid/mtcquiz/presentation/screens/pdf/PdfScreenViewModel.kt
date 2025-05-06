@@ -1,9 +1,6 @@
 package com.gondroid.mtcquiz.presentation.screens.pdf
 
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,6 +8,9 @@ import androidx.navigation.toRoute
 import com.gondroid.mtcquiz.domain.repository.QuizRepository
 import com.gondroid.mtcquiz.presentation.navigation.PdfScreenRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,8 +20,10 @@ class PdfScreenViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val repository: QuizRepository
 ) : ViewModel() {
-    var state by mutableStateOf(PdfDataState())
-        private set
+
+    private var _state = MutableStateFlow(PdfDataState())
+    val state = _state.asStateFlow()
+
 
     private val data = savedStateHandle.toRoute<PdfScreenRoute>()
 
@@ -29,18 +31,24 @@ class PdfScreenViewModel @Inject constructor(
         data.categoryId.let {
             viewModelScope.launch {
                 repository.getCategoryById(it)?.let { category ->
-                    state = state.copy(category = category, isLoading = true)
+                    _state.update {
+                        it.copy(category = category, isLoading = true)
+                    }
                 }
             }
         }
     }
 
     fun loading(isLoading: Boolean) {
-        state = state.copy(isLoading = isLoading)
+        _state.update {
+            it.copy(isLoading = isLoading)
+        }
     }
 
     fun downloading(value: Boolean) {
-        state = state.copy(isLoading = value, shouldDownload = value)
+        _state.update {
+            it.copy(shouldDownload = value, isLoading = value)
+        }
     }
 
 }

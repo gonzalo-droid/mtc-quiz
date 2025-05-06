@@ -31,6 +31,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -59,7 +60,8 @@ fun QuestionsScreenRoot(
     viewModel: QuestionsScreenViewModel,
     navigateBack: () -> Boolean,
 ) {
-    val state = viewModel.state
+    val state by viewModel.state.collectAsState()
+
     QuestionsScreen(
         state = state,
         onAction = { action ->

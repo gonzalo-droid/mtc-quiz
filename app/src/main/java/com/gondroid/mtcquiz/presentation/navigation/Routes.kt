@@ -11,6 +11,15 @@ object LoginScreenRoute
 object HomeScreenRoute
 
 @Serializable
+object ConfigurationScreenRoute
+
+@Serializable
+object TermScreenRoute
+
+@Serializable
+object CustomizeScreenRoute
+
+@Serializable
 data class DetailScreenRoute(
     val categoryId: String
 )
@@ -29,15 +38,6 @@ data class QuestionsScreenRoute(
 data class PdfScreenRoute(
     val categoryId: String
 )
-
-@Serializable
-object ConfigurationScreenRoute
-
-@Serializable
-object TermScreenRoute
-
-@Serializable
-object CustomizeScreenRoute
 
 @Serializable
 data class SummaryScreenRoute(
