@@ -15,7 +15,6 @@ import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
@@ -30,12 +29,14 @@ object RepositoryModule {
     @Singleton
     fun provideQuizRepository(
         evaluationDao: EvaluationDao,
+        preferenceRepository: PreferenceRepository,
         @Named("dispatcherIO")
         dispatcherIO: CoroutineDispatcher,
         @ApplicationContext
         context: Context,
     ): QuizRepository = QuizRepositoryImpl(
         evaluationDao = evaluationDao,
+        preferenceRepository = preferenceRepository,
         dispatcherIO = dispatcherIO,
         context = context
     )

@@ -10,7 +10,10 @@ interface QuizRepository {
 
     suspend fun getCategoryById(categoryId: String): Category?
 
-    suspend fun getQuestionsByCategory(categoryId: String): Flow<List<Question>>
+    suspend fun getQuestionsByCategory(
+        categoryId: String,
+        isTake: Boolean = false // take while numberQuestion prefer
+    ): Flow<List<Question>>
 
     suspend fun saveEvaluation(evaluation: Evaluation)
 

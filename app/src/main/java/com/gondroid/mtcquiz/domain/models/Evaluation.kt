@@ -11,7 +11,7 @@ data class Evaluation(
     val totalCorrect: Int = 0,
     val totalIncorrect: Int = 0,
     val totalQuestions: Int = 0,
-    val state: EvaluationState = EvaluationState.APPROVED,
+    var state: EvaluationState = EvaluationState.APPROVED,
     val date: LocalDateTime = LocalDateTime.now(),
 ) {
     fun toEntity(): EvaluationEntity = EvaluationEntity(

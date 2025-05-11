@@ -6,14 +6,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.gondroid.mtcquiz.domain.models.Evaluation
-import com.gondroid.mtcquiz.domain.models.EvaluationState
 import com.gondroid.mtcquiz.domain.models.QuestionResult
+import com.gondroid.mtcquiz.domain.repository.PreferenceRepository
 import com.gondroid.mtcquiz.domain.repository.QuizRepository
 import com.gondroid.mtcquiz.presentation.navigation.EvaluationScreenRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -26,7 +27,8 @@ class EvaluationScreenViewModel
 @Inject
 constructor(
     savedStateHandle: SavedStateHandle,
-    private val repository: QuizRepository
+    private val repository: QuizRepository,
+    private val preferenceRepository: PreferenceRepository
 ) : ViewModel() {
 
     private var _state = MutableStateFlow(EvaluationDataState())
@@ -42,6 +44,14 @@ constructor(
 
     init {
         viewModelScope.launch {
+
+            val time = preferenceRepository.timeToFinishEvaluationFlow.first().toIntOrNull()
+            time?.let {
+                _state.update {
+                    it.copy(totalMinutes = time)
+                }
+            }
+
             data.categoryId.let {
                 repository.getCategoryById(it)?.let { category ->
                     _state.update {
@@ -50,10 +60,13 @@ constructor(
                 }
             }
 
-            repository.getQuestionsByCategory(data.categoryId)
+            repository.getQuestionsByCategory(categoryId = data.categoryId, isTake = true)
                 .collect { questions ->
                     _state.update {
-                        it.copy(questions = questions, question = questions[_state.value.indexQuestion])
+                        it.copy(
+                            questions = questions,
+                            question = questions[_state.value.indexQuestion]
+                        )
                     }
 
                 }
@@ -67,7 +80,8 @@ constructor(
                 answerWasSelected = false,
                 answerWasVerified = false,
                 indexQuestion = index,
-                question = _state.value.questions[index])
+                question = _state.value.questions[index]
+            )
         }
     }
 
@@ -97,17 +111,15 @@ constructor(
         val totalTask = _state.value.questions.size
         val incorrectAnswers = totalTask - correctAnswers
 
-        val percentage = (correctAnswers / totalTask.toFloat()).times(100).toInt()
-
         viewModelScope.launch {
+
             val evaluation = Evaluation(
                 id = UUID.randomUUID().toString(),
                 categoryId = _state.value.category.id,
                 categoryTitle = _state.value.category.title,
                 totalCorrect = correctAnswers,
                 totalIncorrect = incorrectAnswers,
-                totalQuestions = _state.value.questions.size,
-                state = if (percentage >= 80) EvaluationState.APPROVED else EvaluationState.REJECTED
+                totalQuestions = totalTask,
             )
             repository.saveEvaluation(evaluation = evaluation)
 
