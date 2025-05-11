@@ -25,7 +25,8 @@ class PreferenceRepositoryImpl @Inject constructor(
         val IS_ONBOARDING_SHOWN = booleanPreferencesKey("is_onboarding_shown")
 
         var NUMBER_QUESTIONS = stringPreferencesKey("number_questions")
-        var PERCENTAGE_TO_APPROVED_EVALUATION = stringPreferencesKey("percentage_to_approved_evaluation")
+        var PERCENTAGE_TO_APPROVED_EVALUATION =
+            stringPreferencesKey("percentage_to_approved_evaluation")
         val TIME_TO_FINISH_EVALUATION = stringPreferencesKey("time_to_finish_evaluation")
     }
 
@@ -53,6 +54,7 @@ class PreferenceRepositoryImpl @Inject constructor(
         .map { preferences ->
             preferences[USER_NAME] ?: ""
         }
+
     // Photo URL
     override suspend fun setPhotoUrl(url: String) {
         dataStore.edit { preferences ->
@@ -83,6 +85,7 @@ class PreferenceRepositoryImpl @Inject constructor(
             preferences[IS_ONBOARDING_SHOWN] = isOnboardingShown
         }
     }
+
     override val isOnboardingShownFlow: Flow<Boolean> = dataStore.data
         .map { preferences ->
             preferences[IS_ONBOARDING_SHOWN] ?: false
@@ -136,13 +139,20 @@ class PreferenceRepositoryImpl @Inject constructor(
     }
 
     override suspend fun setPreferencesEvaluation(data: PreferencesEvaluation): Boolean {
-       return try {
+        return try {
             setNumberQuestions(data.numberQuestions)
             setTimeToFinishEvaluation(data.timeToFinishEvaluation)
             setPercentageToApprovedEvaluation(data.percentageToApprovedEvaluation)
             true
-        } catch (e: Exception){
+        } catch (e: Exception) {
             false
         }
+    }
+
+    override suspend fun logout() {
+        setUserName("")
+        setPhotoUrl("")
+        setIsLoggedIn(false)
+        setIsOnboardingShown(true)
     }
 }

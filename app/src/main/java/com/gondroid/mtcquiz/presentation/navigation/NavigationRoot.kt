@@ -131,6 +131,13 @@ fun NavigationRoot(navController: NavHostController, isLoggedIn: Boolean) {
                     },
                     navigateToAbout = {
 
+                    },
+                    navigateToLogout = {
+                        navController.navigate(LoginScreenRoute) {
+                            popUpTo(ConfigurationScreenRoute) {
+                                inclusive = true
+                            }
+                        }
                     }
                 )
             }

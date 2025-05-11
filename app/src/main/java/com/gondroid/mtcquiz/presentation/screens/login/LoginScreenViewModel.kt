@@ -2,10 +2,6 @@ package com.gondroid.mtcquiz.presentation.screens.login
 
 
 import android.content.Context
-import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialResponse
 import androidx.credentials.exceptions.GetCredentialException
@@ -13,7 +9,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gondroid.mtcquiz.domain.repository.AuthRepository
 import com.gondroid.mtcquiz.presentation.screens.configuration.ConfigurationDataState
-import com.gondroid.mtcquiz.presentation.screens.questions.QuestionsDataState
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,7 +17,6 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -90,13 +84,6 @@ class LoginScreenViewModel @Inject constructor(
             else -> {
                 Timber.tag("LoginVM").e("Unexpected type of credential")
             }
-        }
-    }
-
-    fun logout() {
-        viewModelScope.launch {
-            authRepository.logout()
-            _isLoggedIn.update { false }
         }
     }
 }

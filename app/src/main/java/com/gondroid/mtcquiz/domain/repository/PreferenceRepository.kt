@@ -57,4 +57,6 @@ interface PreferenceRepository {
 
     suspend fun setPreferencesEvaluation(data: PreferencesEvaluation) : Boolean
 
+    suspend fun logout()
+
 }

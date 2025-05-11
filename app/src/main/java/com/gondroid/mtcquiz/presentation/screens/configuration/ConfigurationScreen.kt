@@ -31,6 +31,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -40,6 +41,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.gondroid.mtcquiz.R
+import com.gondroid.mtcquiz.presentation.util.OpenAppInPlayStore
 import com.gondroid.mtcquiz.ui.theme.MTCQuizTheme
 
 
@@ -50,9 +52,22 @@ fun ConfigurationScreenRoot(
     navigateToTerm: () -> Unit,
     navigateToCustomize: () -> Unit,
     navigateToAbout: () -> Unit,
+    navigateToLogout: () -> Unit,
 ) {
 
-    val content = LocalContext.current
+    val context = LocalContext.current
+    val event = viewModel.event
+
+    LaunchedEffect(true) {
+        event.collect { event ->
+            when (event) {
+                ConfigurationEvent.Success -> {
+                    navigateToLogout()
+                }
+            }
+        }
+
+    }
 
     ConfigurationScreen(
         onNavigateUp = navigateBack,
@@ -60,13 +75,14 @@ fun ConfigurationScreenRoot(
             when (action) {
                 ConfigurationScreenAction.GoToAbout -> navigateToAbout()
                 ConfigurationScreenAction.GoToRating -> {
-                    openAppInPlayStore(content)
+                    openAppInPlayStore(context)
+                    OpenAppInPlayStore().invoke(context)
                 }
 
                 ConfigurationScreenAction.GoToSCustomize -> navigateToCustomize()
                 ConfigurationScreenAction.GoToTerm -> navigateToTerm()
                 ConfigurationScreenAction.Logout -> {
-
+                    viewModel.logout()
                 }
             }
 
@@ -147,7 +163,7 @@ fun ConfigurationScreen(
                 .padding(16.dp),
         ) {
             Text(
-                text = "Configuraciones",
+                text = stringResource(R.string.settings),
                 style = MaterialTheme.typography.headlineMedium,
                 color = MaterialTheme.colorScheme.onBackground,
                 fontWeight = FontWeight.Bold
@@ -204,14 +220,21 @@ fun ConfigurationScreen(
                 )
                 Spacer(modifier = Modifier.width(20.dp))
                 Text(
-                    text = "Nosotros",
+                    text = stringResource(R.string.about_us),
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.Bold
                 )
             }
 
-            Row(modifier = Modifier.padding(top = 16.dp)) {
+            Row(
+                modifier = Modifier
+                    .padding(top = 16.dp)
+                    .clickable {
+                        onAction(
+                            ConfigurationScreenAction.Logout
+                        )
+                    }) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ExitToApp,
                     contentDescription = "Back",
@@ -219,7 +242,7 @@ fun ConfigurationScreen(
                 )
                 Spacer(modifier = Modifier.width(20.dp))
                 Text(
-                    text = "Cerrar sesión",
+                    text = stringResource(R.string.logout),
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.error,
                     fontWeight = FontWeight.Bold
@@ -241,11 +264,9 @@ fun openAppInPlayStore(context: Context) {
                     Intent.FLAG_ACTIVITY_MULTIPLE_TASK
         )
     }
-
     try {
         context.startActivity(goToMarketIntent)
     } catch (e: ActivityNotFoundException) {
-        // Si no tiene Play Store, abrir en el navegador
         val webUri = Uri.parse("https://play.google.com/store/apps/details?id=$packageName")
         context.startActivity(Intent(Intent.ACTION_VIEW, webUri))
     }

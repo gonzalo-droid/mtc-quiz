@@ -64,7 +64,6 @@ fun LoginScreenRoot(
                     viewModel.launchGoogleSignIn(context)
                 }
 
-                LoginScreenAction.Logout -> viewModel.logout()
             }
         }
     )
