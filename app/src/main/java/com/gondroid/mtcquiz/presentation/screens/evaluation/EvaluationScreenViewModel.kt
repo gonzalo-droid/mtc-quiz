@@ -1,9 +1,6 @@
 package com.gondroid.mtcquiz.presentation.screens.evaluation
 
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,7 +10,6 @@ import com.gondroid.mtcquiz.domain.models.EvaluationState
 import com.gondroid.mtcquiz.domain.models.QuestionResult
 import com.gondroid.mtcquiz.domain.repository.QuizRepository
 import com.gondroid.mtcquiz.presentation.navigation.EvaluationScreenRoute
-import com.gondroid.mtcquiz.presentation.screens.detail.DetailDataState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow

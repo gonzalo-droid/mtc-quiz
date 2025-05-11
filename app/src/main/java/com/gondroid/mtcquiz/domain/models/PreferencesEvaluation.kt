@@ -1,6 +1,6 @@
-package com.gondroid.mtcquiz.presentation.screens.configuration.customize
+package com.gondroid.mtcquiz.domain.models
 
-data class CustomizeDataState(
+data class PreferencesEvaluation(
     val numberQuestions: String = "",
     val timeToFinishEvaluation: String = "",
     val percentageToApprovedEvaluation: String = ""

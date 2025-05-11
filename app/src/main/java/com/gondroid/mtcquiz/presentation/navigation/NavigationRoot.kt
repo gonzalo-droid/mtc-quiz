@@ -8,7 +8,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.gondroid.mtcquiz.presentation.screens.Customize.customize.CustomizeScreenRoot
+import com.gondroid.mtcquiz.presentation.screens.configuration.customize.CustomizeScreenRoot
 import com.gondroid.mtcquiz.presentation.screens.configuration.ConfigurationScreenRoot
 import com.gondroid.mtcquiz.presentation.screens.configuration.ConfigurationScreenViewModel
 import com.gondroid.mtcquiz.presentation.screens.configuration.customize.CustomizeScreenViewModel

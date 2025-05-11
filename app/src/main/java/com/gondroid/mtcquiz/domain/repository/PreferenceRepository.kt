@@ -1,5 +1,6 @@
 package com.gondroid.mtcquiz.domain.repository
 
+import com.gondroid.mtcquiz.domain.models.PreferencesEvaluation
 import kotlinx.coroutines.flow.Flow
 
 interface PreferenceRepository {
@@ -34,5 +35,26 @@ interface PreferenceRepository {
         isOnboardingShown: Boolean
     )
 
+    val numberQuestionsFlow: Flow<String>
+
+    suspend fun setNumberQuestions(
+        value: String
+    )
+
+    val percentageToApprovedEvaluationFlow: Flow<String>
+
+    suspend fun setPercentageToApprovedEvaluation(
+        value: String
+    )
+
+    val timeToFinishEvaluationFlow: Flow<String>
+
+    suspend fun setTimeToFinishEvaluation(
+        value: String
+    )
+
+    suspend fun getInitEvaluation(): PreferencesEvaluation
+
+    suspend fun setPreferencesEvaluation(data: PreferencesEvaluation) : Boolean
 
 }

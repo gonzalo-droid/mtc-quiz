@@ -36,4 +36,8 @@
     <string name="small_title_header">Es hora de cambiar de asiento</string>
     <string name="medium_title_header">Prepárate y\ntoma el volante</string>
     <string name="download">Descargar</string>
+    <string name="time_to_evaluation">Tiempo de duración de la evaluación. (Minutos)</string>
+    <string name="number_of_question_to_evaluation">Número de preguntas para la evaluación</string>
+    <string name="percentage_approbe_to_evaluation">Porcentage (%) de preguntas correctas para aprobar</string>
+    <string name="update_preferences_evaluation">Actualizar valores</string>
 </resources>
