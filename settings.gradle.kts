@@ -22,4 +22,7 @@ dependencyResolutionManagement {
 
 rootProject.name = "MTCQuiz"
 include(":app")
- 
+include(":domain")
+include(":mylibrary")
+include(":data")
+include(":presentation")

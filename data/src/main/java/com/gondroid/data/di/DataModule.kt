@@ -1,18 +1,20 @@
+package com.gondroid.data.di
+
 import android.content.Context
 import androidx.room.Room
-import com.gondroid.mtcquiz.data.di.DataModule
-import com.gondroid.mtcquiz.data.local.evaluation.EvaluationDao
+import com.gondroid.data.MTCDatabase
+import com.gondroid.data.local.evaluation.EvaluationDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import dagger.hilt.testing.TestInstallIn
 import javax.inject.Singleton
 
+
 @Module
-@TestInstallIn(components = [SingletonComponent::class], replaces = [DataModule::class])
-object TestDataModule {
+@InstallIn(SingletonComponent::class)
+object DataModule {
     @Provides
     @Singleton
     fun provideDataBase(
@@ -20,13 +22,13 @@ object TestDataModule {
         context: Context,
     ): MTCDatabase =
         Room
-            .inMemoryDatabaseBuilder(
+            .databaseBuilder(
                 context.applicationContext,
-                MTCDatabase::class.java
+                MTCDatabase::class.java,
+                "mtc_database",
             )
-            .allowMainThreadQueries()
             .build()
 
     @Provides
-    fun provideEvaluationDao(database: MTCDatabase) : EvaluationDao = database.evaluationDao()
+    fun provideEvaluationDao(database: MTCDatabase): EvaluationDao = database.evaluationDao()
 }

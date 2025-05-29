@@ -120,6 +120,7 @@ dependencies {
 
     // Lotiee
     implementation(libs.lottie.compose)
+
     // Librerias Room
     implementation(libs.room.ktx)
     implementation(libs.room.runtime)
@@ -137,6 +138,7 @@ dependencies {
     implementation(libs.moshi)
     ksp(libs.moshi.codegen)
     implementation(libs.moshi.kotlin)
+
     // Retrofit
     implementation(libs.retrofit)
     implementation(libs.retrofit.moshi)
@@ -158,7 +160,6 @@ dependencies {
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.googleid)
-
 
     //Testing
     testImplementation(libs.junit)
