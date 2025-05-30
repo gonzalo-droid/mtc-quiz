@@ -32,6 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.gondroid.mtcquiz.R
 import com.gondroid.mtcquiz.ui.theme.MTCQuizTheme
+import com.gondroid.presentation.ui.theme.MTCQuizTheme
 
 @Composable
 fun LoginScreenRoot(
