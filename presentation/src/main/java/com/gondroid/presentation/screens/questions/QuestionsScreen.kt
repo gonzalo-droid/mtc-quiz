@@ -1,9 +1,6 @@
 package com.gondroid.presentation.screens.questions
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,14 +10,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.SearchOff
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -38,27 +32,19 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.gondroid.domain.models.Question
-import com.gondroid.mtcquiz.R
-import com.gondroid.mtcquiz.core.normalizeText
-import com.gondroid.mtcquiz.domain.models.Question
-import com.gondroid.mtcquiz.presentation.component.CardAnswer
-import com.gondroid.mtcquiz.presentation.component.CardQuestion
-import com.gondroid.mtcquiz.presentation.component.LinearProgressComponent
-import com.gondroid.mtcquiz.ui.theme.MTCQuizTheme
+import com.gondroid.presentation.R
 import com.gondroid.presentation.component.CardAnswer
 import com.gondroid.presentation.component.CardQuestion
 import com.gondroid.presentation.component.LinearProgressComponent
+import com.gondroid.presentation.ui.theme.MTCQuizTheme
 import com.gondroid.presentation.util.normalizeText
 
 
@@ -264,10 +250,10 @@ fun ItemAnswerCard(
     val borderColor = if (isCorrectAnswer) Color(0xFF388E3C) else Color.Gray
 
     CardAnswer(
-        modifier= modifier,
-        backgroundColor= backgroundColor,
-        borderColor= borderColor,
-        text= text
+        modifier = modifier,
+        backgroundColor = backgroundColor,
+        borderColor = borderColor,
+        text = text
     )
 }
 

@@ -18,6 +18,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.gondroid.domain.models.Question
+import com.gondroid.presentation.R
 import com.gondroid.presentation.ui.theme.MTCQuizTheme
 
 @Composable
