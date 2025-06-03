@@ -11,10 +11,45 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/auth" />
+            <option value="$PROJECT_DIR$/auth/data" />
+            <option value="$PROJECT_DIR$/auth/domain" />
+            <option value="$PROJECT_DIR$/auth/presentation" />
+            <option value="$PROJECT_DIR$/category" />
+            <option value="$PROJECT_DIR$/category/data" />
+            <option value="$PROJECT_DIR$/configuration" />
+            <option value="$PROJECT_DIR$/configuration/data" />
+            <option value="$PROJECT_DIR$/configuration/domain" />
+            <option value="$PROJECT_DIR$/configuration/presentation" />
+            <option value="$PROJECT_DIR$/core" />
+            <option value="$PROJECT_DIR$/core/database" />
+            <option value="$PROJECT_DIR$/core/domain" />
+            <option value="$PROJECT_DIR$/core/presentation" />
+            <option value="$PROJECT_DIR$/core/presentation/designsystem" />
+            <option value="$PROJECT_DIR$/core/presentation/ui" />
             <option value="$PROJECT_DIR$/data" />
+            <option value="$PROJECT_DIR$/detail" />
+            <option value="$PROJECT_DIR$/detail/data" />
+            <option value="$PROJECT_DIR$/detail/domain" />
+            <option value="$PROJECT_DIR$/detail/presentation" />
             <option value="$PROJECT_DIR$/domain" />
-            <option value="$PROJECT_DIR$/mylibrary" />
+            <option value="$PROJECT_DIR$/evaluation" />
+            <option value="$PROJECT_DIR$/evaluation/data" />
+            <option value="$PROJECT_DIR$/evaluation/domain" />
+            <option value="$PROJECT_DIR$/evaluation/presentation" />
+            <option value="$PROJECT_DIR$/home" />
+            <option value="$PROJECT_DIR$/home/data" />
+            <option value="$PROJECT_DIR$/home/domain" />
+            <option value="$PROJECT_DIR$/home/presentation" />
+            <option value="$PROJECT_DIR$/pdf" />
+            <option value="$PROJECT_DIR$/pdf/data" />
+            <option value="$PROJECT_DIR$/pdf/domain" />
+            <option value="$PROJECT_DIR$/pdf/presentation" />
             <option value="$PROJECT_DIR$/presentation" />
+            <option value="$PROJECT_DIR$/questionreview" />
+            <option value="$PROJECT_DIR$/questionreview/data" />
+            <option value="$PROJECT_DIR$/questionreview/domain" />
+            <option value="$PROJECT_DIR$/questionreview/presentation" />
           </set>
         </option>
       </GradleProjectSettings>
