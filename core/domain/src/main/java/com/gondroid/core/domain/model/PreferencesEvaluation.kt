@@ -1,4 +1,4 @@
-package com.gondroid.domain.models
+package com.gondroid.core.domain.model
 
 data class PreferencesEvaluation(
     val numberQuestions: String = "",

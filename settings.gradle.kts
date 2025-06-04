@@ -21,6 +21,8 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "MTCQuiz"
+// Esto evita el uso de strings manuales como project(":auth:domain").
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 include(":app")
 include(":domain")
 include(":data")

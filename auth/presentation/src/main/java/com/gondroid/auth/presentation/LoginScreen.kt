@@ -1,4 +1,4 @@
-package com.gondroid.presentation.screens.login
+package com.gondroid.auth.presentation
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -29,8 +29,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.gondroid.presentation.R
-import com.gondroid.presentation.ui.theme.MTCQuizTheme
+import com.gondroid.designsystem.MTCQuizTheme
 
 @Composable
 fun LoginScreenRoot(

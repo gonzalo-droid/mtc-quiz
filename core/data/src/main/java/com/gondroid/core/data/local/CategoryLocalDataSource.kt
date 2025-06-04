@@ -1,5 +1,7 @@
 package com.gondroid.core.data.local
 
+import com.gondroid.core.domain.model.Category
+
 
 const val CLASS_A = "CLASE A"
 const val CLASS_B = "CLASE B"

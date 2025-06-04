@@ -1,8 +1,7 @@
-package com.gondroid.domain.repository
+package com.gondroid.core.domain.repository
 
-import com.gondroid.domain.models.PreferencesEvaluation
+import com.gondroid.core.domain.model.PreferencesEvaluation
 import kotlinx.coroutines.flow.Flow
-
 
 interface PreferenceRepository {
 

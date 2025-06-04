@@ -59,4 +59,6 @@ dependencies {
     implementation(libs.dagger.hilt.navigation.compose)
     implementation(libs.dagger.hilt)
     ksp(libs.dagger.hilt.compiler)
+
+    implementation(projects.core.domain)
 }

@@ -1,4 +1,4 @@
-package com.gondroid.presentation.screens.login
+package com.gondroid.auth.presentation
 
 sealed interface LoginEvent {
     data object Success : LoginEvent

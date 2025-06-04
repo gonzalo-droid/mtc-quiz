@@ -34,10 +34,33 @@ android {
 
 dependencies {
 
+    // Librerias Android y compose
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.test.ext.junit)
-    androidTestImplementation(libs.androidx.test.espresso.core)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.activity.compose)
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.ui)
+    implementation(libs.androidx.ui.graphics)
+    implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.androidx.material3)
+    implementation(libs.androidx.material.icons.extended)
+    implementation(libs.timber)
+    implementation(libs.androidx.core.splashscreen)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.ui.text.google.fonts)
+    implementation(libs.androidx.foundation.android)
+    implementation(libs.androidx.foundation.android)
+    debugImplementation(libs.androidx.ui.tooling)
+
+    // Image
+    implementation(libs.coil.compose)
+
+    // Lotiee
+    implementation(libs.lottie.compose)
+
+    //implementation(project(":auth:domain"))
+    implementation(projects.auth.domain)
+    implementation(projects.core.domain)
+    implementation(projects.core.presentation.designsystem)
 }
