@@ -1,6 +1,5 @@
-package com.gondroid.data.local.quiz
+package com.gondroid.core.data.local
 
-import com.gondroid.domain.models.Category
 
 const val CLASS_A = "CLASE A"
 const val CLASS_B = "CLASE B"

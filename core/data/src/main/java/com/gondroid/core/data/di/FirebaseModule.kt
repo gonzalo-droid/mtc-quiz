@@ -1,4 +1,4 @@
-package com.gondroid.data.di
+package com.gondroid.core.data.di
 
 import android.content.Context
 import androidx.credentials.CredentialManager

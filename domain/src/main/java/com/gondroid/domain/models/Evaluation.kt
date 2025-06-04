@@ -23,6 +23,7 @@ data class Evaluation(
         state = state.name,
         date = date.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
     )
+
 }
 
 enum class EvaluationState {

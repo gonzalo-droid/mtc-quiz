@@ -1,8 +1,9 @@
-package com.gondroid.data.local.evaluation
+package com.gondroid.core.database.dao
 
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
+import com.gondroid.core.database.entity.EvaluationEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao

@@ -1,9 +1,9 @@
-package com.gondroid.data
+package com.gondroid.core.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.gondroid.mtcquiz.data.local.evaluation.EvaluationDao
-import com.gondroid.mtcquiz.data.local.evaluation.EvaluationEntity
+import com.gondroid.core.database.dao.EvaluationDao
+import com.gondroid.core.database.entity.EvaluationEntity
 
 @Database(
     entities = [

@@ -1,10 +1,8 @@
-package com.gondroid.data.local.evaluation
+package com.gondroid.core.database.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.gondroid.domain.models.Evaluation
-import com.gondroid.domain.models.EvaluationState
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
