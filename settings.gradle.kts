@@ -1,4 +1,10 @@
 pluginManagement {
+    /**
+     * Un included build es un proyecto Gradle separado dentro de tu proyecto principal,
+     * cuya única función es contener lógica de construcción (build logic).
+     * build-logic:convention -> libs de configuraciones de gradle para reutilizar en otros modulos
+     */
+    includeBuild("build-logic")
     repositories {
         google {
             content {
