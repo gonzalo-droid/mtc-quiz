@@ -18,5 +18,34 @@ gradlePlugin {
             id = "mtcquiz.android.application"
             implementationClass = "AndroidApplicationConventionPlugin"
         }
+        register("androidApplicationCompose") {
+            id = "mtcquiz.android.application.compose"
+            implementationClass = "AndroidApplicationComposeConventionPlugin"
+        }
+        register("androidLibrary") {
+            id = "mtcquiz.android.library"
+            implementationClass = "AndroidLibraryConventionPlugin"
+        }
+        register("androidLibraryCompose") {
+            id = "mtcquiz.android.library.compose"
+            implementationClass = "AndroidLibraryComposeConventionPlugin"
+        }
+        register("androidFeatureUi") {
+            id = "mtcquiz.android.feature.ui"
+            implementationClass = "AndroidFeatureUiConventionPlugin"
+        }
+        register("androidRoom") {
+            id = "mtcquiz.android.room"
+            implementationClass = "AndroidRoomConventionPlugin"
+        }
+        register("androidDynamicFeature") {
+            id = "mtcquiz.android.dynamic.feature"
+            implementationClass = "AndroidDynamicFeatureConventionPlugin"
+        }
+        register("jvmLibrary") {
+            id = "mtcquiz.jvm.library"
+            implementationClass = "JvmLibraryConventionPlugin"
+        }
     }
+
 }

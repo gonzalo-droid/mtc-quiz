@@ -17,6 +17,10 @@ internal fun Project.configureBuildTypes(
 
     commonExtension.run {
         buildFeatures {
+            /**
+             * Habilita la generación de la clase BuildConfig.
+             * Necesario para que las constantes como BuildConfig.API_KEY estén disponibles.
+             */
             buildConfig = true
         }
 

@@ -52,11 +52,6 @@ android {
         }
     }
 
-
-    buildFeatures {
-        compose = true
-    }
-
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -81,12 +76,12 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.material.icons.extended)
 
+    // Tools
     implementation(libs.timber)
-
     implementation(libs.androidx.core.splashscreen)
-    implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.ui.text.google.fonts)
-    implementation(libs.androidx.foundation.android)
+
+    implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.foundation.android)
     debugImplementation(libs.androidx.ui.tooling)
 
