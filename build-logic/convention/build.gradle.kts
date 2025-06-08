@@ -46,6 +46,10 @@ gradlePlugin {
             id = "mtcquiz.jvm.library"
             implementationClass = "JvmLibraryConventionPlugin"
         }
+        register("androidHilt") {
+            id = "mtcquiz.android.hilt"
+            implementationClass = "AndroidHiltConventionPlugin"
+        }
     }
 
 }
