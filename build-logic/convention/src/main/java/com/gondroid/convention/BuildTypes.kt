@@ -13,6 +13,8 @@ internal fun Project.configureBuildTypes(
     commonExtension: CommonExtension<*, *, *, *, *, *>,
     extensionType: ExtensionType
 ) {
+    // keytool -list -v -keystore /Users/gonzalo/AndroidStudioProjects/keys/mtcquizkeys -alias mtcquizkeys -> hash firebase
+
     commonExtension.run {
         buildFeatures {
             buildConfig = true
@@ -64,6 +66,7 @@ internal fun Project.configureBuildTypes(
 private fun BuildType.configureDebugBuildType(apiKey: String) {
     buildConfigField("String", "API_KEY", "\"$apiKey\"")
     // buildConfigField("String", "BASE_URL", "\"https://runique.pl-coding.com:8080\"")
+
 }
 
 private fun BuildType.configureReleaseBuildType(
@@ -74,6 +77,9 @@ private fun BuildType.configureReleaseBuildType(
     //buildConfigField("String", "BASE_URL", "\"https://runique.pl-coding.com:8080\"")
 
     isMinifyEnabled = true
+    isShrinkResources = true
+    isJniDebuggable = false
+
     proguardFiles(
         commonExtension.getDefaultProguardFile("proguard-android-optimize.txt"),
         "proguard-rules.pro"

@@ -2,8 +2,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.dagger.hilt)
-    alias(libs.plugins.room)
-    alias(libs.plugins.ksp)
+
     alias(libs.plugins.ktlint)
     alias(libs.plugins.com.google.gms.google.services)
     alias(libs.plugins.com.google.firebase.crashlytics)
@@ -16,18 +15,20 @@ plugins {
 
 }
 
-room {
-    schemaDirectory("$projectDir/schemas")
-}
-
 android {
 
     signingConfigs {
         create("release") {
-            storeFile = file(System.getenv("MTC_KEYSTORE_PATH") ?: project.findProperty("MTC_KEYSTORE_PATH") as String)
-            storePassword = System.getenv("MTC_KEYSTORE_PASSWORD") ?: project.findProperty("MTC_KEYSTORE_PASSWORD") as String
-            keyAlias = System.getenv("MTC_KEY_ALIAS") ?: project.findProperty("MTC_KEY_ALIAS") as String
-            keyPassword = System.getenv("MTC_KEY_PASSWORD") ?: project.findProperty("MTC_KEY_PASSWORD") as String
+            storeFile = file(
+                System.getenv("MTC_KEYSTORE_PATH")
+                    ?: project.findProperty("MTC_KEYSTORE_PATH") as String
+            )
+            storePassword = System.getenv("MTC_KEYSTORE_PASSWORD")
+                ?: project.findProperty("MTC_KEYSTORE_PASSWORD") as String
+            keyAlias =
+                System.getenv("MTC_KEY_ALIAS") ?: project.findProperty("MTC_KEY_ALIAS") as String
+            keyPassword = System.getenv("MTC_KEY_PASSWORD")
+                ?: project.findProperty("MTC_KEY_PASSWORD") as String
         }
     }
 
@@ -36,25 +37,6 @@ android {
         testInstrumentationRunner = "androidx.test.runner.CustomTestRunner"
         vectorDrawables {
             useSupportLibrary = true
-        }
-    }
-
-    buildTypes {
-        // keytool -list -v -keystore /Users/gonzalo/AndroidStudioProjects/keys/mtcquizkeys -alias mtcquizkeys -> hash firebase
-        release {
-            isMinifyEnabled = true
-            isShrinkResources = true
-            isDebuggable = false
-            signingConfig = signingConfigs.getByName("release")
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro",
-            )
-        }
-        debug {
-            isMinifyEnabled = false
-            isDebuggable = true
-            versionNameSuffix = ".debug"
         }
     }
 
@@ -72,7 +54,6 @@ android {
 
 
     buildFeatures {
-        buildConfig = true
         compose = true
     }
 
