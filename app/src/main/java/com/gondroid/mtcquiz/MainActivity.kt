@@ -13,7 +13,6 @@ import androidx.compose.runtime.setValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
 import com.gondroid.mtcquiz.presentation.navigation.NavigationRoot
-import com.gondroid.mtcquiz.presentation.screens.sendComment.SendCommentViewModel
 import com.gondroid.mtcquiz.ui.theme.MTCQuizTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -42,8 +41,5 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-fun writeOnFirebase(viewModel: SendCommentViewModel) {
-    val time = System.currentTimeMillis()
-    viewModel.writeOnFirebase(time.toString())
-}
+
 
