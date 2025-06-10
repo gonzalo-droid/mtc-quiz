@@ -1,15 +1,10 @@
 plugins {
-    alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.ktlint)
-    alias(libs.plugins.com.google.gms.google.services)
-    alias(libs.plugins.com.google.firebase.crashlytics)
+    alias(libs.plugins.mtcquiz.android.application.compose)
 
-    /** Include
-     * alias(libs.plugins.android.application)
-     * alias(libs.plugins.kotlin.application)
-     */
-    alias(libs.plugins.mtcquiz.android.application)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.ktlint)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.com.google.gms.google.services)
 
 }
 
@@ -29,24 +24,10 @@ android {
                 ?: project.findProperty("MTC_KEY_PASSWORD") as String
         }
     }
-
     defaultConfig {
-
         testInstrumentationRunner = "androidx.test.runner.CustomTestRunner"
         vectorDrawables {
             useSupportLibrary = true
-        }
-    }
-
-    flavorDimensions += listOf("environment")
-    productFlavors {
-        create("qa") {
-            dimension = "environment"
-            applicationId = "com.gondroid.mtcquiz"
-        }
-        create("prod") {
-            dimension = "environment"
-            applicationId = "com.gondroid.mtcquiz"
         }
     }
 
@@ -68,11 +49,11 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.lifecycle.viewmodel.compose)
 
-    implementation(libs.androidx.ui)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.ui.graphics)
+    implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation(libs.androidx.material.icons.extended)
+    implementation(libs.androidx.compose.material.icons.extended)
 
     // Tools
     implementation(libs.timber)
@@ -81,7 +62,7 @@ dependencies {
 
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.foundation.android)
-    debugImplementation(libs.androidx.ui.tooling)
+    debugImplementation(libs.androidx.compose.ui.tooling)
 
     // Image
     implementation(libs.coil.compose)
@@ -122,8 +103,7 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.firebase.crashlytics)
 
-    // DataStore
-    implementation(libs.androidx.datastore.preferences)
+
 
     // Also add the dependencies for the Credential Manager libraries and specify their versions
     implementation(libs.androidx.credentials)

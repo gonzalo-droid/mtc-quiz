@@ -51,5 +51,4 @@ gradlePlugin {
             implementationClass = "AndroidHiltConventionPlugin"
         }
     }
-
 }
