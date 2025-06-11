@@ -29,7 +29,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.credentials.GetCredentialRequest
 import com.gondroid.designsystem.MTCQuizTheme
+import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 
 @Composable
 fun LoginScreenRoot(

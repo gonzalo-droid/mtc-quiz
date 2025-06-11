@@ -3,12 +3,13 @@ package com.gondroid.auth.presentation
 
 import android.content.Context
 import androidx.credentials.CustomCredential
+import androidx.credentials.GetCredentialRequest
 import androidx.credentials.GetCredentialResponse
 import androidx.credentials.exceptions.GetCredentialException
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gondroid.domain.repository.AuthRepository
-import com.gondroid.presentation.screens.configuration.ConfigurationDataState
+import com.gondroid.auth.domain.AuthRepository
+import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,8 +29,8 @@ class LoginScreenViewModel @Inject constructor(
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
-    private var _state = MutableStateFlow(ConfigurationDataState())
-    val state = _state.asStateFlow()
+    // private var _state = MutableStateFlow(ConfigurationDataState())
+    // val state = _state.asStateFlow()
 
 
     private var _isLoggedIn = MutableStateFlow(authRepository.isUserLoggedIn())
@@ -53,7 +54,15 @@ class LoginScreenViewModel @Inject constructor(
     fun launchGoogleSignIn(context: Context) {
         viewModelScope.launch {
             try {
-                handleSignIn(authRepository.getGoogleClient(context))
+                val signInWithGoogleOption = GetSignInWithGoogleOption.Builder(
+                    context.getString(R.string.default_web_client_id)
+                ).build()
+
+                val request = GetCredentialRequest.Builder()
+                    .addCredentialOption(signInWithGoogleOption)
+                    .build()
+
+                handleSignIn(credentialManager.getCredential(context, request))
             } catch (e: GetCredentialException) {
                 eventChannel.send(LoginEvent.Fail)
                 Timber.e("Error: ${e.localizedMessage} ${e.message}")

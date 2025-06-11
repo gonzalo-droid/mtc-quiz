@@ -1,8 +1,6 @@
 plugins {
     alias(libs.plugins.mtcquiz.android.library)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.dagger.hilt)
-    alias(libs.plugins.ksp)
+    alias(libs.plugins.mtcquiz.android.hilt)
 }
 
 android {
@@ -10,19 +8,6 @@ android {
 }
 
 dependencies {
-
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.test.ext.junit)
-    androidTestImplementation(libs.androidx.test.espresso.core)
-
-    // Librerias Dagger Hilt
-    implementation(libs.dagger.hilt.navigation.compose)
-    implementation(libs.dagger.hilt)
-    ksp(libs.dagger.hilt.compiler)
-
     // Import the Firebase BoM
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)

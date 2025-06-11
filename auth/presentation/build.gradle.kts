@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.mtcquiz.android.feature.ui)
+    alias(libs.plugins.mtcquiz.android.hilt)
 }
 
 android {
@@ -9,19 +10,22 @@ android {
 dependencies {
 
     // Librerias Android y compose
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.activity.compose)
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
-
-
     implementation(libs.timber)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.ui.text.google.fonts)
-    implementation(libs.androidx.foundation.android)
-    implementation(libs.androidx.foundation.android)
+
+    // Import the Firebase BoM
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.database)
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.crashlytics)
+
+    // Also add the dependencies for the Credential Manager libraries and specify their versions
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.googleid)
 
     // Image
     implementation(libs.coil.compose)

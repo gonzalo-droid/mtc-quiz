@@ -2,6 +2,7 @@ import com.android.build.api.dsl.LibraryExtension
 import com.gondroid.convention.ExtensionType
 import com.gondroid.convention.configureBuildTypes
 import com.gondroid.convention.configureKotlinAndroid
+import com.gondroid.convention.libs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
@@ -32,6 +33,7 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
             }
 
             dependencies {
+                "implementation"(libs.findLibrary("timber").get())
                 "testImplementation"(kotlin("test"))
             }
         }
