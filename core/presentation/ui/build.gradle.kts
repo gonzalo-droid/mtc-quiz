@@ -1,12 +1,14 @@
 plugins {
     alias(libs.plugins.mtcquiz.android.library.compose)
+
 }
 
 android {
-    namespace = "com.gondroid.presentation.ui"
+    namespace = "com.gondroid.core.presentation.ui"
 }
 
 dependencies {
+
 
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)

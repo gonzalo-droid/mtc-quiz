@@ -36,5 +36,5 @@ dependencies {
     //implementation(project(":auth:domain"))
     implementation(projects.auth.domain)
     implementation(projects.core.domain)
-    implementation(projects.core.presentation.designsystem)
+    // implementation(projects.core.presentation.designsystem)
 }

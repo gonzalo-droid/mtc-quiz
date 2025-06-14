@@ -1,4 +1,4 @@
-package com.gondroid.designsystem
+package com.gondroid.core.presentation.designsystem
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme

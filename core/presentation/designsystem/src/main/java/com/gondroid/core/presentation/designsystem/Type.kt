@@ -1,29 +1,55 @@
-package com.gondroid.designsystem
+package com.gondroid.core.presentation.designsystem
 
 import androidx.compose.material3.Typography
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.googlefonts.Font
-import androidx.compose.ui.text.googlefonts.GoogleFont
-import com.gondroid.mtcquiz.R
+import androidx.compose.ui.text.font.FontWeight
 
-val provider = GoogleFont.Provider(
-    providerAuthority = "com.google.android.gms.fonts",
-    providerPackage = "com.google.android.gms",
-    certificates = R.array.com_google_android_gms_fonts_certs
-)
 
 val bodyFontFamily = FontFamily(
     Font(
-        googleFont = GoogleFont("Lato"),
-        fontProvider = provider,
-    )
+        resId = R.font.poppins_light,
+        weight = FontWeight.Light
+    ),
+    Font(
+        resId = R.font.poppins_regular,
+        weight = FontWeight.Normal
+    ),
+    Font(
+        resId = R.font.poppins_medium,
+        weight = FontWeight.Medium
+    ),
+    Font(
+        resId = R.font.poppins_semibold,
+        weight = FontWeight.SemiBold
+    ),
+    Font(
+        resId = R.font.poppins_bold,
+        weight = FontWeight.Bold
+    ),
 )
 
 val displayFontFamily = FontFamily(
     Font(
-        googleFont = GoogleFont("Lato"),
-        fontProvider = provider,
-    )
+        resId = R.font.poppins_light,
+        weight = FontWeight.Light
+    ),
+    Font(
+        resId = R.font.poppins_regular,
+        weight = FontWeight.Normal
+    ),
+    Font(
+        resId = R.font.poppins_medium,
+        weight = FontWeight.Medium
+    ),
+    Font(
+        resId = R.font.poppins_semibold,
+        weight = FontWeight.SemiBold
+    ),
+    Font(
+        resId = R.font.poppins_bold,
+        weight = FontWeight.Bold
+    ),
 )
 
 // Default Material 3 typography values

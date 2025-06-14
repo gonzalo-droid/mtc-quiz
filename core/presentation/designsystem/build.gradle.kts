@@ -1,9 +1,10 @@
 plugins {
     alias(libs.plugins.mtcquiz.android.library.compose)
+
 }
 
 android {
-    namespace = "com.gondroid.presentation.designsystem"
+    namespace = "com.gondroid.core.presentation.designsystem"
 }
 
 dependencies {
@@ -15,7 +16,5 @@ dependencies {
     implementation(libs.androidx.compose.material.icons.extended)
 
     debugImplementation(libs.androidx.compose.ui.tooling)
-
     api(libs.androidx.compose.material3)
-
 }

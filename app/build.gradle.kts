@@ -10,6 +10,9 @@ plugins {
 
 android {
 
+    namespace = "com.gondroid.mtcquiz"
+
+
     signingConfigs {
         create("release") {
             storeFile = file(

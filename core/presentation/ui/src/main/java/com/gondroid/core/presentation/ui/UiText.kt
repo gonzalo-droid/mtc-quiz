@@ -1,4 +1,4 @@
-package com.gondroid.presentation.ui
+package com.gondroid.core.presentation.ui
 
 import android.content.Context
 import androidx.annotation.StringRes

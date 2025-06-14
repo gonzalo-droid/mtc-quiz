@@ -1,4 +1,4 @@
-package com.gondroid.presentation.ui
+package com.gondroid.core.presentation.designsystem
 
 import org.junit.Test
 
