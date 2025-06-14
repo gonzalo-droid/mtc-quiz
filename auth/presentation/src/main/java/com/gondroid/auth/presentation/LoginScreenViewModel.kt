@@ -32,7 +32,6 @@ class LoginScreenViewModel @Inject constructor(
     // private var _state = MutableStateFlow(ConfigurationDataState())
     // val state = _state.asStateFlow()
 
-
     private var _isLoggedIn = MutableStateFlow(authRepository.isUserLoggedIn())
     val isLoggedIn = _isLoggedIn.asStateFlow()
 
