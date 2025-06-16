@@ -40,7 +40,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import com.gondroid.mtcquiz.R
 import com.gondroid.mtcquiz.presentation.screens.detail.providers.DetailScreenPreviewProvider
 import com.gondroid.mtcquiz.ui.theme.MTCQuizTheme
 import com.gondroid.presentation.screens.detail.providers.DetailScreenPreviewProvider
@@ -62,11 +61,11 @@ fun DetailScreenRoot(
         state = state,
         onAction = { action ->
             when (action) {
-                is DetailScreenAction.Back -> navigateBack()
-                is DetailScreenAction.GoToConfiguration -> navigateToConfiguration()
-                is DetailScreenAction.GoToEvaluation -> navigateToEvaluation(action.categoryId)
-                is DetailScreenAction.GoToQuestions -> navigateToQuestions(action.categoryId)
-                is DetailScreenAction.ShowPDF -> navigateToShowPDF(action.categoryId)
+                is DetailAction.Back -> navigateBack()
+                is DetailAction.GoToConfiguration -> navigateToConfiguration()
+                is DetailAction.GoToEvaluation -> navigateToEvaluation(action.categoryId)
+                is DetailAction.GoToQuestions -> navigateToQuestions(action.categoryId)
+                is DetailAction.ShowPDF -> navigateToShowPDF(action.categoryId)
             }
         }
     )
@@ -75,8 +74,8 @@ fun DetailScreenRoot(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailScreen(
-    state: DetailDataState,
-    onAction: (DetailScreenAction) -> Unit,
+    state: DetailState,
+    onAction: (DetailAction) -> Unit,
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize().semantics{
@@ -99,7 +98,7 @@ fun DetailScreen(
                         modifier =
                             Modifier.clickable {
                                 onAction(
-                                    DetailScreenAction.Back,
+                                    DetailAction.Back,
                                 )
                             }.semantics{
                                 contentDescription = "back_button"
@@ -112,7 +111,7 @@ fun DetailScreen(
                             Modifier
                                 .padding(8.dp)
                                 .clickable {
-                                    onAction(DetailScreenAction.GoToConfiguration)
+                                    onAction(DetailAction.GoToConfiguration)
                                 },
                     ) {
                         Icon(
@@ -176,9 +175,9 @@ fun DetailScreen(
             Spacer(modifier = Modifier.weight(1f))
 
             ButtonsAction(
-                onGoToEvaluation = { onAction(DetailScreenAction.GoToEvaluation(state.category.id)) },
-                onGoToQuestions = { onAction(DetailScreenAction.GoToQuestions(state.category.id)) },
-                onShowPdf = { onAction(DetailScreenAction.ShowPDF(state.category.id)) }
+                onGoToEvaluation = { onAction(DetailAction.GoToEvaluation(state.category.id)) },
+                onGoToQuestions = { onAction(DetailAction.GoToQuestions(state.category.id)) },
+                onShowPdf = { onAction(DetailAction.ShowPDF(state.category.id)) }
             )
         }
 
@@ -247,7 +246,7 @@ fun ButtonsAction(
 )
 @Composable
 fun PreviewDetailScreenRoot(
-    @PreviewParameter(DetailScreenPreviewProvider::class) state: DetailDataState,
+    @PreviewParameter(DetailScreenPreviewProvider::class) state: DetailState,
 ) {
     MTCQuizTheme {
         DetailScreen(

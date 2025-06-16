@@ -1,9 +1,6 @@
 package com.gondroid.detail.presentation
 
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -28,7 +25,7 @@ constructor(
 ) : ViewModel() {
 
 
-    private var _state = MutableStateFlow(DetailDataState())
+    private var _state = MutableStateFlow(DetailState())
     val state = _state.asStateFlow()
 
     private val data = savedStateHandle.toRoute<DetailScreenRoute>()

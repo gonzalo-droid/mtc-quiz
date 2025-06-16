@@ -1,12 +1,9 @@
 package com.gondroid.home.presentation
 
-
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gondroid.domain.repository.PreferenceRepository
-import com.gondroid.domain.repository.QuizRepository
-import com.gondroid.mtcquiz.domain.repository.PreferenceRepository
-import com.gondroid.mtcquiz.domain.repository.QuizRepository
+import com.gondroid.core.domain.repository.PreferenceRepository
+import com.gondroid.core.domain.repository.QuizRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,7 +21,7 @@ constructor(
     private val preferenceRepository: PreferenceRepository
 ) : ViewModel() {
 
-    private var _state = MutableStateFlow(HomeDataState())
+    private var _state = MutableStateFlow(HomeState())
     val state = _state.asStateFlow()
 
     init {

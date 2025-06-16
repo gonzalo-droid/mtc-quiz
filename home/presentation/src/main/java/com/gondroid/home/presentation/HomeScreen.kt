@@ -41,10 +41,9 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
-import com.gondroid.domain.models.Category
+import com.gondroid.core.domain.model.Category
+import com.gondroid.core.presentation.designsystem.MTCQuizTheme
 import com.gondroid.home.presentation.providers.HomeScreenPreviewProvider
-import com.gondroid.mtcquiz.domain.models.Category
-import com.gondroid.mtcquiz.ui.theme.MTCQuizTheme
 import kotlin.math.absoluteValue
 
 @Composable
@@ -60,8 +59,8 @@ fun HomeScreenRoot(
         state = state,
         onAction = { action ->
             when (action) {
-                is HomeScreenAction.OnClickCategory -> navigateToDetail(action.categoryId)
-                is HomeScreenAction.GoToConfiguration -> navigateToConfiguration()
+                is HomeAction.OnClickCategory -> navigateToDetail(action.categoryId)
+                is HomeAction.GoToConfiguration -> navigateToConfiguration()
             }
         }
     )
@@ -71,13 +70,14 @@ fun HomeScreenRoot(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    state: HomeDataState,
-    onAction: (HomeScreenAction) -> Unit
+    state: HomeState,
+    onAction: (HomeAction) -> Unit
 ) {
 
     Scaffold(
-        modifier = Modifier.fillMaxSize()
-            .semantics{
+        modifier = Modifier
+            .fillMaxSize()
+            .semantics {
                 contentDescription = "home_screen"
             },
         topBar = {
@@ -96,7 +96,7 @@ fun HomeScreen(
                             Modifier
                                 .padding(8.dp)
                                 .clickable {
-                                    onAction(HomeScreenAction.GoToConfiguration)
+                                    onAction(HomeAction.GoToConfiguration)
                                 },
                     ) {
                         Icon(
@@ -119,7 +119,7 @@ fun HomeScreen(
             Text(
                 modifier = Modifier.padding(horizontal = 16.dp),
                 text = stringResource(R.string.hi_name, state.userName),
-                style =  MaterialTheme.typography.bodyLarge,
+                style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.height(8.dp))
@@ -160,7 +160,7 @@ fun HomeScreen(
                     index = index,
                     item = state.categories[index],
                     onItemSelected = {
-                        onAction(HomeScreenAction.OnClickCategory(state.categories[index].id))
+                        onAction(HomeAction.OnClickCategory(state.categories[index].id))
                     })
             }
 
@@ -249,7 +249,7 @@ fun CardCategoryItem(
 )
 @Composable
 fun PreviewHomeScreenRoot(
-    @PreviewParameter(HomeScreenPreviewProvider::class) state: HomeDataState,
+    @PreviewParameter(HomeScreenPreviewProvider::class) state: HomeState,
 ) {
     MTCQuizTheme {
         HomeScreen(
