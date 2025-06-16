@@ -69,14 +69,14 @@ fun ConfigurationScreenRoot(
         onNavigateUp = navigateBack,
         onAction = { action ->
             when (action) {
-                ConfigurationScreenAction.GoToAbout -> navigateToAbout()
-                ConfigurationScreenAction.GoToRating -> {
+                ConfigurationAction.GoToAbout -> navigateToAbout()
+                ConfigurationAction.GoToRating -> {
                     OpenAppInPlayStore().invoke(context)
                 }
 
-                ConfigurationScreenAction.GoToSCustomize -> navigateToCustomize()
-                ConfigurationScreenAction.GoToTerm -> navigateToTerm()
-                ConfigurationScreenAction.Logout -> {
+                ConfigurationAction.GoToSCustomize -> navigateToCustomize()
+                ConfigurationAction.GoToTerm -> navigateToTerm()
+                ConfigurationAction.Logout -> {
                     viewModel.logout()
                 }
             }
@@ -131,7 +131,7 @@ fun ItemList(
 @Composable
 fun ConfigurationScreen(
     onNavigateUp: () -> Unit,
-    onAction: (ConfigurationScreenAction) -> Unit
+    onAction: (ConfigurationAction) -> Unit
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -174,7 +174,7 @@ fun ConfigurationScreen(
                 title = stringResource(R.string.custom_values),
                 onItemClick = {
                     onAction(
-                        ConfigurationScreenAction.GoToSCustomize
+                        ConfigurationAction.GoToSCustomize
                     )
                 }
             )
@@ -187,7 +187,7 @@ fun ConfigurationScreen(
                 title = stringResource(R.string.term_and_conditions),
                 onItemClick = {
                     onAction(
-                        ConfigurationScreenAction.GoToTerm
+                        ConfigurationAction.GoToTerm
                     )
                 }
             )
@@ -200,7 +200,7 @@ fun ConfigurationScreen(
                 title = stringResource(R.string.ranting_app),
                 onItemClick = {
                     onAction(
-                        ConfigurationScreenAction.GoToRating
+                        ConfigurationAction.GoToRating
                     )
                 }
             )
@@ -227,7 +227,7 @@ fun ConfigurationScreen(
                     .padding(top = 16.dp)
                     .clickable {
                         onAction(
-                            ConfigurationScreenAction.Logout
+                            ConfigurationAction.Logout
                         )
                     }) {
                 Icon(

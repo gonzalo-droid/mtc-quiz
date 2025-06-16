@@ -20,7 +20,7 @@ class ConfigurationScreenViewModel
 ) : ViewModel() {
 
 
-    private var _state = MutableStateFlow(ConfigurationDataState())
+    private var _state = MutableStateFlow(ConfigurationState())
     val state = _state.asStateFlow()
 
     private var eventChannel = Channel<ConfigurationEvent>()

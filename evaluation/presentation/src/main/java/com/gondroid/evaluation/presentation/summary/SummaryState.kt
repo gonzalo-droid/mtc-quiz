@@ -1,9 +1,9 @@
 package com.gondroid.evaluation.presentation.summary
 
-import com.gondroid.domain.models.Category
-import com.gondroid.domain.models.Evaluation
+import com.gondroid.core.domain.model.Category
+import com.gondroid.core.domain.model.Evaluation
 
-data class SummaryDataState(
+data class SummaryState(
     val date: String = "",
     val category: Category = Category(),
     val evaluation: Evaluation = Evaluation(),

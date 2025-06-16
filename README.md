@@ -1,19 +1,23 @@
 # 🚗 mtc-quiz
 
-Aplicación Android para practicar el examen de reglas de tránsito del Ministerio de Transportes y Comunicaciones del Perú. Está diseñada como un cuestionario interactivo con preguntas de selección múltiple basadas en el temario oficial.
+Aplicación Android para practicar el examen de reglas de tránsito del Ministerio de Transportes y
+Comunicaciones del Perú. Está diseñada como un cuestionario interactivo con preguntas de selección
+múltiple basadas en el temario oficial.
 
 ---
 
 ## 🌟 Objetivos del proyecto
 
-El principal objetivo de este proyecto fue **practicar y consolidar el uso de arquitectura modular en Android**, aplicando principios como Clean Architecture, inyección de dependencias, testing y separación clara de responsabilidades.
+El principal objetivo de este proyecto fue **practicar y consolidar el uso de arquitectura modular
+en Android**, aplicando principios como Clean Architecture, inyección de dependencias, testing y
+separación clara de responsabilidades.
 
 ---
 
 ## 🛠️ Tecnologías utilizadas
 
 - **Lenguaje**: Kotlin
-- **UI**: Jetpack Compose
+- **UI**: Jetpack Compose∑
 - **Arquitectura**: Clean Architecture + MVVM
 - **Persistencia local**: Room (SQLite)
 - **Networking**: Retrofit2 + Moshi

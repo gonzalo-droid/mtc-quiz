@@ -58,7 +58,7 @@ fun QuestionsScreenRoot(
         state = state,
         onAction = { action ->
             when (action) {
-                QuestionsScreenAction.Back -> navigateBack()
+                QuestionsAction.Back -> navigateBack()
             }
         }
     )
@@ -68,8 +68,8 @@ fun QuestionsScreenRoot(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun QuestionsScreen(
-    state: QuestionsDataState,
-    onAction: (QuestionsScreenAction) -> Unit,
+    state: QuestionsState,
+    onAction: (QuestionsAction) -> Unit,
 ) {
     var isSearchExpanded by remember { mutableStateOf(false) }
     var searchText by remember { mutableStateOf("") }
@@ -148,7 +148,7 @@ fun QuestionsScreen(
                             modifier =
                                 Modifier.clickable {
                                     onAction(
-                                        QuestionsScreenAction.Back,
+                                        QuestionsAction.Back,
                                     )
                                 },
                         )
@@ -298,7 +298,7 @@ fun PreviewQuestionsScreenRoot() {
 
     MTCQuizTheme {
         QuestionsScreen(
-            state = QuestionsDataState(questions = questions),
+            state = QuestionsState(questions = questions),
             onAction = {}
         )
     }

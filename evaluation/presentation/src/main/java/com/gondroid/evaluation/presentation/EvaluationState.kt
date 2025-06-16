@@ -1,9 +1,9 @@
 package com.gondroid.evaluation.presentation
 
-import com.gondroid.domain.models.Category
-import com.gondroid.domain.models.Question
+import com.gondroid.core.domain.model.Category
+import com.gondroid.core.domain.model.Question
 
-data class EvaluationDataState(
+data class EvaluationState(
     val questions: List<Question> = emptyList(),
     val question: Question = Question(),
     val indexQuestion: Int = 0,

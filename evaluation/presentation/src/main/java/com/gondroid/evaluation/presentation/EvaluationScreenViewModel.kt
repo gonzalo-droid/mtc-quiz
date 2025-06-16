@@ -5,6 +5,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.gondroid.core.domain.model.Evaluation
+import com.gondroid.core.domain.model.QuestionResult
+import com.gondroid.core.domain.repository.PreferenceRepository
+import com.gondroid.core.domain.repository.QuizRepository
 import com.gondroid.domain.models.Evaluation
 import com.gondroid.domain.models.QuestionResult
 import com.gondroid.domain.repository.PreferenceRepository
@@ -35,7 +39,7 @@ constructor(
     private val preferenceRepository: PreferenceRepository
 ) : ViewModel() {
 
-    private var _state = MutableStateFlow(EvaluationDataState())
+    private var _state = MutableStateFlow(EvaluationState())
     val state = _state.asStateFlow()
 
     private val _resultsList = mutableListOf<QuestionResult>()

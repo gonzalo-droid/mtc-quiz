@@ -35,6 +35,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.gondroid.core.presentation.designsystem.MTCQuizTheme
 
 @Composable
 fun CustomizeScreenRoot(
@@ -64,7 +65,7 @@ fun CustomizeScreenRoot(
         onNavigateUp = navigateBack,
         onAction = { action ->
             when (action) {
-                is CustomizeScreenAction.UpdateValues -> viewModel.updateValues(
+                is CustomizeAction.UpdateValues -> viewModel.updateValues(
                     numberQuestions = action.numberQuestions,
                     timeToFinishEvaluation = action.timeToFinishEvaluation,
                     percentageToApprovedEvaluation = action.percentageToApprovedEvaluation
@@ -79,8 +80,8 @@ fun CustomizeScreenRoot(
 @Composable
 fun CustomizeScreen(
     onNavigateUp: () -> Unit,
-    onAction: (CustomizeScreenAction) -> Unit,
-    state: CustomizeDataState
+    onAction: (CustomizeAction) -> Unit,
+    state: CustomizeState
 ) {
 
     var numberQuestions by remember { mutableStateOf("") }
@@ -178,7 +179,7 @@ fun CustomizeScreen(
                     .padding(16.dp),
                 updateData = {
                     onAction(
-                        CustomizeScreenAction.UpdateValues(
+                        CustomizeAction.UpdateValues(
                             numberQuestions = numberQuestions,
                             timeToFinishEvaluation = timeToFinishEvaluation,
                             percentageToApprovedEvaluation = percentageToApprovedEvaluation
@@ -266,7 +267,7 @@ fun CustomizeScreenRootPreview() {
         CustomizeScreen(
             onNavigateUp = {},
             onAction = {},
-            state = CustomizeDataState()
+            state = CustomizeState()
         )
     }
 }

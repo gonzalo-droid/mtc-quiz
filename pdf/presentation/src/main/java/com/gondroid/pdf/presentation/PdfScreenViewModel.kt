@@ -5,6 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.gondroid.core.domain.repository.QuizRepository
 import com.gondroid.domain.repository.QuizRepository
 import com.gondroid.mtcquiz.domain.repository.QuizRepository
 import com.gondroid.mtcquiz.presentation.navigation.PdfScreenRoute
@@ -22,7 +23,7 @@ class PdfScreenViewModel @Inject constructor(
     private val repository: QuizRepository
 ) : ViewModel() {
 
-    private var _state = MutableStateFlow(PdfDataState())
+    private var _state = MutableStateFlow(PdfState())
     val state = _state.asStateFlow()
 
 

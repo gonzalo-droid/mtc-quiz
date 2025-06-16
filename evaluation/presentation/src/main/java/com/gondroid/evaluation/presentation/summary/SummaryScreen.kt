@@ -55,9 +55,6 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
-import com.gondroid.mtcquiz.R
-import com.gondroid.mtcquiz.domain.models.EvaluationState
-import com.gondroid.mtcquiz.ui.theme.MTCQuizTheme
 import kotlinx.coroutines.delay
 
 
@@ -72,7 +69,7 @@ fun SummaryScreenRoot(
         state = state,
         onAction = { action ->
             when (action) {
-                SummaryScreenAction.FinishExam -> navigateToDetail(state.category.id)
+                SummaryAction.FinishExam -> navigateToDetail(state.category.id)
             }
         }
     )
@@ -82,8 +79,8 @@ fun SummaryScreenRoot(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SummaryScreen(
-    state: SummaryDataState,
-    onAction: (SummaryScreenAction) -> Unit
+    state: SummaryState,
+    onAction: (SummaryAction) -> Unit
 ) {
 
     val angleRatio =
@@ -215,7 +212,7 @@ fun SummaryScreen(
             Spacer(modifier = Modifier.weight(1f))
 
             ButtonsAction(
-                onGoToDetail = { onAction(SummaryScreenAction.FinishExam) },
+                onGoToDetail = { onAction(SummaryAction.FinishExam) },
             )
         }
 
@@ -239,7 +236,7 @@ fun SummaryScreen(
 @Composable
 fun ProgressReport(
     modifier: Modifier,
-    state: SummaryDataState,
+    state: SummaryState,
     angleRatio: Float,
     animatedPercentageValue: Int
 ) {
@@ -300,7 +297,7 @@ fun ProgressReport(
 @Composable
 fun TitleResult(
     modifier: Modifier,
-    state: SummaryDataState,
+    state: SummaryState,
 ) {
 
     val isApproved = state.evaluation.state == EvaluationState.APPROVED
@@ -340,7 +337,7 @@ fun TitleResult(
 @Composable
 fun TotalSection(
     modifier: Modifier,
-    state: SummaryDataState,
+    state: SummaryState,
 ) {
     Card(
         modifier = modifier,
@@ -448,7 +445,7 @@ fun ButtonsAction(
 fun PreviewSummaryScreenRoot() {
     MTCQuizTheme {
         SummaryScreen(
-            state = SummaryDataState(),
+            state = SummaryState(),
             onAction = {}
         )
     }

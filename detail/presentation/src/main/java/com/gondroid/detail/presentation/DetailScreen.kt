@@ -15,8 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Book
-import androidx.compose.material.icons.filled.DirectionsCar
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -40,9 +38,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import com.gondroid.mtcquiz.presentation.screens.detail.providers.DetailScreenPreviewProvider
-import com.gondroid.mtcquiz.ui.theme.MTCQuizTheme
-import com.gondroid.presentation.screens.detail.providers.DetailScreenPreviewProvider
+import com.gondroid.core.presentation.designsystem.MTCQuizTheme
+import com.gondroid.detail.presentation.providers.DetailScreenPreviewProvider
 
 @Composable
 fun DetailScreenRoot(
@@ -78,9 +75,11 @@ fun DetailScreen(
     onAction: (DetailAction) -> Unit,
 ) {
     Scaffold(
-        modifier = Modifier.fillMaxSize().semantics{
-            contentDescription = "detail_screen"
-        },
+        modifier = Modifier
+            .fillMaxSize()
+            .semantics {
+                contentDescription = "detail_screen"
+            },
         topBar = {
             TopAppBar(
                 title = {
@@ -96,13 +95,15 @@ fun DetailScreen(
                         contentDescription = "Back",
                         tint = MaterialTheme.colorScheme.onBackground,
                         modifier =
-                            Modifier.clickable {
-                                onAction(
-                                    DetailAction.Back,
-                                )
-                            }.semantics{
-                                contentDescription = "back_button"
-                            },
+                            Modifier
+                                .clickable {
+                                    onAction(
+                                        DetailAction.Back,
+                                    )
+                                }
+                                .semantics {
+                                    contentDescription = "back_button"
+                                },
                     )
                 },
                 actions = {
@@ -200,9 +201,9 @@ fun ButtonsAction(
             onClick = onGoToEvaluation,
             modifier = Modifier
                 .fillMaxWidth()
-                .semantics{
-                contentDescription = "start_evaluation"
-            }
+                .semantics {
+                    contentDescription = "start_evaluation"
+                }
         ) {
             Text(text = stringResource(R.string.start_evaluation))
         }
@@ -211,7 +212,7 @@ fun ButtonsAction(
             onClick = onGoToQuestions,
             modifier = Modifier
                 .fillMaxWidth()
-                .semantics{
+                .semantics {
                     contentDescription = "study"
                 },
             border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
@@ -226,8 +227,9 @@ fun ButtonsAction(
 
         TextButton(
             onClick = onShowPdf,
-            modifier = Modifier.fillMaxWidth()
-                .semantics{
+            modifier = Modifier
+                .fillMaxWidth()
+                .semantics {
                     contentDescription = "download_pdf"
                 },
         ) {

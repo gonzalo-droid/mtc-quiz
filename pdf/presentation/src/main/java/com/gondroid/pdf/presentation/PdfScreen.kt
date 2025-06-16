@@ -21,7 +21,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Download
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -53,9 +52,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import coil3.compose.AsyncImage
-import com.gondroid.mtcquiz.presentation.screens.util.Permissions.RequestPermissionIfNeeded
-import com.gondroid.mtcquiz.ui.theme.MTCQuizTheme
-import com.gondroid.presentation.screens.util.Permissions.RequestPermissionIfNeeded
+import com.gondroid.core.presentation.designsystem.MTCQuizTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -154,8 +151,8 @@ fun PdfScreenRoot(
         },
         onAction = { action ->
             when (action) {
-                is PdfScreenAction.Back -> navigateBack()
-                PdfScreenAction.Downloading -> {
+                is PdfAction.Back -> navigateBack()
+                PdfAction.Downloading -> {
                     viewModel.downloading(true)
                 }
             }
@@ -167,8 +164,8 @@ fun PdfScreenRoot(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PdfScreen(
-    state: PdfDataState,
-    onAction: (PdfScreenAction) -> Unit,
+    state: PdfState,
+    onAction: (PdfAction) -> Unit,
     onValueChange: (String) -> Unit,
     emptyListSearch: () -> Unit,
     pdfUri: Uri?,
@@ -196,7 +193,7 @@ fun PdfScreen(
                     Row(
                         modifier = Modifier.clickable {
                             onAction(
-                                PdfScreenAction.Downloading
+                                PdfAction.Downloading
                             )
                         },
                     ) {
@@ -221,7 +218,7 @@ fun PdfScreen(
                         modifier =
                             Modifier.clickable {
                                 onAction(
-                                    PdfScreenAction.Back,
+                                    PdfAction.Back,
                                 )
                             },
                     )
@@ -391,7 +388,7 @@ fun savePdfToDownloads(context: Context, assetPath: String, fileName: String): B
 fun PreviewPdfScreenRoot() {
     MTCQuizTheme {
         PdfScreen(
-            state = PdfDataState(),
+            state = PdfState(),
             onAction = {},
             pdfUri = null,
             renderedPages = listOf(),

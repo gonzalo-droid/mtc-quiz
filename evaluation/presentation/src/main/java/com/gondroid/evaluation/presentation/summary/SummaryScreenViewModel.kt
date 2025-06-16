@@ -8,6 +8,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.gondroid.core.domain.repository.QuizRepository
 import com.gondroid.domain.repository.QuizRepository
 import com.gondroid.mtcquiz.domain.repository.QuizRepository
 import com.gondroid.mtcquiz.presentation.navigation.SummaryScreenRoute
@@ -25,7 +26,7 @@ constructor(
     private val repository: QuizRepository
 ) : ViewModel() {
 
-    var state by mutableStateOf(SummaryDataState())
+    var state by mutableStateOf(SummaryState())
         private set
 
     private val data = savedStateHandle.toRoute<SummaryScreenRoute>()

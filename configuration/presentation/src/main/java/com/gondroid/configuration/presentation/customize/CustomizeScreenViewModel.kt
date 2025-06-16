@@ -3,8 +3,8 @@ package com.gondroid.configuration.presentation.customize
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gondroid.domain.models.PreferencesEvaluation
-import com.gondroid.domain.repository.PreferenceRepository
+import com.gondroid.core.domain.model.PreferencesEvaluation
+import com.gondroid.core.domain.repository.PreferenceRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +22,7 @@ constructor(
     private val repository: PreferenceRepository
 ) : ViewModel() {
 
-    private var _state = MutableStateFlow(CustomizeDataState())
+    private var _state = MutableStateFlow(CustomizeState())
     val state = _state.asStateFlow()
 
     private var eventChannel = Channel<CustomizeEvent>()

@@ -1,5 +1,5 @@
 package com.gondroid.configuration.presentation
 
-data class ConfigurationDataState(
+data class ConfigurationState(
     val date: String = ""
 )

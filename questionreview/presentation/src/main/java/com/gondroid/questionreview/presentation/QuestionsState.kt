@@ -1,9 +1,9 @@
 package com.gondroid.questionreview.presentation
 
-import com.gondroid.domain.models.Category
-import com.gondroid.domain.models.Question
+import com.gondroid.core.domain.model.Category
+import com.gondroid.core.domain.model.Question
 
-data class QuestionsDataState(
+data class QuestionsState(
     val questions: List<Question> = emptyList(),
     val category: Category = Category()
 )

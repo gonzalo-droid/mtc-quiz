@@ -42,17 +42,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.gondroid.domain.models.Category
-import com.gondroid.domain.models.Question
-import com.gondroid.domain.models.TypeActionQuestion
-import com.gondroid.mtcquiz.domain.models.TypeActionQuestion.FINISH
-import com.gondroid.mtcquiz.domain.models.TypeActionQuestion.NEXT
-import com.gondroid.mtcquiz.domain.models.TypeActionQuestion.VERIFY
-import com.gondroid.mtcquiz.ui.theme.MTCQuizTheme
-import com.gondroid.presentation.component.CardAnswer
-import com.gondroid.presentation.component.CardQuestion
-import com.gondroid.presentation.component.LinearProgressComponent
-import com.gondroid.presentation.util.toFormattedTime
+import com.gondroid.core.domain.model.Category
+import com.gondroid.core.domain.model.Question
+import com.gondroid.core.presentation.designsystem.MTCQuizTheme
 import kotlinx.coroutines.delay
 
 
@@ -84,30 +76,30 @@ fun EvaluationScreenRoot(
     EvaluationScreen(
         state = state, onAction = { action ->
             when (action) {
-                EvaluationScreenAction.Back -> {
+                EvaluationAction.Back -> {
                     showCancelDialog = true
                     blockExit = false
                 }
 
-                EvaluationScreenAction.VerifyAnswer -> viewModel.verifyAnswer()
-                EvaluationScreenAction.NextQuestion -> viewModel.nextQuestion()
-                is EvaluationScreenAction.SaveAnswer -> viewModel.saveAnswer(
+                EvaluationAction.VerifyAnswer -> viewModel.verifyAnswer()
+                EvaluationAction.NextQuestion -> viewModel.nextQuestion()
+                is EvaluationAction.SaveAnswer -> viewModel.saveAnswer(
                     isCorrect = action.isCorrect, option = action.option
                 )
 
-                is EvaluationScreenAction.SummaryExam -> {
+                is EvaluationAction.SummaryExam -> {
                     viewModel.saveExam()
                     showCancelDialog = false
                     blockExit = false
                 }
 
-                EvaluationScreenAction.ConfirmCancel -> {
+                EvaluationAction.ConfirmCancel -> {
                     showCancelDialog = false
                     blockExit = false
                     navigateBack()
                 }
 
-                EvaluationScreenAction.DismissDialog -> {
+                EvaluationAction.DismissDialog -> {
                     showCancelDialog = false
                     blockExit = true
                 }
@@ -119,8 +111,8 @@ fun EvaluationScreenRoot(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EvaluationScreen(
-    state: EvaluationDataState,
-    onAction: (EvaluationScreenAction) -> Unit,
+    state: EvaluationState,
+    onAction: (EvaluationAction) -> Unit,
     showCancelDialog: Boolean,
 ) {
 
@@ -180,7 +172,7 @@ fun EvaluationScreen(
                         tint = MaterialTheme.colorScheme.onBackground,
                         modifier = Modifier.clickable {
                             onAction(
-                                EvaluationScreenAction.Back,
+                                EvaluationAction.Back,
                             )
                         },
                     )
@@ -256,29 +248,29 @@ fun EvaluationScreen(
                 onClickNextQuestion = { type ->
                     when (type) {
                         VERIFY -> {
-                            onAction(EvaluationScreenAction.VerifyAnswer)
+                            onAction(EvaluationAction.VerifyAnswer)
                         }
 
                         NEXT -> {
                             onAction(
-                                EvaluationScreenAction.SaveAnswer(
+                                EvaluationAction.SaveAnswer(
                                     option = selectedOption.toString(),
                                     isCorrect = isCorrectAnswerSelected == true
                                 )
                             )
                             selectedOption = null
-                            onAction(EvaluationScreenAction.NextQuestion)
+                            onAction(EvaluationAction.NextQuestion)
                         }
 
                         FINISH -> {
                             onAction(
-                                EvaluationScreenAction.SaveAnswer(
+                                EvaluationAction.SaveAnswer(
                                     option = selectedOption.toString(),
                                     isCorrect = isCorrectAnswerSelected == true
                                 )
                             )
                             selectedOption = null
-                            onAction(EvaluationScreenAction.SummaryExam(state.category.id))
+                            onAction(EvaluationAction.SummaryExam(state.category.id))
                         }
                     }
                 })
@@ -288,18 +280,18 @@ fun EvaluationScreen(
         if (showFinishEvaluationDialog) {
             FinishedTimeDialog {
                 showFinishEvaluationDialog = false
-                onAction(EvaluationScreenAction.SummaryExam(state.category.id))
+                onAction(EvaluationAction.SummaryExam(state.category.id))
             }
         }
 
         if (showCancelDialog) {
             CancelEvaluation(onConfirmCancel = {
                 onAction(
-                    EvaluationScreenAction.ConfirmCancel
+                    EvaluationAction.ConfirmCancel
                 )
             }, onDismiss = {
                 onAction(
-                    EvaluationScreenAction.DismissDialog
+                    EvaluationAction.DismissDialog
                 )
             })
         }
@@ -309,7 +301,7 @@ fun EvaluationScreen(
 
 @Composable
 fun AnswerCard(
-    state: EvaluationDataState,
+    state: EvaluationState,
     text: String,
     isCorrect: Boolean,
     isSelected: Boolean,
@@ -342,7 +334,7 @@ fun AnswerCard(
 
 @Composable
 fun ButtonsAction(
-    state: EvaluationDataState,
+    state: EvaluationState,
     modifier: Modifier,
     onClickNextQuestion: (type: TypeActionQuestion) -> Unit = {},
     selectedOption: String?,
@@ -454,7 +446,7 @@ fun PreviewEvaluationScreenRoot() {
 
     MTCQuizTheme {
         EvaluationScreen(
-            state = EvaluationDataState(
+            state = EvaluationState(
                 questions = listOf(question), question = question, category = Category(
                     title = "CLASE A - CATEGORIA I"
                 )
