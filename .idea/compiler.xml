@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel>
+      <module name="MTCQuiz.data" target="21" />
+      <module name="MTCQuiz.domain" target="11" />
+      <module name="MTCQuiz.domain.main" target="11" />
+      <module name="MTCQuiz.domain.test" target="11" />
+      <module name="MTCQuiz.presentation" target="21" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

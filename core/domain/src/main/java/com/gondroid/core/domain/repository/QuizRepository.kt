@@ -1,8 +1,9 @@
-package com.gondroid.domain.repository
+package com.gondroid.core.domain.repository
 
-import com.gondroid.domain.models.Category
-import com.gondroid.domain.models.Evaluation
-import com.gondroid.domain.models.Question
+
+import com.gondroid.core.domain.model.Category
+import com.gondroid.core.domain.model.Evaluation
+import com.gondroid.core.domain.model.Question
 import kotlinx.coroutines.flow.Flow
 
 interface QuizRepository {

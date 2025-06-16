@@ -31,9 +31,6 @@ rootProject.name = "MTCQuiz"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 include(":app")
-include(":domain")
-include(":data")
-include(":presentation")
 
 include(":auth:data")
 include(":auth:presentation")

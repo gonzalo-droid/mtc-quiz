@@ -41,12 +41,10 @@
             <option value="$PROJECT_DIR$/core/presentation" />
             <option value="$PROJECT_DIR$/core/presentation/designsystem" />
             <option value="$PROJECT_DIR$/core/presentation/ui" />
-            <option value="$PROJECT_DIR$/data" />
             <option value="$PROJECT_DIR$/detail" />
             <option value="$PROJECT_DIR$/detail/data" />
             <option value="$PROJECT_DIR$/detail/domain" />
             <option value="$PROJECT_DIR$/detail/presentation" />
-            <option value="$PROJECT_DIR$/domain" />
             <option value="$PROJECT_DIR$/evaluation" />
             <option value="$PROJECT_DIR$/evaluation/data" />
             <option value="$PROJECT_DIR$/evaluation/domain" />
@@ -59,7 +57,6 @@
             <option value="$PROJECT_DIR$/pdf/data" />
             <option value="$PROJECT_DIR$/pdf/domain" />
             <option value="$PROJECT_DIR$/pdf/presentation" />
-            <option value="$PROJECT_DIR$/presentation" />
             <option value="$PROJECT_DIR$/questionreview" />
             <option value="$PROJECT_DIR$/questionreview/data" />
             <option value="$PROJECT_DIR$/questionreview/domain" />

@@ -1,4 +1,4 @@
-package com.gondroid.domain.models
+package com.gondroid.core.domain.model
 
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -12,19 +12,7 @@ data class Evaluation(
     val totalQuestions: Int = 0,
     var state: EvaluationState = EvaluationState.APPROVED,
     val date: LocalDateTime = LocalDateTime.now(),
-) {
-    fun toEntity(): EvaluationEntity = EvaluationEntity(
-        id = id,
-        categoryId = categoryId,
-        categoryTitle = categoryTitle,
-        totalCorrect = totalCorrect,
-        totalIncorrect = totalIncorrect,
-        total = totalQuestions,
-        state = state.name,
-        date = date.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
-    )
-
-}
+)
 
 enum class EvaluationState {
     APPROVED,

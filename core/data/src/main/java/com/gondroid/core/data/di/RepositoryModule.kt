@@ -1,17 +1,13 @@
-package com.gondroid.data.di
+package com.gondroid.core.data.di
 
 import android.content.Context
-import androidx.credentials.CredentialManager
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import com.gondroid.data.local.QuizRepositoryImpl
-import com.gondroid.data.local.evaluation.EvaluationDao
-import com.gondroid.data.local.userPreferences.PreferenceRepositoryImpl
-import com.gondroid.data.remote.AuthRepositoryImpl
-import com.gondroid.domain.repository.AuthRepository
-import com.gondroid.domain.repository.PreferenceRepository
-import com.gondroid.domain.repository.QuizRepository
-import com.google.firebase.auth.FirebaseAuth
+import com.gondroid.core.data.repository.PreferenceRepositoryImpl
+import com.gondroid.core.data.repository.QuizRepositoryImpl
+import com.gondroid.core.database.dao.EvaluationDao
+import com.gondroid.core.domain.repository.PreferenceRepository
+import com.gondroid.core.domain.repository.QuizRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -41,6 +37,7 @@ object RepositoryModule {
         context = context
     )
 
+    /*
     @Provides
     @Singleton
     fun provideAuthRepository(
@@ -52,6 +49,7 @@ object RepositoryModule {
         credentialManager = credentialManager,
         preferenceRepository = preferenceRepository
     )
+    */
 
     @Provides
     @Singleton

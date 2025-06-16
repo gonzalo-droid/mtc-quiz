@@ -22,15 +22,4 @@ data class EvaluationEntity(
     val total: Int,
     val state: String,
     val date: Long,
-) {
-    fun toDomain(): Evaluation = Evaluation(
-        id = id,
-        categoryId = categoryId,
-        categoryTitle = categoryTitle,
-        totalCorrect = totalCorrect,
-        totalIncorrect = totalIncorrect,
-        totalQuestions = total,
-        state = EvaluationState.valueOf(state),
-        date = LocalDateTime.ofInstant(Instant.ofEpochMilli(date), ZoneId.systemDefault())
-    )
-}
+)

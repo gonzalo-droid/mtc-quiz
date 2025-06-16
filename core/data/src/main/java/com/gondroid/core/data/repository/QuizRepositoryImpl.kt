@@ -1,15 +1,17 @@
-package com.gondroid.data.local
+package com.gondroid.core.data.repository
 
 import android.content.Context
-import com.gondroid.data.local.evaluation.EvaluationDao
-import com.gondroid.data.local.quiz.categoriesLocalDataSource
-import com.gondroid.domain.models.Category
-import com.gondroid.domain.models.Evaluation
-import com.gondroid.domain.models.EvaluationState
-import com.gondroid.domain.models.Question
-import com.gondroid.domain.models.QuestionResponse
-import com.gondroid.domain.repository.PreferenceRepository
-import com.gondroid.domain.repository.QuizRepository
+import com.gondroid.core.data.local.categoriesLocalDataSource
+import com.gondroid.core.database.dao.EvaluationDao
+import com.gondroid.core.database.mapper.toDomain
+import com.gondroid.core.database.mapper.toEntity
+import com.gondroid.core.domain.model.Category
+import com.gondroid.core.domain.model.Evaluation
+import com.gondroid.core.domain.model.EvaluationState
+import com.gondroid.core.domain.model.Question
+import com.gondroid.core.domain.model.QuestionResponse
+import com.gondroid.core.domain.repository.PreferenceRepository
+import com.gondroid.core.domain.repository.QuizRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -18,8 +20,8 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.json.Json
 import java.io.IOException
+import kotlinx.serialization.json.Json
 
 class QuizRepositoryImpl(
     private val evaluationDao: EvaluationDao,
