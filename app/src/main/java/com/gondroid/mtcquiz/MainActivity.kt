@@ -12,8 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
-import com.gondroid.mtcquiz.presentation.navigation.NavigationRoot
-import com.gondroid.mtcquiz.ui.theme.MTCQuizTheme
+import com.gondroid.core.presentation.designsystem.MTCQuizTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -27,11 +26,11 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             var keepSplashScreen by remember { mutableStateOf(true) }
-            splashScreen.setKeepOnScreenCondition{keepSplashScreen}
+            splashScreen.setKeepOnScreenCondition { keepSplashScreen }
             val authState by viewModel.state.collectAsState()
 
             MTCQuizTheme {
-                if (!authState.isLoading){
+                if (!authState.isLoading) {
                     keepSplashScreen = false
                     val navController = rememberNavController()
                     NavigationRoot(navController, authState.isLoggedIn)

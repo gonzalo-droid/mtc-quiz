@@ -3,7 +3,7 @@ package com.gondroid.mtcquiz
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gondroid.mtcquiz.domain.repository.PreferenceRepository
+import com.gondroid.core.domain.repository.PreferenceRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

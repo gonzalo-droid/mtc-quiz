@@ -67,15 +67,15 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
 
     // Image
-    implementation(libs.coil.compose)
+    // implementation(libs.coil.compose)
 
     // Lotiee
-    implementation(libs.lottie.compose)
+    // implementation(libs.lottie.compose)
 
     // Librerias Room
-    implementation(libs.room.ktx)
-    implementation(libs.room.runtime)
-    ksp(libs.room.compiler)
+    // implementation(libs.room.ktx)
+    // implementation(libs.room.runtime)
+    // ksp(libs.room.compiler)
 
     // Librerias Dagger Hilt
     implementation(libs.dagger.hilt.navigation.compose)
@@ -86,17 +86,17 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
 
     // Moshi
-    implementation(libs.moshi)
-    ksp(libs.moshi.codegen)
-    implementation(libs.moshi.kotlin)
+    // implementation(libs.moshi)
+    // ksp(libs.moshi.codegen)
+    // implementation(libs.moshi.kotlin)
 
     // Retrofit
-    implementation(libs.retrofit)
-    implementation(libs.retrofit.moshi)
+    // implementation(libs.retrofit)
+    // implementation(libs.retrofit.moshi)
 
     // OkHttp
-    implementation(libs.okhttp)
-    implementation(libs.okhttp.logging)
+    // implementation(libs.okhttp)
+    // implementation(libs.okhttp.logging)
 
     // Import the Firebase BoM
     implementation(platform(libs.firebase.bom))
@@ -134,6 +134,7 @@ dependencies {
     androidTestImplementation(libs.androidx.test.espresso.core)
     androidTestImplementation(libs.androidx.navigation.testing)
 
+
     // Hilt Testing
     androidTestImplementation(libs.dagger.hilt.android.testing)
     kspAndroidTest(libs.dagger.hilt.compiler)
@@ -141,7 +142,14 @@ dependencies {
     // Debug dependencies
     testImplementation(kotlin("test"))
 
+    implementation(projects.core.presentation.designsystem)
+    implementation(projects.core.presentation.ui)
+    implementation(projects.core.domain)
+    implementation(projects.core.data)
+    implementation(projects.core.database)
+
     implementation(projects.auth.presentation)
     implementation(projects.auth.domain)
     implementation(projects.auth.data)
+
 }

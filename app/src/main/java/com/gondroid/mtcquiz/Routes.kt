@@ -1,8 +1,6 @@
-package com.gondroid.mtcquiz.presentation.navigation
+package com.gondroid.mtcquiz
 
-import androidx.navigation.NavBackStackEntry
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
 
 @Serializable
 object LoginScreenRoute

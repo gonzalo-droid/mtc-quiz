@@ -29,9 +29,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.credentials.GetCredentialRequest
-import com.gondroid.designsystem.MTCQuizTheme
-import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
+import com.gondroid.core.presentation.designsystem.MTCQuizTheme
 
 @Composable
 fun LoginScreenRoot(
@@ -44,11 +42,12 @@ fun LoginScreenRoot(
     LaunchedEffect(true) {
         event.collect { event ->
             when (event) {
-                LoginEvent.Fail -> {
-                    Toast.makeText(context, "Error al iniciar sesión", Toast.LENGTH_SHORT).show()
+                is LoginEvent.Error -> {
+                    Toast.makeText(context, event.error.asString(context), Toast.LENGTH_SHORT)
+                        .show()
                 }
 
-                LoginEvent.Success -> {
+                LoginEvent.LoginSuccess -> {
                     Toast.makeText(context, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show()
                     navigateToHome()
                 }
@@ -60,8 +59,8 @@ fun LoginScreenRoot(
         navigateToDetail = {},
         onAction = { action ->
             when (action) {
-                LoginScreenAction.GoogleSignOn -> {
-                    viewModel.launchGoogleSignIn(context)
+                LoginAction.GoogleSignOn -> {
+                    viewModel.authenticateWithGoogle()
                 }
 
             }
@@ -74,7 +73,7 @@ fun LoginScreenRoot(
 @Composable
 fun LoginScreen(
     navigateToDetail: () -> Unit,
-    onAction: (LoginScreenAction) -> Unit
+    onAction: (LoginAction) -> Unit
 ) {
     Scaffold(
         containerColor = MaterialTheme.colorScheme.primary
@@ -115,7 +114,7 @@ fun LoginScreen(
                 Button(
                     onClick = {
                         onAction(
-                            LoginScreenAction.GoogleSignOn
+                            LoginAction.GoogleSignOn
                         )
                     },
                     modifier = Modifier

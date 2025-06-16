@@ -1,6 +1,8 @@
 package com.gondroid.auth.presentation
 
+import com.gondroid.core.presentation.ui.UiText
+
 sealed interface LoginEvent {
-    data object Success : LoginEvent
-    data object Fail : LoginEvent
+    data class Error(val error: UiText) : LoginEvent
+    data object LoginSuccess : LoginEvent
 }

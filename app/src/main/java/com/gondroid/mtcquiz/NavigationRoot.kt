@@ -1,4 +1,4 @@
-package com.gondroid.mtcquiz.presentation.navigation
+package com.gondroid.mtcquiz
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,9 +8,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.gondroid.mtcquiz.presentation.screens.configuration.customize.CustomizeScreenRoot
+import com.gondroid.auth.presentation.LoginScreenRoot
+import com.gondroid.auth.presentation.LoginScreenViewModel
 import com.gondroid.mtcquiz.presentation.screens.configuration.ConfigurationScreenRoot
 import com.gondroid.mtcquiz.presentation.screens.configuration.ConfigurationScreenViewModel
+import com.gondroid.mtcquiz.presentation.screens.configuration.customize.CustomizeScreenRoot
 import com.gondroid.mtcquiz.presentation.screens.configuration.customize.CustomizeScreenViewModel
 import com.gondroid.mtcquiz.presentation.screens.configuration.term.TermScreenRoot
 import com.gondroid.mtcquiz.presentation.screens.detail.DetailScreenRoot
@@ -21,8 +23,6 @@ import com.gondroid.mtcquiz.presentation.screens.evaluation.summary.SummaryScree
 import com.gondroid.mtcquiz.presentation.screens.evaluation.summary.SummaryScreenViewModel
 import com.gondroid.mtcquiz.presentation.screens.home.HomeScreenRoot
 import com.gondroid.mtcquiz.presentation.screens.home.HomeScreenViewModel
-import com.gondroid.mtcquiz.presentation.screens.login.LoginScreenRoot
-import com.gondroid.mtcquiz.presentation.screens.login.LoginScreenViewModel
 import com.gondroid.mtcquiz.presentation.screens.pdf.PdfScreenRoot
 import com.gondroid.mtcquiz.presentation.screens.pdf.PdfScreenViewModel
 import com.gondroid.mtcquiz.presentation.screens.questions.QuestionsScreenRoot

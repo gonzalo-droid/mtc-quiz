@@ -2,4 +2,5 @@
     <string name="singing_google">Iniciar sesión con Google</string>
     <string name="small_title_header">Es hora de cambiar de asiento</string>
     <string name="medium_title_header">Prepárate y\ntoma el volante</string>
+    <string name="provider_google_not_avaible">Inicio de sesión con Google no disponible</string>
 </resources>

@@ -1,14 +1,12 @@
 package com.gondroid.auth.data
 
-import android.content.Context
 import androidx.credentials.ClearCredentialStateRequest
 import androidx.credentials.ClearCredentialStateRequest.Companion.TYPE_CLEAR_RESTORE_CREDENTIAL
 import androidx.credentials.CredentialManager
-import androidx.credentials.GetCredentialRequest
-import androidx.credentials.GetCredentialResponse
 import com.gondroid.auth.domain.AuthRepository
+import com.gondroid.auth.domain.provider.AuthProvider
+import com.gondroid.auth.domain.provider.AuthResult
 import com.gondroid.core.domain.repository.PreferenceRepository
-import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
@@ -20,10 +18,10 @@ class AuthRepositoryImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
     private val credentialManager: CredentialManager,
     private val preferenceRepository: PreferenceRepository,
+    private val adapters: Set<@JvmSuppressWildcards AuthProviderAdapter>
 ) : AuthRepository {
 
-    override fun isUserLoggedIn(): Boolean = firebaseAuth.currentUser != null
-
+    override suspend fun isAuthenticated(): Boolean = firebaseAuth.currentUser != null
 
     override suspend fun logout(): Boolean {
         return try {
@@ -62,33 +60,16 @@ class AuthRepositoryImpl @Inject constructor(
         preferenceRepository.setIsLoggedIn(true)
     }
 
-    override suspend fun getGoogleClient(context: Context): GetCredentialResponse {
-        val signInWithGoogleOption: GetSignInWithGoogleOption =
-            GetSignInWithGoogleOption.Builder(
-                context.getString(R.string.default_web_client_id)
-            ).build()
+    override suspend fun authenticate(provider: AuthProvider): AuthResult {
+        val adapter = adapters.find { it.supports(provider) }
+            ?: return AuthResult.Error("No adapter found for provider: ${provider::class.simpleName}")
 
-        val request = GetCredentialRequest.Builder()
-            .addCredentialOption(signInWithGoogleOption)
-            .build()
-
-        return credentialManager.getCredential(context, request)
+        return adapter.authenticate(provider)
     }
 
-    suspend fun getGoogleClient(
-        contextProvider: () -> Context
-    ): GetCredentialResponse {
-        val context = contextProvider()
 
-        val signInWithGoogleOption = GetSignInWithGoogleOption.Builder(
-            context.getString(R.string.default_web_client_id)
-        ).build()
-
-        val request = GetCredentialRequest.Builder()
-            .addCredentialOption(signInWithGoogleOption)
-            .build()
-
-        return credentialManager.getCredential(context, request)
+    override suspend fun getAvailableProviders(): List<AuthProvider> {
+        TODO("Not yet implemented")
     }
 
 }

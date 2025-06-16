@@ -8,7 +8,7 @@ import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 
 @HiltAndroidApp
-class MTCApp : Application() {
+class MtcQuizApp : Application() {
     override fun onCreate() {
         super.onCreate()
         // Plant appropriate Timber tree based on build type
