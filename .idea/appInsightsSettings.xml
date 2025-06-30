@@ -6,14 +6,6 @@
         <entry key="Firebase Crashlytics">
           <value>
             <InsightsFilterSettings>
-              <option name="connection">
-                <ConnectionSetting>
-                  <option name="appId" value="com.gondroid.mtcquiz" />
-                  <option name="mobileSdkAppId" value="1:949408476336:android:f204df31e29aba29b95f75" />
-                  <option name="projectId" value="mtcquiz-d8c5f" />
-                  <option name="projectNumber" value="949408476336" />
-                </ConnectionSetting>
-              </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
               <option name="timeIntervalDays" value="THIRTY_DAYS" />
               <option name="visibilityType" value="ALL" />

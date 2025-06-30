@@ -1,0 +1,5 @@
+<resources>
+    <string name="study">Estudiar</string>
+    <string name="download_pdf">Descargar PDF</string>
+    <string name="start_evaluation">Iniciar evalución</string>
+</resources>

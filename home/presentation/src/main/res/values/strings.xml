@@ -1,0 +1,7 @@
+<resources>
+    <string name="test_evaluation">Simulacro de evaluación - Perú 🇵🇪</string>
+    <string name="hi_name">👋 Hola, %s</string>
+    <string name="subtitle_message_home">Evaluación de conocimientos para postulantes a licencias de conducir.</string>
+    <string name="selected_category">Selecciona tu categoría</string>
+    <string name="practice_to_evaluation">Preparate para tu evaluación</string>
+</resources>

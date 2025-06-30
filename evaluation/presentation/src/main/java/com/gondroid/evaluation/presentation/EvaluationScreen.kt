@@ -38,13 +38,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.gondroid.core.domain.model.Category
 import com.gondroid.core.domain.model.Question
+import com.gondroid.core.domain.model.TypeActionQuestion
 import com.gondroid.core.presentation.designsystem.MTCQuizTheme
+import com.gondroid.core.presentation.designsystem.components.CardAnswer
+import com.gondroid.core.presentation.designsystem.components.CardQuestion
+import com.gondroid.core.presentation.designsystem.components.LinearProgressComponent
+import com.gondroid.core.presentation.ui.toFormattedTime
 import kotlinx.coroutines.delay
 
 
@@ -216,9 +222,9 @@ fun EvaluationScreen(
 
             CardQuestion(
                 modifier = Modifier.fillMaxWidth(),
-                question = state.question
+                title = "${state.question.id}.- ${state.question.title}",
+                image = painterResource(id = R.drawable.card_background),
             )
-
 
             LazyColumn(
                 modifier = Modifier.weight(1f), verticalArrangement = Arrangement.Bottom
@@ -247,11 +253,11 @@ fun EvaluationScreen(
                 modifier = Modifier.fillMaxWidth(),
                 onClickNextQuestion = { type ->
                     when (type) {
-                        VERIFY -> {
+                        TypeActionQuestion.VERIFY -> {
                             onAction(EvaluationAction.VerifyAnswer)
                         }
 
-                        NEXT -> {
+                        TypeActionQuestion.NEXT -> {
                             onAction(
                                 EvaluationAction.SaveAnswer(
                                     option = selectedOption.toString(),
@@ -262,7 +268,7 @@ fun EvaluationScreen(
                             onAction(EvaluationAction.NextQuestion)
                         }
 
-                        FINISH -> {
+                        TypeActionQuestion.FINISH -> {
                             onAction(
                                 EvaluationAction.SaveAnswer(
                                     option = selectedOption.toString(),
@@ -339,21 +345,21 @@ fun ButtonsAction(
     onClickNextQuestion: (type: TypeActionQuestion) -> Unit = {},
     selectedOption: String?,
 ) {
-    var typeQuestion = VERIFY
+    var typeQuestion = TypeActionQuestion.VERIFY
 
     val buttonText = when {
         state.isFinishExam -> {
-            typeQuestion = FINISH
+            typeQuestion = TypeActionQuestion.FINISH
             stringResource(R.string.finish)
         }
 
         !state.answerWasVerified -> {
-            typeQuestion = VERIFY
+            typeQuestion = TypeActionQuestion.VERIFY
             stringResource(R.string.verify)
         }
 
         else -> {
-            typeQuestion = NEXT
+            typeQuestion = TypeActionQuestion.NEXT
             stringResource(R.string.next)
         }
     }

@@ -11,10 +11,8 @@ dependencies {
 
     // Librerias Android y compose
     implementation(libs.timber)
-    implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.ui.text.google.fonts)
-
     // Image
     implementation(libs.coil.compose)
 

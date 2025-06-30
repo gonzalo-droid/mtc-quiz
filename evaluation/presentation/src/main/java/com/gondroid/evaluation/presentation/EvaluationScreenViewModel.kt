@@ -9,15 +9,7 @@ import com.gondroid.core.domain.model.Evaluation
 import com.gondroid.core.domain.model.QuestionResult
 import com.gondroid.core.domain.repository.PreferenceRepository
 import com.gondroid.core.domain.repository.QuizRepository
-import com.gondroid.domain.models.Evaluation
-import com.gondroid.domain.models.QuestionResult
-import com.gondroid.domain.repository.PreferenceRepository
-import com.gondroid.domain.repository.QuizRepository
-import com.gondroid.mtcquiz.domain.models.Evaluation
-import com.gondroid.mtcquiz.domain.models.QuestionResult
-import com.gondroid.mtcquiz.domain.repository.PreferenceRepository
-import com.gondroid.mtcquiz.domain.repository.QuizRepository
-import com.gondroid.mtcquiz.presentation.navigation.EvaluationScreenRoute
+import com.gondroid.core.presentation.ui.EvaluationScreenRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow

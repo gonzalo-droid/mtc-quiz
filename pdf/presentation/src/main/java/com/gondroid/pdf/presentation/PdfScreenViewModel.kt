@@ -6,9 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.gondroid.core.domain.repository.QuizRepository
-import com.gondroid.domain.repository.QuizRepository
-import com.gondroid.mtcquiz.domain.repository.QuizRepository
-import com.gondroid.mtcquiz.presentation.navigation.PdfScreenRoute
+import com.gondroid.core.presentation.ui.PdfScreenRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

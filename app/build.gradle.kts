@@ -1,9 +1,7 @@
 plugins {
-    alias(libs.plugins.mtcquiz.android.application.compose)
-
+    alias(libs.plugins.mtcquiz.android.feature.ui)
+    alias(libs.plugins.mtcquiz.android.hilt)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.ktlint)
-    alias(libs.plugins.ksp)
     alias(libs.plugins.com.google.gms.google.services)
 
 }
@@ -78,9 +76,9 @@ dependencies {
     // ksp(libs.room.compiler)
 
     // Librerias Dagger Hilt
-    implementation(libs.dagger.hilt.navigation.compose)
-    implementation(libs.dagger.hilt)
-    ksp(libs.dagger.hilt.compiler)
+    // implementation(libs.dagger.hilt.navigation.compose)
+    // implementation(libs.dagger.hilt)
+    // ksp(libs.dagger.hilt.compiler)
 
     // Libreria Serializacion
     implementation(libs.kotlinx.serialization.json)
@@ -152,4 +150,28 @@ dependencies {
     implementation(projects.auth.domain)
     implementation(projects.auth.data)
 
+    implementation(projects.configuration.presentation)
+    implementation(projects.configuration.domain)
+    implementation(projects.configuration.data)
+
+    implementation(projects.home.presentation)
+    implementation(projects.home.domain)
+    implementation(projects.home.data)
+
+    implementation(projects.detail.presentation)
+    implementation(projects.detail.domain)
+    implementation(projects.detail.data)
+
+    implementation(projects.pdf.presentation)
+    implementation(projects.pdf.domain)
+    implementation(projects.pdf.data)
+
+    implementation(projects.evaluation.presentation)
+    implementation(projects.evaluation.domain)
+    implementation(projects.evaluation.data)
+
+
+    implementation(projects.questionreview.presentation)
+    implementation(projects.questionreview.domain)
+    implementation(projects.questionreview.data)
 }

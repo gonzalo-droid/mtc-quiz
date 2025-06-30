@@ -34,17 +34,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.gondroid.domain.models.Question
-import com.gondroid.presentation.component.CardAnswer
-import com.gondroid.presentation.component.CardQuestion
-import com.gondroid.presentation.component.LinearProgressComponent
-import com.gondroid.presentation.ui.theme.MTCQuizTheme
-import com.gondroid.presentation.util.normalizeText
+import com.gondroid.core.domain.model.Question
+import com.gondroid.core.presentation.designsystem.MTCQuizTheme
+import com.gondroid.core.presentation.designsystem.components.CardAnswer
+import com.gondroid.core.presentation.designsystem.components.CardQuestion
+import com.gondroid.core.presentation.designsystem.components.LinearProgressComponent
+import com.gondroid.core.presentation.ui.normalizeText
 
 
 @Composable
@@ -211,7 +212,8 @@ fun QuestionsScreen(
                     ) { question ->
                         CardQuestion(
                             modifier = Modifier.fillMaxWidth(),
-                            question = question
+                            title = "${question.id}.- ${question.title}",
+                            image = painterResource(id = R.drawable.card_background),
                         )
 
                         Spacer(modifier = Modifier.height(8.dp))

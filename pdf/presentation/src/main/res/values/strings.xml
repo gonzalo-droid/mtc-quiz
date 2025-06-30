@@ -1,0 +1,5 @@
+<resources>
+    <string name="success_download_pdf">PDF guardado en Descargas</string>
+    <string name="failure_download_pdf">Error al guardar PDF</string>
+    <string name="download">Descargar</string>
+</resources>

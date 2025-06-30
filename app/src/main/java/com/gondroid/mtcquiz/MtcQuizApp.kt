@@ -20,12 +20,12 @@ class MtcQuizApp : Application() {
             priority: Int,
             tag: String?,
             message: String,
-            throwable: Throwable?
+            t: Throwable?
         ) {
             if (priority == Log.VERBOSE || priority == Log.DEBUG) {
                 return
             }
-            val exception = throwable ?: Exception(message)
+            val exception = t ?: Exception(message)
 
             // Crashlytics
             val crashlytics = Firebase.crashlytics

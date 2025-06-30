@@ -10,26 +10,37 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.gondroid.auth.presentation.LoginScreenRoot
 import com.gondroid.auth.presentation.LoginScreenViewModel
-import com.gondroid.mtcquiz.presentation.screens.configuration.ConfigurationScreenRoot
-import com.gondroid.mtcquiz.presentation.screens.configuration.ConfigurationScreenViewModel
-import com.gondroid.mtcquiz.presentation.screens.configuration.customize.CustomizeScreenRoot
-import com.gondroid.mtcquiz.presentation.screens.configuration.customize.CustomizeScreenViewModel
-import com.gondroid.mtcquiz.presentation.screens.configuration.term.TermScreenRoot
-import com.gondroid.mtcquiz.presentation.screens.detail.DetailScreenRoot
-import com.gondroid.mtcquiz.presentation.screens.detail.DetailScreenViewModel
-import com.gondroid.mtcquiz.presentation.screens.evaluation.EvaluationScreenRoot
-import com.gondroid.mtcquiz.presentation.screens.evaluation.EvaluationScreenViewModel
-import com.gondroid.mtcquiz.presentation.screens.evaluation.summary.SummaryScreenRoot
-import com.gondroid.mtcquiz.presentation.screens.evaluation.summary.SummaryScreenViewModel
-import com.gondroid.mtcquiz.presentation.screens.home.HomeScreenRoot
-import com.gondroid.mtcquiz.presentation.screens.home.HomeScreenViewModel
-import com.gondroid.mtcquiz.presentation.screens.pdf.PdfScreenRoot
-import com.gondroid.mtcquiz.presentation.screens.pdf.PdfScreenViewModel
-import com.gondroid.mtcquiz.presentation.screens.questions.QuestionsScreenRoot
-import com.gondroid.mtcquiz.presentation.screens.questions.QuestionsScreenViewModel
+import com.gondroid.configuration.presentation.ConfigurationScreenRoot
+import com.gondroid.configuration.presentation.ConfigurationScreenViewModel
+import com.gondroid.configuration.presentation.customize.CustomizeScreenRoot
+import com.gondroid.configuration.presentation.customize.CustomizeScreenViewModel
+import com.gondroid.configuration.presentation.term.TermScreenRoot
+import com.gondroid.core.presentation.ui.ConfigurationScreenRoute
+import com.gondroid.core.presentation.ui.CustomizeScreenRoute
+import com.gondroid.core.presentation.ui.DetailScreenRoute
+import com.gondroid.core.presentation.ui.EvaluationScreenRoute
+import com.gondroid.core.presentation.ui.HomeScreenRoute
+import com.gondroid.core.presentation.ui.LoginScreenRoute
+import com.gondroid.core.presentation.ui.PdfScreenRoute
+import com.gondroid.core.presentation.ui.QuestionsScreenRoute
+import com.gondroid.core.presentation.ui.SummaryScreenRoute
+import com.gondroid.core.presentation.ui.TermScreenRoute
+import com.gondroid.detail.presentation.DetailScreenRoot
+import com.gondroid.detail.presentation.DetailScreenViewModel
+import com.gondroid.evaluation.presentation.EvaluationScreenRoot
+import com.gondroid.evaluation.presentation.EvaluationScreenViewModel
+import com.gondroid.evaluation.presentation.summary.SummaryScreenRoot
+import com.gondroid.evaluation.presentation.summary.SummaryScreenViewModel
+import com.gondroid.home.presentation.HomeScreenRoot
+import com.gondroid.home.presentation.HomeScreenViewModel
+import com.gondroid.pdf.presentation.PdfScreenRoot
+import com.gondroid.pdf.presentation.PdfScreenViewModel
+import com.gondroid.questionreview.presentation.QuestionsScreenRoot
+import com.gondroid.questionreview.presentation.QuestionsScreenViewModel
 
 @Composable
 fun NavigationRoot(navController: NavHostController, isLoggedIn: Boolean) {
+
     Box(
         modifier = Modifier.fillMaxSize(),
     ) {
@@ -130,7 +141,7 @@ fun NavigationRoot(navController: NavHostController, isLoggedIn: Boolean) {
                         )
                     },
                     navigateToAbout = {
-
+                        // TODO: Implementar navegación a About
                     },
                     navigateToLogout = {
                         navController.navigate(LoginScreenRoute) {
