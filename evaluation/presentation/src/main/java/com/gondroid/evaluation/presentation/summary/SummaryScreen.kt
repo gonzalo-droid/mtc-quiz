@@ -55,6 +55,9 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
+import com.gondroid.core.domain.model.EvaluationState
+import com.gondroid.core.presentation.designsystem.MTCQuizTheme
+import com.gondroid.evaluation.presentation.R
 import kotlinx.coroutines.delay
 
 

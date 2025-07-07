@@ -8,4 +8,10 @@
     <string name="cancel_evaluation">¿Cancelar evaluación?</string>
     <string name="yes_cancel">Sí, cancelar</string>
     <string name="no">No</string>
+    <string name="approved">Aprobado</string>
+    <string name="rejected">Rechazado</string>
+    <string name="results">Resultados</string>
+    <string name="total_correct">Total correctas</string>
+    <string name="total_incorrect">Toral incorrectas</string>
+    <string name="total_question">Total</string>
 </resources>

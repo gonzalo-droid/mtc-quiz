@@ -43,7 +43,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
 import com.gondroid.core.domain.model.Category
 import com.gondroid.core.presentation.designsystem.MTCQuizTheme
-import com.gondroid.home.presentation.providers.HomeScreenPreviewProvider
 import kotlin.math.absoluteValue
 
 @Composable
@@ -248,12 +247,31 @@ fun CardCategoryItem(
     showBackground = true,
 )
 @Composable
-fun PreviewHomeScreenRoot(
-    @PreviewParameter(HomeScreenPreviewProvider::class) state: HomeState,
-) {
+fun PreviewHomeScreenRoot() {
     MTCQuizTheme {
         HomeScreen(
-            state = state,
+            state = HomeState(
+                categories = listOf(
+                    Category(
+                        id = "1",
+                        title = "CLASE A - CATEGORIA I",
+                        category = "A-I",
+                        classType = "CLASS A",
+                        description = "Es el más común y te permite manejar carros como sedanes, coupé , hatchback, convertibles, station wagon, SUV, Areneros, Pickup y furgones. Es necesaria para obtener las demás licencias de Clase A.",
+                        image = "a",
+                        pdf = "CLASE_A_I.pdf"
+                    ),
+                    Category(
+                        id = "2",
+                        title = "CLASE A - CATEGORIA II-A",
+                        category = "A-IIa",
+                        classType = "CLASS A",
+                        description = "Los mismos que A-1 y también carros oficiales de transporte de pasajeros como Taxis, Buses, Ambulancias y Transporte Interprovincial. Primero debes obtener la Licencia A-I",
+                        image = "a",
+                        pdf = "CLASE_A_I.pdf"
+                    )
+                )
+            ),
             onAction = {}
         )
     }
