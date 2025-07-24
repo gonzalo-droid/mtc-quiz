@@ -1,9 +1,8 @@
 plugins {
-    alias(libs.plugins.mtcquiz.android.feature.ui)
+    alias(libs.plugins.mtcquiz.android.application.compose)
     alias(libs.plugins.mtcquiz.android.hilt)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.com.google.gms.google.services)
-
 }
 
 android {
