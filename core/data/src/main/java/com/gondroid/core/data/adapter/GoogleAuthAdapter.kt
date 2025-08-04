@@ -1,13 +1,13 @@
-package com.gondroid.auth.data
+package com.gondroid.core.data.adapter
 
 import android.content.Context
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.GetCredentialResponse
 import androidx.credentials.exceptions.GetCredentialCancellationException
-import com.gondroid.auth.domain.provider.AuthCredential
-import com.gondroid.auth.domain.provider.AuthProvider
-import com.gondroid.auth.domain.provider.AuthResult
+import com.gondroid.core.domain.provider.AuthCredential
+import com.gondroid.core.domain.provider.AuthProvider
+import com.gondroid.core.domain.provider.AuthResult
 import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import dagger.hilt.android.qualifiers.ApplicationContext

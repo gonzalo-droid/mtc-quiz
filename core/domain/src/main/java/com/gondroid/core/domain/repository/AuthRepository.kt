@@ -1,9 +1,7 @@
-package com.gondroid.auth.domain
+package com.gondroid.core.domain.repository
 
-import com.gondroid.auth.domain.provider.AuthCredential
-import com.gondroid.auth.domain.provider.AuthProvider
-import com.gondroid.auth.domain.provider.AuthResult
-
+import com.gondroid.core.domain.provider.AuthProvider
+import com.gondroid.core.domain.provider.AuthResult
 
 interface AuthRepository {
 

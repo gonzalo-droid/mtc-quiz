@@ -1,9 +1,9 @@
-package com.gondroid.auth.data.di
+package com.gondroid.core.data.di
 
-import com.gondroid.auth.data.AuthConfigProviderImpl
-import com.gondroid.auth.data.AuthRepositoryImpl
-import com.gondroid.auth.domain.AuthRepository
-import com.gondroid.auth.domain.provider.AuthConfigProvider
+import com.gondroid.core.data.repository.AuthConfigProviderImpl
+import com.gondroid.core.data.repository.AuthRepositoryImpl
+import com.gondroid.core.domain.provider.AuthConfigProvider
+import com.gondroid.core.domain.repository.AuthRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

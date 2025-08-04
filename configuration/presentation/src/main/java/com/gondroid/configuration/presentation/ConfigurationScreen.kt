@@ -36,9 +36,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.gondroid.mtcquiz.presentation.util.OpenAppInPlayStore
-import com.gondroid.mtcquiz.ui.theme.MTCQuizTheme
-import com.gondroid.presentation.util.OpenAppInPlayStore
+import com.gondroid.core.presentation.designsystem.MTCQuizTheme
 
 
 @Composable

@@ -1,9 +1,9 @@
-package com.gondroid.auth.data
+package com.gondroid.core.data.adapter
 
 import android.content.Context
 import androidx.credentials.CredentialManager
-import com.gondroid.auth.domain.provider.AuthProvider
-import com.gondroid.auth.domain.provider.AuthResult
+import com.gondroid.core.domain.provider.AuthProvider
+import com.gondroid.core.domain.provider.AuthResult
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton

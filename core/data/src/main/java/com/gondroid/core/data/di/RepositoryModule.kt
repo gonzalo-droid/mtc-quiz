@@ -37,19 +37,6 @@ object RepositoryModule {
         context = context
     )
 
-    /*
-    @Provides
-    @Singleton
-    fun provideAuthRepository(
-        firebaseAuth: FirebaseAuth,
-        credentialManager: CredentialManager,
-        preferenceRepository: PreferenceRepository
-    ): AuthRepository = AuthRepositoryImpl(
-        firebaseAuth = firebaseAuth,
-        credentialManager = credentialManager,
-        preferenceRepository = preferenceRepository
-    )
-    */
 
     @Provides
     @Singleton

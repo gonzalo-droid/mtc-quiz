@@ -1,11 +1,11 @@
-package com.gondroid.auth.data
+package com.gondroid.core.data.repository
 
 import androidx.credentials.ClearCredentialStateRequest
-import androidx.credentials.ClearCredentialStateRequest.Companion.TYPE_CLEAR_RESTORE_CREDENTIAL
 import androidx.credentials.CredentialManager
-import com.gondroid.auth.domain.AuthRepository
-import com.gondroid.auth.domain.provider.AuthProvider
-import com.gondroid.auth.domain.provider.AuthResult
+import com.gondroid.core.data.adapter.AuthProviderAdapter
+import com.gondroid.core.domain.provider.AuthProvider
+import com.gondroid.core.domain.provider.AuthResult
+import com.gondroid.core.domain.repository.AuthRepository
 import com.gondroid.core.domain.repository.PreferenceRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -27,14 +27,15 @@ class AuthRepositoryImpl @Inject constructor(
         return try {
             firebaseAuth.signOut()
             // Create a ClearCredentialStateRequest object
-            val clearRequest = ClearCredentialStateRequest(TYPE_CLEAR_RESTORE_CREDENTIAL)
+            val clearRequest =
+                ClearCredentialStateRequest(ClearCredentialStateRequest.Companion.TYPE_CLEAR_RESTORE_CREDENTIAL)
             // On user log-out, clear the restore key
             credentialManager.clearCredentialState(clearRequest)
 
             preferenceRepository.logout()
             true
         } catch (e: Exception) {
-            Timber.tag("AuthRepository").e(e, "Error en logout")
+            Timber.Forest.tag("AuthRepository").e(e, "Error en logout")
             false
         }
     }
@@ -48,7 +49,7 @@ class AuthRepositoryImpl @Inject constructor(
             }
             true
         } catch (e: Exception) {
-            Timber.tag("AuthRepository").e(e, "Error en signInWithGoogle")
+            Timber.Forest.tag("AuthRepository").e(e, "Error en signInWithGoogle")
             false
         }
     }

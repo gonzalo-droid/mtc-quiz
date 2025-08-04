@@ -1,0 +1,13 @@
+<resources>
+    <string name="settings">Configuraciones</string>
+    <string name="custom_values">Personalización</string>
+    <string name="term_and_conditions"><![CDATA[Términos & Condiciones]]></string>
+    <string name="ranting_app">Califica la aplicación</string>
+    <string name="about_us">Nosotros</string>
+    <string name="logout">Cerrar sesión</string>
+    <string name="custimize_setting">Personaliza tu configuración y sigue estudiando</string>
+    <string name="time_to_evaluation">Tiempo de duración de la evaluación. (Minutos)</string>
+    <string name="number_of_question_to_evaluation">Número de preguntas para la evaluación</string>
+    <string name="percentage_approbe_to_evaluation">Porcentage (%) de preguntas correctas para aprobar</string>
+    <string name="update_preferences_evaluation">Actualizar valores</string>
+</resources>

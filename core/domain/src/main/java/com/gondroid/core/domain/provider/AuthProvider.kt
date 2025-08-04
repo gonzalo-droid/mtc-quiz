@@ -1,4 +1,4 @@
-package com.gondroid.auth.domain.provider
+package com.gondroid.core.domain.provider
 
 sealed class AuthProvider {
     data class Google(val clientId: String) : AuthProvider()

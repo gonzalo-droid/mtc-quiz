@@ -5,7 +5,7 @@ import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialResponse
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gondroid.auth.domain.AuthRepository
+import com.gondroid.core.domain.repository.AuthRepository
 import com.gondroid.auth.domain.provider.AuthProvider
 import com.gondroid.auth.domain.provider.AuthResult
 import com.gondroid.core.presentation.ui.UiText

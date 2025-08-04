@@ -35,6 +35,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.gondroid.configuration.presentation.R
 import com.gondroid.core.presentation.designsystem.MTCQuizTheme
 
 @Composable
@@ -51,10 +52,12 @@ fun CustomizeScreenRoot(
         event.collect { event ->
             when (event) {
                 is CustomizeEvent.Success -> {
-                    Toast.makeText(context, "Datos actualizados",Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "Datos actualizados", Toast.LENGTH_LONG).show()
                 }
+
                 is CustomizeEvent.Error -> {
-                    Toast.makeText(context, "Error al actualizar los datos",Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "Error al actualizar los datos", Toast.LENGTH_LONG)
+                        .show()
                 }
             }
         }
@@ -218,7 +221,7 @@ fun ItemField(
             imeAction = ImeAction.Done
         ),
     )
-    if(value.isBlank()){
+    if (value.isBlank()) {
         Text(
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.error,

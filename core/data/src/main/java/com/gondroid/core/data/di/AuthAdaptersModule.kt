@@ -1,8 +1,8 @@
-package com.gondroid.auth.data.di
+package com.gondroid.core.data.di
 
-import com.gondroid.auth.data.AuthProviderAdapter
-import com.gondroid.auth.data.FacebookAuthAdapter
-import com.gondroid.auth.data.GoogleAuthAdapter
+import com.gondroid.core.data.adapter.AuthProviderAdapter
+import com.gondroid.core.data.adapter.FacebookAuthAdapter
+import com.gondroid.core.data.adapter.GoogleAuthAdapter
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
