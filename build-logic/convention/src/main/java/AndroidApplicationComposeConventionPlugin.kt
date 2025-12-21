@@ -11,6 +11,9 @@ class AndroidApplicationComposeConventionPlugin : Plugin<Project> {
             pluginManager.apply("mtcquiz.android.application")
             pluginManager.apply("org.jetbrains.kotlin.plugin.compose")
 
+            pluginManager.apply("com.google.gms.google-services")
+            pluginManager.apply("com.google.firebase.crashlytics")
+
             val extension = extensions.getByType<ApplicationExtension>()
             configureAndroidCompose(extension)
         }

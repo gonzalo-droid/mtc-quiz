@@ -19,7 +19,6 @@ class ConfigurationScreenViewModel
     private val repository: AuthRepository
 ) : ViewModel() {
 
-
     private var _state = MutableStateFlow(ConfigurationState())
     val state = _state.asStateFlow()
 

@@ -18,8 +18,9 @@ object FirebaseModule {
     @Singleton
     fun provideFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
 
+    /*
     @Provides
     @Singleton
     fun provideCredentialManager(@ApplicationContext context: Context): CredentialManager =
-        CredentialManager.Companion.create(context)
+        CredentialManager.Companion.create(context)*/
 }

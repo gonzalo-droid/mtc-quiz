@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.mtcquiz.android.hilt)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.com.google.gms.google.services)
+    alias(libs.plugins.com.google.firebase.crashlytics)
 }
 
 android {

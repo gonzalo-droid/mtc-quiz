@@ -46,7 +46,8 @@ fun NavigationRoot(navController: NavHostController, isLoggedIn: Boolean) {
     ) {
         NavHost(
             navController = navController,
-            startDestination = if (isLoggedIn) HomeScreenRoute else LoginScreenRoute,
+            startDestination = HomeScreenRoute,
+            // if (isLoggedIn) HomeScreenRoute else LoginScreenRoute,
         ) {
 
             composable<HomeScreenRoute> {

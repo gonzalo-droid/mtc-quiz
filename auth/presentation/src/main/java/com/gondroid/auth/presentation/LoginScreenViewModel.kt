@@ -5,9 +5,9 @@ import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialResponse
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gondroid.core.domain.provider.AuthProvider
+import com.gondroid.core.domain.provider.AuthResult
 import com.gondroid.core.domain.repository.AuthRepository
-import com.gondroid.auth.domain.provider.AuthProvider
-import com.gondroid.auth.domain.provider.AuthResult
 import com.gondroid.core.presentation.ui.UiText
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
@@ -35,7 +35,8 @@ class LoginScreenViewModel @Inject constructor(
 
 
     init {
-        loadAvailableProviders()
+        // TODO implemented login
+        // loadAvailableProviders()
     }
 
 

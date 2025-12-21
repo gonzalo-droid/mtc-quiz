@@ -220,6 +220,7 @@ fun ConfigurationScreen(
                 )
             }
 
+            /*
             Row(
                 modifier = Modifier
                     .padding(top = 16.dp)
@@ -240,7 +241,7 @@ fun ConfigurationScreen(
                     color = MaterialTheme.colorScheme.error,
                     fontWeight = FontWeight.Bold
                 )
-            }
+            }*/
 
         }
     }

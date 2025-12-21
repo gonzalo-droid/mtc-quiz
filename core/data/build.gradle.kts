@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.mtcquiz.android.library)
     alias(libs.plugins.mtcquiz.android.hilt)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {

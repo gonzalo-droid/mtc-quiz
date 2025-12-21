@@ -1,6 +1,6 @@
 package com.gondroid.auth.presentation
 
-import com.gondroid.auth.domain.provider.AuthProvider
+import com.gondroid.core.domain.provider.AuthProvider
 
 data class LoginState(
     val availableProviders: List<AuthProvider> = emptyList(),
