@@ -109,7 +109,10 @@ fun PdfScreenRoot(
     var showMessage by remember { mutableStateOf<String?>(null) }
 
     if (state.shouldDownload) {
-        DownloadPdfIfPermitted(context = context) { success ->
+        DownloadPdfIfPermitted(
+            context = context,
+            nameFile = state.category.pdf
+        ) { success ->
             showMessage =
                 if (success) context.getString(R.string.success_download_pdf) else context.getString(
                     R.string.failure_download_pdf
@@ -343,10 +346,11 @@ fun PdfPage(
 @Composable
 fun DownloadPdfIfPermitted(
     context: Context,
+    nameFile: String,
     onResult: (Boolean) -> Unit
 ) {
     RequestPermissionIfNeeded {
-        val success = savePdfToDownloads(context, "pdf/CLASE_A_I.pdf", "CLASE_A_I.pdf")
+        val success = savePdfToDownloads(context, "pdf/$nameFile", nameFile)
         onResult(success)
     }
 }

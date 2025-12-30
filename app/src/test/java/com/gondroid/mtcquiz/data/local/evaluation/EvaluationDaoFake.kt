@@ -1,6 +1,10 @@
 package com.gondroid.mtcquiz.data.local.evaluation
 
-import com.gondroid.mtcquiz.domain.models.Evaluation
+import com.gondroid.core.database.dao.EvaluationDao
+import com.gondroid.core.database.entity.EvaluationEntity
+import com.gondroid.core.database.mapper.toDomain
+import com.gondroid.core.database.mapper.toEntity
+import com.gondroid.core.domain.model.Evaluation
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 

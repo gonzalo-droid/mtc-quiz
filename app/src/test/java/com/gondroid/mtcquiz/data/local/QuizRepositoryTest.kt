@@ -2,8 +2,9 @@ package com.gondroid.mtcquiz.data.local
 
 import android.content.Context
 import android.content.res.AssetManager
+import com.gondroid.core.data.repository.QuizRepositoryImpl
+import com.gondroid.core.domain.model.Evaluation
 import com.gondroid.mtcquiz.data.local.evaluation.EvaluationDaoFake
-import com.gondroid.mtcquiz.domain.models.Evaluation
 import com.gondroid.mtcquiz.util.MainDispatcherRule
 import com.google.common.truth.Truth
 import io.mockk.every
@@ -58,7 +59,8 @@ class QuizRepositoryTest {
         repository = QuizRepositoryImpl(
             evaluationDao = fakeDao,
             dispatcherIO = StandardTestDispatcher(),
-            context = mockContext
+            context = mockContext,
+            preferenceRepository = mockk()
         )
     }
 

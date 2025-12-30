@@ -1,10 +1,10 @@
 package com.gondroid.mtcquiz.presentation.screens
 
-import com.gondroid.mtcquiz.data.local.quiz.CLASS_A
-import com.gondroid.mtcquiz.domain.models.Category
-import com.gondroid.mtcquiz.domain.models.Evaluation
-import com.gondroid.mtcquiz.domain.models.Question
-import com.gondroid.mtcquiz.domain.repository.QuizRepository
+import com.gondroid.core.data.local.CLASS_A
+import com.gondroid.core.domain.model.Category
+import com.gondroid.core.domain.model.Evaluation
+import com.gondroid.core.domain.model.Question
+import com.gondroid.core.domain.repository.QuizRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -74,7 +74,10 @@ class QuizRepositoryFake : QuizRepository {
         return fakeCategories.find { it.id == categoryId }
     }
 
-    override suspend fun getQuestionsByCategory(categoryId: String): Flow<List<Question>> {
+    override suspend fun getQuestionsByCategory(
+        categoryId: String,
+        isTake: Boolean
+    ): Flow<List<Question>> {
         val questions = fakeQuestions[categoryId] ?: emptyList()
         return flow { emit(questions) }
     }

@@ -1,6 +1,5 @@
 package com.gondroid.evaluation.presentation
 
-
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -20,7 +19,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
-
 
 @HiltViewModel
 class EvaluationScreenViewModel

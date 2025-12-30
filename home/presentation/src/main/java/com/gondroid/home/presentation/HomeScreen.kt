@@ -115,13 +115,6 @@ fun HomeScreen(
                     .padding(paddingValues)
                     .padding(vertical = 16.dp),
         ) {
-            Text(
-                modifier = Modifier.padding(horizontal = 16.dp),
-                text = stringResource(R.string.hi_name, state.userName),
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(modifier = Modifier.height(8.dp))
 
             Text(
                 modifier = Modifier.padding(horizontal = 16.dp),

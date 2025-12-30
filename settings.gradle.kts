@@ -51,8 +51,8 @@ include(":pdf:data")
 include(":pdf:domain")
 
 include(":configuration:data")
-include(":configuration:presentation")
 include(":configuration:domain")
+include(":configuration:presentation")
 
 include(":home:data")
 include(":home:presentation")

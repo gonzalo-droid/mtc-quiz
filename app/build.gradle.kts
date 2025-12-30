@@ -39,6 +39,11 @@ android {
             excludes += "/META-INF/NOTICE*"
         }
     }
+    buildTypes {
+        getByName("release") {
+            signingConfig = signingConfigs.getByName("release")
+        }
+    }
 }
 
 dependencies {
