@@ -13,6 +13,7 @@ interface QuizRepository {
 
     suspend fun getQuestionsByCategory(
         categoryId: String,
+        pathJson: String,
         isTake: Boolean = false // take while numberQuestion prefer
     ): Flow<List<Question>>
 

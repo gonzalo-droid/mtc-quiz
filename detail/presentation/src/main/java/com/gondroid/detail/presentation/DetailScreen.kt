@@ -138,17 +138,17 @@ fun DetailScreen(
                     modifier = Modifier.weight(1f)
                 ) {
                     Text(
+                        modifier = Modifier,
+                        text = state.category.classType,
+                        color = MaterialTheme.colorScheme.primary,
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+                    Text(
                         text = state.category.category,
                         modifier = Modifier,
                         style = MaterialTheme.typography.displayLarge,
                         color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.Bold,
-                    )
-                    Text(
-                        modifier = Modifier,
-                        text = state.category.title,
-                        color = MaterialTheme.colorScheme.primary,
-                        style = MaterialTheme.typography.titleMedium,
                     )
                 }
                 Image(

@@ -8,4 +8,5 @@ data class Category(
     val description: String = "",
     val image: String? = "",
     val pdf: String = "",
+    val pathJson: String = "",
 )

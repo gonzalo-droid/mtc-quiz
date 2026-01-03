@@ -40,12 +40,13 @@ class QuizRepositoryImpl(
 
     override suspend fun getQuestionsByCategory(
         categoryId: String,
+        pathJson: String,
         isTake: Boolean
     ): Flow<List<Question>> =
         channelFlow {
             launch(dispatcherIO) { // Se ejecuta en IO
                 val questions = try {
-                    val jsonString = context.assets.open("json/a1_questions_test.json")
+                    val jsonString = context.assets.open("json/$pathJson")
                         .bufferedReader().use { it.readText() }
 
                     val questionResponse =

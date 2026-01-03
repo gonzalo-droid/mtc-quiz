@@ -57,7 +57,11 @@ constructor(
                 }
             }
 
-            repository.getQuestionsByCategory(categoryId = data.categoryId, isTake = true)
+            repository.getQuestionsByCategory(
+                categoryId = data.categoryId,
+                pathJson = _state.value.category.pathJson,
+                isTake = true
+            )
                 .collect { questions ->
                     _state.update {
                         it.copy(

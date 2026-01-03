@@ -126,8 +126,7 @@ fun EvaluationScreen(
         derivedStateOf {
             if (state.questions.size > 1) {
                 (state.indexQuestion.toFloat() / (state.questions.size - 1).coerceAtLeast(1)).coerceIn(
-                    0f,
-                    1f
+                    0f, 1f
                 )
             } else {
                 0f
@@ -330,10 +329,7 @@ fun AnswerCard(
     CardAnswer(
         modifier = modifier.clickable(enabled = isCorrectAnswerSelected == null) {
             onClick()
-        },
-        backgroundColor = backgroundColor,
-        borderColor = borderColor,
-        text = text
+        }, backgroundColor = backgroundColor, borderColor = borderColor, text = text
     )
 }
 

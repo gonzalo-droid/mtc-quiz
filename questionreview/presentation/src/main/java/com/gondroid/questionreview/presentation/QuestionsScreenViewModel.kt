@@ -37,7 +37,10 @@ class QuestionsScreenViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            repository.getQuestionsByCategory("categoryId")
+            repository.getQuestionsByCategory(
+                categoryId = _state.value.category.id,
+                pathJson = _state.value.category.pathJson
+            )
                 .collect { questions ->
                     _state.update {
                         it.copy(questions = questions)
