@@ -1,13 +1,19 @@
 package com.gondroid.home.presentation
 
 
+import android.Manifest
+import android.util.Log
+import androidx.annotation.RequiresPermission
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
@@ -24,12 +30,17 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
@@ -37,22 +48,34 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
 import com.gondroid.core.domain.model.Category
 import com.gondroid.core.presentation.designsystem.MTCQuizTheme
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.LoadAdError
 import kotlin.math.absoluteValue
 
+
+@RequiresPermission(Manifest.permission.INTERNET)
 @Composable
 fun HomeScreenRoot(
     viewModel: HomeScreenViewModel,
     navigateToDetail: (String) -> Unit,
     navigateToConfiguration: () -> Unit,
 ) {
-
     val state by viewModel.state.collectAsState()
+
+    val context = LocalContext.current
+    val adView = remember { AdView(context) }
+    adView.adUnitId = "ca-app-pub-3940256099942544/9214589741"
+
+    val adSize = AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(LocalContext.current, 360)
+    adView.setAdSize(adSize)
 
     HomeScreen(
         state = state,
@@ -61,8 +84,48 @@ fun HomeScreenRoot(
                 is HomeAction.OnClickCategory -> navigateToDetail(action.categoryId)
                 is HomeAction.GoToConfiguration -> navigateToConfiguration()
             }
+        },
+        content = {
+            Column(modifier = Modifier.fillMaxSize().background(Color.Red),
+                verticalArrangement = Arrangement.Bottom) {
+                Box(modifier = Modifier.fillMaxWidth()) { BannerAd(adView, Modifier) }
+            }
         }
     )
+
+    adView.adListener =
+        object : AdListener() {
+            override fun onAdLoaded() {
+                Log.d("adMobTest", "Banner ad was loaded.")
+            }
+
+            override fun onAdFailedToLoad(error: LoadAdError) {
+                Log.e("adMobTest", "Banner ad failed to load: ${error.message}")
+            }
+
+            override fun onAdImpression() {
+                Log.d("adMobTest", "Banner ad recorded an impression.")
+            }
+
+            override fun onAdClicked() {
+                Log.d("adMobTest", "Banner ad was clicked.")
+            }
+        }
+    // [END add_listener]
+
+    // Prevent loading the AdView if the app is in preview mode.
+    if (!LocalInspectionMode.current) {
+        // [START load_ad]
+        // Create an AdRequest and load the ad.
+        val adRequest = AdRequest.Builder().build()
+        adView.loadAd(adRequest)
+        // [END load_ad]
+    }
+
+    DisposableEffect(Unit) {
+        // Destroy the AdView to prevent memory leaks when the screen is disposed.
+        onDispose { adView.destroy() }
+    }
 
 }
 
@@ -70,7 +133,8 @@ fun HomeScreenRoot(
 @Composable
 fun HomeScreen(
     state: HomeState,
-    onAction: (HomeAction) -> Unit
+    onAction: (HomeAction) -> Unit,
+    content: @Composable () -> Unit
 ) {
 
     Scaffold(
@@ -155,6 +219,10 @@ fun HomeScreen(
                         onAction(HomeAction.OnClickCategory(state.categories[index].id))
                     })
             }
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            content()
 
         }
     }
@@ -265,7 +333,8 @@ fun PreviewHomeScreenRoot() {
                     )
                 )
             ),
-            onAction = {}
+            onAction = {},
+            content = {}
         )
     }
 }

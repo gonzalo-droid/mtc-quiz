@@ -107,6 +107,8 @@ dependencies {
     implementation(libs.firebase.database)
     implementation(libs.firebase.auth)
     implementation(libs.firebase.crashlytics)
+    // adMob
+    implementation(libs.play.services.admob)
 
 
     // Also add the dependencies for the Credential Manager libraries and specify their versions

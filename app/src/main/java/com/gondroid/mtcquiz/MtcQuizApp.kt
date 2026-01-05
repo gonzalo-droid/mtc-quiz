@@ -2,6 +2,7 @@ package com.gondroid.mtcquiz
 
 import android.app.Application
 import android.util.Log
+import com.google.android.gms.ads.MobileAds
 import com.google.firebase.Firebase
 import com.google.firebase.crashlytics.crashlytics
 import dagger.hilt.android.HiltAndroidApp
@@ -11,6 +12,7 @@ import timber.log.Timber
 class MtcQuizApp : Application() {
     override fun onCreate() {
         super.onCreate()
+        MobileAds.initialize(this)
         // Plant appropriate Timber tree based on build type
         Timber.plant(if (BuildConfig.DEBUG) Timber.DebugTree() else CrashReportingTree())
     }

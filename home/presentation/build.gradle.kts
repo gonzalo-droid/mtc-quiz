@@ -21,6 +21,9 @@ dependencies {
     // Lotiee
     implementation(libs.lottie.compose)
 
+    // adMob
+    implementation(libs.play.services.admob)
+
     implementation(projects.home.domain)
     implementation(projects.core.domain)
     implementation(projects.core.presentation.designsystem)
