@@ -1,6 +1,7 @@
 package com.gondroid.home.presentation
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,7 +28,7 @@ fun BannerAd(adView: AdView, modifier: Modifier = Modifier) {
         return
     }
 
-    AndroidView(modifier = modifier.wrapContentSize(), factory = { adView })
+    AndroidView(modifier = modifier.fillMaxWidth(), factory = { adView })
 
     // Pause and resume the AdView when the lifecycle is paused and resumed.
     LifecycleResumeEffect(adView) {

@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:repo1.maven.org)",
+      "WebFetch(domain:dagger.dev)"
+    ]
+  }
+}

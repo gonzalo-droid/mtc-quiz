@@ -18,8 +18,8 @@ interface EvaluationDao {
     suspend fun upsertEvaluation(note: EvaluationEntity)
 
     @Query("DELETE FROM evaluations WHERE id = :id")
-    suspend fun deleteEvaluationById(id: String)
+    suspend fun deleteEvaluationById(id: String): Int
 
     @Query("DELETE FROM evaluations")
-    suspend fun deleteAllEvaluations()
+    suspend fun deleteAllEvaluations(): Int
 }

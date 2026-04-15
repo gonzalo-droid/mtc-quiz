@@ -57,7 +57,6 @@ include(":configuration:presentation")
 include(":home:data")
 include(":home:presentation")
 include(":home:domain")
-include(":category:data")
 
 include(":detail:data")
 include(":detail:presentation")

@@ -86,7 +86,7 @@ fun HomeScreenRoot(
             }
         },
         content = {
-            Column(modifier = Modifier.fillMaxSize().background(Color.Red),
+            Column(modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.Bottom) {
                 Box(modifier = Modifier.fillMaxWidth()) { BannerAd(adView, Modifier) }
             }

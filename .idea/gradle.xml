@@ -29,8 +29,6 @@
             <option value="$PROJECT_DIR$/auth/presentation" />
             <option value="$PROJECT_DIR$/build-logic" />
             <option value="$PROJECT_DIR$/build-logic/convention" />
-            <option value="$PROJECT_DIR$/category" />
-            <option value="$PROJECT_DIR$/category/data" />
             <option value="$PROJECT_DIR$/configuration" />
             <option value="$PROJECT_DIR$/configuration/data" />
             <option value="$PROJECT_DIR$/configuration/domain" />
