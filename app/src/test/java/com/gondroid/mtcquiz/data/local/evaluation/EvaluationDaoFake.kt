@@ -20,8 +20,12 @@ class EvaluationDaoFake : EvaluationDao {
         )
     }.toMutableList()
 
-    override fun getAllEvaluations(categoryId: String): Flow<List<EvaluationEntity>> {
+    override fun getAllEvaluations(): Flow<List<EvaluationEntity>> {
         return flow { emit(evaluations.map { it.toEntity() }) }
+    }
+
+    override fun getAllEvaluations(categoryId: String): Flow<List<EvaluationEntity>> {
+        return flow { emit(evaluations.filter { it.categoryId == categoryId }.map { it.toEntity() }) }
     }
 
     override suspend fun getEvaluationById(id: String): EvaluationEntity? {

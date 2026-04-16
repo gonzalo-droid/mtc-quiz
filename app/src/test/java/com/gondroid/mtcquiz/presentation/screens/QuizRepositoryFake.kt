@@ -91,4 +91,8 @@ class QuizRepositoryFake : QuizRepository {
     override suspend fun getEvaluationById(evaluationId: String): Evaluation? {
         return fakeEvaluations.find { it.id == evaluationId }
     }
+
+    override fun getAllEvaluations(): Flow<List<Evaluation>> {
+        return flow { emit(fakeEvaluations.toList()) }
+    }
 }

@@ -6,6 +6,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class PreferenceRepositoryFake : PreferenceRepository {
+    private val _currentStreakFlow = MutableStateFlow(0)
+    private val _lastStudyDateFlow = MutableStateFlow(0L)
     private val _userNameFlow = MutableStateFlow("Usuario de prueba")
     private val _darkModeFlow = MutableStateFlow(true)
     private val _isLoggedIn = MutableStateFlow(false)
@@ -14,6 +16,10 @@ class PreferenceRepositoryFake : PreferenceRepository {
     private val _numberQuestionsFlow = MutableStateFlow("40")
     private val _percentageFlow = MutableStateFlow("70")
     private val _timeFlow = MutableStateFlow("40")
+
+    override val currentStreakFlow: Flow<Int> = _currentStreakFlow
+    override val lastStudyDateFlow: Flow<Long> = _lastStudyDateFlow
+    override suspend fun recordStudySession() {}
 
     override val darkModeFlow: Flow<Boolean> = _darkModeFlow
 
