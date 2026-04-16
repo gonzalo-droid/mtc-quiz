@@ -1,5 +1,7 @@
 package com.gondroid.evaluation.presentation.history
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,8 +14,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.History
@@ -108,8 +111,18 @@ fun HistoryScreen(state: HistoryState, navigateBack: () -> Unit) {
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                items(state.evaluations) { evaluation ->
-                    EvaluationHistoryCard(evaluation)
+                itemsIndexed(state.evaluations) { index, evaluation ->
+                    val animatedAlpha by animateFloatAsState(
+                        targetValue = 1f,
+                        animationSpec = tween(durationMillis = 300, delayMillis = index * 50),
+                        label = "itemAlpha",
+                    )
+                    EvaluationHistoryCard(
+                        evaluation = evaluation,
+                        modifier = Modifier
+                            .graphicsLayer { alpha = animatedAlpha }
+                            .animateItem(),
+                    )
                 }
             }
         }
@@ -117,7 +130,7 @@ fun HistoryScreen(state: HistoryState, navigateBack: () -> Unit) {
 }
 
 @Composable
-fun EvaluationHistoryCard(evaluation: Evaluation) {
+fun EvaluationHistoryCard(evaluation: Evaluation, modifier: Modifier = Modifier) {
     val isApproved = evaluation.state == EvaluationState.APPROVED
     val statusColor = if (isApproved) Color(0xFF4CAF50) else MaterialTheme.colorScheme.error
     val statusText = if (isApproved) "Aprobado" else "Desaprobado"
@@ -126,7 +139,7 @@ fun EvaluationHistoryCard(evaluation: Evaluation) {
     val failedQuestions = evaluation.questionResults.filter { !it.isCorrect }
 
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
         ),

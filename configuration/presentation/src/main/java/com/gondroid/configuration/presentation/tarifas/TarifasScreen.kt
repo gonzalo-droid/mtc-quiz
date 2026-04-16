@@ -39,7 +39,7 @@ fun TarifasScreen(
         topBar = {
             TopAppBar(
                 modifier = Modifier,
-                title = { Text(text = "Tarifas e Infracciones") },
+                title = { Text(text = "Trámites asociados") },
                 navigationIcon = {
                     IconButton(onClick = onNavigateUp) {
                         Icon(
@@ -61,7 +61,7 @@ fun TarifasScreen(
                     settings.javaScriptEnabled = true
                     settings.domStorageEnabled = true
                     webViewClient = WebViewClient()
-                    loadUrl("https://www.gob.pe/institucion/mtc/informes-publicaciones/344684-tabla-de-infracciones-y-sanciones")
+                    loadUrl("https://www.gob.pe/196-obtener-licencia-de-conducir-brevete-por-primera-vez-rendir-examen-de-reglas-de-transito-para-obtener-licencia-de-conducir-brevete")
                 }
             }
         )

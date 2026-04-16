@@ -3,7 +3,6 @@ package com.gondroid.configuration.presentation
 import android.app.Activity
 import android.content.Context
 import com.google.android.play.core.review.ReviewManagerFactory
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,26 +11,28 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.AccountBalance
+import androidx.compose.material.icons.automirrored.filled.Assignment
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.LightMode
-import androidx.compose.material.icons.filled.Payments
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -114,7 +115,6 @@ fun ConfigurationScreenRoot(
                 is ConfigurationAction.ToggleDarkMode -> {
                     viewModel.onAction(action)
                 }
-                else -> Unit
             }
 
         }
@@ -123,43 +123,43 @@ fun ConfigurationScreenRoot(
 
 @Composable
 fun ItemList(
-    modifier: Modifier,
     icon: ImageVector,
     title: String,
-    onItemClick: () -> Unit,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-
-    Column(modifier = modifier.clickable {
-        onItemClick()
-    }) {
+    Surface(
+        onClick = onClick,
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(12.dp),
+        color = MaterialTheme.colorScheme.surfaceContainerLow,
+    ) {
         Row(
-            modifier = Modifier,
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 14.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = "Back",
-                tint = MaterialTheme.colorScheme.onSurface,
-            )
-            Spacer(modifier = Modifier.width(20.dp))
-            Text(
-                text = title,
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onBackground,
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(modifier = Modifier.weight(1f))
-            IconButton(onClick = onItemClick, modifier = Modifier) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
-                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                    contentDescription = "Back",
-                    tint = MaterialTheme.colorScheme.onSurface,
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(24.dp),
+                )
+                Spacer(modifier = Modifier.width(16.dp))
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.bodyLarge,
                 )
             }
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
         }
-
-        HorizontalDivider()
     }
 }
 
@@ -203,128 +203,89 @@ fun ConfigurationScreen(
 
             Spacer(modifier = Modifier.height(50.dp))
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 0.dp, vertical = 8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp),
+                color = MaterialTheme.colorScheme.surfaceContainerLow,
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        imageVector = if (state.isDarkMode) Icons.Default.DarkMode else Icons.Default.LightMode,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
-                    )
-                    Spacer(modifier = Modifier.width(16.dp))
-                    Text(
-                        text = stringResource(R.string.dark_mode),
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onBackground,
-                        fontWeight = FontWeight.Bold,
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 14.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = if (state.isDarkMode) Icons.Default.DarkMode else Icons.Default.LightMode,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(24.dp),
+                        )
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Text(
+                            text = stringResource(R.string.dark_mode),
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onBackground,
+                            fontWeight = FontWeight.Bold,
+                        )
+                    }
+                    Switch(
+                        checked = state.isDarkMode,
+                        onCheckedChange = { onAction(ConfigurationAction.ToggleDarkMode(it)) },
                     )
                 }
-                Switch(
-                    checked = state.isDarkMode,
-                    onCheckedChange = { onAction(ConfigurationAction.ToggleDarkMode(it)) },
-                )
             }
-
-            HorizontalDivider()
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            ItemList(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp),
-                icon = Icons.Default.Category,
-                title = stringResource(R.string.custom_values),
-                onItemClick = {
-                    onAction(
-                        ConfigurationAction.GoToSCustomize
-                    )
-                }
-            )
-
-            ItemList(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp),
-                icon = Icons.Default.AccountBalance,
-                title = stringResource(R.string.term_and_conditions),
-                onItemClick = {
-                    onAction(
-                        ConfigurationAction.GoToTerm
-                    )
-                }
-            )
-
-            ItemList(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp),
-                icon = Icons.Default.Payments,
-                title = "Tarifas e Infracciones",
-                onItemClick = {
-                    onAction(
-                        ConfigurationAction.GoToTarifas
-                    )
-                }
-            )
-
-            ItemList(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp),
-                icon = Icons.Default.Star,
-                title = stringResource(R.string.ranting_app),
-                onItemClick = {
-                    onAction(
-                        ConfigurationAction.GoToRating
-                    )
-                }
-            )
-
-            Spacer(modifier = Modifier.weight(1f))
-
-            Row(modifier = Modifier) {
-                Icon(
-                    imageVector = Icons.Default.Info,
-                    contentDescription = "Back",
-                    tint = MaterialTheme.colorScheme.onSurface,
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                ItemList(
+                    icon = Icons.Default.Category,
+                    title = stringResource(R.string.custom_values),
+                    onClick = { onAction(ConfigurationAction.GoToSCustomize) },
                 )
-                Spacer(modifier = Modifier.width(20.dp))
-                Text(
-                    text = stringResource(R.string.about_us),
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    fontWeight = FontWeight.Bold
+
+                ItemList(
+                    icon = Icons.Default.AccountBalance,
+                    title = stringResource(R.string.term_and_conditions),
+                    onClick = { onAction(ConfigurationAction.GoToTerm) },
+                )
+
+                ItemList(
+                    icon = Icons.AutoMirrored.Filled.Assignment,
+                    title = "Trámites asociados",
+                    onClick = { onAction(ConfigurationAction.GoToTarifas) },
                 )
             }
 
-            /*
+            Spacer(modifier = Modifier.weight(1f))
+
             Row(
                 modifier = Modifier
-                    .padding(top = 16.dp)
-                    .clickable {
-                        onAction(
-                            ConfigurationAction.Logout
-                        )
-                    }) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ExitToApp,
-                    contentDescription = "Back",
-                    tint = MaterialTheme.colorScheme.error,
-                )
-                Spacer(modifier = Modifier.width(20.dp))
-                Text(
-                    text = stringResource(R.string.logout),
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.error,
-                    fontWeight = FontWeight.Bold
-                )
-            }*/
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+            ) {
+                TextButton(onClick = { onAction(ConfigurationAction.GoToRating) }) {
+                    Icon(
+                        Icons.Default.Star,
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp),
+                    )
+                    Spacer(Modifier.width(4.dp))
+                    Text("Calificar", style = MaterialTheme.typography.bodySmall)
+                }
+                TextButton(onClick = { onAction(ConfigurationAction.GoToAbout) }) {
+                    Icon(
+                        Icons.Default.Info,
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp),
+                    )
+                    Spacer(Modifier.width(4.dp))
+                    Text("Nosotros", style = MaterialTheme.typography.bodySmall)
+                }
+            }
 
             val context = LocalContext.current
             val versionName = context.packageManager
