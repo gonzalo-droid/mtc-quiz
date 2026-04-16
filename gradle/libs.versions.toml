@@ -78,7 +78,7 @@ projectVersionName = "1.1.0"
 projectMinSdkVersion = "26"
 projectTargetSdkVersion = "35"
 projectCompileSdkVersion = "35"
-projectVersionCode = "3"
+projectVersionCode = "4"
 
 [libraries]
 # 🔧 Build & Gradle Tools
