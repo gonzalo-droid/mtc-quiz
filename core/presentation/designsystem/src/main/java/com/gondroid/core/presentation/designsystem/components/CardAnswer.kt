@@ -22,8 +22,9 @@ fun CardAnswer(
     modifier: Modifier,
     backgroundColor: Color,
     borderColor: Color,
-    text: String
-){
+    text: String,
+    textColor: Color = Color.Black,
+    ){
     Card(
         modifier = modifier,
         colors = CardDefaults.cardColors(containerColor = backgroundColor),
@@ -38,7 +39,7 @@ fun CardAnswer(
             Text(
                 text = text,
                 style = MaterialTheme.typography.titleSmall,
-                color = Color.Black,
+                color = textColor,
             )
         }
     }

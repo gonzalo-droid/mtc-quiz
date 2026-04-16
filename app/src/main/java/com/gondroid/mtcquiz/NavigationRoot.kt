@@ -65,10 +65,6 @@ fun NavigationRoot(navController: NavHostController, isLoggedIn: Boolean, isOnbo
             navController = navController,
             startDestination = if (!isOnboardingShown) OnboardingRoute else HomeScreenRoute,
             // if (isLoggedIn) HomeScreenRoute else LoginScreenRoute,
-            enterTransition = { slideInHorizontally(initialOffsetX = { it }) + fadeIn(animationSpec = tween(300)) },
-            exitTransition = { slideOutHorizontally(targetOffsetX = { -it / 3 }) + fadeOut(animationSpec = tween(300)) },
-            popEnterTransition = { slideInHorizontally(initialOffsetX = { -it / 3 }) + fadeIn(animationSpec = tween(300)) },
-            popExitTransition = { slideOutHorizontally(targetOffsetX = { it }) + fadeOut(animationSpec = tween(300)) },
         ) {
 
             composable<OnboardingRoute> {

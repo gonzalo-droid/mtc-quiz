@@ -217,17 +217,24 @@ fun EvaluationScreen(
                 countProgress = "${state.indexQuestion + 1}/${state.questions.size}"
             )
 
-            Spacer(modifier = Modifier.height(32.dp))
-
-            CardQuestion(
-                modifier = Modifier.fillMaxWidth(),
-                title = "${state.question.id}.- ${state.question.title}",
-                image = painterResource(id = R.drawable.card_background),
-            )
+            Spacer(modifier = Modifier.height(20.dp))
 
             LazyColumn(
-                modifier = Modifier.weight(1f), verticalArrangement = Arrangement.Bottom
+                modifier = Modifier.weight(1f), verticalArrangement = Arrangement.Top
             ) {
+               item {
+                   CardQuestion(
+                       modifier = Modifier.fillMaxWidth(),
+                       title = "${state.question.id}.- ${state.question.title}",
+                       image = painterResource(id = R.drawable.card_background),
+                   )
+                   Spacer(modifier = Modifier.height(8.dp))
+               }
+
+                item {
+                    Spacer(modifier = Modifier.weight(1f))
+                }
+
                 itemsIndexed(state.question.options) { index, option ->
                     AnswerCard(
                         state = state,

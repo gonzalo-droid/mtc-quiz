@@ -63,7 +63,6 @@ fun ReviewErrorsScreenRoot(
         state = state,
         navigateBack = navigateBack,
         onDismissQuestion = { viewModel.dismissQuestion(it) },
-        onRestoreAll = { viewModel.restoreAllDismissed() },
     )
 }
 
@@ -73,7 +72,6 @@ fun ReviewErrorsScreen(
     state: ReviewErrorsState,
     navigateBack: () -> Unit,
     onDismissQuestion: (Int) -> Unit,
-    onRestoreAll: () -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -83,16 +81,7 @@ fun ReviewErrorsScreen(
                     IconButton(onClick = navigateBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
-                },
-                actions = {
-                    IconButton(onClick = onRestoreAll) {
-                        Icon(
-                            Icons.Default.Restore,
-                            contentDescription = "Restaurar descartadas",
-                            tint = MaterialTheme.colorScheme.primary,
-                        )
-                    }
-                },
+                }
             )
         }
     ) { padding ->
