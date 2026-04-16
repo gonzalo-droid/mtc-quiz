@@ -36,15 +36,18 @@ class EvaluationDaoFake : EvaluationDao {
         evaluations.add(evaluation.toDomain())
     }
 
-    override suspend fun deleteEvaluationById(id: String) {
+    override suspend fun deleteEvaluationById(id: String): Int {
         val element = evaluations.find { it.id == id }
-        if (element != null) {
+        return if (element != null) {
             evaluations.remove(element)
-        }
+            1
+        } else 0
     }
 
-    override suspend fun deleteAllEvaluations() {
+    override suspend fun deleteAllEvaluations(): Int {
+        val count = evaluations.size
         evaluations.clear()
+        return count
     }
 
 }

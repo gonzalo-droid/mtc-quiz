@@ -1,8 +1,9 @@
 package com.gondroid.mtcquiz.presentation.screens.home
 
 import app.cash.turbine.test
-import com.gondroid.mtcquiz.data.local.quiz.CLASS_A
-import com.gondroid.mtcquiz.domain.models.Category
+import com.gondroid.core.data.local.CLASS_A
+import com.gondroid.core.domain.model.Category
+import com.gondroid.home.presentation.HomeScreenViewModel
 import com.gondroid.mtcquiz.presentation.screens.PreferenceRepositoryFake
 import com.gondroid.mtcquiz.presentation.screens.QuizRepositoryFake
 import com.gondroid.mtcquiz.util.MainDispatcherRule
@@ -34,7 +35,8 @@ class HomeScreenViewModelTest {
         preferenceRepository = PreferenceRepositoryFake()
         viewModel = HomeScreenViewModel(
             repository = repository,
-            preferenceRepository = preferenceRepository
+            preferenceRepository = preferenceRepository,
+            bannerAdId = "test-banner-id"
         )
     }
 
