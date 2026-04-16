@@ -5,6 +5,7 @@ import android.content.res.AssetManager
 import com.gondroid.core.data.repository.QuizRepositoryImpl
 import com.gondroid.core.domain.model.Evaluation
 import com.gondroid.mtcquiz.data.local.evaluation.EvaluationDaoFake
+import com.gondroid.mtcquiz.presentation.screens.PreferenceRepositoryFake
 import com.gondroid.mtcquiz.util.MainDispatcherRule
 import com.google.common.truth.Truth
 import io.mockk.every
@@ -60,7 +61,7 @@ class QuizRepositoryTest {
             evaluationDao = fakeDao,
             dispatcherIO = StandardTestDispatcher(),
             context = mockContext,
-            preferenceRepository = mockk()
+            preferenceRepository = PreferenceRepositoryFake()
         )
     }
 
@@ -92,7 +93,7 @@ class QuizRepositoryTest {
 
     @Test
     fun `getQuestionsByCategory returns question from json`() = runTest {
-        val questions = repository.getQuestionsByCategory("1", "json/a1_questions_test.json").first()
+        val questions = repository.getQuestionsByCategory("1", "a1_questions_test.json").first()
         Truth.assertThat(questions).isNotEmpty()
         Truth.assertThat(questions.first().title).isEqualTo("Está permitido en la vía:")
         val q = questions.first()

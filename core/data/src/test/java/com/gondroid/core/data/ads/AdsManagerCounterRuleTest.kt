@@ -1,6 +1,8 @@
 package com.gondroid.core.data.ads
 
+import com.gondroid.core.data.billing.BillingManager
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
@@ -12,7 +14,11 @@ class AdsManagerCounterRuleTest {
 
     @Before fun setUp() {
         prefs = FakeAdsPreferences()
-        manager = AdsManagerImpl(prefs = prefs, interstitialId = "test-id")
+        manager = AdsManagerImpl(
+            prefs = prefs,
+            interstitialId = "test-id",
+            billingManager = FakeBillingManager()
+        )
     }
 
     @Test fun `first download does not show interstitial`() = runTest {
