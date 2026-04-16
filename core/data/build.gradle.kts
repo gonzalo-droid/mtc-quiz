@@ -31,4 +31,10 @@ dependencies {
     implementation(projects.core.domain)
     implementation(projects.core.database)
 
+    // AdMob
+    implementation(libs.play.services.admob)
+
+    // Test
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.truth)
 }

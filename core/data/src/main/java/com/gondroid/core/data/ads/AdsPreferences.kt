@@ -14,8 +14,9 @@ import javax.inject.Singleton
 open class AdsPreferences @Inject constructor(
     private val dataStore: DataStore<Preferences>
 ) {
-    open val pdfDownloadCount: Flow<Int> = dataStore.data
-        .map { prefs -> prefs[PDF_DOWNLOAD_COUNT] ?: 0 }
+    open val pdfDownloadCount: Flow<Int> by lazy {
+        dataStore.data.map { prefs -> prefs[PDF_DOWNLOAD_COUNT] ?: 0 }
+    }
 
     open suspend fun incrementPdfDownloadCount(): Int {
         var newValue = 0
