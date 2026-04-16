@@ -14,6 +14,7 @@ import com.gondroid.configuration.presentation.ConfigurationScreenRoot
 import com.gondroid.configuration.presentation.ConfigurationScreenViewModel
 import com.gondroid.configuration.presentation.customize.CustomizeScreenRoot
 import com.gondroid.configuration.presentation.customize.CustomizeScreenViewModel
+import com.gondroid.configuration.presentation.tarifas.TarifasScreenRoot
 import com.gondroid.configuration.presentation.term.TermScreenRoot
 import com.gondroid.core.presentation.ui.ConfigurationScreenRoute
 import com.gondroid.core.presentation.ui.CustomizeScreenRoute
@@ -24,6 +25,7 @@ import com.gondroid.core.presentation.ui.LoginScreenRoute
 import com.gondroid.core.presentation.ui.PdfScreenRoute
 import com.gondroid.core.presentation.ui.QuestionsScreenRoute
 import com.gondroid.core.presentation.ui.SummaryScreenRoute
+import com.gondroid.core.presentation.ui.TarifasScreenRoute
 import com.gondroid.core.presentation.ui.TermScreenRoute
 import com.gondroid.detail.presentation.DetailScreenRoot
 import com.gondroid.detail.presentation.DetailScreenViewModel
@@ -141,6 +143,9 @@ fun NavigationRoot(navController: NavHostController, isLoggedIn: Boolean) {
                             CustomizeScreenRoute
                         )
                     },
+                    navigateToTarifas = {
+                        navController.navigate(TarifasScreenRoute)
+                    },
                     navigateToAbout = {
                         // TODO: Implementar navegación a About
                     },
@@ -156,6 +161,14 @@ fun NavigationRoot(navController: NavHostController, isLoggedIn: Boolean) {
 
             composable<TermScreenRoute> {
                 TermScreenRoot(
+                    navigateBack = {
+                        navController.navigateUp()
+                    }
+                )
+            }
+
+            composable<TarifasScreenRoute> {
+                TarifasScreenRoot(
                     navigateBack = {
                         navController.navigateUp()
                     }

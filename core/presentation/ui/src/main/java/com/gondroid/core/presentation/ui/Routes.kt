@@ -15,6 +15,9 @@ object ConfigurationScreenRoute
 object TermScreenRoute
 
 @Serializable
+object TarifasScreenRoute
+
+@Serializable
 object CustomizeScreenRoute
 
 @Serializable
