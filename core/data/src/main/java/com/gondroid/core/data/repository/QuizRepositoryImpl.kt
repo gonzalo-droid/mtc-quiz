@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.IOException
@@ -90,5 +91,10 @@ class QuizRepositoryImpl(
     override suspend fun getEvaluationById(evaluationId: String): Evaluation? =
         withContext(dispatcherIO) {
             evaluationDao.getEvaluationById(evaluationId)?.toDomain()
+        }
+
+    override fun getAllEvaluations(): Flow<List<Evaluation>> =
+        evaluationDao.getAllEvaluations().map { entities ->
+            entities.map { it.toDomain() }
         }
 }

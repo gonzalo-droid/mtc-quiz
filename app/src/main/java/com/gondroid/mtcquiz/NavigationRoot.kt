@@ -19,6 +19,7 @@ import com.gondroid.configuration.presentation.term.TermScreenRoot
 import com.gondroid.core.presentation.ui.ConfigurationScreenRoute
 import com.gondroid.core.presentation.ui.CustomizeScreenRoute
 import com.gondroid.core.presentation.ui.DetailScreenRoute
+import com.gondroid.core.presentation.ui.EvaluationHistoryRoute
 import com.gondroid.core.presentation.ui.EvaluationScreenRoute
 import com.gondroid.core.presentation.ui.HomeScreenRoute
 import com.gondroid.core.presentation.ui.LoginScreenRoute
@@ -31,6 +32,7 @@ import com.gondroid.detail.presentation.DetailScreenRoot
 import com.gondroid.detail.presentation.DetailScreenViewModel
 import com.gondroid.evaluation.presentation.EvaluationScreenRoot
 import com.gondroid.evaluation.presentation.EvaluationScreenViewModel
+import com.gondroid.evaluation.presentation.history.HistoryScreenRoot
 import com.gondroid.evaluation.presentation.summary.SummaryScreenRoot
 import com.gondroid.evaluation.presentation.summary.SummaryScreenViewModel
 import com.gondroid.home.presentation.HomeScreenRoot
@@ -67,7 +69,16 @@ fun NavigationRoot(navController: NavHostController, isLoggedIn: Boolean) {
                         navController.navigate(
                             ConfigurationScreenRoute
                         )
+                    },
+                    navigateToHistory = {
+                        navController.navigate(EvaluationHistoryRoute)
                     }
+                )
+            }
+
+            composable<EvaluationHistoryRoute> {
+                HistoryScreenRoot(
+                    navigateBack = { navController.navigateUp() }
                 )
             }
 

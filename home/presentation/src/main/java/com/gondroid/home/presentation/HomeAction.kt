@@ -6,4 +6,6 @@ sealed interface HomeAction {
     ) : HomeAction
 
     data object GoToConfiguration : HomeAction
+
+    data object GoToHistory : HomeAction
 }

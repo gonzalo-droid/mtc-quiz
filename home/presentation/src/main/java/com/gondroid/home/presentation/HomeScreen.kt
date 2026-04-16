@@ -20,11 +20,13 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -67,6 +69,7 @@ fun HomeScreenRoot(
     viewModel: HomeScreenViewModel,
     navigateToDetail: (String) -> Unit,
     navigateToConfiguration: () -> Unit,
+    navigateToHistory: () -> Unit,
 ) {
     val state by viewModel.state.collectAsState()
 
@@ -83,6 +86,7 @@ fun HomeScreenRoot(
             when (action) {
                 is HomeAction.OnClickCategory -> navigateToDetail(action.categoryId)
                 is HomeAction.GoToConfiguration -> navigateToConfiguration()
+                is HomeAction.GoToHistory -> navigateToHistory()
             }
         },
         content = {
@@ -161,6 +165,13 @@ fun HomeScreen(
                     )
                 },
                 actions = {
+                    IconButton(onClick = { onAction(HomeAction.GoToHistory) }) {
+                        Icon(
+                            imageVector = Icons.Default.History,
+                            contentDescription = "history_button",
+                            tint = MaterialTheme.colorScheme.onSurface,
+                        )
+                    }
                     Box(
                         modifier =
                             Modifier

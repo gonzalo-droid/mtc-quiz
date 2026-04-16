@@ -45,3 +45,6 @@ data class SummaryScreenRoute(
     val categoryId: String,
     val evaluationId: String
 )
+
+@Serializable
+data object EvaluationHistoryRoute

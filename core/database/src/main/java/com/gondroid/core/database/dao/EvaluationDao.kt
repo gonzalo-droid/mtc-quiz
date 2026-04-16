@@ -8,6 +8,9 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface EvaluationDao {
+    @Query("SELECT * FROM evaluations ORDER BY date DESC")
+    fun getAllEvaluations(): Flow<List<EvaluationEntity>>
+
     @Query("SELECT * FROM evaluations WHERE category_id = :categoryId")
     fun getAllEvaluations(categoryId: String): Flow<List<EvaluationEntity>>
 
