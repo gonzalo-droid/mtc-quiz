@@ -1,6 +1,7 @@
 package com.gondroid.pdf.presentation
 
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.RectF
@@ -54,6 +55,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import coil3.compose.AsyncImage
 import com.gondroid.core.presentation.designsystem.MTCQuizTheme
+import com.gondroid.core.presentation.ui.ObserveAsEvents
 import com.gondroid.presentation.screens.util.Permissions.RequestPermissionIfNeeded
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -71,6 +73,28 @@ fun PdfScreenRoot(
     val state by viewModel.state.collectAsState()
 
     val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        viewModel.adsManager.preloadPdfInterstitial(context)
+    }
+
+    val activity = LocalContext.current as? Activity
+
+    ObserveAsEvents(viewModel.events) { event ->
+        when (event) {
+            PdfEvent.ShowInterstitial -> {
+                val act = activity
+                if (act != null) {
+                    viewModel.adsManager.showPdfInterstitial(act) {
+                        viewModel.onInterstitialClosed()
+                    }
+                } else {
+                    viewModel.onInterstitialClosed()
+                }
+            }
+            PdfEvent.StartDownload -> viewModel.onDownloadStarting()
+        }
+    }
 
     val pdfBitmapConverter = remember {
         PdfBitmapConverter(context)
@@ -113,11 +137,9 @@ fun PdfScreenRoot(
             context = context,
             nameFile = state.category.pdf
         ) { success ->
-            showMessage =
-                if (success) context.getString(R.string.success_download_pdf) else context.getString(
-                    R.string.failure_download_pdf
-                )
-            viewModel.downloading(false)
+            showMessage = if (success) context.getString(R.string.success_download_pdf)
+                          else context.getString(R.string.failure_download_pdf)
+            viewModel.onDownloadFinished()
         }
     }
 
@@ -158,7 +180,7 @@ fun PdfScreenRoot(
             when (action) {
                 is PdfAction.Back -> navigateBack()
                 PdfAction.Downloading -> {
-                    viewModel.downloading(true)
+                    viewModel.onDownloadClicked()
                 }
             }
         },
