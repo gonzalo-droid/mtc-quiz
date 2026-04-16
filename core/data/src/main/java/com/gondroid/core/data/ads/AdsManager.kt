@@ -28,4 +28,27 @@ interface AdsManager {
      * el intersticial.
      */
     suspend fun recordPdfDownload()
+
+    /**
+     * Precarga el intersticial de evaluación para tenerlo listo. Idempotente.
+     */
+    fun preloadEvaluationInterstitial(context: Context)
+
+    /**
+     * Devuelve true si según la regla de frecuencia (cada 3 evaluaciones) corresponde mostrar
+     * el intersticial al iniciar esta evaluación.
+     */
+    suspend fun shouldShowEvaluationInterstitial(): Boolean
+
+    /**
+     * Muestra el intersticial de evaluación precargado. Si no está cargado o falla, invoca
+     * [onDismiss] inmediatamente. Nunca bloquea.
+     */
+    fun showEvaluationInterstitial(activity: Activity, onDismiss: () -> Unit)
+
+    /**
+     * Incrementa el contador persistente de evaluaciones iniciadas. Se llama ANTES de decidir
+     * si mostrar el intersticial.
+     */
+    suspend fun recordEvaluationStart()
 }

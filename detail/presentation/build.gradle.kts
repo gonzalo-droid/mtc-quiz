@@ -21,5 +21,7 @@ dependencies {
 
     implementation(projects.detail.domain)
     implementation(projects.core.domain)
+    implementation(projects.core.data)
+    implementation(projects.core.presentation.ui)
     implementation(projects.core.presentation.designsystem)
 }

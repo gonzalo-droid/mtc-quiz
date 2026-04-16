@@ -30,7 +30,24 @@ open class AdsPreferences @Inject constructor(
 
     open suspend fun currentPdfDownloadCount(): Int = pdfDownloadCount.first()
 
+    open val evaluationStartCount: Flow<Int> by lazy {
+        dataStore.data.map { prefs -> prefs[EVALUATION_START_COUNT] ?: 0 }
+    }
+
+    open suspend fun incrementEvaluationStartCount(): Int {
+        var newValue = 0
+        dataStore.edit { prefs ->
+            val current = prefs[EVALUATION_START_COUNT] ?: 0
+            newValue = current + 1
+            prefs[EVALUATION_START_COUNT] = newValue
+        }
+        return newValue
+    }
+
+    open suspend fun currentEvaluationStartCount(): Int = evaluationStartCount.first()
+
     private companion object {
         val PDF_DOWNLOAD_COUNT = intPreferencesKey("pdf_download_count")
+        val EVALUATION_START_COUNT = intPreferencesKey("evaluation_start_count")
     }
 }

@@ -1,5 +1,6 @@
 package com.gondroid.detail.presentation
 
+import android.app.Activity
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -28,10 +29,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
@@ -41,6 +44,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.gondroid.core.domain.model.Category
 import com.gondroid.core.presentation.designsystem.MTCQuizTheme
+import com.gondroid.core.presentation.ui.ObserveAsEvents
 
 @Composable
 fun DetailScreenRoot(
@@ -53,7 +57,28 @@ fun DetailScreenRoot(
 ) {
 
     val state by viewModel.state.collectAsState()
+    val context = LocalContext.current
+    val activity = context as? Activity
 
+    LaunchedEffect(Unit) {
+        viewModel.adsManager.preloadEvaluationInterstitial(context)
+    }
+
+    ObserveAsEvents(viewModel.events) { event ->
+        when (event) {
+            is DetailEvent.NavigateToEvaluation -> navigateToEvaluation(event.categoryId)
+            DetailEvent.ShowEvaluationInterstitial -> {
+                val act = activity
+                if (act != null) {
+                    viewModel.adsManager.showEvaluationInterstitial(act) {
+                        viewModel.onInterstitialClosed(state.category.id)
+                    }
+                } else {
+                    viewModel.onInterstitialClosed(state.category.id)
+                }
+            }
+        }
+    }
 
     DetailScreen(
         state = state,
@@ -61,7 +86,7 @@ fun DetailScreenRoot(
             when (action) {
                 is DetailAction.Back -> navigateBack()
                 is DetailAction.GoToConfiguration -> navigateToConfiguration()
-                is DetailAction.GoToEvaluation -> navigateToEvaluation(action.categoryId)
+                is DetailAction.GoToEvaluation -> viewModel.onStartEvaluation(action.categoryId)
                 is DetailAction.GoToQuestions -> navigateToQuestions(action.categoryId)
                 is DetailAction.ShowPDF -> navigateToShowPDF(action.categoryId)
             }
