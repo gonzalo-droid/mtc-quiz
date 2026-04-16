@@ -54,3 +54,6 @@ data object ErrorReviewRoute
 
 @Serializable
 data object StatsRoute
+
+@Serializable
+data object PremiumScreenRoute

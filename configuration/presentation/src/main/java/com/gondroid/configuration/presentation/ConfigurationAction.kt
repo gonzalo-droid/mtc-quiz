@@ -9,5 +9,6 @@ sealed interface ConfigurationAction {
     data object GoToTarifas : ConfigurationAction
     data object GoToStats : ConfigurationAction
     data object GoToHistory : ConfigurationAction
+    data object GoToPremium : ConfigurationAction
     data class ToggleDarkMode(val enabled: Boolean) : ConfigurationAction
 }

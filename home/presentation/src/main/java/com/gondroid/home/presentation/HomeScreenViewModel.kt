@@ -2,6 +2,7 @@ package com.gondroid.home.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gondroid.core.data.billing.BillingManager
 import com.gondroid.core.domain.repository.PreferenceRepository
 import com.gondroid.core.domain.repository.QuizRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,6 +21,7 @@ class HomeScreenViewModel
 constructor(
     private val repository: QuizRepository,
     private val preferenceRepository: PreferenceRepository,
+    private val billingManager: BillingManager,
     @Named("admobBannerId") val bannerAdId: String,
 ) : ViewModel() {
 
@@ -40,6 +42,12 @@ constructor(
         preferenceRepository.currentStreakFlow.onEach { streak ->
             _state.update {
                 it.copy(streak = streak)
+            }
+        }.launchIn(viewModelScope)
+
+        billingManager.isPremiumFlow.onEach { isPremium ->
+            _state.update {
+                it.copy(isPremium = isPremium)
             }
         }.launchIn(viewModelScope)
     }

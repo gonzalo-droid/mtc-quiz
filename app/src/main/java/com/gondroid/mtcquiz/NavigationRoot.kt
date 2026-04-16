@@ -21,6 +21,7 @@ import com.gondroid.configuration.presentation.customize.CustomizeScreenRoot
 import com.gondroid.configuration.presentation.customize.CustomizeScreenViewModel
 import com.gondroid.configuration.presentation.tarifas.TarifasScreenRoot
 import com.gondroid.configuration.presentation.term.TermScreenRoot
+import com.gondroid.configuration.presentation.premium.PremiumScreenRoot
 import com.gondroid.core.presentation.ui.ConfigurationScreenRoute
 import com.gondroid.core.presentation.ui.CustomizeScreenRoute
 import com.gondroid.core.presentation.ui.DetailScreenRoute
@@ -28,6 +29,7 @@ import com.gondroid.core.presentation.ui.ErrorReviewRoute
 import com.gondroid.core.presentation.ui.EvaluationHistoryRoute
 import com.gondroid.core.presentation.ui.EvaluationScreenRoute
 import com.gondroid.core.presentation.ui.HomeScreenRoute
+import com.gondroid.core.presentation.ui.PremiumScreenRoute
 import com.gondroid.core.presentation.ui.StatsRoute
 import com.gondroid.core.presentation.ui.LoginScreenRoute
 import com.gondroid.core.presentation.ui.PdfScreenRoute
@@ -187,6 +189,9 @@ fun NavigationRoot(navController: NavHostController, isLoggedIn: Boolean) {
                     navigateToHistory = {
                         navController.navigate(EvaluationHistoryRoute)
                     },
+                    navigateToPremium = {
+                        navController.navigate(PremiumScreenRoute)
+                    },
                     navigateToLogout = {
                         navController.navigate(LoginScreenRoute) {
                             popUpTo(ConfigurationScreenRoute) {
@@ -220,6 +225,12 @@ fun NavigationRoot(navController: NavHostController, isLoggedIn: Boolean) {
                     navigateBack = {
                         navController.navigateUp()
                     }
+                )
+            }
+
+            composable<PremiumScreenRoute> {
+                PremiumScreenRoot(
+                    navigateBack = { navController.navigateUp() }
                 )
             }
 

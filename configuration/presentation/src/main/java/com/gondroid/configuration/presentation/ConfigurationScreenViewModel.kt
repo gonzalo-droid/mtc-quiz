@@ -3,6 +3,7 @@ package com.gondroid.configuration.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gondroid.core.data.billing.BillingManager
 import com.gondroid.core.domain.repository.AuthRepository
 import com.gondroid.core.domain.repository.PreferenceRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,6 +23,7 @@ class ConfigurationScreenViewModel
 @Inject constructor(
     private val repository: AuthRepository,
     private val preferenceRepository: PreferenceRepository,
+    private val billingManager: BillingManager,
 ) : ViewModel() {
 
     private var _state = MutableStateFlow(ConfigurationState())
@@ -34,6 +36,12 @@ class ConfigurationScreenViewModel
         preferenceRepository.darkModeFlow
             .onEach { isDarkMode ->
                 _state.update { it.copy(isDarkMode = isDarkMode) }
+            }
+            .launchIn(viewModelScope)
+
+        billingManager.isPremiumFlow
+            .onEach { isPremium ->
+                _state.update { it.copy(isPremium = isPremium) }
             }
             .launchIn(viewModelScope)
     }

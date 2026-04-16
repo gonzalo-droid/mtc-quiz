@@ -27,6 +27,7 @@ import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.WorkspacePremium
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -79,6 +80,7 @@ fun ConfigurationScreenRoot(
     navigateToLogout: () -> Unit,
     navigateToStats: () -> Unit = {},
     navigateToHistory: () -> Unit = {},
+    navigateToPremium: () -> Unit = {},
 ) {
 
     val context = LocalContext.current
@@ -116,6 +118,7 @@ fun ConfigurationScreenRoot(
                 ConfigurationAction.GoToTarifas -> navigateToTarifas()
                 ConfigurationAction.GoToStats -> navigateToStats()
                 ConfigurationAction.GoToHistory -> navigateToHistory()
+                ConfigurationAction.GoToPremium -> navigateToPremium()
                 ConfigurationAction.Logout -> {
                     viewModel.logout()
                 }
@@ -265,6 +268,11 @@ fun ConfigurationScreen(
                     icon = Icons.Default.Category,
                     title = stringResource(R.string.custom_values),
                     onClick = { onAction(ConfigurationAction.GoToSCustomize) },
+                )
+                ItemList(
+                    icon = Icons.Default.WorkspacePremium,
+                    title = if (state.isPremium) "Premium ✓" else "Hazte Premium",
+                    onClick = { onAction(ConfigurationAction.GoToPremium) },
                 )
             }
 

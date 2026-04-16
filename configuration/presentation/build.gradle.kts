@@ -22,6 +22,7 @@ dependencies {
 
     implementation(projects.configuration.domain)
     implementation(projects.core.domain)
+    implementation(projects.core.data)
     implementation(projects.core.presentation.designsystem)
 
     // In-App Review

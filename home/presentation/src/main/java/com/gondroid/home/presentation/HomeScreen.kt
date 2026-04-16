@@ -125,15 +125,17 @@ fun HomeScreenRoot(
             }
         },
         content = {
-            Column(modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Bottom) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 8.dp),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    BannerAd(adView, Modifier)
+            if (!state.isPremium) {
+                Column(modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Bottom) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 8.dp),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        BannerAd(adView, Modifier)
+                    }
                 }
             }
         }
