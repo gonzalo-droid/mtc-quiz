@@ -1,9 +1,7 @@
 package com.gondroid.configuration.presentation.term
 
-import android.content.Context
-import android.text.method.LinkMovementMethod
-import android.widget.TextView
-import androidx.compose.foundation.layout.Column
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -17,18 +15,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.core.text.HtmlCompat
 
 
 @Composable
 fun TermScreenRoot(
     navigateBack: () -> Unit
 ) {
-
     TermScreen(
         onNavigateUp = navigateBack
     )
@@ -40,10 +34,6 @@ fun TermScreenRoot(
 fun TermScreen(
     onNavigateUp: () -> Unit
 ) {
-
-    val context = LocalContext.current
-
-
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -62,34 +52,20 @@ fun TermScreen(
             )
         }
     ) { paddingValues ->
-        Column(
+        AndroidView(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
-                .padding(16.dp),
-        ) {
-
-            AndroidView(
-                modifier = Modifier,
-                factory = { ctx ->
-                    TextView(ctx).apply {
-                        text = HtmlCompat.fromHtml(
-                            loadHtmlFromAssets(context),
-                            HtmlCompat.FROM_HTML_MODE_LEGACY
-                        )
-                         movementMethod = LinkMovementMethod.getInstance()
-                    }
+                .padding(paddingValues),
+            factory = { ctx ->
+                WebView(ctx).apply {
+                    settings.javaScriptEnabled = true
+                    settings.domStorageEnabled = true
+                    webViewClient = WebViewClient()
+                    loadUrl("https://gonzalo-lozg.me/term/quote-anime/")
                 }
-            )
-
-
-        }
+            }
+        )
     }
-}
-
-
-fun loadHtmlFromAssets(context: Context): String {
-    return context.assets.open("html/term.html").bufferedReader().use { it.readText() }
 }
 
 
