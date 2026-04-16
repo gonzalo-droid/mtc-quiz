@@ -28,8 +28,9 @@ class MainActivity : ComponentActivity() {
             var keepSplashScreen by remember { mutableStateOf(true) }
             splashScreen.setKeepOnScreenCondition { keepSplashScreen }
             val authState by viewModel.state.collectAsState()
+            val isDarkMode by viewModel.isDarkMode.collectAsState()
 
-            MTCQuizTheme {
+            MTCQuizTheme(darkTheme = isDarkMode) {
                 if (!authState.isLoading) {
                     keepSplashScreen = false
                     val navController = rememberNavController()

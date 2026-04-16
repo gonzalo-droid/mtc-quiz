@@ -19,7 +19,10 @@ import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.AccountBalance
 import androidx.compose.material.icons.filled.Category
+import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.LightMode
+import androidx.compose.material.icons.filled.Payments
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -27,10 +30,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -40,6 +46,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.gondroid.configuration.presentation.R
 import com.gondroid.core.presentation.designsystem.MTCQuizTheme
 
 
@@ -63,12 +70,14 @@ fun ConfigurationScreenRoot(
     navigateBack: () -> Unit,
     navigateToTerm: () -> Unit,
     navigateToCustomize: () -> Unit,
+    navigateToTarifas: () -> Unit,
     navigateToAbout: () -> Unit,
     navigateToLogout: () -> Unit,
 ) {
 
     val context = LocalContext.current
     val event = viewModel.event
+    val state by viewModel.state.collectAsState()
 
     LaunchedEffect(true) {
         event.collect { event ->
@@ -82,6 +91,7 @@ fun ConfigurationScreenRoot(
     }
 
     ConfigurationScreen(
+        state = state,
         onNavigateUp = navigateBack,
         onAction = { action ->
             when (action) {
@@ -97,9 +107,14 @@ fun ConfigurationScreenRoot(
 
                 ConfigurationAction.GoToSCustomize -> navigateToCustomize()
                 ConfigurationAction.GoToTerm -> navigateToTerm()
+                ConfigurationAction.GoToTarifas -> navigateToTarifas()
                 ConfigurationAction.Logout -> {
                     viewModel.logout()
                 }
+                is ConfigurationAction.ToggleDarkMode -> {
+                    viewModel.onAction(action)
+                }
+                else -> Unit
             }
 
         }
@@ -151,6 +166,7 @@ fun ItemList(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ConfigurationScreen(
+    state: ConfigurationState,
     onNavigateUp: () -> Unit,
     onAction: (ConfigurationAction) -> Unit
 ) {
@@ -187,6 +203,37 @@ fun ConfigurationScreen(
 
             Spacer(modifier = Modifier.height(50.dp))
 
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 0.dp, vertical = 8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = if (state.isDarkMode) Icons.Default.DarkMode else Icons.Default.LightMode,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                    )
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Text(
+                        text = stringResource(R.string.dark_mode),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        fontWeight = FontWeight.Bold,
+                    )
+                }
+                Switch(
+                    checked = state.isDarkMode,
+                    onCheckedChange = { onAction(ConfigurationAction.ToggleDarkMode(it)) },
+                )
+            }
+
+            HorizontalDivider()
+
+            Spacer(modifier = Modifier.height(8.dp))
+
             ItemList(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -209,6 +256,19 @@ fun ConfigurationScreen(
                 onItemClick = {
                     onAction(
                         ConfigurationAction.GoToTerm
+                    )
+                }
+            )
+
+            ItemList(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                icon = Icons.Default.Payments,
+                title = "Tarifas e Infracciones",
+                onItemClick = {
+                    onAction(
+                        ConfigurationAction.GoToTarifas
                     )
                 }
             )
@@ -288,6 +348,7 @@ fun ConfigurationScreen(
 fun ConfigurationScreenRootPreview() {
     MTCQuizTheme {
         ConfigurationScreen(
+            state = ConfigurationState(),
             onNavigateUp = {},
             onAction = {}
         )
