@@ -76,6 +76,7 @@ class QuizRepositoryFake : QuizRepository {
 
     override suspend fun getQuestionsByCategory(
         categoryId: String,
+        pathJson: String,
         isTake: Boolean
     ): Flow<List<Question>> {
         val questions = fakeQuestions[categoryId] ?: emptyList()

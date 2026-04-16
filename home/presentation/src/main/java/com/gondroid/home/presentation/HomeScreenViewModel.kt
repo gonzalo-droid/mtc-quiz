@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
+import javax.inject.Named
 
 
 @HiltViewModel
@@ -18,7 +19,8 @@ class HomeScreenViewModel
 @Inject
 constructor(
     private val repository: QuizRepository,
-    private val preferenceRepository: PreferenceRepository
+    private val preferenceRepository: PreferenceRepository,
+    @Named("admobBannerId") val bannerAdId: String,
 ) : ViewModel() {
 
     private var _state = MutableStateFlow(HomeState())

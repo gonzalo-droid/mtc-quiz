@@ -92,7 +92,7 @@ class QuizRepositoryTest {
 
     @Test
     fun `getQuestionsByCategory returns question from json`() = runTest {
-        val questions = repository.getQuestionsByCategory("1").first()
+        val questions = repository.getQuestionsByCategory("1", "json/a1_questions_test.json").first()
         Truth.assertThat(questions).isNotEmpty()
         Truth.assertThat(questions.first().title).isEqualTo("Está permitido en la vía:")
         val q = questions.first()

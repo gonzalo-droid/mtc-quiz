@@ -1,5 +1,6 @@
 package com.gondroid.mtcquiz.domain.models
 
+import com.gondroid.core.domain.model.Question
 import org.junit.Before
 import org.junit.Test
 

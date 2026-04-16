@@ -72,7 +72,7 @@ fun HomeScreenRoot(
 
     val context = LocalContext.current
     val adView = remember { AdView(context) }
-    adView.adUnitId = "ca-app-pub-3940256099942544/9214589741"
+    adView.adUnitId = viewModel.bannerAdId
 
     val adSize = AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(LocalContext.current, 360)
     adView.setAdSize(adSize)
@@ -88,7 +88,14 @@ fun HomeScreenRoot(
         content = {
             Column(modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.Bottom) {
-                Box(modifier = Modifier.fillMaxWidth()) { BannerAd(adView, Modifier) }
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    BannerAd(adView, Modifier)
+                }
             }
         }
     )
