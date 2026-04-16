@@ -5,6 +5,8 @@ import android.content.Context
 import com.google.android.play.core.review.ReviewManagerFactory
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -205,6 +207,7 @@ fun ConfigurationScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
+                .verticalScroll(rememberScrollState())
                 .padding(16.dp),
         ) {
             Text(
@@ -360,7 +363,7 @@ fun ConfigurationScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.height(32.dp))
 
             val context = LocalContext.current
             val versionName = context.packageManager

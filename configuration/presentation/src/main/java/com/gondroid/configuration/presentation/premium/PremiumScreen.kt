@@ -30,6 +30,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -181,16 +182,14 @@ fun PremiumScreen(
 
                 Spacer(Modifier.weight(1f))
 
-                Button(
+                Surface(
                     onClick = onSubscribe,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(56.dp),
                     enabled = !isLoading,
                     shape = RoundedCornerShape(16.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Transparent,
-                    ),
+                    color = Color.Transparent,
                 ) {
                     Box(
                         modifier = Modifier
