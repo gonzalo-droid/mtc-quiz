@@ -292,4 +292,34 @@ Luego:
 
 ---
 
+## Funcionalidades futuras
+
+Propuestas de diferenciación basadas en análisis de apps competidoras ([DMV Genie](https://driving-tests.org/dmv-genie/), [Zutobi](https://zutobi.com/us), [Drivio](https://apps.apple.com/us/app/drivio-dmv-practice-test-2026/id6748651210)) y del mercado peruano.
+
+### Tier 1 — Alto impacto
+
+| Feature | Descripción | Estado |
+|---|---|---|
+| Explicación de respuesta correcta | Pre-generar explicaciones con IA (Claude API) para cada pregunta del banco, citando el artículo del Reglamento Nacional de Tránsito. Se almacenan en el JSON de assets como campo `explanation`. Funciona offline, costo único ~$1-2 USD. | Propuesta |
+| Modo repaso de errores | Quiz que muestra SOLO las preguntas que el usuario falló en evaluaciones previas. Usa los datos ya persistidos en Room (tabla `evaluations`, columna `question_results`). | Propuesta |
+| Racha diaria (streak) | Contador de días consecutivos de estudio. Notificación push + badge visual. Modelo Duolingo para retención. | Propuesta |
+| Estadísticas de progreso | Gráfica de evolución (% aprobación por semana), categorías más débiles, total de preguntas respondidas. | Propuesta |
+
+### Tier 2 — Medio-alto impacto
+
+| Feature | Descripción | Estado |
+|---|---|---|
+| Gamificación con niveles | XP por quiz completado, niveles (Principiante → Experto), badges por logros ("10 evaluaciones aprobadas", "racha de 7 días"). | Propuesta |
+| Leaderboard anónimo | Ranking semanal de usuarios por % de aprobación. Requiere Firebase Realtime DB (ya integrado). | Propuesta |
+| Señales de tránsito interactivas | Quiz visual: muestra la señal → el usuario responde qué significa. Formato diferente al texto. | Propuesta |
+
+### Tier 3 — Moonshot
+
+| Feature | Descripción | Estado |
+|---|---|---|
+| AI Tutor | Chatbot "Preguntale a MTCQuiz" que explica reglas de tránsito. Requiere integración con Claude/GPT API en runtime. | Propuesta |
+| Modo offline completo | Descargar todo el banco de preguntas + funcionar sin internet. Importante en zonas rurales de Perú. | Propuesta |
+
+---
+
 Hecho con por [@gonzalo-droid](https://github.com/gonzalo-droid)
