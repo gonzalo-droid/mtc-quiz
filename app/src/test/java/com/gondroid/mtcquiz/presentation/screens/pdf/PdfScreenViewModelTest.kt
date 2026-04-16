@@ -58,6 +58,7 @@ class PdfScreenViewModelTest {
             vm.onDownloadClicked()
             assertThat(awaitItem()).isEqualTo(PdfEvent.ShowInterstitial)
         }
+        coVerify { adsManager.recordPdfDownload() }
     }
 
     @Test

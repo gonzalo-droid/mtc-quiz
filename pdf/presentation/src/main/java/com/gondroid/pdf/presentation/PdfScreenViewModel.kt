@@ -77,9 +77,4 @@ class PdfScreenViewModel @Inject constructor(
         _state.update { it.copy(shouldDownload = false, isLoading = false) }
     }
 
-    @Deprecated("Use onDownloadClicked / onDownloadFinished instead")
-    fun downloading(value: Boolean) {
-        if (value) onDownloadStarting() else onDownloadFinished()
-    }
-
 }
