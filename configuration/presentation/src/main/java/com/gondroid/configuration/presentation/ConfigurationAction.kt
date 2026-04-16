@@ -11,4 +11,5 @@ sealed interface ConfigurationAction {
     data object GoToHistory : ConfigurationAction
     data object GoToPremium : ConfigurationAction
     data class ToggleDarkMode(val enabled: Boolean) : ConfigurationAction
+    data class SetThemeMode(val mode: String) : ConfigurationAction
 }

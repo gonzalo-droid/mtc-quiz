@@ -10,6 +10,7 @@ class PreferenceRepositoryFake : PreferenceRepository {
     private val _lastStudyDateFlow = MutableStateFlow(0L)
     private val _userNameFlow = MutableStateFlow("Usuario de prueba")
     private val _darkModeFlow = MutableStateFlow(true)
+    private val _themeModeFlow = MutableStateFlow("system")
     private val _isLoggedIn = MutableStateFlow(false)
     private val _isOnboardingShownFlow = MutableStateFlow(false)
     private val _photoUrlFlow = MutableStateFlow("image.png")
@@ -25,6 +26,12 @@ class PreferenceRepositoryFake : PreferenceRepository {
 
     override suspend fun setDarkMode(enabled: Boolean) {
         _darkModeFlow.value = enabled
+    }
+
+    override val themeModeFlow: Flow<String> = _themeModeFlow
+
+    override suspend fun setThemeMode(mode: String) {
+        _themeModeFlow.value = mode
     }
 
     override val userNameFlow: Flow<String> = _userNameFlow

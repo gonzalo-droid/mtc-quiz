@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -28,9 +29,15 @@ class MainActivity : ComponentActivity() {
             var keepSplashScreen by remember { mutableStateOf(true) }
             splashScreen.setKeepOnScreenCondition { keepSplashScreen }
             val authState by viewModel.state.collectAsState()
-            val isDarkMode by viewModel.isDarkMode.collectAsState()
+            val themeMode by viewModel.themeMode.collectAsState()
+            val systemDark = isSystemInDarkTheme()
+            val isDark = when (themeMode) {
+                "dark" -> true
+                "light" -> false
+                else -> systemDark
+            }
 
-            MTCQuizTheme(darkTheme = isDarkMode) {
+            MTCQuizTheme(darkTheme = isDark) {
                 if (!authState.isLoading) {
                     keepSplashScreen = false
                     val navController = rememberNavController()

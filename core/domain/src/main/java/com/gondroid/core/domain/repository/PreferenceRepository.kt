@@ -10,10 +10,13 @@ interface PreferenceRepository {
     suspend fun recordStudySession()
 
     val darkModeFlow: Flow<Boolean>
+    val themeModeFlow: Flow<String>
 
     suspend fun setDarkMode(
         enabled: Boolean
     )
+
+    suspend fun setThemeMode(mode: String)
 
     val userNameFlow: Flow<String>
 

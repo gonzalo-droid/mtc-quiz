@@ -30,6 +30,9 @@ constructor(
     val isDarkMode = preferenceRepository.darkModeFlow
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
 
+    val themeMode = preferenceRepository.themeModeFlow
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "system")
+
     val isPremium = billingManager.isPremiumFlow
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
 

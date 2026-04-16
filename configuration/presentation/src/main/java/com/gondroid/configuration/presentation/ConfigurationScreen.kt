@@ -3,6 +3,7 @@ package com.gondroid.configuration.presentation
 import android.app.Activity
 import android.content.Context
 import com.google.android.play.core.review.ReviewManagerFactory
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.rememberScrollState
@@ -130,6 +131,9 @@ fun ConfigurationScreenRoot(
                 is ConfigurationAction.ToggleDarkMode -> {
                     viewModel.onAction(action)
                 }
+                is ConfigurationAction.SetThemeMode -> {
+                    viewModel.onAction(action)
+                }
             }
 
         }
@@ -244,30 +248,54 @@ fun ConfigurationScreen(
                     shape = RoundedCornerShape(12.dp),
                     color = MaterialTheme.colorScheme.surfaceContainerLow,
                 ) {
-                    Row(
+                    Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 14.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically,
+                            .padding(16.dp),
                     ) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
+                            val themeIcon = when (state.themeMode) {
+                                "dark" -> Icons.Default.DarkMode
+                                "light" -> Icons.Default.LightMode
+                                else -> Icons.Default.LightMode
+                            }
                             Icon(
-                                imageVector = if (state.isDarkMode) Icons.Default.DarkMode else Icons.Default.LightMode,
+                                imageVector = themeIcon,
                                 contentDescription = null,
                                 tint = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier.size(24.dp),
                             )
                             Spacer(modifier = Modifier.width(16.dp))
                             Text(
-                                text = stringResource(R.string.dark_mode),
+                                text = "Apariencia",
                                 style = MaterialTheme.typography.bodyLarge,
                             )
                         }
-                        Switch(
-                            checked = state.isDarkMode,
-                            onCheckedChange = { onAction(ConfigurationAction.ToggleDarkMode(it)) },
-                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            listOf("system" to "Sistema", "light" to "Claro", "dark" to "Oscuro").forEach { (mode, label) ->
+                                val selected = state.themeMode == mode
+                                Surface(
+                                    onClick = { onAction(ConfigurationAction.SetThemeMode(mode)) },
+                                    modifier = Modifier.weight(1f),
+                                    shape = RoundedCornerShape(8.dp),
+                                    color = if (selected) MaterialTheme.colorScheme.primary else Color.Transparent,
+                                    border = if (!selected) BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant) else null,
+                                ) {
+                                    Text(
+                                        text = label,
+                                        modifier = Modifier.padding(vertical = 8.dp),
+                                        textAlign = TextAlign.Center,
+                                        style = MaterialTheme.typography.labelMedium,
+                                        fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal,
+                                        color = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
                 ItemList(

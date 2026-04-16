@@ -39,6 +39,12 @@ class ConfigurationScreenViewModel
             }
             .launchIn(viewModelScope)
 
+        preferenceRepository.themeModeFlow
+            .onEach { themeMode ->
+                _state.update { it.copy(themeMode = themeMode) }
+            }
+            .launchIn(viewModelScope)
+
         billingManager.isPremiumFlow
             .onEach { isPremium ->
                 _state.update { it.copy(isPremium = isPremium) }
@@ -51,6 +57,11 @@ class ConfigurationScreenViewModel
             is ConfigurationAction.ToggleDarkMode -> {
                 viewModelScope.launch {
                     preferenceRepository.setDarkMode(action.enabled)
+                }
+            }
+            is ConfigurationAction.SetThemeMode -> {
+                viewModelScope.launch {
+                    preferenceRepository.setThemeMode(action.mode)
                 }
             }
             else -> Unit

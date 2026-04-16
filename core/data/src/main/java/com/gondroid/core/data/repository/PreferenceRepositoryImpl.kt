@@ -22,6 +22,7 @@ class PreferenceRepositoryImpl @Inject constructor(
 
     companion object {
         val DARK_MODE_KEY = booleanPreferencesKey("dark_mode_enabled")
+        val THEME_MODE_KEY = stringPreferencesKey("theme_mode")
         val USER_NAME = stringPreferencesKey("user_name")
         val PHOTO_URL = stringPreferencesKey("photo_url")
         val IS_LOGGED_IN = booleanPreferencesKey("is_logged_in")
@@ -36,7 +37,7 @@ class PreferenceRepositoryImpl @Inject constructor(
     }
 
 
-    // DarkMode
+    // DarkMode (legacy)
     override val darkModeFlow: Flow<Boolean> = dataStore.data
         .map { preferences ->
             preferences[DARK_MODE_KEY] ?: false
@@ -45,6 +46,18 @@ class PreferenceRepositoryImpl @Inject constructor(
     override suspend fun setDarkMode(enabled: Boolean) {
         dataStore.edit { preferences ->
             preferences[DARK_MODE_KEY] = enabled
+        }
+    }
+
+    // Theme mode: "system", "light", "dark"
+    override val themeModeFlow: Flow<String> = dataStore.data
+        .map { preferences ->
+            preferences[THEME_MODE_KEY] ?: "system"
+        }
+
+    override suspend fun setThemeMode(mode: String) {
+        dataStore.edit { preferences ->
+            preferences[THEME_MODE_KEY] = mode
         }
     }
     // UserName
