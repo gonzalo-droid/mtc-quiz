@@ -46,6 +46,7 @@ firebaseBom = "33.10.0"
 googleService = "4.4.2"
 googleFirebaseCrashlytics = "3.0.3"
 playServicesAdMob = "24.9.0"
+playReview = "2.0.2"
 
 # 🧭 Navigation
 navigationCompose = "2.8.1"
@@ -145,6 +146,9 @@ firebase-database = { module = "com.google.firebase:firebase-database" }
 firebase-auth = { module = "com.google.firebase:firebase-auth" }
 # adMob
 play-services-admob = { module = "com.google.android.gms:play-services-ads", version.ref = "playServicesAdMob" }
+# In-App Review
+play-review = { module = "com.google.android.play:review", version.ref = "playReview" }
+play-review-ktx = { module = "com.google.android.play:review-ktx", version.ref = "playReview" }
 
 
 # 🧭 Navigation

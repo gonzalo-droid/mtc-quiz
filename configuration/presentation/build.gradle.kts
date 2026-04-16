@@ -23,4 +23,7 @@ dependencies {
     implementation(projects.configuration.domain)
     implementation(projects.core.domain)
     implementation(projects.core.presentation.designsystem)
+
+    // In-App Review
+    implementation(libs.play.review.ktx)
 }
