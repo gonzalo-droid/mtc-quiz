@@ -3,6 +3,7 @@ package com.gondroid.configuration.presentation
 import android.app.Activity
 import android.content.Context
 import com.google.android.play.core.review.ReviewManagerFactory
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -44,6 +45,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -269,11 +272,65 @@ fun ConfigurationScreen(
                     title = stringResource(R.string.custom_values),
                     onClick = { onAction(ConfigurationAction.GoToSCustomize) },
                 )
-                ItemList(
-                    icon = Icons.Default.WorkspacePremium,
-                    title = if (state.isPremium) "Premium ✓" else "Hazte Premium",
-                    onClick = { onAction(ConfigurationAction.GoToPremium) },
-                )
+                if (state.isPremium) {
+                    ItemList(
+                        icon = Icons.Default.WorkspacePremium,
+                        title = "Premium ✓",
+                        onClick = { onAction(ConfigurationAction.GoToPremium) },
+                    )
+                } else {
+                    Surface(
+                        onClick = { onAction(ConfigurationAction.GoToPremium) },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(16.dp),
+                        color = Color.Transparent,
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(
+                                    brush = Brush.horizontalGradient(
+                                        colors = listOf(
+                                            Color(0xFFFFB300),
+                                            Color(0xFFFF8F00),
+                                        )
+                                    ),
+                                    shape = RoundedCornerShape(16.dp),
+                                )
+                                .padding(horizontal = 16.dp, vertical = 16.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Icon(
+                                    imageVector = Icons.Default.WorkspacePremium,
+                                    contentDescription = null,
+                                    tint = Color.White,
+                                    modifier = Modifier.size(28.dp),
+                                )
+                                Spacer(modifier = Modifier.width(12.dp))
+                                Column {
+                                    Text(
+                                        text = "Hazte Premium",
+                                        style = MaterialTheme.typography.titleSmall,
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color.White,
+                                    )
+                                    Text(
+                                        text = "Estudia sin anuncios",
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = Color.White.copy(alpha = 0.85f),
+                                    )
+                                }
+                            }
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                                contentDescription = null,
+                                tint = Color.White,
+                            )
+                        }
+                    }
+                }
             }
 
             Spacer(modifier = Modifier.height(20.dp))
