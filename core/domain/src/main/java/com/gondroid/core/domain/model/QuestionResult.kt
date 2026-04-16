@@ -8,5 +8,6 @@ data class QuestionResult(
     val questionId: Int,
     val question: String,
     val option: String? = "",
-    val isCorrect: Boolean = false
+    val isCorrect: Boolean = false,
+    val correctAnswer: String = "",
 )

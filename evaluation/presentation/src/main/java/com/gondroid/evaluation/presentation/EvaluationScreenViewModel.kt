@@ -98,12 +98,14 @@ constructor(
 
     fun saveAnswer(isCorrect: Boolean, option: String) {
         if (_state.value.answerWasVerified) {
+            val currentQuestion = _state.value.question
             val result = QuestionResult(
                 id = UUID.randomUUID().toString(),
-                questionId = _state.value.question.id,
-                question = _state.value.question.title,
+                questionId = currentQuestion.id,
+                question = currentQuestion.title,
                 option = option,
-                isCorrect = isCorrect
+                isCorrect = isCorrect,
+                correctAnswer = currentQuestion.getOption(currentQuestion.answer),
             )
             _resultsList.add(result)
         }

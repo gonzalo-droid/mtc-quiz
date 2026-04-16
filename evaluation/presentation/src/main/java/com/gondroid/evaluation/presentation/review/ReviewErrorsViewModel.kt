@@ -21,13 +21,28 @@ class ReviewErrorsViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             repository.getAllEvaluations().collect { evaluations ->
-                val failedQuestions = evaluations
+                val allFailedResults = evaluations
                     .flatMap { it.questionResults }
                     .filter { !it.isCorrect }
-                    .distinctBy { it.questionId }
+
+                val frequentErrors = allFailedResults
+                    .groupBy { it.questionId }
+                    .filter { (_, results) -> results.size >= 3 }
+                    .map { (questionId, results) ->
+                        val latest = results.last()
+                        FrequentError(
+                            questionId = questionId,
+                            question = latest.question,
+                            failCount = results.size,
+                            lastWrongAnswer = latest.option ?: "",
+                            correctAnswer = latest.correctAnswer,
+                        )
+                    }
+                    .sortedByDescending { it.failCount }
+
                 _state.update {
                     it.copy(
-                        failedQuestions = failedQuestions,
+                        frequentErrors = frequentErrors,
                         isLoading = false,
                     )
                 }

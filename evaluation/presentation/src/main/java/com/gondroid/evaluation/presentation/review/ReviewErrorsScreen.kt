@@ -13,12 +13,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -40,7 +42,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.gondroid.core.domain.model.QuestionResult
 
 @Composable
 fun ReviewErrorsScreenRoot(
@@ -69,22 +70,21 @@ fun ReviewErrorsScreen(state: ReviewErrorsState, navigateBack: () -> Unit) {
         when {
             state.isLoading -> {
                 Box(
-                    Modifier
-                        .fillMaxSize()
-                        .padding(padding),
+                    Modifier.fillMaxSize().padding(padding),
                     contentAlignment = Alignment.Center,
                 ) {
                     CircularProgressIndicator()
                 }
             }
-            state.failedQuestions.isEmpty() -> {
+            state.frequentErrors.isEmpty() -> {
                 Box(
-                    Modifier
-                        .fillMaxSize()
-                        .padding(padding),
+                    Modifier.fillMaxSize().padding(padding),
                     contentAlignment = Alignment.Center,
                 ) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.padding(32.dp),
+                    ) {
                         Icon(
                             Icons.Default.CheckCircle,
                             contentDescription = null,
@@ -93,13 +93,13 @@ fun ReviewErrorsScreen(state: ReviewErrorsState, navigateBack: () -> Unit) {
                         )
                         Spacer(Modifier.height(16.dp))
                         Text(
-                            "¡No tienes errores por repasar!",
+                            "¡No tienes errores frecuentes!",
                             style = MaterialTheme.typography.titleMedium,
                             textAlign = TextAlign.Center,
                         )
                         Spacer(Modifier.height(8.dp))
                         Text(
-                            "Completa evaluaciones para ver tus errores aquí",
+                            "Las preguntas que falles 3 o más veces aparecerán aquí para que las repases",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             textAlign = TextAlign.Center,
@@ -109,21 +109,19 @@ fun ReviewErrorsScreen(state: ReviewErrorsState, navigateBack: () -> Unit) {
             }
             else -> {
                 LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(padding),
+                    modifier = Modifier.fillMaxSize().padding(padding),
                     contentPadding = PaddingValues(16.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
                     item {
                         Text(
-                            "${state.failedQuestions.size} preguntas para repasar",
+                            "${state.frequentErrors.size} preguntas frecuentes",
                             style = MaterialTheme.typography.titleSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
-                    itemsIndexed(state.failedQuestions) { index, question ->
-                        FailedQuestionCard(index = index + 1, question = question)
+                    items(state.frequentErrors) { error ->
+                        FrequentErrorCard(error)
                     }
                 }
             }
@@ -132,7 +130,7 @@ fun ReviewErrorsScreen(state: ReviewErrorsState, navigateBack: () -> Unit) {
 }
 
 @Composable
-fun FailedQuestionCard(index: Int, question: QuestionResult) {
+private fun FrequentErrorCard(error: FrequentError) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
@@ -140,33 +138,47 @@ fun FailedQuestionCard(index: Int, question: QuestionResult) {
         ),
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.Top,
+            ) {
+                Text(
+                    text = error.question,
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Medium,
+                    modifier = Modifier.weight(1f),
+                )
+                Spacer(Modifier.width(8.dp))
                 Surface(
-                    shape = CircleShape,
+                    shape = RoundedCornerShape(8.dp),
                     color = MaterialTheme.colorScheme.error.copy(alpha = 0.12f),
-                    modifier = Modifier.size(32.dp),
                 ) {
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier.fillMaxSize(),
+                    Row(
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
+                        Icon(
+                            Icons.Default.Warning,
+                            contentDescription = null,
+                            modifier = Modifier.size(14.dp),
+                            tint = MaterialTheme.colorScheme.error,
+                        )
+                        Spacer(Modifier.width(4.dp))
                         Text(
-                            "$index",
-                            style = MaterialTheme.typography.labelMedium,
+                            text = "${error.failCount}x",
+                            style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.error,
+                            fontWeight = FontWeight.Bold,
                         )
                     }
                 }
-                Spacer(Modifier.width(12.dp))
-                Text(
-                    text = question.question,
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.Medium,
-                )
             }
-            if (!question.option.isNullOrEmpty()) {
-                Spacer(Modifier.height(8.dp))
-                Row(verticalAlignment = Alignment.CenterVertically) {
+
+            Spacer(Modifier.height(12.dp))
+
+            if (error.lastWrongAnswer.isNotEmpty()) {
+                Row(verticalAlignment = Alignment.Top) {
                     Icon(
                         Icons.Default.Close,
                         contentDescription = null,
@@ -175,9 +187,27 @@ fun FailedQuestionCard(index: Int, question: QuestionResult) {
                     )
                     Spacer(Modifier.width(8.dp))
                     Text(
-                        text = "Tu respuesta: ${question.option}",
+                        text = error.lastWrongAnswer,
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.error,
+                    )
+                }
+                Spacer(Modifier.height(6.dp))
+            }
+
+            if (error.correctAnswer.isNotEmpty()) {
+                Row(verticalAlignment = Alignment.Top) {
+                    Icon(
+                        Icons.Default.Done,
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp),
+                        tint = Color(0xFF4CAF50),
+                    )
+                    Spacer(Modifier.width(8.dp))
+                    Text(
+                        text = error.correctAnswer,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color(0xFF4CAF50),
                     )
                 }
             }

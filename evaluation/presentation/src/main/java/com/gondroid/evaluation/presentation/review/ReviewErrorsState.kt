@@ -1,8 +1,14 @@
 package com.gondroid.evaluation.presentation.review
 
-import com.gondroid.core.domain.model.QuestionResult
-
 data class ReviewErrorsState(
-    val failedQuestions: List<QuestionResult> = emptyList(),
+    val frequentErrors: List<FrequentError> = emptyList(),
     val isLoading: Boolean = true,
+)
+
+data class FrequentError(
+    val questionId: Int,
+    val question: String,
+    val failCount: Int,
+    val lastWrongAnswer: String,
+    val correctAnswer: String,
 )
