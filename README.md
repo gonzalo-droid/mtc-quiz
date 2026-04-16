@@ -17,7 +17,7 @@ Aplicación Android para practicar el examen de reglas de tránsito del Minister
 | Backend | Firebase Realtime Database, Analytics, Crashlytics |
 | Async | Coroutines + Flow |
 | Serialización | kotlinx.serialization |
-| Monetización | Google AdMob (Play Services Ads) |
+| Monetización | Google AdMob (banner + intersticiales) + Google Play Billing (suscripción premium) |
 | Testing | JUnit4, MockK, Turbine, Truth, Robolectric, MockWebServer |
 
 ### Stack de versiones principales
@@ -29,6 +29,8 @@ Aplicación Android para practicar el examen de reglas de tránsito del Minister
 | Android Gradle Plugin | 8.10.0 |
 | Hilt | 2.57.2 |
 | Room | 2.8.4 |
+| Google Play Billing | 7.1.1 |
+| Play In-App Review | 2.0.2 |
 | Compose BOM | 2025.02.00 |
 | Min SDK | 26 |
 | Target / Compile SDK | 35 |
@@ -100,7 +102,7 @@ MTCQuiz/
 ├── configuration/
 │   ├── domain/
 │   ├── data/
-│   └── presentation/           # ConfigurationScreen, CustomizeScreen, TermScreen
+│   └── presentation/           # ConfigurationScreen, CustomizeScreen, TermScreen, PremiumScreen, StatisticsScreen, EvaluationHistoryScreen, ErrorReviewScreen
 │
 └── build-logic/
     └── convention/             # Plugins de convención Gradle
@@ -292,6 +294,69 @@ Luego:
 
 ---
 
+## Monetización
+
+### AdMob
+
+| Formato | Ubicación | Comportamiento |
+|---|---|---|
+| Banner | Home (centrado) | Oculto para usuarios premium |
+| Intersticial | Antes de descarga PDF | Se muestra cada 3 descargas |
+| Intersticial | Antes de iniciar evaluación | Se muestra cada 3 evaluaciones |
+
+Los IDs de anuncios están parametrizados por build type: IDs de prueba en `debug`, IDs reales en `release`. Se configuran como `resValue` en `app/build.gradle.kts`.
+
+### Google Play Billing — Suscripción Premium
+
+- Producto: `mtcquiz_premium_annual` (suscripción anual).
+- Verificación client-side con `queryPurchasesAsync()`.
+- Estado `isPremium` persistido en DataStore.
+- Arquitectura: `BillingManager` en `core/data/billing/`, `SubscriptionRepository` en `core/domain`.
+- Al ser premium: banner y ambos intersticiales se omiten completamente.
+- Acceso desde la pantalla **Hazte Premium** (gradiente oscuro) en la sección Configuración.
+- Tras cerrar un intersticial se muestra un dialog de upsell ("¿Cansado de los anuncios? Suscríbete").
+
+---
+
+## Funcionalidades implementadas
+
+### Estudio y evaluación
+
+| Feature | Descripción |
+|---|---|
+| Historial de evaluaciones | Pantalla con cards que muestran cada evaluación pasada con badge aprobado/reprobado, fecha, puntaje y categoría. Accesible desde la sección "Mi progreso" en Configuración. |
+| Preguntas falladas persistidas | Las preguntas incorrectas se almacenan en Room como columna JSON (`failed_questions`). Migración de esquema v1 → v2 ya aplicada. |
+| Repaso de errores | Pantalla dedicada de quiz que muestra únicamente las preguntas que el usuario falló. Accesible desde el detalle de cada evaluación en el historial. |
+| Estadísticas de progreso | Tasa de aprobación global, desglose de rendimiento por categoría y total de preguntas respondidas. Accesible desde la sección "Mi progreso". |
+| Racha diaria (streak) | Contador de días consecutivos de estudio con icono de fuego visible en HomeScreen. |
+
+### Configuración (secciones)
+
+**Mi progreso**
+- Estadísticas de progreso
+- Historial de evaluaciones
+
+**Configuración**
+- Toggle dark/light mode
+- Personalizar valores (número de preguntas, tiempo, porcentaje de aprobación)
+- Hazte Premium
+
+**Información**
+- Términos y condiciones (WebView con manejo offline + retry)
+- Trámites asociados (WebView con manejo offline + retry)
+- Calificar la app (In-App Review API + fallback a Play Store)
+- Nosotros
+
+### UX y diseño
+
+- **Paleta**: indigo profundo como color primario + amber/gold como acento.
+- **Tipografía**: fuente Inter (reemplaza Poppins).
+- **Transiciones de navegación**: `slideIn` / `fadeIn` entre pantallas.
+- **WebViews**: manejo de estado offline con pantalla de error y botón de reintento.
+- **Pantalla Premium**: fondo con gradiente oscuro.
+
+---
+
 ## Funcionalidades futuras
 
 Propuestas de diferenciación basadas en análisis de apps competidoras ([DMV Genie](https://driving-tests.org/dmv-genie/), [Zutobi](https://zutobi.com/us), [Drivio](https://apps.apple.com/us/app/drivio-dmv-practice-test-2026/id6748651210)) y del mercado peruano.
@@ -301,9 +366,9 @@ Propuestas de diferenciación basadas en análisis de apps competidoras ([DMV Ge
 | Feature | Descripción | Estado |
 |---|---|---|
 | Explicación de respuesta correcta | Pre-generar explicaciones con IA (Claude API) para cada pregunta del banco, citando el artículo del Reglamento Nacional de Tránsito. Se almacenan en el JSON de assets como campo `explanation`. Funciona offline, costo único ~$1-2 USD. | Propuesta |
-| Modo repaso de errores | Quiz que muestra SOLO las preguntas que el usuario falló en evaluaciones previas. Usa los datos ya persistidos en Room (tabla `evaluations`, columna `question_results`). | Propuesta |
-| Racha diaria (streak) | Contador de días consecutivos de estudio. Notificación push + badge visual. Modelo Duolingo para retención. | Propuesta |
-| Estadísticas de progreso | Gráfica de evolución (% aprobación por semana), categorías más débiles, total de preguntas respondidas. | Propuesta |
+| Modo repaso de errores | Quiz que muestra SOLO las preguntas que el usuario falló en evaluaciones previas. Usa los datos ya persistidos en Room (tabla `evaluations`, columna `question_results`). | Implementado |
+| Racha diaria (streak) | Contador de días consecutivos de estudio. Notificación push + badge visual. Modelo Duolingo para retención. | Implementado |
+| Estadísticas de progreso | Gráfica de evolución (% aprobación por semana), categorías más débiles, total de preguntas respondidas. | Implementado |
 
 ### Tier 2 — Medio-alto impacto
 
@@ -324,10 +389,10 @@ Propuestas de diferenciación basadas en análisis de apps competidoras ([DMV Ge
 
 | Feature | Descripción | Estado |
 |---|---|---|
-| Suscripción anual | Integrar Google Play Billing Library (`billing-ktx:7.x`). Producto: `mtcquiz_premium_annual`. Verificación client-side con `queryPurchasesAsync()`. Estado `isPremium` en DataStore. Arquitectura: `BillingManager` interface+impl en `core/data/billing/`, `SubscriptionRepository` en `core/domain`. | Propuesta |
-| Eliminar ads para premium | Todos los puntos de ads (`AdsManager`) verifican `isPremium` antes de mostrar. Banner en Home, intersticiales en PDF y evaluación se ocultan si el usuario es premium. | Propuesta |
-| Popup post-ad | Después de cerrar un intersticial, mostrar dialog: "¿Cansado de los anuncios? Suscríbete por S/XX.XX/año". Botones: [Suscribirme] [No, gracias]. Se implementa en `onDismiss` callback del intersticial. | Propuesta |
-| Item en configuración | Agregar "Premium" en la sección "Configuración" del menú lateral con badge/icono. Muestra estado actual y opción de compra. | Propuesta |
+| Suscripción anual | Integrar Google Play Billing Library (`billing-ktx:7.x`). Producto: `mtcquiz_premium_annual`. Verificación client-side con `queryPurchasesAsync()`. Estado `isPremium` en DataStore. Arquitectura: `BillingManager` interface+impl en `core/data/billing/`, `SubscriptionRepository` en `core/domain`. | Implementado |
+| Eliminar ads para premium | Todos los puntos de ads (`AdsManager`) verifican `isPremium` antes de mostrar. Banner en Home, intersticiales en PDF y evaluación se ocultan si el usuario es premium. | Implementado |
+| Popup post-ad | Después de cerrar un intersticial, mostrar dialog: "¿Cansado de los anuncios? Suscríbete por S/XX.XX/año". Botones: [Suscribirme] [No, gracias]. Se implementa en `onDismiss` callback del intersticial. | Implementado |
+| Item en configuración | Agregar "Premium" en la sección "Configuración" del menú lateral con badge/icono. Muestra estado actual y opción de compra. | Implementado |
 
 ---
 
