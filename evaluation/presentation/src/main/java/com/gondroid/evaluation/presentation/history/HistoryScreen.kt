@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.History
+import androidx.compose.material.icons.filled.Replay
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -49,14 +50,15 @@ import java.time.format.DateTimeFormatter
 fun HistoryScreenRoot(
     viewModel: HistoryScreenViewModel = hiltViewModel(),
     navigateBack: () -> Unit,
+    navigateToErrorReview: () -> Unit = {},
 ) {
     val state by viewModel.state.collectAsState()
-    HistoryScreen(state = state, navigateBack = navigateBack)
+    HistoryScreen(state = state, navigateBack = navigateBack, navigateToErrorReview = navigateToErrorReview)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HistoryScreen(state: HistoryState, navigateBack: () -> Unit) {
+fun HistoryScreen(state: HistoryState, navigateBack: () -> Unit, navigateToErrorReview: () -> Unit = {}) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -67,6 +69,11 @@ fun HistoryScreen(state: HistoryState, navigateBack: () -> Unit) {
                             Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back",
                         )
+                    }
+                },
+                actions = {
+                    IconButton(onClick = navigateToErrorReview) {
+                        Icon(Icons.Default.Replay, contentDescription = "Repasar errores")
                     }
                 },
             )

@@ -48,3 +48,9 @@ data class SummaryScreenRoute(
 
 @Serializable
 data object EvaluationHistoryRoute
+
+@Serializable
+data object ErrorReviewRoute
+
+@Serializable
+data object StatsRoute

@@ -11,16 +11,21 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.History
+import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -70,6 +75,7 @@ fun HomeScreenRoot(
     navigateToDetail: (String) -> Unit,
     navigateToConfiguration: () -> Unit,
     navigateToHistory: () -> Unit,
+    navigateToStats: () -> Unit = {},
 ) {
     val state by viewModel.state.collectAsState()
 
@@ -87,6 +93,7 @@ fun HomeScreenRoot(
                 is HomeAction.OnClickCategory -> navigateToDetail(action.categoryId)
                 is HomeAction.GoToConfiguration -> navigateToConfiguration()
                 is HomeAction.GoToHistory -> navigateToHistory()
+                is HomeAction.GoToStats -> navigateToStats()
             }
         },
         content = {
@@ -165,6 +172,13 @@ fun HomeScreen(
                     )
                 },
                 actions = {
+                    IconButton(onClick = { onAction(HomeAction.GoToStats) }) {
+                        Icon(
+                            imageVector = Icons.Default.BarChart,
+                            contentDescription = "stats_button",
+                            tint = MaterialTheme.colorScheme.onSurface,
+                        )
+                    }
                     IconButton(onClick = { onAction(HomeAction.GoToHistory) }) {
                         Icon(
                             imageVector = Icons.Default.History,
@@ -211,6 +225,28 @@ fun HomeScreen(
                 text = stringResource(R.string.subtitle_message_home),
                 style = MaterialTheme.typography.bodyLarge
             )
+
+            if (state.streak > 0) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.LocalFireDepartment,
+                        contentDescription = "Racha",
+                        tint = Color(0xFFFF9800),
+                        modifier = Modifier.size(20.dp),
+                    )
+                    Spacer(Modifier.width(4.dp))
+                    Text(
+                        text = "${state.streak} día${if (state.streak > 1) "s" else ""}",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = Color(0xFFFF9800),
+                        fontWeight = FontWeight.Bold,
+                    )
+                }
+            }
 
             Spacer(modifier = Modifier.height(30.dp))
 

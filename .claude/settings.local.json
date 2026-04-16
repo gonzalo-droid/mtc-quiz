@@ -35,7 +35,8 @@
       "Bash(cp /tmp/inter_font/extras/ttf/Inter-Regular.ttf /Users/gonzalo/AndroidStudioProjects/MTCQuiz/core/presentation/designsystem/src/main/res/font/inter_regular.ttf)",
       "Bash(cp /tmp/inter_font/extras/ttf/Inter-Medium.ttf /Users/gonzalo/AndroidStudioProjects/MTCQuiz/core/presentation/designsystem/src/main/res/font/inter_medium.ttf)",
       "Bash(cp /tmp/inter_font/extras/ttf/Inter-SemiBold.ttf /Users/gonzalo/AndroidStudioProjects/MTCQuiz/core/presentation/designsystem/src/main/res/font/inter_semibold.ttf)",
-      "Bash(./gradlew :configuration:presentation:compileDebugKotlin)"
+      "Bash(./gradlew :configuration:presentation:compileDebugKotlin)",
+      "WebSearch"
     ]
   }
 }

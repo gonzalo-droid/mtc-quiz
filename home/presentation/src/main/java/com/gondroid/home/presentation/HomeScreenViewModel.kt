@@ -36,5 +36,11 @@ constructor(
                 it.copy(userName = userName)
             }
         }.launchIn(viewModelScope)
+
+        preferenceRepository.currentStreakFlow.onEach { streak ->
+            _state.update {
+                it.copy(streak = streak)
+            }
+        }.launchIn(viewModelScope)
     }
 }

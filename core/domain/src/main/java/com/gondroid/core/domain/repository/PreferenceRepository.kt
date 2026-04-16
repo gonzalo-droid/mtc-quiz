@@ -5,6 +5,10 @@ import kotlinx.coroutines.flow.Flow
 
 interface PreferenceRepository {
 
+    val currentStreakFlow: Flow<Int>
+    val lastStudyDateFlow: Flow<Long>
+    suspend fun recordStudySession()
+
     val darkModeFlow: Flow<Boolean>
 
     suspend fun setDarkMode(

@@ -126,6 +126,7 @@ constructor(
                 questionResults = _resultsList.toList(),
             )
             repository.saveEvaluation(evaluation = evaluation)
+            preferenceRepository.recordStudySession()
 
             eventChannel.send(EvaluationEvent.EvaluationCreated(evaluationId = evaluation.id))
         }

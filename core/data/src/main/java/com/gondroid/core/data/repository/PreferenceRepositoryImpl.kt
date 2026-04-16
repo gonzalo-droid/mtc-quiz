@@ -4,7 +4,10 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
+import java.time.LocalDate
 import com.gondroid.core.domain.model.PreferencesEvaluation
 import com.gondroid.core.domain.repository.PreferenceRepository
 import kotlinx.coroutines.flow.Flow
@@ -28,6 +31,8 @@ class PreferenceRepositoryImpl @Inject constructor(
         var PERCENTAGE_TO_APPROVED_EVALUATION =
             stringPreferencesKey("percentage_to_approved_evaluation")
         val TIME_TO_FINISH_EVALUATION = stringPreferencesKey("time_to_finish_evaluation")
+        val CURRENT_STREAK = intPreferencesKey("current_streak")
+        val LAST_STUDY_DATE = longPreferencesKey("last_study_date")
     }
 
 
@@ -146,6 +151,35 @@ class PreferenceRepositoryImpl @Inject constructor(
             true
         } catch (e: Exception) {
             false
+        }
+    }
+
+    // Streak
+    override val currentStreakFlow: Flow<Int> = dataStore.data
+        .map { prefs -> prefs[CURRENT_STREAK] ?: 0 }
+
+    override val lastStudyDateFlow: Flow<Long> = dataStore.data
+        .map { prefs -> prefs[LAST_STUDY_DATE] ?: 0L }
+
+    override suspend fun recordStudySession() {
+        dataStore.edit { prefs ->
+            val today = LocalDate.now().toEpochDay()
+            val lastDate = prefs[LAST_STUDY_DATE] ?: 0L
+            val currentStreak = prefs[CURRENT_STREAK] ?: 0
+
+            when {
+                lastDate == today -> { /* already recorded today, no change */ }
+                lastDate == today - 1 -> {
+                    // consecutive day — increment streak
+                    prefs[CURRENT_STREAK] = currentStreak + 1
+                    prefs[LAST_STUDY_DATE] = today
+                }
+                else -> {
+                    // streak broken or first time — reset to 1
+                    prefs[CURRENT_STREAK] = 1
+                    prefs[LAST_STUDY_DATE] = today
+                }
+            }
         }
     }
 
