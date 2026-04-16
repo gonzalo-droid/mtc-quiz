@@ -10,6 +10,9 @@ android {
 
     namespace = "com.gondroid.mtcquiz"
 
+    buildFeatures {
+        buildConfig = true
+    }
 
     signingConfigs {
         create("release") {
@@ -40,8 +43,18 @@ android {
         }
     }
     buildTypes {
+        debug {
+            buildConfigField("String", "ADMOB_BANNER_ID",
+                "\"ca-app-pub-3940256099942544/9214589741\"")
+            buildConfigField("String", "ADMOB_INTERSTITIAL_ID",
+                "\"ca-app-pub-3940256099942544/1033173712\"")
+        }
         getByName("release") {
             signingConfig = signingConfigs.getByName("release")
+            buildConfigField("String", "ADMOB_BANNER_ID",
+                "\"ca-app-pub-1427341798923689/8361981027\"")
+            buildConfigField("String", "ADMOB_INTERSTITIAL_ID",
+                "\"ca-app-pub-1427341798923689/3029763296\"")
         }
     }
 }
