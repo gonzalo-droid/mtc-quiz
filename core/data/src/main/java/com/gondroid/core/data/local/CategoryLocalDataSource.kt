@@ -28,7 +28,7 @@ val categoriesLocalDataSource = listOf(
         description = "Los mismos que A-1 y también carros oficiales de transporte de pasajeros como Taxis, Buses, Ambulancias y Transporte Interprovincial. Primero debes obtener la Licencia A-I",
         image = "a",
         pdf = "CLASE_A_IIA.pdf",
-        pathJson = "a1_questions.json"
+        pathJson = "a2a_questions.json"
     ),
     Category(
         id = "3",
@@ -38,7 +38,7 @@ val categoriesLocalDataSource = listOf(
         description = "Los mismos que A-1, A-IIa y también Microbuses de hasta 16 asientos y 4 toneladas de peso bruto y Minibuses hasta 33 asientos y 7 toneladas de peso bruto. Primero debes obtener la Licencia A-I",
         image = "a",
         pdf = "CLASE_A_IIB.pdf",
-        pathJson = "a1_questions.json"
+        pathJson = "a2b_questions.json"
     ),
     Category(
         id = "4",
@@ -48,7 +48,7 @@ val categoriesLocalDataSource = listOf(
         description = " Los mismos que A-I, A-IIa y AIIb y también vehiculos con más de 6 toneladas como omnibuses urbanos, interurbanos, panorámicos y articulados. Primero debes obtener la Licencia A-I",
         image = "a",
         pdf = "CLASE_A_IIIA.pdf",
-        pathJson = "a1_questions.json"
+        pathJson = "a3a_questions.json"
     ),
     Category(
         id = "5",
@@ -58,7 +58,7 @@ val categoriesLocalDataSource = listOf(
         description = "Los mismos que A-I, A-IIa y A-IIb (pero no A-IIIa) y también vehículos de chasis cabinado, remolques, gruas, cargobus, plataforma, baranda y volquetes. Primero debes obtener la Licencia A-I.",
         image = "a",
         pdf = "CLASE_A_IIIB.pdf",
-        pathJson = "a1_questions.json"
+        pathJson = "a3b_questions.json"
     ),
     Category(
         id = "6",
@@ -68,7 +68,7 @@ val categoriesLocalDataSource = listOf(
         description = "Los mismos que A-I, A-IIa, AIIb, A-IIIa y A-IIIb. Primero debes obtener la Licencia A-I.",
         image = "a",
         pdf = "CLASE_A_IIIC.pdf",
-        pathJson = "a1_questions.json"
+        pathJson = "a3c_questions.json"
     ),
 
 
@@ -83,7 +83,7 @@ val categoriesLocalDataSource = listOf(
         description = "Vehículos no motorizados de 3 ruedas (triciclos) para transporte público especial de pasajeros.",
         image = "a",
         pdf = "CLASE_A_I.pdf",
-        pathJson = "a1_questions.json"
+        pathJson = "a2a_questions.json"
     ),
     Category(
         id = "8",

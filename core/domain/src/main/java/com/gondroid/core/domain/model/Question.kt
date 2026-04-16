@@ -1,5 +1,6 @@
 package com.gondroid.core.domain.model
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -10,6 +11,7 @@ data class Question(
     val topic: String = "",
     val title: String = "",
     val answer: String = "",
+    @SerialName("fundamento") val argument : String = "",
     val options: List<String> = listOf(),
     val image: String? = null,
 ) {
