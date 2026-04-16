@@ -29,7 +29,7 @@ fun CardQuestion(
 ){
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiary),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondary),
         shape = RoundedCornerShape(8.dp),
     ) {
         Column(

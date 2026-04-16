@@ -34,6 +34,9 @@ dependencies {
     // AdMob
     implementation(libs.play.services.admob)
 
+    // Google Play Billing (suscripciones)
+    implementation(libs.play.billing.ktx)
+
     // Test
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.truth)

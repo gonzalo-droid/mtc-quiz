@@ -36,7 +36,12 @@
       "Bash(cp /tmp/inter_font/extras/ttf/Inter-Medium.ttf /Users/gonzalo/AndroidStudioProjects/MTCQuiz/core/presentation/designsystem/src/main/res/font/inter_medium.ttf)",
       "Bash(cp /tmp/inter_font/extras/ttf/Inter-SemiBold.ttf /Users/gonzalo/AndroidStudioProjects/MTCQuiz/core/presentation/designsystem/src/main/res/font/inter_semibold.ttf)",
       "Bash(./gradlew :configuration:presentation:compileDebugKotlin)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(./gradlew :home:presentation:compileDebugKotlin)",
+      "Bash(./gradlew :core:data:test)",
+      "Bash(./gradlew :app:compileDebugKotlin)",
+      "Bash(./gradlew :app:test)",
+      "Bash(./gradlew :app:test --tests \"com.gondroid.mtcquiz.presentation.screens.home.HomeScreenViewModelTest\")"
     ]
   }
 }

@@ -27,6 +27,7 @@ import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.WorkspacePremium
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -75,6 +76,7 @@ fun HomeScreenRoot(
     viewModel: HomeScreenViewModel,
     navigateToDetail: (String) -> Unit,
     navigateToConfiguration: () -> Unit,
+    navigateToPremium: () -> Unit = {},
 ) {
     val state by viewModel.state.collectAsState()
 
@@ -122,6 +124,7 @@ fun HomeScreenRoot(
             when (action) {
                 is HomeAction.OnClickCategory -> navigateToDetail(action.categoryId)
                 is HomeAction.GoToConfiguration -> navigateToConfiguration()
+                is HomeAction.GoToPremium -> navigateToPremium()
             }
         },
         content = {
@@ -173,6 +176,15 @@ fun HomeScreen(
                     )
                 },
                 actions = {
+                    if (!state.isPremium) {
+                        IconButton(onClick = { onAction(HomeAction.GoToPremium) }) {
+                            Icon(
+                                imageVector = Icons.Default.WorkspacePremium,
+                                contentDescription = "premium",
+                                tint = Color(0xFFFFB300),
+                            )
+                        }
+                    }
                     Box(
                         modifier =
                             Modifier

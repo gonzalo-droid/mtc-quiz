@@ -47,6 +47,7 @@ googleService = "4.4.2"
 googleFirebaseCrashlytics = "3.0.3"
 playServicesAdMob = "24.9.0"
 playReview = "2.0.2"
+playBilling = "7.1.1"
 
 # 🧭 Navigation
 navigationCompose = "2.8.1"
@@ -73,11 +74,11 @@ jetbrainsKotlinJvm = "2.2.21"
 
 # 📦 Project Info
 projectApplicationId = "com.gondroid.mtcquiz"
-projectVersionName = "1.0.1"
+projectVersionName = "1.1.0"
 projectMinSdkVersion = "26"
 projectTargetSdkVersion = "35"
 projectCompileSdkVersion = "35"
-projectVersionCode = "2"
+projectVersionCode = "3"
 
 [libraries]
 # 🔧 Build & Gradle Tools
@@ -149,6 +150,9 @@ play-services-admob = { module = "com.google.android.gms:play-services-ads", ver
 # In-App Review
 play-review = { module = "com.google.android.play:review", version.ref = "playReview" }
 play-review-ktx = { module = "com.google.android.play:review-ktx", version.ref = "playReview" }
+# Google Play Billing (suscripciones y compras in-app)
+play-billing = { module = "com.android.billingclient:billing", version.ref = "playBilling" }
+play-billing-ktx = { module = "com.android.billingclient:billing-ktx", version.ref = "playBilling" }
 
 
 # 🧭 Navigation

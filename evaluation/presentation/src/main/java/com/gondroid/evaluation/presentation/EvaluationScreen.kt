@@ -322,7 +322,7 @@ fun AnswerCard(
             else -> Color.White to Color.Gray
         }
 
-        isSelected -> MaterialTheme.colorScheme.tertiary to MaterialTheme.colorScheme.tertiary
+        isSelected -> MaterialTheme.colorScheme.secondary to MaterialTheme.colorScheme.secondary
         else -> Color.White to Color.Gray
     }
 

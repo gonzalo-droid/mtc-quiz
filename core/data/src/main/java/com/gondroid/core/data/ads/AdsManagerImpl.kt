@@ -16,7 +16,11 @@ import javax.inject.Singleton
 class AdsManagerImpl @Inject constructor(
     private val prefs: AdsPreferences,
     @Named("admobInterstitialId") private val interstitialId: String,
+    private val billingManager: com.gondroid.core.data.billing.BillingManager,
 ) : AdsManager {
+
+    private val isPremium: Boolean
+        get() = (billingManager.isPremiumFlow as? kotlinx.coroutines.flow.StateFlow)?.value ?: false
 
     private var interstitial: InterstitialAd? = null
     private var isLoading: Boolean = false
@@ -25,6 +29,7 @@ class AdsManagerImpl @Inject constructor(
     private var isLoadingEvaluation: Boolean = false
 
     override fun preloadPdfInterstitial(context: Context) {
+        if (isPremium) return
         if (interstitial != null || isLoading) return
         isLoading = true
         InterstitialAd.load(
@@ -45,11 +50,13 @@ class AdsManagerImpl @Inject constructor(
     }
 
     override suspend fun shouldShowPdfInterstitial(): Boolean {
+        if (isPremium) return false
         val count = prefs.currentPdfDownloadCount()
         return count > 0 && count % 3 == 0
     }
 
     override fun showPdfInterstitial(activity: Activity, onDismiss: () -> Unit) {
+        if (isPremium) { onDismiss(); return }
         val ad = interstitial
         if (ad == null) {
             onDismiss()
@@ -74,6 +81,7 @@ class AdsManagerImpl @Inject constructor(
     }
 
     override fun preloadEvaluationInterstitial(context: Context) {
+        if (isPremium) return
         if (evaluationInterstitial != null || isLoadingEvaluation) return
         isLoadingEvaluation = true
         InterstitialAd.load(
@@ -94,11 +102,13 @@ class AdsManagerImpl @Inject constructor(
     }
 
     override suspend fun shouldShowEvaluationInterstitial(): Boolean {
+        if (isPremium) return false
         val count = prefs.currentEvaluationStartCount()
         return count > 0 && count % 3 == 0
     }
 
     override fun showEvaluationInterstitial(activity: Activity, onDismiss: () -> Unit) {
+        if (isPremium) { onDismiss(); return }
         val ad = evaluationInterstitial
         if (ad == null) {
             onDismiss()

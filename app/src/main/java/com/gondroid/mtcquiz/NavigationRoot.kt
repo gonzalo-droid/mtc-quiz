@@ -85,6 +85,9 @@ fun NavigationRoot(navController: NavHostController, isLoggedIn: Boolean) {
                             ConfigurationScreenRoute
                         )
                     },
+                    navigateToPremium = {
+                        navController.navigate(PremiumScreenRoute)
+                    },
                 )
             }
 
