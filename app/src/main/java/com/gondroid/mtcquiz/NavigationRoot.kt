@@ -83,12 +83,6 @@ fun NavigationRoot(navController: NavHostController, isLoggedIn: Boolean) {
                             ConfigurationScreenRoute
                         )
                     },
-                    navigateToHistory = {
-                        navController.navigate(EvaluationHistoryRoute)
-                    },
-                    navigateToStats = {
-                        navController.navigate(StatsRoute)
-                    }
                 )
             }
 
@@ -186,6 +180,12 @@ fun NavigationRoot(navController: NavHostController, isLoggedIn: Boolean) {
                     },
                     navigateToAbout = {
                         // TODO: Implementar navegación a About
+                    },
+                    navigateToStats = {
+                        navController.navigate(StatsRoute)
+                    },
+                    navigateToHistory = {
+                        navController.navigate(EvaluationHistoryRoute)
                     },
                     navigateToLogout = {
                         navController.navigate(LoginScreenRoute) {

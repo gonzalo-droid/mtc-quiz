@@ -74,8 +74,6 @@ fun HomeScreenRoot(
     viewModel: HomeScreenViewModel,
     navigateToDetail: (String) -> Unit,
     navigateToConfiguration: () -> Unit,
-    navigateToHistory: () -> Unit,
-    navigateToStats: () -> Unit = {},
 ) {
     val state by viewModel.state.collectAsState()
 
@@ -92,8 +90,6 @@ fun HomeScreenRoot(
             when (action) {
                 is HomeAction.OnClickCategory -> navigateToDetail(action.categoryId)
                 is HomeAction.GoToConfiguration -> navigateToConfiguration()
-                is HomeAction.GoToHistory -> navigateToHistory()
-                is HomeAction.GoToStats -> navigateToStats()
             }
         },
         content = {
@@ -172,20 +168,6 @@ fun HomeScreen(
                     )
                 },
                 actions = {
-                    IconButton(onClick = { onAction(HomeAction.GoToStats) }) {
-                        Icon(
-                            imageVector = Icons.Default.BarChart,
-                            contentDescription = "stats_button",
-                            tint = MaterialTheme.colorScheme.onSurface,
-                        )
-                    }
-                    IconButton(onClick = { onAction(HomeAction.GoToHistory) }) {
-                        Icon(
-                            imageVector = Icons.Default.History,
-                            contentDescription = "history_button",
-                            tint = MaterialTheme.colorScheme.onSurface,
-                        )
-                    }
                     Box(
                         modifier =
                             Modifier

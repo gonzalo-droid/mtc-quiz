@@ -24,6 +24,8 @@ import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.LightMode
+import androidx.compose.material.icons.filled.BarChart
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -75,6 +77,8 @@ fun ConfigurationScreenRoot(
     navigateToTarifas: () -> Unit,
     navigateToAbout: () -> Unit,
     navigateToLogout: () -> Unit,
+    navigateToStats: () -> Unit = {},
+    navigateToHistory: () -> Unit = {},
 ) {
 
     val context = LocalContext.current
@@ -110,6 +114,8 @@ fun ConfigurationScreenRoot(
                 ConfigurationAction.GoToSCustomize -> navigateToCustomize()
                 ConfigurationAction.GoToTerm -> navigateToTerm()
                 ConfigurationAction.GoToTarifas -> navigateToTarifas()
+                ConfigurationAction.GoToStats -> navigateToStats()
+                ConfigurationAction.GoToHistory -> navigateToHistory()
                 ConfigurationAction.Logout -> {
                     viewModel.logout()
                 }
@@ -199,120 +205,97 @@ fun ConfigurationScreen(
                 text = stringResource(R.string.settings),
                 style = MaterialTheme.typography.headlineMedium,
                 color = MaterialTheme.colorScheme.onBackground,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
 
-            Spacer(modifier = Modifier.height(50.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(12.dp),
-                color = MaterialTheme.colorScheme.surfaceContainerLow,
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 14.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            imageVector = if (state.isDarkMode) Icons.Default.DarkMode else Icons.Default.LightMode,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(24.dp),
-                        )
-                        Spacer(modifier = Modifier.width(16.dp))
-                        Text(
-                            text = stringResource(R.string.dark_mode),
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.onBackground,
-                            fontWeight = FontWeight.Bold,
-                        )
-                    }
-                    Switch(
-                        checked = state.isDarkMode,
-                        onCheckedChange = { onAction(ConfigurationAction.ToggleDarkMode(it)) },
-                    )
-                }
+            // --- Mi progreso ---
+            SectionTitle("Mi progreso")
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                ItemList(
+                    icon = Icons.Default.BarChart,
+                    title = "Estadísticas",
+                    onClick = { onAction(ConfigurationAction.GoToStats) },
+                )
+                ItemList(
+                    icon = Icons.Default.History,
+                    title = "Historial de evaluaciones",
+                    onClick = { onAction(ConfigurationAction.GoToHistory) },
+                )
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
+            // --- Configuración ---
+            SectionTitle("Configuración")
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    color = MaterialTheme.colorScheme.surfaceContainerLow,
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 14.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                imageVector = if (state.isDarkMode) Icons.Default.DarkMode else Icons.Default.LightMode,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(24.dp),
+                            )
+                            Spacer(modifier = Modifier.width(16.dp))
+                            Text(
+                                text = stringResource(R.string.dark_mode),
+                                style = MaterialTheme.typography.bodyLarge,
+                            )
+                        }
+                        Switch(
+                            checked = state.isDarkMode,
+                            onCheckedChange = { onAction(ConfigurationAction.ToggleDarkMode(it)) },
+                        )
+                    }
+                }
                 ItemList(
                     icon = Icons.Default.Category,
                     title = stringResource(R.string.custom_values),
                     onClick = { onAction(ConfigurationAction.GoToSCustomize) },
                 )
+            }
 
+            Spacer(modifier = Modifier.height(20.dp))
+
+            // --- Información ---
+            SectionTitle("Información")
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 ItemList(
                     icon = Icons.Default.AccountBalance,
                     title = stringResource(R.string.term_and_conditions),
                     onClick = { onAction(ConfigurationAction.GoToTerm) },
                 )
-
                 ItemList(
                     icon = Icons.AutoMirrored.Filled.Assignment,
                     title = "Trámites asociados",
                     onClick = { onAction(ConfigurationAction.GoToTarifas) },
                 )
+                ItemList(
+                    icon = Icons.Default.Star,
+                    title = "Calificar app",
+                    onClick = { onAction(ConfigurationAction.GoToRating) },
+                )
+                ItemList(
+                    icon = Icons.Default.Info,
+                    title = "Nosotros",
+                    onClick = { onAction(ConfigurationAction.GoToAbout) },
+                )
             }
 
             Spacer(modifier = Modifier.weight(1f))
-
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(4.dp),
-            ) {
-                TextButton(
-                    onClick = { onAction(ConfigurationAction.GoToRating) },
-                    modifier = Modifier.fillMaxWidth(),
-                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Icon(
-                            Icons.Default.Star,
-                            contentDescription = null,
-                            modifier = Modifier.size(20.dp),
-                            tint = MaterialTheme.colorScheme.primary,
-                        )
-                        Spacer(Modifier.width(12.dp))
-                        Text(
-                            "Calificar app",
-                            style = MaterialTheme.typography.bodyMedium,
-                        )
-                    }
-                }
-                TextButton(
-                    onClick = { onAction(ConfigurationAction.GoToAbout) },
-                    modifier = Modifier.fillMaxWidth(),
-                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Icon(
-                            Icons.Default.Info,
-                            contentDescription = null,
-                            modifier = Modifier.size(20.dp),
-                            tint = MaterialTheme.colorScheme.primary,
-                        )
-                        Spacer(Modifier.width(12.dp))
-                        Text(
-                            "Nosotros",
-                            style = MaterialTheme.typography.bodyMedium,
-                        )
-                    }
-                }
-            }
 
             val context = LocalContext.current
             val versionName = context.packageManager
@@ -329,6 +312,17 @@ fun ConfigurationScreen(
 
         }
     }
+}
+
+@Composable
+private fun SectionTitle(title: String) {
+    Text(
+        text = title,
+        style = MaterialTheme.typography.titleSmall,
+        color = MaterialTheme.colorScheme.primary,
+        fontWeight = FontWeight.SemiBold,
+        modifier = Modifier.padding(bottom = 8.dp),
+    )
 }
 
 @Preview(showBackground = true)
