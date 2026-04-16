@@ -1,5 +1,8 @@
 package com.gondroid.configuration.presentation
 
+import android.app.Activity
+import android.content.Context
+import com.google.android.play.core.review.ReviewManagerFactory
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -34,10 +37,25 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.gondroid.core.presentation.designsystem.MTCQuizTheme
 
+
+private fun requestInAppReview(activity: Activity, context: Context) {
+    val manager = ReviewManagerFactory.create(activity)
+    manager.requestReviewFlow().addOnCompleteListener { task ->
+        if (task.isSuccessful) {
+            manager.launchReviewFlow(activity, task.result).addOnCompleteListener {
+                // Google doesn't tell us if user actually rated.
+                // Flow is complete — no further action needed.
+            }
+        } else {
+            OpenAppInPlayStore().invoke(context)
+        }
+    }
+}
 
 @Composable
 fun ConfigurationScreenRoot(
@@ -69,7 +87,12 @@ fun ConfigurationScreenRoot(
             when (action) {
                 ConfigurationAction.GoToAbout -> navigateToAbout()
                 ConfigurationAction.GoToRating -> {
-                    OpenAppInPlayStore().invoke(context)
+                    val activity = context as? Activity
+                    if (activity != null) {
+                        requestInAppReview(activity, context)
+                    } else {
+                        OpenAppInPlayStore().invoke(context)
+                    }
                 }
 
                 ConfigurationAction.GoToSCustomize -> navigateToCustomize()
@@ -242,6 +265,19 @@ fun ConfigurationScreen(
                     fontWeight = FontWeight.Bold
                 )
             }*/
+
+            val context = LocalContext.current
+            val versionName = context.packageManager
+                .getPackageInfo(context.packageName, 0).versionName
+            Text(
+                text = "v$versionName",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
+                textAlign = TextAlign.Center,
+            )
 
         }
     }
