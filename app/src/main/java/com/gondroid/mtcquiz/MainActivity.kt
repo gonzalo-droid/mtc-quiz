@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
                 if (!authState.isLoading) {
                     keepSplashScreen = false
                     val navController = rememberNavController()
-                    NavigationRoot(navController, authState.isLoggedIn)
+                    NavigationRoot(navController, authState.isLoggedIn, authState.isOnboardingShown)
                 }
             }
         }

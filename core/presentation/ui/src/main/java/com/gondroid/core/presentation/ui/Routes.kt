@@ -57,3 +57,6 @@ data object StatsRoute
 
 @Serializable
 data object PremiumScreenRoute
+
+@Serializable
+data object OnboardingRoute

@@ -29,6 +29,7 @@ import com.gondroid.core.presentation.ui.ErrorReviewRoute
 import com.gondroid.core.presentation.ui.EvaluationHistoryRoute
 import com.gondroid.core.presentation.ui.EvaluationScreenRoute
 import com.gondroid.core.presentation.ui.HomeScreenRoute
+import com.gondroid.core.presentation.ui.OnboardingRoute
 import com.gondroid.core.presentation.ui.PremiumScreenRoute
 import com.gondroid.core.presentation.ui.StatsRoute
 import com.gondroid.core.presentation.ui.LoginScreenRoute
@@ -37,6 +38,7 @@ import com.gondroid.core.presentation.ui.QuestionsScreenRoute
 import com.gondroid.core.presentation.ui.SummaryScreenRoute
 import com.gondroid.core.presentation.ui.TarifasScreenRoute
 import com.gondroid.core.presentation.ui.TermScreenRoute
+import com.gondroid.mtcquiz.onboarding.OnboardingScreen
 import com.gondroid.detail.presentation.DetailScreenRoot
 import com.gondroid.detail.presentation.DetailScreenViewModel
 import com.gondroid.evaluation.presentation.EvaluationScreenRoot
@@ -54,20 +56,32 @@ import com.gondroid.questionreview.presentation.QuestionsScreenRoot
 import com.gondroid.questionreview.presentation.QuestionsScreenViewModel
 
 @Composable
-fun NavigationRoot(navController: NavHostController, isLoggedIn: Boolean) {
+fun NavigationRoot(navController: NavHostController, isLoggedIn: Boolean, isOnboardingShown: Boolean) {
 
     Box(
         modifier = Modifier.fillMaxSize(),
     ) {
         NavHost(
             navController = navController,
-            startDestination = HomeScreenRoute,
+            startDestination = if (!isOnboardingShown) OnboardingRoute else HomeScreenRoute,
             // if (isLoggedIn) HomeScreenRoute else LoginScreenRoute,
             enterTransition = { slideInHorizontally(initialOffsetX = { it }) + fadeIn(animationSpec = tween(300)) },
             exitTransition = { slideOutHorizontally(targetOffsetX = { -it / 3 }) + fadeOut(animationSpec = tween(300)) },
             popEnterTransition = { slideInHorizontally(initialOffsetX = { -it / 3 }) + fadeIn(animationSpec = tween(300)) },
             popExitTransition = { slideOutHorizontally(targetOffsetX = { it }) + fadeOut(animationSpec = tween(300)) },
         ) {
+
+            composable<OnboardingRoute> {
+                val mainViewModel: MainViewModel = hiltViewModel()
+                OnboardingScreen(
+                    onFinish = {
+                        mainViewModel.onOnboardingComplete()
+                        navController.navigate(HomeScreenRoute) {
+                            popUpTo(OnboardingRoute) { inclusive = true }
+                        }
+                    },
+                )
+            }
 
             composable<HomeScreenRoute> {
                 val viewmodel = hiltViewModel<HomeScreenViewModel>()

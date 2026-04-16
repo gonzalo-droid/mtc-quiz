@@ -9,8 +9,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -33,15 +33,24 @@ constructor(
     val isPremium = billingManager.isPremiumFlow
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
 
+    val isOnboardingShown = preferenceRepository.isOnboardingShownFlow
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), true)
+
+    fun onOnboardingComplete() = viewModelScope.launch {
+        preferenceRepository.setIsOnboardingShown(true)
+    }
+
     init {
-        preferenceRepository.isLoggedInFlow
-            .onEach { isLoggedIn ->
-                _state.value = AuthState(
-                    isLoggedIn = isLoggedIn,
-                    isLoading = false
-                )
-            }
-            .launchIn(viewModelScope)
+        combine(
+            preferenceRepository.isLoggedInFlow,
+            preferenceRepository.isOnboardingShownFlow,
+        ) { isLoggedIn, isOnboardingShown ->
+            _state.value = AuthState(
+                isLoggedIn = isLoggedIn,
+                isOnboardingShown = isOnboardingShown,
+                isLoading = false,
+            )
+        }.launchIn(viewModelScope)
 
         viewModelScope.launch {
             billingManager.refreshPurchaseState()
@@ -51,5 +60,6 @@ constructor(
 
 data class AuthState(
     val isLoggedIn: Boolean = false,
-    val isLoading: Boolean = true
+    val isOnboardingShown: Boolean = true,
+    val isLoading: Boolean = true,
 )
