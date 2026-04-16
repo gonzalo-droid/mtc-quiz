@@ -38,6 +38,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -78,11 +79,42 @@ fun HomeScreenRoot(
     val state by viewModel.state.collectAsState()
 
     val context = LocalContext.current
-    val adView = remember { AdView(context) }
-    adView.adUnitId = viewModel.bannerAdId
+    val bannerAdId = viewModel.bannerAdId
+    val adView = remember {
+        AdView(context).apply {
+            adUnitId = bannerAdId
+            val adSize = AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(context, 360)
+            setAdSize(adSize)
+            adListener = object : AdListener() {
+                override fun onAdLoaded() {
+                    Log.d("adMobTest", "Banner ad was loaded.")
+                }
 
-    val adSize = AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(LocalContext.current, 360)
-    adView.setAdSize(adSize)
+                override fun onAdFailedToLoad(error: LoadAdError) {
+                    Log.e("adMobTest", "Banner ad failed to load: ${error.message}")
+                }
+
+                override fun onAdImpression() {
+                    Log.d("adMobTest", "Banner ad recorded an impression.")
+                }
+
+                override fun onAdClicked() {
+                    Log.d("adMobTest", "Banner ad was clicked.")
+                }
+            }
+        }
+    }
+
+    // Prevent loading the AdView if the app is in preview mode.
+    val isInspectionMode = LocalInspectionMode.current
+    LaunchedEffect(Unit) {
+        if (!isInspectionMode) {
+            // [START load_ad]
+            // Create an AdRequest and load the ad.
+            adView.loadAd(AdRequest.Builder().build())
+            // [END load_ad]
+        }
+    }
 
     HomeScreen(
         state = state,
@@ -106,35 +138,6 @@ fun HomeScreenRoot(
             }
         }
     )
-
-    adView.adListener =
-        object : AdListener() {
-            override fun onAdLoaded() {
-                Log.d("adMobTest", "Banner ad was loaded.")
-            }
-
-            override fun onAdFailedToLoad(error: LoadAdError) {
-                Log.e("adMobTest", "Banner ad failed to load: ${error.message}")
-            }
-
-            override fun onAdImpression() {
-                Log.d("adMobTest", "Banner ad recorded an impression.")
-            }
-
-            override fun onAdClicked() {
-                Log.d("adMobTest", "Banner ad was clicked.")
-            }
-        }
-    // [END add_listener]
-
-    // Prevent loading the AdView if the app is in preview mode.
-    if (!LocalInspectionMode.current) {
-        // [START load_ad]
-        // Create an AdRequest and load the ad.
-        val adRequest = AdRequest.Builder().build()
-        adView.loadAd(adRequest)
-        // [END load_ad]
-    }
 
     DisposableEffect(Unit) {
         // Destroy the AdView to prevent memory leaks when the screen is disposed.
