@@ -320,6 +320,15 @@ Propuestas de diferenciación basadas en análisis de apps competidoras ([DMV Ge
 | AI Tutor | Chatbot "Preguntale a MTCQuiz" que explica reglas de tránsito. Requiere integración con Claude/GPT API en runtime. | Propuesta |
 | Modo offline completo | Descargar todo el banco de preguntas + funcionar sin internet. Importante en zonas rurales de Perú. | Propuesta |
 
+### Monetización — Suscripción Premium
+
+| Feature | Descripción | Estado |
+|---|---|---|
+| Suscripción anual | Integrar Google Play Billing Library (`billing-ktx:7.x`). Producto: `mtcquiz_premium_annual`. Verificación client-side con `queryPurchasesAsync()`. Estado `isPremium` en DataStore. Arquitectura: `BillingManager` interface+impl en `core/data/billing/`, `SubscriptionRepository` en `core/domain`. | Propuesta |
+| Eliminar ads para premium | Todos los puntos de ads (`AdsManager`) verifican `isPremium` antes de mostrar. Banner en Home, intersticiales en PDF y evaluación se ocultan si el usuario es premium. | Propuesta |
+| Popup post-ad | Después de cerrar un intersticial, mostrar dialog: "¿Cansado de los anuncios? Suscríbete por S/XX.XX/año". Botones: [Suscribirme] [No, gracias]. Se implementa en `onDismiss` callback del intersticial. | Propuesta |
+| Item en configuración | Agregar "Premium" en la sección "Configuración" del menú lateral con badge/icono. Muestra estado actual y opción de compra. | Propuesta |
+
 ---
 
 Hecho con por [@gonzalo-droid](https://github.com/gonzalo-droid)
