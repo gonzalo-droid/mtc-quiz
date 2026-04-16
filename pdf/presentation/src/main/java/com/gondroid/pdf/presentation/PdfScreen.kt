@@ -68,9 +68,11 @@ import java.io.FileOutputStream
 fun PdfScreenRoot(
     viewModel: PdfScreenViewModel,
     navigateBack: () -> Boolean,
+    navigateToPremium: () -> Unit = {},
 ) {
 
     val state by viewModel.state.collectAsState()
+    var showUpsellDialog by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
 
@@ -86,6 +88,7 @@ fun PdfScreenRoot(
                 val act = activity
                 if (act != null) {
                     viewModel.adsManager.showPdfInterstitial(act) {
+                        showUpsellDialog = true
                         viewModel.onInterstitialClosed()
                     }
                 } else {
@@ -94,6 +97,16 @@ fun PdfScreenRoot(
             }
             PdfEvent.StartDownload -> viewModel.onDownloadStarting()
         }
+    }
+
+    if (showUpsellDialog) {
+        com.gondroid.core.presentation.designsystem.components.PremiumUpsellDialog(
+            onGoToPremium = {
+                showUpsellDialog = false
+                navigateToPremium()
+            },
+            onDismiss = { showUpsellDialog = false },
+        )
     }
 
     val pdfBitmapConverter = remember {

@@ -140,7 +140,10 @@ fun NavigationRoot(navController: NavHostController, isLoggedIn: Boolean) {
                         navController.navigate(
                             ConfigurationScreenRoute
                         )
-                    }
+                    },
+                    navigateToPremium = {
+                        navController.navigate(PremiumScreenRoute)
+                    },
                 )
             }
 
@@ -253,7 +256,10 @@ fun NavigationRoot(navController: NavHostController, isLoggedIn: Boolean) {
                     viewModel = viewModel,
                     navigateBack = {
                         navController.navigateUp()
-                    }
+                    },
+                    navigateToPremium = {
+                        navController.navigate(PremiumScreenRoute)
+                    },
                 )
             }
 

@@ -1,6 +1,9 @@
 package com.gondroid.detail.presentation
 
 import android.app.Activity
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -54,11 +57,13 @@ fun DetailScreenRoot(
     navigateToQuestions: (String) -> Unit,
     navigateToShowPDF: (String) -> Unit,
     navigateToEvaluation: (String) -> Unit,
+    navigateToPremium: () -> Unit = {},
 ) {
 
     val state by viewModel.state.collectAsState()
     val context = LocalContext.current
     val activity = context as? Activity
+    var showUpsellDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         viewModel.adsManager.preloadEvaluationInterstitial(context)
@@ -71,6 +76,7 @@ fun DetailScreenRoot(
                 val act = activity
                 if (act != null) {
                     viewModel.adsManager.showEvaluationInterstitial(act) {
+                        showUpsellDialog = true
                         viewModel.onInterstitialClosed(state.category.id)
                     }
                 } else {
@@ -78,6 +84,16 @@ fun DetailScreenRoot(
                 }
             }
         }
+    }
+
+    if (showUpsellDialog) {
+        com.gondroid.core.presentation.designsystem.components.PremiumUpsellDialog(
+            onGoToPremium = {
+                showUpsellDialog = false
+                navigateToPremium()
+            },
+            onDismiss = { showUpsellDialog = false },
+        )
     }
 
     DetailScreen(
