@@ -22,4 +22,6 @@ data class EvaluationEntity(
     val total: Int,
     val state: String,
     val date: Long,
+    @ColumnInfo(name = "question_results")
+    val questionResults: String = "[]",
 )

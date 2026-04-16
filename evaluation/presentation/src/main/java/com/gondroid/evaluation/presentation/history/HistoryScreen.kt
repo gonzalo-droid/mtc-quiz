@@ -35,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.gondroid.core.domain.model.Evaluation
@@ -122,48 +123,72 @@ fun EvaluationHistoryCard(evaluation: Evaluation) {
     val statusText = if (isApproved) "Aprobado" else "Desaprobado"
     val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
 
+    val failedQuestions = evaluation.questionResults.filter { !it.isCorrect }
+
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
         ),
     ) {
-        Row(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
         ) {
-            Column(modifier = Modifier.weight(1f)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = evaluation.categoryTitle,
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.SemiBold,
+                    )
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        text = evaluation.date.format(dateFormatter),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        text = "${evaluation.totalCorrect}/${evaluation.totalQuestions} correctas",
+                        style = MaterialTheme.typography.bodyMedium,
+                    )
+                }
+                Surface(
+                    shape = RoundedCornerShape(8.dp),
+                    color = statusColor.copy(alpha = 0.12f),
+                ) {
+                    Text(
+                        text = statusText,
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = statusColor,
+                        fontWeight = FontWeight.SemiBold,
+                    )
+                }
+            }
+            if (failedQuestions.isNotEmpty()) {
+                Spacer(Modifier.height(8.dp))
                 Text(
-                    text = evaluation.categoryTitle,
-                    style = MaterialTheme.typography.titleSmall,
-                    fontWeight = FontWeight.SemiBold,
-                )
-                Spacer(Modifier.height(4.dp))
-                Text(
-                    text = evaluation.date.format(dateFormatter),
-                    style = MaterialTheme.typography.bodySmall,
+                    text = "Preguntas incorrectas:",
+                    style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
-                Spacer(Modifier.height(4.dp))
-                Text(
-                    text = "${evaluation.totalCorrect}/${evaluation.totalQuestions} correctas",
-                    style = MaterialTheme.typography.bodyMedium,
-                )
-            }
-            Surface(
-                shape = RoundedCornerShape(8.dp),
-                color = statusColor.copy(alpha = 0.12f),
-            ) {
-                Text(
-                    text = statusText,
-                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
-                    style = MaterialTheme.typography.labelMedium,
-                    color = statusColor,
-                    fontWeight = FontWeight.SemiBold,
-                )
+                failedQuestions.forEach { q ->
+                    Text(
+                        text = "• ${q.question}",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.padding(start = 8.dp, top = 2.dp),
+                    )
+                }
             }
         }
     }

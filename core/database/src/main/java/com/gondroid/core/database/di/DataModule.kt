@@ -26,6 +26,7 @@ object DataModule {
                 MTCDatabase::class.java,
                 "mtc_database",
             )
+            .addMigrations(MTCDatabase.MIGRATION_1_2)
             .build()
 
     @Provides

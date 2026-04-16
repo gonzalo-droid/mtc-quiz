@@ -123,6 +123,7 @@ constructor(
                 totalCorrect = correctAnswers,
                 totalIncorrect = incorrectAnswers,
                 totalQuestions = totalTask,
+                questionResults = _resultsList.toList(),
             )
             repository.saveEvaluation(evaluation = evaluation)
 

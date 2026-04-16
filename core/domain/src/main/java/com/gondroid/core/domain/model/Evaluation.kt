@@ -3,6 +3,7 @@ package com.gondroid.core.domain.model
 import java.time.LocalDateTime
 import java.time.ZoneId
 
+
 data class Evaluation(
     val id: String = "",
     val categoryId: String = "",
@@ -12,6 +13,7 @@ data class Evaluation(
     val totalQuestions: Int = 0,
     var state: EvaluationState = EvaluationState.APPROVED,
     val date: LocalDateTime = LocalDateTime.now(),
+    val questionResults: List<QuestionResult> = emptyList(),
 )
 
 enum class EvaluationState {
