@@ -2,10 +2,13 @@ package com.gondroid.evaluation.presentation.review
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gondroid.core.database.dao.DismissedQuestionDao
+import com.gondroid.core.database.entity.DismissedQuestionEntity
 import com.gondroid.core.domain.repository.QuizRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -13,6 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ReviewErrorsViewModel @Inject constructor(
     private val repository: QuizRepository,
+    private val dismissedDao: DismissedQuestionDao,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ReviewErrorsState())
@@ -20,14 +24,19 @@ class ReviewErrorsViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            repository.getAllEvaluations().collect { evaluations ->
+            combine(
+                repository.getAllEvaluations(),
+                dismissedDao.getAllDismissedIds(),
+            ) { evaluations, dismissedIds ->
                 val allFailedResults = evaluations
                     .flatMap { it.questionResults }
                     .filter { !it.isCorrect }
 
-                val frequentErrors = allFailedResults
+                allFailedResults
                     .groupBy { it.questionId }
-                    .filter { (_, results) -> results.size >= 3 }
+                    .filter { (questionId, results) ->
+                        results.size >= 3 && questionId !in dismissedIds
+                    }
                     .map { (questionId, results) ->
                         val latest = results.last()
                         FrequentError(
@@ -39,7 +48,7 @@ class ReviewErrorsViewModel @Inject constructor(
                         )
                     }
                     .sortedByDescending { it.failCount }
-
+            }.collect { frequentErrors ->
                 _state.update {
                     it.copy(
                         frequentErrors = frequentErrors,
@@ -48,5 +57,13 @@ class ReviewErrorsViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun dismissQuestion(questionId: Int) = viewModelScope.launch {
+        dismissedDao.dismiss(DismissedQuestionEntity(questionId))
+    }
+
+    fun restoreAllDismissed() = viewModelScope.launch {
+        dismissedDao.restoreAll()
     }
 }

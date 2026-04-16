@@ -326,10 +326,12 @@ fun AnswerCard(
         else -> Color.White to Color.Gray
     }
 
+    val textColor = if(isSelected && !state.answerWasSelected)  Color.White else Color.Black
+
     CardAnswer(
         modifier = modifier.clickable(enabled = isCorrectAnswerSelected == null) {
             onClick()
-        }, backgroundColor = backgroundColor, borderColor = borderColor, text = text
+        }, backgroundColor = backgroundColor, borderColor = borderColor, textColor= textColor, text = text
     )
 }
 

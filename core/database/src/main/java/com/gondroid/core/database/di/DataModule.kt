@@ -3,6 +3,7 @@ package com.gondroid.core.database.di
 import android.content.Context
 import androidx.room.Room
 import com.gondroid.core.database.MTCDatabase
+import com.gondroid.core.database.dao.DismissedQuestionDao
 import com.gondroid.core.database.dao.EvaluationDao
 import dagger.Module
 import dagger.Provides
@@ -26,9 +27,12 @@ object DataModule {
                 MTCDatabase::class.java,
                 "mtc_database",
             )
-            .addMigrations(MTCDatabase.MIGRATION_1_2)
+            .addMigrations(MTCDatabase.MIGRATION_1_2, MTCDatabase.MIGRATION_2_3)
             .build()
 
     @Provides
     fun provideEvaluationDao(database: MTCDatabase): EvaluationDao = database.evaluationDao()
+
+    @Provides
+    fun provideDismissedQuestionDao(database: MTCDatabase): DismissedQuestionDao = database.dismissedQuestionDao()
 }

@@ -1,5 +1,7 @@
 package com.gondroid.evaluation.presentation.review
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,7 +21,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.Restore
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -30,9 +34,13 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -43,18 +51,30 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 
+private val correctGreen = Color(0xFF4CAF50)
+
 @Composable
 fun ReviewErrorsScreenRoot(
     viewModel: ReviewErrorsViewModel = hiltViewModel(),
     navigateBack: () -> Unit,
 ) {
     val state by viewModel.state.collectAsState()
-    ReviewErrorsScreen(state = state, navigateBack = navigateBack)
+    ReviewErrorsScreen(
+        state = state,
+        navigateBack = navigateBack,
+        onDismissQuestion = { viewModel.dismissQuestion(it) },
+        onRestoreAll = { viewModel.restoreAllDismissed() },
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ReviewErrorsScreen(state: ReviewErrorsState, navigateBack: () -> Unit) {
+fun ReviewErrorsScreen(
+    state: ReviewErrorsState,
+    navigateBack: () -> Unit,
+    onDismissQuestion: (Int) -> Unit,
+    onRestoreAll: () -> Unit,
+) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -62,6 +82,15 @@ fun ReviewErrorsScreen(state: ReviewErrorsState, navigateBack: () -> Unit) {
                 navigationIcon = {
                     IconButton(onClick = navigateBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    }
+                },
+                actions = {
+                    IconButton(onClick = onRestoreAll) {
+                        Icon(
+                            Icons.Default.Restore,
+                            contentDescription = "Restaurar descartadas",
+                            tint = MaterialTheme.colorScheme.primary,
+                        )
                     }
                 },
             )
@@ -89,7 +118,7 @@ fun ReviewErrorsScreen(state: ReviewErrorsState, navigateBack: () -> Unit) {
                             Icons.Default.CheckCircle,
                             contentDescription = null,
                             modifier = Modifier.size(64.dp),
-                            tint = Color(0xFF4CAF50),
+                            tint = correctGreen,
                         )
                         Spacer(Modifier.height(16.dp))
                         Text(
@@ -99,7 +128,7 @@ fun ReviewErrorsScreen(state: ReviewErrorsState, navigateBack: () -> Unit) {
                         )
                         Spacer(Modifier.height(8.dp))
                         Text(
-                            "Las preguntas que falles 3 o más veces aparecerán aquí para que las repases",
+                            "Las preguntas que falles 3 o más veces aparecerán aquí.\nDesliza para descartar las que ya aprendiste.",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             textAlign = TextAlign.Center,
@@ -115,17 +144,75 @@ fun ReviewErrorsScreen(state: ReviewErrorsState, navigateBack: () -> Unit) {
                 ) {
                     item {
                         Text(
-                            "${state.frequentErrors.size} preguntas frecuentes",
-                            style = MaterialTheme.typography.titleSmall,
+                            "${state.frequentErrors.size} preguntas frecuentes — desliza para descartar",
+                            style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
-                    items(state.frequentErrors) { error ->
-                        FrequentErrorCard(error)
+                    items(
+                        items = state.frequentErrors,
+                        key = { it.questionId },
+                    ) { error ->
+                        SwipeToDismissItem(
+                            error = error,
+                            onDismiss = { onDismissQuestion(error.questionId) },
+                        )
                     }
                 }
             }
         }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun SwipeToDismissItem(
+    error: FrequentError,
+    onDismiss: () -> Unit,
+) {
+    val dismissState = rememberSwipeToDismissBoxState()
+
+    LaunchedEffect(dismissState.currentValue) {
+        if (dismissState.currentValue == SwipeToDismissBoxValue.EndToStart) {
+            onDismiss()
+        }
+    }
+
+    SwipeToDismissBox(
+        state = dismissState,
+        enableDismissFromStartToEnd = false,
+        backgroundContent = {
+            val color by animateColorAsState(
+                when (dismissState.targetValue) {
+                    SwipeToDismissBoxValue.EndToStart -> correctGreen
+                    else -> Color.Transparent
+                },
+                label = "swipeBg",
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(color, RoundedCornerShape(16.dp))
+                    .padding(end = 20.dp),
+                contentAlignment = Alignment.CenterEnd,
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        Icons.Default.Done,
+                        contentDescription = "Ya la aprendí",
+                        tint = Color.White,
+                    )
+                    Spacer(Modifier.width(4.dp))
+                    Text(
+                        "Aprendida",
+                        color = Color.White,
+                        fontWeight = FontWeight.SemiBold,
+                    )
+                }
+            }
+        },
+    ) {
+        FrequentErrorCard(error)
     }
 }
 
@@ -136,6 +223,7 @@ private fun FrequentErrorCard(error: FrequentError) {
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
         ),
+        shape = RoundedCornerShape(16.dp),
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(
@@ -186,13 +274,20 @@ private fun FrequentErrorCard(error: FrequentError) {
                         tint = MaterialTheme.colorScheme.error,
                     )
                     Spacer(Modifier.width(8.dp))
-                    Text(
-                        text = error.lastWrongAnswer,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.error,
-                    )
+                    Column {
+                        Text(
+                            text = "Tu respuesta",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.error.copy(alpha = 0.7f),
+                        )
+                        Text(
+                            text = error.lastWrongAnswer,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.error,
+                        )
+                    }
                 }
-                Spacer(Modifier.height(6.dp))
+                Spacer(Modifier.height(8.dp))
             }
 
             if (error.correctAnswer.isNotEmpty()) {
@@ -201,14 +296,21 @@ private fun FrequentErrorCard(error: FrequentError) {
                         Icons.Default.Done,
                         contentDescription = null,
                         modifier = Modifier.size(16.dp),
-                        tint = Color(0xFF4CAF50),
+                        tint = correctGreen,
                     )
                     Spacer(Modifier.width(8.dp))
-                    Text(
-                        text = error.correctAnswer,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = Color(0xFF4CAF50),
-                    )
+                    Column {
+                        Text(
+                            text = "Respuesta correcta",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = correctGreen.copy(alpha = 0.7f),
+                        )
+                        Text(
+                            text = error.correctAnswer,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = correctGreen,
+                        )
+                    }
                 }
             }
         }

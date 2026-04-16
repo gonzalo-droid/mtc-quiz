@@ -143,8 +143,6 @@ fun EvaluationHistoryCard(evaluation: Evaluation, modifier: Modifier = Modifier)
     val statusText = if (isApproved) "Aprobado" else "Desaprobado"
     val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
 
-    val failedQuestions = evaluation.questionResults.filter { !it.isCorrect }
-
     Card(
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
@@ -189,24 +187,6 @@ fun EvaluationHistoryCard(evaluation: Evaluation, modifier: Modifier = Modifier)
                         style = MaterialTheme.typography.labelMedium,
                         color = statusColor,
                         fontWeight = FontWeight.SemiBold,
-                    )
-                }
-            }
-            if (failedQuestions.isNotEmpty()) {
-                Spacer(Modifier.height(8.dp))
-                Text(
-                    text = "Preguntas incorrectas:",
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-                failedQuestions.forEach { q ->
-                    Text(
-                        text = "• ${q.question}",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.padding(start = 8.dp, top = 2.dp),
                     )
                 }
             }

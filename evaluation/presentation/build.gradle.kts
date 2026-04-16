@@ -23,5 +23,6 @@ dependencies {
 
     implementation(projects.evaluation.domain)
     implementation(projects.core.domain)
+    implementation(projects.core.database)
     implementation(projects.core.presentation.designsystem)
 }
