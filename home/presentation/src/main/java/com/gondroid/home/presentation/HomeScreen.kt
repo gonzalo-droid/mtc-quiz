@@ -5,7 +5,6 @@ import android.Manifest
 import android.util.Log
 import androidx.annotation.RequiresPermission
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -23,8 +22,6 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.BarChart
-import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.WorkspacePremium
@@ -60,6 +57,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
+import com.gondroid.core.data.local.CardType
 import com.gondroid.core.domain.model.Category
 import com.gondroid.core.presentation.designsystem.MTCQuizTheme
 import com.google.android.gms.ads.AdListener
@@ -347,7 +345,7 @@ fun CardCategoryItem(
             }
 
             Image(
-                painter = painterResource(id = R.drawable.card_background),
+                painter = painterResource(id = item.image?:R.drawable.a1_card),
                 contentDescription = "image_category",
                 modifier = Modifier.align(Alignment.BottomEnd),
                 contentScale = ContentScale.Fit
@@ -368,11 +366,11 @@ fun PreviewHomeScreenRoot() {
                 categories = listOf(
                     Category(
                         id = "1",
-                        title = "CLASE A - CATEGORIA I",
+                        title = "CLASE A - CATEGORIA 2",
                         category = "A-I",
                         classType = "CLASS A",
                         description = "Es el más común y te permite manejar carros como sedanes, coupé , hatchback, convertibles, station wagon, SUV, Areneros, Pickup y furgones. Es necesaria para obtener las demás licencias de Clase A.",
-                        image = "a",
+                        image = CardType.A2A.drawable,
                         pdf = "CLASE_A_I.pdf"
                     ),
                     Category(
@@ -381,7 +379,7 @@ fun PreviewHomeScreenRoot() {
                         category = "A-IIa",
                         classType = "CLASS A",
                         description = "Los mismos que A-1 y también carros oficiales de transporte de pasajeros como Taxis, Buses, Ambulancias y Transporte Interprovincial. Primero debes obtener la Licencia A-I",
-                        image = "a",
+                        image = CardType.A1.drawable,
                         pdf = "CLASE_A_I.pdf"
                     )
                 )

@@ -6,7 +6,7 @@ data class Category(
     val category: String = "",
     val classType: String = "",
     val description: String = "",
-    val image: String? = "",
+    val image: Int?,
     val pdf: String = "",
     val pathJson: String = "",
 )
