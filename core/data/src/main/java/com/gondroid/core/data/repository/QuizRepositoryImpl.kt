@@ -32,7 +32,9 @@ class QuizRepositoryImpl(
 ) : QuizRepository {
     override val categoriesFlow: Flow<List<Category>>
         get() = flow {
-            emit(categoriesLocalDataSource)
+            emit(
+                categoriesLocalDataSource
+            )
         }
 
     override suspend fun getCategoryById(categoryId: String): Category? {

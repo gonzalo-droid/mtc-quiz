@@ -1,6 +1,6 @@
 package com.gondroid.mtcquiz.presentation.screens
 
-import com.gondroid.core.data.local.CLASS_A
+import com.gondroid.core.domain.model.CLASS_A
 import com.gondroid.core.domain.model.Category
 import com.gondroid.core.domain.model.Evaluation
 import com.gondroid.core.domain.model.Question

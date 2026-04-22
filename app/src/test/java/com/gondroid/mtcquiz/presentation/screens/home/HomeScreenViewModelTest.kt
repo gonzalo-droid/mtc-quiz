@@ -3,7 +3,7 @@ package com.gondroid.mtcquiz.presentation.screens.home
 import android.app.Activity
 import app.cash.turbine.test
 import com.gondroid.core.data.billing.BillingManager
-import com.gondroid.core.data.local.CLASS_A
+import com.gondroid.core.domain.model.CLASS_A
 import com.gondroid.core.domain.model.Category
 import com.gondroid.home.presentation.HomeScreenViewModel
 import com.gondroid.mtcquiz.presentation.screens.PreferenceRepositoryFake

@@ -222,14 +222,14 @@ fun EvaluationScreen(
             LazyColumn(
                 modifier = Modifier.weight(1f), verticalArrangement = Arrangement.Top
             ) {
-               item {
-                   CardQuestion(
-                       modifier = Modifier.fillMaxWidth(),
-                       title = "${state.question.id}.- ${state.question.title}",
-                       image = painterResource(id = R.drawable.card_background),
-                   )
-                   Spacer(modifier = Modifier.height(8.dp))
-               }
+                item {
+                    CardQuestion(
+                        modifier = Modifier.fillMaxWidth(),
+                        title = "${state.question.id}.- ${state.question.title}",
+                        image = painterResource(id = R.drawable.card_background),
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
 
                 item {
                     Spacer(modifier = Modifier.weight(1f))
@@ -333,12 +333,16 @@ fun AnswerCard(
         else -> Color.White to Color.Gray
     }
 
-    val textColor = if(isSelected && !state.answerWasSelected)  Color.White else Color.Black
+    val textColor = if (isSelected && !state.answerWasSelected) Color.White else Color.Black
 
     CardAnswer(
         modifier = modifier.clickable(enabled = isCorrectAnswerSelected == null) {
             onClick()
-        }, backgroundColor = backgroundColor, borderColor = borderColor, textColor= textColor, text = text
+        },
+        backgroundColor = backgroundColor,
+        borderColor = borderColor,
+        textColor = textColor,
+        text = text
     )
 }
 
@@ -459,7 +463,8 @@ fun PreviewEvaluationScreenRoot() {
         EvaluationScreen(
             state = EvaluationState(
                 questions = listOf(question), question = question, category = Category(
-                    title = "CLASE A - CATEGORIA I"
+                    title = "CLASE A - CATEGORIA I",
+                    image = R.drawable.card_background
                 )
             ), onAction = {}, showCancelDialog = false
         )
