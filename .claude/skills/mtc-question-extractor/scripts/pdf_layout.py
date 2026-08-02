@@ -189,7 +189,15 @@ def _snap_headers_to_clusters(
     in left-to-right order, to the nearest not-yet-used content-column
     x-cluster so `columns` reflects where the data actually lives instead
     of where the label happens to be drawn. Clusters between two assigned
-    headers (e.g. untracked Materia/Categoria columns) are skipped."""
+    headers (e.g. untracked Materia/Categoria columns) are skipped.
+
+    NOTE: exact-match verified only against CLASE_A_I.pdf (via
+    test_pdf_layout.py's full text comparison against the human-verified
+    a1_questions.json). The other 8 PDFs only get a coarser smoke check
+    (all expected columns present, plausible row counts, no header-word
+    leakage) - if a future task's own validation against those finds a
+    column boundary off, this greedy nearest-cluster assignment is the
+    first place to check."""
     snapped: dict[str, int] = {}
     ci = 0
     for key, hleft in ordered_headers:
@@ -203,13 +211,21 @@ def _snap_headers_to_clusters(
     return snapped
 
 
-def detect_columns(texts: list[TextEl]) -> dict[str, tuple[int, int]]:
-    page1 = [t for t in texts if t.page == 1]
-    # Header row texts are bold, small-ish and appear before the first
-    # question row; find them by matching known labels directly rather than
-    # relying on a fixed y-range, since page geometry differs per PDF.
+def _match_header_labels(candidate_texts: list[TextEl]) -> dict[str, TextEl]:
+    """Find header label text elements (by matching known column labels,
+    substring/exact rather than relying on a fixed x/y position since page
+    geometry differs per PDF) within a given set of texts. Shared by
+    detect_columns and _find_header_rows.
+
+    Callers must pre-filter `candidate_texts` to a single candidate header
+    line (see _find_header_rows) rather than passing a whole page's texts:
+    some header labels are short enough to appear as a substring of an
+    unrelated word elsewhere on the page - e.g. "TEMA" inside "SISTEMA" -
+    and matching against a whole page can pick up a coincidental hit like
+    that instead of the real header, especially on pages that contain more
+    than one balotario table (see _find_header_rows)."""
     found: dict[str, TextEl] = {}
-    for t in page1:
+    for t in candidate_texts:
         norm = _norm(t.text)
         for key, labels in _HEADER_LABELS.items():
             if key in found:
@@ -220,6 +236,75 @@ def detect_columns(texts: list[TextEl]) -> dict[str, tuple[int, int]]:
                         found[key] = t
                 elif label in norm:
                     found[key] = t
+    return found
+
+
+# A real header row always has every one of its (up to 9) labels land on
+# the exact same line, so requiring most of them to co-occur is enough to
+# tell a genuine header row apart from a single incidental substring match
+# (which essentially never lands several different header words on the
+# same exact `top`).
+_MIN_HEADER_LABELS_PER_ROW = 5
+
+
+def _find_header_rows(texts: list[TextEl]) -> list[tuple[int, int, dict[str, TextEl]]]:
+    """Find every occurrence of a genuine header row anywhere in the
+    document, sorted by document order (page, top). Each is
+    `(page, top, matched_labels)`.
+
+    pdftohtml reprints the same table header at the top of every page, not
+    just page 1 - and some balotario PDFs contain more than one table
+    (e.g. the main N-question table followed by a supplementary section
+    with its own header row, occasionally even adding a Fundamento column
+    an A-license table otherwise wouldn't have), so this doesn't assume
+    exactly one header per page. Header cells belonging to the same header
+    row all share the same exact `top` (verified across every PDF checked
+    so far), so grouping candidates that way - and requiring a strong
+    majority of labels to match within a group - avoids the false-positive
+    risk described in _match_header_labels's docstring: an incidental
+    substring collision only ever produces a single match at its own
+    `top`, never enough to pass _MIN_HEADER_LABELS_PER_ROW.
+    """
+    by_page_top: dict[tuple[int, int], list[TextEl]] = {}
+    for t in texts:
+        by_page_top.setdefault((t.page, t.top), []).append(t)
+    header_rows: list[tuple[int, int, dict[str, TextEl]]] = []
+    for (page, top), group in by_page_top.items():
+        found = _match_header_labels(group)
+        if len(found) >= _MIN_HEADER_LABELS_PER_ROW:
+            header_rows.append((page, top, found))
+    header_rows.sort(key=lambda r: (r[0], r[1]))
+    return header_rows
+
+
+def detect_header_rows(texts: list[TextEl]) -> list[tuple[int, int, int]]:
+    """Public: `(page, top, bottom)` for every header-row occurrence in the
+    document, sorted by document order. See _find_header_rows for why
+    there can be more than one per page. `build_row_bands` uses this so
+    that:
+
+    - a question row that starts a new page begins its band *after* that
+      page's header, instead of at the physical top of the page (which
+      would otherwise sweep the reprinted header's own text - e.g. the
+      literal word "TEMA" - into that question, and double-claim that
+      space with the previous question's band too, since without this it
+      has no way to know a header sits there and stop before the new page
+      begins); and
+    - the very last detected question's band, which otherwise extends all
+      the way to the end of the document, stops instead at the next
+      header-row occurrence after it, if any - so a second, unrelated
+      table later in the same PDF doesn't get swept into the last real
+      question.
+    """
+    return [
+        (page, top, max(t.top + t.height for t in found.values()))
+        for page, top, found in _find_header_rows(texts)
+    ]
+
+
+def detect_columns(texts: list[TextEl]) -> dict[str, tuple[int, int]]:
+    page1_header_rows = _find_header_rows([t for t in texts if t.page == 1])
+    found = page1_header_rows[0][2] if page1_header_rows else {}
     ordered = sorted(((key, t.left) for key, t in found.items()), key=lambda kv: kv[1])
 
     # Snap each header's x-position to where its column's content actually
@@ -263,6 +348,15 @@ def detect_question_rows(
     # Keep strictly increasing question numbers in document order; drop
     # accidental digit matches (e.g. a number that lands in the Nº column
     # x-range but isn't actually the next question).
+    #
+    # NOTE: this has no recovery path if a genuine question number is
+    # missed or misdetected (e.g. OCR/rendering noise merges "23" into an
+    # unrecognizable glyph) - `expected` never advances past that point, so
+    # every subsequent row in the document is silently dropped rather than
+    # just the one bad row. Not observed in any of the 9 balotario PDFs
+    # (each yields exactly its expected question count), but if a future
+    # PDF comes up short, check here first rather than assuming a column-
+    # detection problem.
     cleaned: list[tuple[int, int, int]] = []
     expected = 1
     for qnum, page, top in rows:
@@ -273,7 +367,9 @@ def detect_question_rows(
 
 
 def build_row_bands(
-    rows: list[tuple[int, int, int]], last_page: int
+    rows: list[tuple[int, int, int]],
+    last_page: int,
+    header_rows: list[tuple[int, int, int]],
 ) -> list[tuple[int, int, int, int, int]]:
     # The Nº cell is vertically centered within its (possibly multi-line)
     # row rather than pinned to the row's top line, so a question's other
@@ -281,31 +377,55 @@ def build_row_bands(
     # (e.g. a 4-line alternative wrapped around a 1-line Nº). Splitting
     # bands at the raw digit tops therefore clips a row's leading lines
     # into the previous band. Instead, split at the midpoint between two
-    # consecutive rows' digit tops (on the same page) so each band's
-    # boundary falls in the gap between rows rather than mid-row; the
-    # first row has no predecessor to split against, so its start is
-    # extrapolated using the same gap as to the following row.
+    # consecutive rows' digit tops when they're on the same page, so each
+    # band's boundary falls in the gap between rows rather than mid-row.
+    #
+    # A row that starts a new page (the document's first row, or any row
+    # whose predecessor is on an earlier page) has no predecessor on that
+    # page to split against - and pdftohtml reprints the table header at
+    # the top of every page, so the naive fallback of "start of page" would
+    # sweep that reprinted header text into the row. `header_rows` (see
+    # detect_header_rows) gives the real per-page boundary instead: the
+    # first header-row occurrence on each page.
+    first_header_bottom_by_page: dict[int, int] = {}
+    for page, _top, bottom in header_rows:
+        first_header_bottom_by_page.setdefault(page, bottom)
+
+    # Symmetrically, a row whose *successor* is on a later page never
+    # extends into that later page itself: in every balotario PDF we've
+    # checked, a question's own content is fully contained on the page its
+    # Nº digit is on (the page break falls between rows, not mid-row), so
+    # capping the band at the bottom of its own starting page - rather
+    # than reaching into the next row's page up to the next row's raw
+    # digit top - avoids the previous bug where two adjacent bands both
+    # claimed the reprinted-header region of the new page and duplicated
+    # its content between them.
     bands = []
     n = len(rows)
     for i, (qnum, page, top) in enumerate(rows):
         if i > 0 and rows[i - 1][1] == page:
             start_page, start_top = page, (rows[i - 1][2] + top) // 2
-        elif i > 0:
-            start_page, start_top = page, 0
-        elif n > 1 and rows[i + 1][1] == page:
-            gap = rows[i + 1][2] - top
-            start_page, start_top = page, max(0, top - gap // 2)
         else:
-            start_page, start_top = page, 0
+            start_page, start_top = page, first_header_bottom_by_page.get(page, 0)
 
-        if i + 1 < n:
-            _, next_page, next_top = rows[i + 1]
-            if next_page == page:
-                end_page, end_top = page, (top + next_top) // 2
-            else:
-                end_page, end_top = next_page, next_top
+        if i + 1 < n and rows[i + 1][1] == page:
+            end_page, end_top = page, (top + rows[i + 1][2]) // 2
+        elif i + 1 < n:
+            end_page, end_top = page, 10**6
         else:
-            end_page, end_top = last_page, 10**6
+            # Last detected question: its band would otherwise extend all
+            # the way to the document end, but some balotario PDFs contain
+            # a second, unrelated table later in the same document (e.g. a
+            # supplementary section after the main N questions) with its
+            # own header row - without capping there, that whole second
+            # table gets swept into this last question. Stop at the next
+            # header-row occurrence after this row, if any; only fall back
+            # to the true document end when there isn't one.
+            next_header = next(
+                ((hp, ht) for hp, ht, _hb in header_rows if (hp, ht) > (page, top)),
+                None,
+            )
+            end_page, end_top = next_header if next_header else (last_page, 10**6)
         bands.append((qnum, start_page, start_top, end_page, end_top))
     return bands
 

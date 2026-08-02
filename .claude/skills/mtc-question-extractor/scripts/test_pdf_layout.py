@@ -10,11 +10,20 @@ sys.path.insert(0, str(Path(__file__).parent))
 from pdf_layout import (  # noqa: E402
     build_row_bands,
     detect_columns,
+    detect_header_rows,
     detect_question_rows,
     parse_xml,
     run_pdftohtml,
     text_in_band,
 )
+
+# Literal header words that must never appear in extracted question text.
+# pdftohtml reprints the table header at the top of every page, so a bug
+# in how row bands handle page breaks (see Task 1 review) shows up as one
+# of these leaking into a real question's title/tema/options/answer -
+# this class of bug isn't caught by only checking questions 1-5 (all on
+# page 1, before any header reprint), so it's checked across all 200.
+_HEADER_WORDS = ("TEMA", "DESCRIPCIÓN DE LA PREGUNTA", "ALTERNATIVA", "RESPUESTA")
 
 REPO = Path(__file__).resolve().parents[4]
 PDF = REPO / "app/src/main/assets/pdf/CLASE_A_I.pdf"
@@ -33,7 +42,24 @@ def main() -> None:
     assert len(rows) == 200, f"expected 200 questions, got {len(rows)}"
 
     last_page = max(t.page for t in texts)
-    bands = build_row_bands(rows, last_page)
+    header_rows = detect_header_rows(texts)
+    bands = build_row_bands(rows, last_page, header_rows)
+
+    # Full-document header-leakage check (all 200 questions, not just the
+    # first 5): a page-crossing question's band overlapping the reprinted
+    # header on its new page - or stealing/duplicating the next question's
+    # content there - shows up as one of _HEADER_WORDS appearing somewhere
+    # it shouldn't. 20 of these 200 questions cross a page boundary in
+    # CLASE_A_I.pdf, so this exercises that path thoroughly.
+    col_keys = [k for k in ("tema", "descripcion", "alt1", "alt2", "alt3", "alt4", "respuesta") if k in columns]
+    for band in bands:
+        qnum = band[0]
+        for key in col_keys:
+            text = text_in_band(texts, band, columns[key])
+            for word in _HEADER_WORDS:
+                assert word not in text, (
+                    f"q{qnum} column {key!r} leaked header word {word!r}: {text!r}"
+                )
 
     expected = json.loads(JSON.read_text())["data"]
     for band in bands[:5]:
