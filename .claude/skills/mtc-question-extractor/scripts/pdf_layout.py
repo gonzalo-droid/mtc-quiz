@@ -366,10 +366,63 @@ def detect_question_rows(
     return cleaned
 
 
+def _find_section_break_after(
+    texts: list[TextEl],
+    columns: dict[str, tuple[int, int]],
+    after: tuple[int, int],
+    before: tuple[int, int],
+    margin: int = 20,
+) -> tuple[int, int] | None:
+    """Find the earliest text block strictly between `after` and `before`
+    (both `(page, top)`) that looks like a section-title / instruction
+    line rather than real per-column cell content, e.g. a "SEGUNDA PARTE -
+    MATERIAS ESPECÍFICAS" line some balotario PDFs insert between the main
+    N-question table and a supplementary section's own header row.
+
+    Such a line isn't a header row itself (too few/no matching labels for
+    _find_header_rows) and isn't caught by capping at the next header row
+    either, since it sits *before* that header. But it's still reliably
+    distinguishable from real cell content: a genuine cell's line is never
+    wider than the single column it's flush-left inside (verified: the
+    widest real `descripcion` line across every PDF checked is ~291px,
+    comfortably inside that column's own ~300px width), whereas a
+    centered section title's rendered width spills well past the right
+    edge of whichever column its `left` happens to land inside - e.g. one
+    observed instance starts inside the `descripcion` column but extends
+    past not just `descripcion`'s own right edge but `alt1`'s too. `margin`
+    gives real content some slack before being treated as a false
+    positive.
+
+    Column ranges can overlap near a shared boundary (a few px of jitter
+    tolerance, and "numero"'s range is deliberately wide since it also
+    covers the untracked Materia/Categoria columns - see detect_columns),
+    so a text landing in that overlap can technically match more than one
+    column. Picking the first match in iteration order risks picking
+    "numero"'s much narrower range for text that's really a jitter-shifted
+    line of the next column over, which would then look like it "crosses"
+    numero's boundary when it doesn't cross its real column's. Picking the
+    match with the largest `lo` (i.e. the most specific/narrowest-starting
+    one that still contains the point) avoids that.
+    """
+    candidates = []
+    for t in texts:
+        if not (after < (t.page, t.top) < before):
+            continue
+        best: tuple[int, int] | None = None
+        for lo, hi in columns.values():
+            if lo - 5 <= t.left < hi and (best is None or lo > best[0]):
+                best = (lo, hi)
+        if best is not None and t.left + t.width > best[1] + margin:
+            candidates.append((t.page, t.top))
+    return min(candidates, default=None)
+
+
 def build_row_bands(
     rows: list[tuple[int, int, int]],
     last_page: int,
     header_rows: list[tuple[int, int, int]],
+    texts: list[TextEl],
+    columns: dict[str, tuple[int, int]],
 ) -> list[tuple[int, int, int, int, int]]:
     # The Nº cell is vertically centered within its (possibly multi-line)
     # row rather than pinned to the row's top line, so a question's other
@@ -406,7 +459,19 @@ def build_row_bands(
         if i > 0 and rows[i - 1][1] == page:
             start_page, start_top = page, (rows[i - 1][2] + top) // 2
         else:
-            start_page, start_top = page, first_header_bottom_by_page.get(page, 0)
+            page_header_bottom = first_header_bottom_by_page.get(page, 0)
+            # Not every page has a header at its own top - some pages just
+            # continue the previous page's content with no header reprint
+            # at all (observed on B-license PDFs that don't repeat headers
+            # every page), and a page can also have its *only* header
+            # appear well into the page instead of at the top (e.g. a
+            # supplementary second table's header, when that table starts
+            # partway down the same page the main table's last row is on).
+            # `first_header_bottom_by_page` only records *a* header found
+            # somewhere on the page, not necessarily one that actually
+            # precedes this row - so ignore it if it doesn't, rather than
+            # skipping past this row's own real content to reach it.
+            start_page, start_top = page, page_header_bottom if page_header_bottom <= top else 0
 
         if i + 1 < n and rows[i + 1][1] == page:
             end_page, end_top = page, (top + rows[i + 1][2]) // 2
@@ -425,7 +490,15 @@ def build_row_bands(
                 ((hp, ht) for hp, ht, _hb in header_rows if (hp, ht) > (page, top)),
                 None,
             )
-            end_page, end_top = next_header if next_header else (last_page, 10**6)
+            end_boundary = next_header or (last_page, 10**6)
+            # A section-title/instruction line (e.g. "SEGUNDA PARTE -
+            # MATERIAS ESPECÍFICAS") can sit between this last question's
+            # own content and that next header row, and isn't a header row
+            # itself - see _find_section_break_after - so it wouldn't be
+            # caught by the header-row cap above. Use whichever boundary
+            # comes first.
+            section_break = _find_section_break_after(texts, columns, (page, top), end_boundary)
+            end_page, end_top = min(end_boundary, section_break) if section_break else end_boundary
         bands.append((qnum, start_page, start_top, end_page, end_top))
     return bands
 
