@@ -444,6 +444,100 @@ def _map_by_position(
     return mapping
 
 
+def _collapse_self_repetition(val: str) -> str:
+    """Collapse a value that's an exact, space-joined repetition of a
+    shorter phrase (`"P P"` or `"P P P"`, etc.) down to one copy of `P`.
+
+    This is a *different* shape from `_trim_leaked_duplicate_suffix`'s
+    two-question leak: `tema` (topic) is frequently identical across a
+    long run of consecutive questions in these PDFs (many rows share one
+    topic heading verbatim). When two - or, confirmed on
+    CLASE_B_IIB.pdf's q157/160/199 cluster, *three* - consecutive rows
+    have exactly the same topic text, nothing about a gap or terminal
+    punctuation distinguishes "this is a same-topic wrap" from "this is
+    a new row that happens to repeat the same topic", so
+    `_gap_based_column_paragraphs` can merge all of them into one
+    over-long paragraph assigned to a single question (e.g. "X X X"
+    instead of "X"), while the others fall back to `text_in_band` and
+    independently recover the correct single copy.
+    `_trim_leaked_duplicate_suffix` alone doesn't fully clean this up:
+    for a 3x merge assigned to question N, trimming once against
+    N+1's clean value only removes one copy, leaving a residual 2x
+    self-repeat on N (still wrong, and its own trailing copy can even
+    coincidentally read as a "leaked" duplicate of the row *before* N
+    instead - confirmed: CLASE_B_IIB.pdf q159/q160, where q160's
+    residual "X X" duplicate happens to end with q159's own distinct,
+    correct "X" value). Collapsing any exact self-repetition first,
+    before the pairwise check runs, removes this at the root regardless
+    of how many copies got merged in."""
+    n = len(val)
+    for length in range(1, n // 2 + 1):
+        if (n + 1) % (length + 1) != 0:
+            continue
+        count = (n + 1) // (length + 1)
+        if count < 2:
+            continue
+        phrase = val[:length]
+        if not phrase or phrase != phrase.strip():
+            continue
+        if " ".join([phrase] * count) == val:
+            return phrase
+    return val
+
+
+def _trim_leaked_duplicate_suffix(questions: list[dict], field: str) -> None:
+    """Post-hoc repair for one specific, confirmed corruption shape that
+    `_gap_based_column_paragraphs`'s whole-document reconstruction can
+    produce for `title`/`topic`: when a question's own paragraph has no
+    terminal punctuation and the following question's first line lands
+    within this document's normal same-paragraph wrap-gap range (or even
+    tighter - a confirmed real case has a genuine boundary gap *smaller*
+    than the document's own normal wrap spacing), the reconstruction
+    can't tell "wrap" from "real boundary" and merges the next question's
+    *whole* paragraph onto the current one's tail. `_map_by_position`
+    then assigns the whole merged blob to the first question, and the
+    second question - left uncovered by the primary reconstruction -
+    independently re-derives its own value via the plain per-band
+    `text_in_band` fallback, producing a verbatim duplicate: confirmed
+    real cases (CLASE_B_IIB.pdf/CLASE_B_IIC.pdf q4/q5, q91/q92, q199/q200,
+    q121/q122, q59/q60) all have question[i]'s value end with
+    question[i+1]'s value exactly, both derived from the same underlying
+    PDF text lines.
+
+    Detecting and trimming this exact shape after the fact - rather than
+    trying to prevent the merge during reconstruction - is deliberately
+    conservative. An earlier attempt used the alt1-4 letter-anchored
+    reconstruction's own row-start position as a forced split point
+    during paragraph building, to prevent the merge from happening at
+    all; it was tried and reverted, because a question's own alt1-4 cell
+    frequently starts many lines into its own title (PDF cells appear
+    vertically offset within a row by content length, not top-aligned to
+    the row - confirmed on CLASE_A_I.pdf q16, whose own earliest option
+    lands between its own title's 1st and 2nd line, and more sharply on
+    CLASE_B_IIA.pdf q62-64, whose own option cells start deep into their
+    own multi-line titles). A forced split anchored on that position can
+    land deep inside a *different*, previously-correctly-recovered next
+    question's own title (recovered precisely *because* it fell through
+    to the same `text_in_band` fallback this function's precondition
+    relies on), corrupting it in a new way instead of fixing anything -
+    confirmed regression: b2a_questions.json title mismatches jumped from
+    31 to 147 (out of 204) when tried, including on rows this task's
+    brief never flagged as broken. Trimming only the exact, already-
+    confirmed duplicate shape post-hoc has no such risk: it's a no-op
+    unless question[i]'s value verbatim-ends-with question[i+1]'s value
+    (and is strictly longer), which cannot happen by coincidence for two
+    real, differently-worded questions of any realistic length - checked
+    across all of a1/b2a/b2b/b2c, 0 unintended trims."""
+    for i in range(len(questions) - 1):
+        cur = questions[i].get(field, "")
+        nxt = questions[i + 1].get(field, "")
+        if not cur or not nxt or len(cur) <= len(nxt) or not cur.endswith(nxt):
+            continue
+        trimmed = cur[: -len(nxt)].rstrip()
+        if trimmed:
+            questions[i][field] = trimmed
+
+
 def _load_existing_extras(json_path: Path) -> dict[int, dict]:
     """Load any non-text-field keys (e.g. "image") from an existing output
     file, keyed by question id, so a re-run doesn't clobber them."""
@@ -573,6 +667,12 @@ def main() -> None:
                 entry["fundamento"] = fundamento
         entry.update(existing_extras.get(qnum, {}))
         questions.append(entry)
+
+    for field in ("title", "topic"):
+        for entry in questions:
+            if entry.get(field):
+                entry[field] = _collapse_self_repetition(entry[field])
+        _trim_leaked_duplicate_suffix(questions, field)
 
     json_path.write_text(
         json.dumps({"data": questions}, ensure_ascii=False, indent=4), encoding="utf-8"
