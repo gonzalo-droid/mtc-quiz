@@ -371,7 +371,7 @@ def _find_section_break_after(
     columns: dict[str, tuple[int, int]],
     after: tuple[int, int],
     before: tuple[int, int],
-    margin: int = 20,
+    min_width: int = 150,
 ) -> tuple[int, int] | None:
     """Find the earliest text block strictly between `after` and `before`
     (both `(page, top)`) that looks like a section-title / instruction
@@ -381,39 +381,48 @@ def _find_section_break_after(
 
     Such a line isn't a header row itself (too few/no matching labels for
     _find_header_rows) and isn't caught by capping at the next header row
-    either, since it sits *before* that header. But it's still reliably
-    distinguishable from real cell content: a genuine cell's line is never
-    wider than the single column it's flush-left inside (verified: the
-    widest real `descripcion` line across every PDF checked is ~291px,
-    comfortably inside that column's own ~300px width), whereas a
-    centered section title's rendered width spills well past the right
-    edge of whichever column its `left` happens to land inside - e.g. one
-    observed instance starts inside the `descripcion` column but extends
-    past not just `descripcion`'s own right edge but `alt1`'s too. `margin`
-    gives real content some slack before being treated as a false
-    positive.
+    either, since it sits *before* that header.
 
-    Column ranges can overlap near a shared boundary (a few px of jitter
-    tolerance, and "numero"'s range is deliberately wide since it also
-    covers the untracked Materia/Categoria columns - see detect_columns),
-    so a text landing in that overlap can technically match more than one
-    column. Picking the first match in iteration order risks picking
-    "numero"'s much narrower range for text that's really a jitter-shifted
-    line of the next column over, which would then look like it "crosses"
-    numero's boundary when it doesn't cross its real column's. Picking the
-    match with the largest `lo` (i.e. the most specific/narrowest-starting
-    one that still contains the point) avoids that.
+    An earlier version of this function flagged a text block if its
+    rendered extent (`left + width`) crossed past the right edge of
+    whichever single column its `left` happened to land inside. That
+    turned out to be too fragile: it depends on `detect_columns` having
+    estimated that column's right edge tightly, and on a PDF where a
+    column's range came out a bit wider than it should have
+    (`CLASE_A_IIIC.pdf`'s `alt3` (900, 1079) vs. the near-identical
+    `CLASE_A_IIIB.pdf`'s correctly-narrower (900, 1030)), a completely
+    normal wrapped continuation line landed inside that overly generous
+    range and got misidentified as "crossing" it, truncating real content.
+
+    A section-title line is instead reliably distinguishable from real
+    cell content by two properties that don't depend on any single
+    column's estimated boundary at all:
+    - it's wide in absolute terms. Checked directly against every text
+      block actually observed in this kind of gap across all 9 PDFs: the
+      widest genuine trailing continuation line is ~114px, while every
+      observed section-title/part-break line is 232-319px - a wide,
+      comfortable margin either side of `min_width`;
+    - unlike a real cell's line - which is always flush-left with its
+      column's own detected peak, even across every multi-line cell
+      checked - a centered section title never starts flush with any
+      known column's peak.
+    Both together make a false positive essentially impossible: narrow
+    text (a materia/categoria value, a short word fragment, a mid-
+    sentence B-license word) fails the width check regardless of its `left`,
+    and a wide but legitimate single-line cell (e.g. a short question's
+    whole `descripcion`, occasionally up to ~290px) still starts flush at
+    its column's peak and fails the alignment check.
     """
+    peaks = [lo for lo, _hi in columns.values()]
     candidates = []
     for t in texts:
         if not (after < (t.page, t.top) < before):
             continue
-        best: tuple[int, int] | None = None
-        for lo, hi in columns.values():
-            if lo - 5 <= t.left < hi and (best is None or lo > best[0]):
-                best = (lo, hi)
-        if best is not None and t.left + t.width > best[1] + margin:
-            candidates.append((t.page, t.top))
+        if t.width < min_width:
+            continue
+        if any(abs(t.left - p) <= 5 for p in peaks):
+            continue
+        candidates.append((t.page, t.top))
     return min(candidates, default=None)
 
 

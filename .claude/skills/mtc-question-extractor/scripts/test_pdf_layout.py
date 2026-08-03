@@ -51,6 +51,24 @@ _SECTION_BREAK_PDFS = (
     "CLASE_A_IIIC.pdf",
 )
 
+# Pinned regression case (Task 1 review, third round): a section-break
+# detection heuristic that compared a text block's width against the
+# *specific column it happened to land in* falsely fired on
+# CLASE_A_IIIC.pdf q200 - that PDF's detect_columns output gives `alt3` an
+# overly wide range (900, 1079) vs. the near-identical CLASE_A_IIIB.pdf's
+# correctly-narrower (900, 1030) - and truncated real content. Crucially,
+# the truncation happened to also delete the banned "SEGUNDA PARTE"
+# substring, so the leakage check above passed while content silently
+# vanished - a substring-absence check alone can't distinguish "correctly
+# truncated" from "incorrectly truncated". These exact strings (captured
+# once the fix was verified correct) pin the full, un-truncated content so
+# this can't silently regress again.
+_A_IIIC_Q200_EXPECTED = {
+    "tema": "Reglamento de Tránsito y Manual de Dispositivos de Control de Tránsito",
+    "alt1": "a) La zona que permite adelantar inicia con las líneas amarillas continuas.",
+    "alt2": "b) Los conductores pueden estacionarse al empezar las líneas continuas.",
+}
+
 
 def _leakage_check(pdf_path: Path, workdir: Path):
     """Parse `pdf_path` end to end and assert none of the header words or
@@ -82,6 +100,41 @@ def _leakage_check(pdf_path: Path, workdir: Path):
     return bands, texts, columns
 
 
+def _assert_last_question_nonempty(pdf_path: Path, workdir: Path, keys: tuple[str, ...]) -> None:
+    """A substring-absence check alone can be fooled by a band boundary
+    that's cut too early: the truncated text can happen to no longer
+    contain the banned word either, so the leakage check above passes
+    while real content silently vanishes (see the CLASE_A_IIIC.pdf q200
+    case pinned below - the truncation there happened to also delete the
+    banned "SEGUNDA PARTE" substring). The very last question's band is
+    the one most exposed to this: every "cap at the next boundary"
+    heuristic in build_row_bands has to get it right with no following
+    question's band to sanity-check it against.
+
+    Only checks `keys` (not necessarily every detected column) rather than
+    sweeping all 9 PDFs unconditionally: while writing this check, it also
+    surfaced CLASE_A_IIIA.pdf's `tema` column coming back empty for its
+    last question and other rows - a genuine but separate pre-existing bug
+    (that PDF's `numero` column range comes out as (52, 287), engulfing
+    `tema`'s real territory instead of the normal ~(52, 210)), not caused
+    or fixed by this round's change and out of scope for it (flagged
+    separately in the report instead). Scoping this check to the columns
+    and PDFs this round's fix actually touches keeps it from failing on
+    that unrelated, pre-existing issue.
+    """
+    xml_path = run_pdftohtml(pdf_path, workdir)
+    texts, _ = parse_xml(xml_path)
+    columns = detect_columns(texts)
+    rows = detect_question_rows(texts, columns)
+    last_page = max(t.page for t in texts)
+    header_rows = detect_header_rows(texts)
+    bands = build_row_bands(rows, last_page, header_rows, texts, columns)
+    last_band = bands[-1]
+    for key in keys:
+        text = text_in_band(texts, last_band, columns[key])
+        assert text, f"{pdf_path.name} q{last_band[0]} column {key!r} is empty: band={last_band}"
+
+
 def main() -> None:
     # Full-document leakage check (all 200 questions, not just the first
     # 5): a page-crossing question's band overlapping the reprinted header
@@ -105,7 +158,10 @@ def main() -> None:
 
     # Fresh, explicit check of the exact bug the second review round
     # found: q200's title on each of the 4 affected PDFs must be just the
-    # real question text, with no trailing "SEGUNDA PARTE..." appended.
+    # real question text, with no trailing "SEGUNDA PARTE..." appended -
+    # and (third review round) not truncated short of the real content
+    # either, which a section-break heuristic that's too eager can do just
+    # as easily as one that's not eager enough.
     for name in _SECTION_BREAK_PDFS:
         pdf_path = PDF_DIR / name
         xml_path = run_pdftohtml(pdf_path, Path(f"/tmp/mtc_extractor_test_{pdf_path.stem}"))
@@ -120,6 +176,25 @@ def main() -> None:
         assert "SEGUNDA PARTE" not in q200_title, (
             f"{name}: q200 title still leaks section title: {q200_title!r}"
         )
+        # tema/alt1/alt2 aren't affected by the pre-existing, unrelated
+        # alt3/alt4 range-estimation issue on CLASE_A_IIIC.pdf (see
+        # _A_IIIC_Q200_EXPECTED's docstring above), so require them
+        # non-empty on every affected PDF, not just A_IIIC.
+        for key in ("tema", "alt1", "alt2"):
+            text = text_in_band(p_texts, q200_band, p_columns[key])
+            assert text, f"{name}: q200 column {key!r} is empty: band={q200_band}"
+        if name == "CLASE_A_IIIC.pdf":
+            for key, expected_text in _A_IIIC_Q200_EXPECTED.items():
+                got = text_in_band(p_texts, q200_band, p_columns[key])
+                assert got == expected_text, (
+                    f"CLASE_A_IIIC.pdf q200 column {key!r} mismatch:\n"
+                    f"  got:      {got!r}\n  expected: {expected_text!r}"
+                )
+
+    # CLASE_A_I.pdf's last question doesn't cross a section break at all
+    # (its band runs to the document end, see the round-1 report), so this
+    # exercises the plain fallback path for the same class of check.
+    _assert_last_question_nonempty(PDF, WORKDIR, ("tema", "descripcion", "alt1", "alt2", "respuesta"))
 
     expected = json.loads(JSON.read_text())["data"]
     for band in bands[:5]:
