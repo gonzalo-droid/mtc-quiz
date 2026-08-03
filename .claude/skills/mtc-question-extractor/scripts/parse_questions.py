@@ -485,6 +485,26 @@ def _collapse_self_repetition(val: str) -> str:
     return val
 
 
+_GENUINE_START_CHARS = "¿¡\"'(0123456789_"
+
+
+def _looks_like_genuine_start(val: str) -> bool:
+    """Heuristic: does `val` look like it begins at a real title/topic
+    boundary, rather than mid-clause (i.e. `val` is itself already a
+    truncated fragment missing its own true leading words)? Checked
+    across every title/topic in the `a1`/`b2a` ground truth (400+ rows):
+    every single one starts with an uppercase letter, one of Spanish's
+    opening punctuation marks (`¿`/`¡`), a quote/paren, a digit, or (one
+    real case, a1 q103) an underscore opening a blank-fill exercise - a
+    lowercase letter start does not occur even once. Used by
+    `_trim_leaked_duplicate_suffix` as a trust check on the *reference*
+    value it's about to trim another question's text against - see that
+    function's docstring for why a neighbor's own value can't always be
+    taken on faith."""
+    val = val.strip()
+    return bool(val) and (val[0].isupper() or val[0] in _GENUINE_START_CHARS)
+
+
 def _trim_leaked_duplicate_suffix(questions: list[dict], field: str) -> None:
     """Post-hoc repair for one specific, confirmed corruption shape that
     `_gap_based_column_paragraphs`'s whole-document reconstruction can
@@ -522,16 +542,44 @@ def _trim_leaked_duplicate_suffix(questions: list[dict], field: str) -> None:
     relies on), corrupting it in a new way instead of fixing anything -
     confirmed regression: b2a_questions.json title mismatches jumped from
     31 to 147 (out of 204) when tried, including on rows this task's
-    brief never flagged as broken. Trimming only the exact, already-
-    confirmed duplicate shape post-hoc has no such risk: it's a no-op
-    unless question[i]'s value verbatim-ends-with question[i+1]'s value
-    (and is strictly longer), which cannot happen by coincidence for two
-    real, differently-worded questions of any realistic length - checked
-    across all of a1/b2a/b2b/b2c, 0 unintended trims."""
+    brief never flagged as broken.
+
+    Trimming only the exact, already-confirmed duplicate shape post-hoc
+    avoids *that* risk, but has a narrower one of its own: it trusts
+    question[i+1]'s own value as ground truth for what to strip off
+    question[i], and that value can itself already be wrong from some
+    other, unrelated pre-existing extraction defect - confirmed real
+    cases (CLASE_B_IIB.pdf/CLASE_B_IIC.pdf q59/q60 and CLASE_B_IIB.pdf
+    q121/q122): q60's own independently-derived value is a *different*,
+    pre-existing bug that wrongly prepends a fragment belonging to q59
+    ("para voltear") onto q60's real start; trimming q59 against that
+    already-wrong reference stripped "para voltear" from the one place
+    it was actually correct, leaving q59 ending abruptly on a dangling
+    comma - worse than the duplication it replaced, since a duplicate is
+    at least readable and recoverable by a human, while this is a
+    silently-truncated non-sentence. Symmetrically, q122's own value is
+    independently missing its own true leading words ("Una observación
+    _______ en la"), so trimming q121 against it left a garbled,
+    mid-clause fragment glued onto an otherwise-complete title.
+
+    `_looks_like_genuine_start` is the safety valve for this: both bad
+    reference values (q60's, q122's) start mid-clause with a lowercase
+    word, which never happens for a real title/topic (checked across
+    every a1/b2a ground-truth row - see that function's docstring), so
+    it's used to require the reference look like a genuine start before
+    trusting it enough to trim against. When it doesn't, this function
+    leaves question[i] at its pre-trim (duplicated but readable) value
+    rather than risk producing a new, worse, silently-broken shape - per
+    this task's own stated priority, a known disclosed duplicate is a
+    strictly better outcome than a fresh garbled non-sentence, and this
+    function's job is only to remove duplication it can do so *safely*,
+    not to guarantee every row is fully correct."""
     for i in range(len(questions) - 1):
         cur = questions[i].get(field, "")
         nxt = questions[i + 1].get(field, "")
         if not cur or not nxt or len(cur) <= len(nxt) or not cur.endswith(nxt):
+            continue
+        if not _looks_like_genuine_start(nxt):
             continue
         trimmed = cur[: -len(nxt)].rstrip()
         if trimmed:
