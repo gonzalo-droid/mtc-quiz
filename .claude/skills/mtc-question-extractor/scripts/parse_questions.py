@@ -603,6 +603,19 @@ def _load_existing_extras(json_path: Path) -> dict[int, dict]:
     return extras
 
 
+def _existing_question_count(json_path: Path) -> int | None:
+    """Returns the record count already committed at `json_path`, or None
+    if there's no existing file (or it can't be parsed) to compare
+    against. Used as the baseline for `main`'s hard safety check below."""
+    if not json_path.exists():
+        return None
+    try:
+        existing = json.loads(json_path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return None
+    return len(existing.get("data", []))
+
+
 def main() -> None:
     exam_id = sys.argv[1]
     pdf_stem, category = EXAM_TO_PDF[exam_id]
@@ -611,6 +624,7 @@ def main() -> None:
     workdir = Path(f"/tmp/mtc_extractor_{exam_id}")
 
     existing_extras = _load_existing_extras(json_path)
+    baseline_count = _existing_question_count(json_path)
 
     xml_path = run_pdftohtml(pdf_path, workdir)
     texts, images = parse_xml(xml_path)
@@ -721,6 +735,34 @@ def main() -> None:
             if entry.get(field):
                 entry[field] = _collapse_self_repetition(entry[field])
         _trim_leaked_duplicate_suffix(questions, field)
+
+    # Hard safety check: refuse to silently shrink an exam's question
+    # count. `detect_question_rows` requires the PDF's own Nº column to
+    # count continuously 1..N for the *whole* document (see its own
+    # docstring) - correct for 7 of the 9 balotario PDFs, but a3b/a3c each
+    # print a second numbered table whose own Nº column restarts at 1
+    # (extract_images.py's `detect_rows_allowing_resets` documents this
+    # and works around it for image association; this script does not yet
+    # have an equivalent for text extraction). Without this check, running
+    # this script against a3b/a3c would have `detect_question_rows` stop
+    # cold at the first table's last row (200) and silently overwrite
+    # a3b/a3c_questions.json with a 200-row file, permanently losing the
+    # other 71/139 real records - exactly what happened once already
+    # during this project (caught only because a human noticed and
+    # reverted from git, not because the script itself objected). Compare
+    # against whatever this exam's own output file already has on disk
+    # (if any) rather than a hardcoded number, so this stays correct for
+    # every exam without needing per-exam special-casing here.
+    if baseline_count is not None and len(questions) < baseline_count:
+        raise RuntimeError(
+            f"{exam_id}: refusing to write {json_path} - question count "
+            f"would drop from {baseline_count} to {len(questions)}. This "
+            "usually means detect_question_rows lost sync with the PDF's "
+            "own Nº column (e.g. a second table that restarts at 1, like "
+            "a3b/a3c - see extract_images.py's detect_rows_allowing_resets, "
+            "which this script does not yet use for text extraction). "
+            "Investigate before overwriting the existing file."
+        )
 
     json_path.write_text(
         json.dumps({"data": questions}, ensure_ascii=False, indent=4), encoding="utf-8"

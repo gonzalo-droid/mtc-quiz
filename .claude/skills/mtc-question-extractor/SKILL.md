@@ -53,8 +53,8 @@ To check if an exam needs image extraction:
 Images live in `app/src/main/assets/images/` as `.webp` files.
 
 **Naming convention:** `q{questionId}_{letter}_{examId}.webp`
-- `{letter}` = a/b/c/d (matching option position in question's `options` array)
-- Example: `q1_a_a1.webp` = exam a1, question 1, option a
+- `{letter}` = a per-image sequence index within the question (a = 1st image, b = 2nd, c = 3rd, ...), **not** the option position it illustrates. A question can carry far more than 4 images (up to ~13 observed on some rows), and a question with only one image always gets letter `a` regardless of which option (a/b/c/d) that image actually relates to.
+- Example: `q1_a_a1.webp` = exam a1, question 1, 1st image (may or may not correspond to option "a")
 
 **Critical exception for a3b and a3c:**
 These PDFs each contain *two separate numbered tables* that restart numbering. The JSON preserves the PDF's literal (duplicate) `id` values, but filenames use the record's *document position* (1-indexed, continuing across the restart) to avoid collisions.
@@ -111,6 +111,6 @@ See the actual script files for algorithm details:
 
 **Adaptive thresholds:** Both scripts compute PDF-specific parameters (row-gap thresholds, column boundaries) from the actual document data rather than using fixed magic numbers. This makes them robust to PDF layout variations.
 
-**Safe re-running:** `parse_questions.py` preserves non-text fields on re-run (e.g., existing `imagens`). `extract_images.py` rebuilds `imagens` from scratch, so re-running is safe and idempotent.
+**Safe re-running:** `parse_questions.py` preserves non-text fields on re-run (e.g., existing `imagens`), and refuses to write output with fewer questions than the exam's existing file already has (hard safety check, raises loudly instead of truncating silently). `extract_images.py` rebuilds `imagens` from scratch, so re-running is safe and idempotent, and has its own analogous hard safety check (output record count must exactly match input).
 
-**Multi-table PDFs:** a3b/a3c are structurally unique in the corpus (two numbered tables per PDF with restart-at-1). The scripts detect duplicate `id` values and use document-position indexing instead of `id`-keyed lookups for these cases — fully automatic, no manual intervention needed.
+**Multi-table PDFs:** a3b/a3c are structurally unique in the corpus (two numbered tables per PDF with restart-at-1). Only `extract_images.py` handles this: it detects duplicate `id` values and uses document-position indexing (`detect_rows_allowing_resets`) instead of `id`-keyed lookups — fully automatic, no manual intervention needed. `parse_questions.py` does **not** have an equivalent yet — its `detect_question_rows` requires the Nº column to count continuously 1..N for the whole document, so a fresh run against a3b/a3c would lose sync at the first table's last row (200) and, left unchecked, silently truncate the output to 200 questions (this happened once already during this project; a human caught it and reverted from git). `parse_questions.py` now has a hard safety check that refuses to write a file with fewer questions than the exam's existing output already has, so it will raise and refuse to write instead of silently truncating — but it will still fail loudly on a3b/a3c rather than succeed, since the underlying row-detection gap is unfixed. Do not re-run `parse_questions.py` against a3b/a3c until `detect_rows_allowing_resets` (or equivalent) is ported into it.
