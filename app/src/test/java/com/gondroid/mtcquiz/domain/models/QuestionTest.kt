@@ -1,6 +1,8 @@
 package com.gondroid.mtcquiz.domain.models
 
 import com.gondroid.core.domain.model.Question
+import com.google.common.truth.Truth
+import kotlinx.serialization.json.Json
 import org.junit.Before
 import org.junit.Test
 
@@ -41,6 +43,28 @@ class QuestionTest {
     fun givenQuestion_whenGetOption_thenReturnsIncorrectOptionText() {
         val result = question.getOption("a")
         assert(result == "3")
+    }
+
+    @Test
+    fun `decodes imagens array from json`() {
+        val json = """
+            {
+                "id": 1,
+                "title": "t",
+                "answer": "a",
+                "options": ["a", "b", "c", "d"],
+                "imagens": ["q1_a_a1", "q1_b_a1"]
+            }
+        """.trimIndent()
+        val question = Json.decodeFromString<Question>(json)
+        Truth.assertThat(question.imagens).containsExactly("q1_a_a1", "q1_b_a1").inOrder()
+    }
+
+    @Test
+    fun `imagens defaults to empty list when absent`() {
+        val json = """{"id": 1, "title": "t", "answer": "a", "options": ["a","b","c","d"]}"""
+        val question = Json.decodeFromString<Question>(json)
+        Truth.assertThat(question.imagens).isEmpty()
     }
 
 }

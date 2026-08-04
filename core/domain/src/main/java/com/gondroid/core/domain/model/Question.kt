@@ -13,7 +13,7 @@ data class Question(
     val answer: String = "",
     @SerialName("fundamento") val argument : String = "",
     val options: List<String> = listOf(),
-    val image: String? = null,
+    val imagens: List<String> = emptyList(),
 ) {
     fun isCorrectAnswer(index: Int): Boolean {
         val indexAnswer = when (answer) {
