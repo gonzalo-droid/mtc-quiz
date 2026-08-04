@@ -30,6 +30,13 @@ class QuizRepositoryImpl(
     private val dispatcherIO: CoroutineDispatcher = Dispatchers.IO,
     private val context: Context,
 ) : QuizRepository {
+
+    // Some balotario JSON assets carry extra bookkeeping fields (e.g. "part",
+    // used internally to mark which of a source PDF's two numbered tables a
+    // question came from) that aren't part of the Question schema. Ignoring
+    // unknown keys keeps bundled asset drift from crashing question loading.
+    private val questionJson = Json { ignoreUnknownKeys = true }
+
     override val categoriesFlow: Flow<List<Category>>
         get() = flow {
             emit(
@@ -53,7 +60,7 @@ class QuizRepositoryImpl(
                         .bufferedReader().use { it.readText() }
 
                     val questionResponse =
-                        Json.Default.decodeFromString<QuestionResponse>(jsonString)
+                        questionJson.decodeFromString<QuestionResponse>(jsonString)
 
                     val numberQuestion =
                         preferenceRepository.numberQuestionsFlow.first().toIntOrNull()
