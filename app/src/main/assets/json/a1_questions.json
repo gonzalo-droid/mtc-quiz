@@ -54,6 +54,9 @@
                 "b) Está permitido adelantar vehículos.",
                 "c) El único sentido de desplazamiento es continuar de frente.",
                 "d) Ninguna de las alternativas es correcta"
+            ],
+            "imagens": [
+                "q4_a_a1"
             ]
         },
         {
@@ -124,6 +127,9 @@
                 "b) Prohíbe al conductor detener el vehículo dentro del área de la intersección.",
                 "c) Prohíbe la carga y descarga.",
                 "d) Prohíbe la circulación de vehículos motorizados"
+            ],
+            "imagens": [
+                "q9_a_a1"
             ]
         },
         {
@@ -250,6 +256,9 @@
                 "b) Prohíbe el uso de la bocina en carreteras.",
                 "c) Prohíbe el uso de la bocina.",
                 "d) Prohíbe hacer ruido."
+            ],
+            "imagens": [
+                "q18_a_a1"
             ]
         },
         {
@@ -390,6 +399,9 @@
                 "b) Se aproxima un carril adicional.",
                 "c) Está permitido cambiar de carril.",
                 "d) Ninguna de las alternativas es correcta."
+            ],
+            "imagens": [
+                "q28_a_a1"
             ]
         },
         {
@@ -446,6 +458,9 @@
                 "b) La señal P-2A se utiliza en situaciones de mayor riesgo.",
                 "c) La señal P-1A advierte la presencia de curva pronunciada a la derecha mientras que la P-2A advierte la presencia de curva suave a la derecha.",
                 "d) La señal P-2A advierte la presencia de curva pronunciada a la derecha mientras que la P-1A advierte la presencia de curva suave a la derecha."
+            ],
+            "imagens": [
+                "q32_a_a1"
             ]
         },
         {
@@ -460,6 +475,9 @@
                 "b) Regula la velocidad máxima permitida en curvas.",
                 "c) Regula la velocidad máxima en zonas rurales.",
                 "d) No se encuentra regulada en el reglamento."
+            ],
+            "imagens": [
+                "q33_a_a1"
             ]
         },
         {
@@ -488,6 +506,9 @@
                 "b) El que se aproxime por la derecha del otro.",
                 "c) El que se aproxime por la izquierda del otro.",
                 "d) El que haga sonar la bocina primero."
+            ],
+            "imagens": [
+                "q35_a_a1"
             ]
         },
         {
@@ -698,6 +719,9 @@
                 "b) Reducción de la calzada al lado izquierdo.",
                 "c) Reducción de la calzada en ambos lados.",
                 "d) Ensanchamiento de la calzada en ambos lados."
+            ],
+            "imagens": [
+                "q50_a_a1"
             ]
         },
         {
@@ -936,6 +960,9 @@
                 "b) Señal de proximidad a un badén.",
                 "c) Señal de proximidad de un reductor de velocidad tipo resalto.",
                 "d) Ninguna de las alternativas es correcta."
+            ],
+            "imagens": [
+                "q67_a_a1"
             ]
         },
         {
@@ -1286,6 +1313,9 @@
                 "b) Está permitido cruzar al otro carril para el adelantamiento.",
                 "c) Se trata de una vía de doble sentido de circulación, que permite\ncruzar al otro carril.",
                 "d) Separa corrientes de tráfico en el mismo sentido."
+            ],
+            "imagens": [
+                "q92_a_a1"
             ]
         },
         {
@@ -1384,6 +1414,9 @@
                 "b) Puede hacerlo solo si, el vehículo en sentido contrario está lejos y alcanza hacer la maniobra con seguridad.",
                 "c) No puede hacerlo.",
                 "d) Puede hacerlo por la izquierda."
+            ],
+            "imagens": [
+                "q99_a_a1"
             ]
         },
         {
@@ -1398,6 +1431,9 @@
                 "b) Prohibida la circulación de vehículos automotores.",
                 "c) Prohibida la circulación de autos particulares.",
                 "d) Ninguna de las alternativas es correcta."
+            ],
+            "imagens": [
+                "q100_a_a1"
             ]
         },
         {
@@ -1412,6 +1448,9 @@
                 "b) Que está por ingresar a una vía de sentido contrario y no debe entrar.",
                 "c) Que debe parar totalmente antes de poder ingresar.",
                 "d) Ninguna de las alternativas es correcta"
+            ],
+            "imagens": [
+                "q101_a_a1"
             ]
         },
         {
@@ -1426,6 +1465,9 @@
                 "b) Superficie deslizante.",
                 "c) Prender las luces bajas.",
                 "d) Mantener la distancia entre vehículos por seguridad."
+            ],
+            "imagens": [
+                "q102_a_a1"
             ]
         },
         {
@@ -1440,6 +1482,9 @@
                 "b) Circular por el carril central.",
                 "c) Circular solo en el sentido indicado por la flecha.",
                 "d) Ninguna de las alternativas es correcta."
+            ],
+            "imagens": [
+                "q103_a_a1"
             ]
         },
         {
@@ -1454,6 +1499,9 @@
                 "b) Que es una vía de tres carriles y usted puede utilizar solo uno de ellos.",
                 "c) Que es una vía de tres carriles y usted puede utilizar los dos de la derecha.",
                 "d) Ninguna de las alternativas es correcta."
+            ],
+            "imagens": [
+                "q104_a_a1"
             ]
         },
         {
@@ -1468,6 +1516,9 @@
                 "b) Que la velocidad mínima de la vía es de 50 km/h.",
                 "c) Que al salir de la vía por donde está circulando, la velocidad máxima es 50 km/h.",
                 "d) Que al salir de la vía por donde está circulando, la velocidad mínima es 50 km/h."
+            ],
+            "imagens": [
+                "q105_a_a1"
             ]
         },
         {
@@ -1482,6 +1533,9 @@
                 "b) Que la intersección contempla giros tangentes a la izquierda en ambos sentidos.",
                 "c) Que la intersección está en mantenimiento y que por el momento solo se puede girar a la izquierda.",
                 "d) Ninguna de las alternativas es correcta."
+            ],
+            "imagens": [
+                "q106_a_a1"
             ]
         },
         {
@@ -1496,6 +1550,9 @@
                 "b) Que está permitido el giro en U.",
                 "c) Que si desea puede girar a la izquierda.",
                 "d) Ninguna de las alternativas es correcta."
+            ],
+            "imagens": [
+                "q107_a_a1"
             ]
         },
         {
@@ -1510,6 +1567,9 @@
                 "b) Prevención por bifurcación de la vía.",
                 "c) Que el carril por donde circula permite girar a la izquierda o seguir de frente.",
                 "d) No es una señal válida en el Perú."
+            ],
+            "imagens": [
+                "q108_a_a1"
             ]
         },
         {
@@ -1524,6 +1584,9 @@
                 "b) Que el conductor que viene por la derecha debe tener cuidado con los peatones.",
                 "c) Que los peatones deben circular por la izquierda.",
                 "d) Que los peatones deben circular por la derecha."
+            ],
+            "imagens": [
+                "q109_a_a1"
             ]
         },
         {
@@ -1538,6 +1601,9 @@
                 "b) Control policial.",
                 "c) Pavimento deslizante.",
                 "d) Circular con luces bajas."
+            ],
+            "imagens": [
+                "q110_a_a1"
             ]
         },
         {
@@ -1552,6 +1618,9 @@
                 "b) Los peatones deben tener cuidado con los camiones.",
                 "c) Zona de carga y descarga.",
                 "d) Ninguna de las alternativas es correcta."
+            ],
+            "imagens": [
+                "q111_a_a1"
             ]
         },
         {
@@ -1566,6 +1635,9 @@
                 "b) Se debe mantener la distancia de seguridad entre vehículos.",
                 "c) Está permitido cambiar de carril por la izquierda para adelantar.",
                 "d) Ninguna de las alternativas es correcta."
+            ],
+            "imagens": [
+                "q112_a_a1"
             ]
         },
         {
@@ -1580,6 +1652,9 @@
                 "b) Que si solo hay un carril tiene preferencia el conductor que está mirando la señal.",
                 "c) Que si solo hay un carril no tiene preferencia el que está mirando la señal y debe darle paso al del sentido contrario.",
                 "d) Ninguna de las alternativas es correcta."
+            ],
+            "imagens": [
+                "q113_a_a1"
             ]
         },
         {
@@ -1594,6 +1669,9 @@
                 "b) Una señal preventiva.",
                 "c) Una señal de obligación.",
                 "d) No es una señal válida en el Perú."
+            ],
+            "imagens": [
+                "q114_a_a1"
             ]
         },
         {
@@ -1608,6 +1686,9 @@
                 "b) Hay una curva y contra- curva a la derecha.",
                 "c) Hay una curva y contra- curva pronunciada a la derecha.",
                 "d) Hay una curva y contra- curva pronunciada a la izquierda."
+            ],
+            "imagens": [
+                "q115_a_a1"
             ]
         },
         {
@@ -1622,6 +1703,9 @@
                 "b) Se aproxima a una curva y contra-curva a la derecha.",
                 "c) Se aproxima a un camino sinuoso a la derecha.",
                 "d) Se aproxima a un camino sinuoso a la izquierda."
+            ],
+            "imagens": [
+                "q116_a_a1"
             ]
         },
         {
@@ -1636,6 +1720,9 @@
                 "b) Se aproxima a una reducción de la vía en ambos sentidos.",
                 "c) Está circulando por una curva horizontal.",
                 "d) Ninguna de las alternativas es correcta."
+            ],
+            "imagens": [
+                "q117_a_a1"
             ]
         },
         {
@@ -1650,6 +1737,9 @@
                 "b) Se aproxima a un resalto.",
                 "c) Se aproxima a un rompe muelles.",
                 "d) Se aproxima a un badén."
+            ],
+            "imagens": [
+                "q118_a_a1"
             ]
         },
         {
@@ -1664,6 +1754,9 @@
                 "b) Una señal informativa.",
                 "c) Una señal preventiva.",
                 "d) Ninguna de las alternativas es correcta."
+            ],
+            "imagens": [
+                "q119_a_a1"
             ]
         },
         {
@@ -1678,6 +1771,9 @@
                 "b) Autorización para el cruce de ciclistas.",
                 "c) Ciclistas en la vía.",
                 "d) Cercanía de una ciclovía."
+            ],
+            "imagens": [
+                "q120_a_a1"
             ]
         },
         {
@@ -1692,6 +1788,9 @@
                 "b) Que nos aproximamos a un cruce de ciclovía.",
                 "c) Que la ciclovía es solo para los ciclistas.",
                 "d) Todas las alternativas son correctas."
+            ],
+            "imagens": [
+                "q121_a_a1"
             ]
         },
         {
@@ -1706,6 +1805,9 @@
                 "b) Que nos aproximamos a un cruce de ciclovía.",
                 "c) Que la ciclovía es solo para los ciclistas.",
                 "d) La ubicación de un cruce de ciclistas."
+            ],
+            "imagens": [
+                "q122_a_a1"
             ]
         },
         {
@@ -1720,6 +1822,9 @@
                 "b) Zona con presencia de peatones.",
                 "c) Ubicación de un cruce escolar.",
                 "d) Ninguna de las alternativas es correcta."
+            ],
+            "imagens": [
+                "q123_a_a1"
             ]
         },
         {
@@ -1734,6 +1839,9 @@
                 "b) Proximidad a un cruce peatonal.",
                 "c) Ubicación de un cruce escolar.",
                 "d) Ninguna de las alternativas es correcta."
+            ],
+            "imagens": [
+                "q124_a_a1"
             ]
         },
         {
@@ -1748,6 +1856,9 @@
                 "b) Proximidad a una calzada.",
                 "c) Ubicación de un cruce peatonal.",
                 "d) Ninguna de las alternativas es correcta."
+            ],
+            "imagens": [
+                "q125_a_a1"
             ]
         },
         {
@@ -1762,6 +1873,9 @@
                 "b) Proximidad a un cruce peatonal.",
                 "c) Zona transitada.",
                 "d) Ninguna de las alternativas es correcta."
+            ],
+            "imagens": [
+                "q126_a_a1"
             ]
         },
         {
@@ -1776,6 +1890,9 @@
                 "b) Proximidad a un cruce escolar.",
                 "c) Ubicación de un cruce escolar.",
                 "d) Ninguna de las alternativas es correcta."
+            ],
+            "imagens": [
+                "q127_a_a1"
             ]
         },
         {
@@ -1790,6 +1907,9 @@
                 "b) Proximidad a un cruce peatonal.",
                 "c) Ubicación de un cruce escolar",
                 "d) Ninguna de las alternativas es correcta."
+            ],
+            "imagens": [
+                "q128_a_a1"
             ]
         },
         {
@@ -1804,6 +1924,9 @@
                 "b) Proximidad a campo deportivo.",
                 "c) Proximidad a zona urbana.",
                 "d) Niños jugando."
+            ],
+            "imagens": [
+                "q129_a_a1"
             ]
         },
         {
@@ -1818,6 +1941,9 @@
                 "b) Proximidad a zona rural.",
                 "c) Maquinaria agrícola en la vía.",
                 "d) Ninguna de las alternativas es correcta."
+            ],
+            "imagens": [
+                "q130_a_a1"
             ]
         },
         {
@@ -1832,6 +1958,9 @@
                 "b) Proximidad a zona agrícola.",
                 "c) Animales en la vía.",
                 "d) Ninguna de las alternativas es correcta."
+            ],
+            "imagens": [
+                "q131_a_a1"
             ]
         },
         {
@@ -1846,6 +1975,9 @@
                 "b) Proximidad a un semáforo.",
                 "c) Semáforos en ola verde.",
                 "d) Ninguna de las alternativas es correcta."
+            ],
+            "imagens": [
+                "q132_a_a1"
             ]
         },
         {
@@ -1860,6 +1992,9 @@
                 "b) Que usted debe parar donde está la señal P-58.",
                 "c) Que se trata de un PARE, pero puede seguir adelante.",
                 "d) Ninguna de las alternativas es correcta."
+            ],
+            "imagens": [
+                "q133_a_a1"
             ]
         },
         {
@@ -1874,6 +2009,9 @@
                 "b) Que usted debe ceder el paso donde está la señal P- 59.",
                 "c) Que se trata de un PARE, pero puede seguir adelante.",
                 "d) Ninguna de las alternativas es correcta."
+            ],
+            "imagens": [
+                "q134_a_a1"
             ]
         },
         {
@@ -1888,6 +2026,9 @@
                 "b) Que usted debe encender sus luces pues se aproxima a una zona con poca visibilidad.",
                 "c) Que usted se aproxima a un túnel.",
                 "d) Ninguna de las alternativas es correcta."
+            ],
+            "imagens": [
+                "q135_a_a1"
             ]
         },
         {
@@ -1902,6 +2043,9 @@
                 "b) Proximidad a una pista de aviones.",
                 "c) Vuelo de aviones a baja altura.",
                 "d) Aviones que generan ruido."
+            ],
+            "imagens": [
+                "q136_a_a1"
             ]
         },
         {
@@ -1916,6 +2060,9 @@
                 "b) Que usted debe dar prioridad de paso a los bomberos.",
                 "c) Que se aproxima a una salida de vehículos de bomberos.",
                 "d) Ninguna de las alternativas es correcta."
+            ],
+            "imagens": [
+                "q137_a_a1"
             ]
         },
         {
@@ -1930,6 +2077,9 @@
                 "b) Que se aproxima una zona donde hay ráfagas de viento lateral.",
                 "c) Que se acerca a una zona de arenamiento en la vía.",
                 "d) Ninguna de las alternativas es correcta."
+            ],
+            "imagens": [
+                "q138_a_a1"
             ]
         },
         {
@@ -1944,6 +2094,9 @@
                 "b) Que está pasando por una zona donde hay ráfagas de viento lateral.",
                 "c) Que se acerca a una zona de arenamiento en la vía.",
                 "d) Ninguna de las alternativas es correcta."
+            ],
+            "imagens": [
+                "q139_a_a1"
             ]
         },
         {
@@ -1958,6 +2111,9 @@
                 "b) En la siguiente intersección está prohibido girar a la izquierda y por lo tanto, si desea seguir esa ruta debe tomar el camino alternativo que muestra la señal.",
                 "c) En la siguiente intersección está prohibido girar a la derecha y por lo tanto, si desea seguir esa ruta debe tomar el camino alternativo que muestra la señal.",
                 "d) Ninguna de las alternativas es correcta."
+            ],
+            "imagens": [
+                "q140_a_a1"
             ]
         },
         {
@@ -1972,6 +2128,9 @@
                 "b) En la siguiente intersección está prohibido girar a la izquierda y por lo tanto, si desea seguir esa ruta debe hacerlo una cuadra antes.",
                 "c) En esa dirección hay una zona de parqueo.",
                 "d) Ninguna de las alternativas es correcta."
+            ],
+            "imagens": [
+                "q141_a_a1"
             ]
         },
         {
@@ -1986,6 +2145,9 @@
                 "b) Señal de hospedaje.",
                 "c) Señal de hospital.",
                 "d) Ninguna de las alternativas es correcta."
+            ],
+            "imagens": [
+                "q142_a_a1"
             ]
         },
         {
@@ -2000,6 +2162,9 @@
                 "b) Proximidad a un estacionamiento permitido.",
                 "c) Proximidad de una zona de parqueo para vecinos.",
                 "d) Proximidad de un estacionamiento para emergencias."
+            ],
+            "imagens": [
+                "q143_a_a1"
             ]
         },
         {
@@ -2014,6 +2179,9 @@
                 "b) Zona de control de aduanas.",
                 "c) Zona militar.",
                 "d) Ninguna de las alternativas es correcta."
+            ],
+            "imagens": [
+                "q144_a_a1"
             ]
         },
         {
@@ -2028,6 +2196,9 @@
                 "b) Cercanía a un servicio mecánico.",
                 "c) Cercanía a un grifo.",
                 "d) Ninguna de las alternativas es correcta"
+            ],
+            "imagens": [
+                "q145_a_a1"
             ]
         },
         {
@@ -2042,6 +2213,9 @@
                 "b) Cercanía a una tienda.",
                 "c) Cercanía a un grifo.",
                 "d) Ninguna de las alternativas es correcta."
+            ],
+            "imagens": [
+                "q146_a_a1"
             ]
         },
         {
@@ -2056,6 +2230,9 @@
                 "b) Cercanía a una zona donde debe circular con cadenas en las llantas.",
                 "c) Cercanía a un grifo.",
                 "d) Cercanía a una llantería."
+            ],
+            "imagens": [
+                "q147_a_a1"
             ]
         },
         {
@@ -2070,6 +2247,9 @@
                 "b) Fin de la restricción de prohibido adelantar.",
                 "c) Fin de la restricción de circulación en doble sentido.",
                 "d) Ninguna de las alternativas es correcta."
+            ],
+            "imagens": [
+                "q148_a_a1"
             ]
         },
         {
@@ -2112,6 +2292,9 @@
                 "b) Delineadores de curva, que guían al conductor.",
                 "c) Advertencia al conductor sobre la proximidad de un puente.",
                 "d) Ninguna de las alternativas es correcta."
+            ],
+            "imagens": [
+                "q151_a_a1"
             ]
         },
         {
@@ -2532,6 +2715,9 @@
                 "b) La proximidad a un huracán.",
                 "c) La proximidad a un camino sinuoso.",
                 "d) La proximidad de una intersección rotatoria (óvalo o rotonda)."
+            ],
+            "imagens": [
+                "q181_a_a1"
             ]
         },
         {
@@ -2546,6 +2732,9 @@
                 "b) La proximidad de una vía asfaltada.",
                 "c) La proximidad de una pendiente leve.",
                 "d) Ninguna de las alternativas es correcta."
+            ],
+            "imagens": [
+                "q182_a_a1"
             ]
         },
         {
@@ -2616,6 +2805,9 @@
                 "b) Dar preferencia de paso al peatón para que cruce la calzada.",
                 "c) Girar lentamente a la derecha antes que el peatón cruce la calzada.",
                 "d) Tocar el claxon para que el peatón no cruce la calzada"
+            ],
+            "imagens": [
+                "q187_a_a1"
             ]
         },
         {
@@ -2756,6 +2948,9 @@
                 "b) Únicamente señalización de tránsito vertical en una zona escolar.",
                 "c) Únicamente señalización de tránsito horizontal en una zona escolar.",
                 "d) Ninguna de las alternativas es correcta."
+            ],
+            "imagens": [
+                "q197_a_a1"
             ]
         },
         {
@@ -2784,6 +2979,9 @@
                 "b) Que se están realizando trabajos de emergencia en el área demarcada.",
                 "c) Que únicamente puede detener el vehículo dentro del área de intersección.",
                 "d) Que es una isla de refugio peatonal."
+            ],
+            "imagens": [
+                "q199_a_a1"
             ]
         },
         {
@@ -2798,6 +2996,9 @@
                 "b) Los conductores pueden estacionarse al empezar las líneas continuas.",
                 "c) La zona de no adelantar inicia con las líneas amarillas continuas.",
                 "d) El conductor del camión puede estacionarse antes de empezar las líneas continuas"
+            ],
+            "imagens": [
+                "q200_a_a1"
             ]
         }
     ]
