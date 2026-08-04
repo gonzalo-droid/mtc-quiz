@@ -214,6 +214,7 @@ fun QuestionsScreen(
                             modifier = Modifier.fillMaxWidth(),
                             title = "${question.id}.- ${question.title}",
                             image = painterResource(id = R.drawable.card_background),
+                            questionImages = question.imagens,
                         )
 
                         Spacer(modifier = Modifier.height(8.dp))

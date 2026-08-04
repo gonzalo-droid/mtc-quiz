@@ -227,6 +227,7 @@ fun EvaluationScreen(
                         modifier = Modifier.fillMaxWidth(),
                         title = "${state.question.id}.- ${state.question.title}",
                         image = painterResource(id = R.drawable.card_background),
+                        questionImages = state.question.imagens,
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                 }
