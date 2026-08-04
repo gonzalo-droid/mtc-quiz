@@ -51,6 +51,13 @@ class QuestionAssetsSchemaTest {
                 if (q.title.isBlank()) {
                     errors += "${file.name}#${q.id}: blank title"
                 }
+                if (q.options.any { it.isBlank() }) {
+                    errors += "${file.name}#${q.id}: blank option"
+                }
+                val answerIndex = "abcd".indexOf(q.answer.lowercase().firstOrNull() ?: ' ')
+                if (q.options.getOrNull(answerIndex).isNullOrBlank()) {
+                    errors += "${file.name}#${q.id}: answer '${q.answer}' points at a blank option"
+                }
             }
         }
         assertThat(errors).isEmpty()
