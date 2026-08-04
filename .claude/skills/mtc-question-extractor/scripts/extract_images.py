@@ -91,6 +91,118 @@ def band_for_image(bands, image: ImageEl):
     return None
 
 
+# Two images belong to the same printed visual row if their `top`s are
+# within this many px of each other. Derived from the actual data, not
+# guessed: measured the full distribution of gaps between consecutive
+# `top` values (per page) across every one of the 9 PDFs. Genuine
+# within-row jitter (pdftohtml's own rounding/baseline differences for
+# icons printed on the same line) tops out at 18px anywhere in the corpus;
+# every observed *between-row* gap (either between two sub-rows of icons
+# within one multi-row question, or between two different questions' own
+# image rows) is >=30px, most commonly 40-70px. 25 sits centered in that
+# gap with margin on both sides.
+_ROW_CLUSTER_GAP = 25
+
+
+def _cluster_rows(items, page_of, top_of, gap=_ROW_CLUSTER_GAP):
+    """Group `items` (already known to be spatially close enough to be
+    worth comparing - e.g. all raw images on a page, or one question's own
+    images) into visual-row clusters, in document top-to-bottom order.
+
+    A new cluster starts whenever the page changes or the gap to the
+    previous item's `top` exceeds `gap` (see `_ROW_CLUSTER_GAP`). Returns
+    a list of clusters (each a list of items), in document order.
+    """
+    ordered = sorted(items, key=lambda it: (page_of(it), top_of(it)))
+    clusters: list[list] = []
+    cur: list = []
+    for it in ordered:
+        if cur and (
+            page_of(it) != page_of(cur[-1]) or top_of(it) - top_of(cur[-1]) > gap
+        ):
+            clusters.append(cur)
+            cur = []
+        cur.append(it)
+    if cur:
+        clusters.append(cur)
+    return clusters
+
+
+def assign_images_to_questions(images: list[ImageEl], bands) -> dict[int, list[ImageEl]]:
+    """Assign every raw image to the question it visually belongs to.
+
+    Deliberately does *not* just take each image's own individually
+    computed `band_for_image` result at face value. `build_row_bands`
+    splits bands at the midpoint between two consecutive questions' Nº
+    digit positions (see its own docstring) - a boundary tuned for
+    *text* columns, which routinely doesn't land exactly where a nearby
+    icon's own pixel content happens to sit. Confirmed real case
+    (CLASE_A_IIIC.pdf, page 24): one image at top=541 falls 3px on the
+    "wrong" side of the 544px digit-midpoint split between questions 229
+    and 230, even though it's only 6px away from - and forms one obvious
+    printed row together with - two other images at top=547 that *do*
+    fall on question 230's side; the true nearest question-229 image is
+    62px away. Taking `band_for_image` per-image at face value assigned
+    that stray image to question 229, leaking a piece of question 230's
+    own row into 229's `imagens`.
+
+    Fix: first cluster all of a document's images into visual rows by
+    `top`-proximity alone (`_cluster_rows`, page/digit-boundary-agnostic),
+    then assign every image in a cluster to whichever question the
+    *majority* of that cluster's images individually band-matched to.
+    A single 1-image minority within an otherwise-coherent row cluster
+    gets pulled along with the majority instead of leaking to a
+    neighboring question. Logs (to stderr, non-fatal) every case where
+    this majority vote overrides an individual image's own band match -
+    that's exactly the class of leak this exists to catch, and is worth a
+    human being able to scan for it on future PDFs this hasn't been
+    checked against.
+    """
+    pairs = [(im, band_for_image(bands, im)) for im in images]
+    pairs = [(im, q) for im, q in pairs if q is not None]
+
+    per_question: dict[int, list[ImageEl]] = {}
+    for cluster in _cluster_rows(pairs, page_of=lambda p: p[0].page, top_of=lambda p: p[0].top):
+        qnums = [q for _, q in cluster]
+        majority_q, _ = Counter(qnums).most_common(1)[0]
+        for im, own_q in cluster:
+            per_question.setdefault(majority_q, []).append(im)
+            if own_q != majority_q:
+                print(
+                    f"  [row-cluster fix] image page={im.page} top={im.top} "
+                    f"left={im.left} own band={own_q} reassigned to "
+                    f"majority band={majority_q} (row-cluster of "
+                    f"{len(cluster)})",
+                    file=sys.stderr,
+                )
+    return per_question
+
+
+def row_major_sorted(images: list[ImageEl]) -> list[ImageEl]:
+    """Order one question's own images in human reading order: top-to-
+    bottom by visual row, left-to-right within each row.
+
+    Replaces a flat `sorted(images, key=lambda x: (x.page, x.top,
+    x.left))`, which was the actual root cause of a previous run
+    mislabeling most multi-image questions' a/b/c/d order: images on the
+    same printed row (meant to be read left-to-right) routinely differ in
+    `top` by a few px of pdftohtml jitter, and that tiny `top` difference
+    outranked `left` in the sort key, scrambling the resulting order.
+    Confirmed concrete case: CLASE_A_IIIC.pdf id 28 had 4 images at
+    top=(389,390,390,393) / left=(930,683,802,553) - the flat sort put
+    them in top order (930, 683, 802, 553), assigning the true rightmost
+    image (left=930) the letter "a" and the true leftmost (left=553) the
+    letter "d": exactly backwards. Clustering by row first (all 4 of
+    these images are one row - max internal jitter is 4px, far under
+    `_ROW_CLUSTER_GAP`) and sorting left-to-right *within* that cluster
+    fixes it: (553, 683, 802, 930) -> correct a/b/c/d order.
+    """
+    ordered: list[ImageEl] = []
+    for cluster in _cluster_rows(images, page_of=lambda im: im.page, top_of=lambda im: im.top):
+        ordered.extend(sorted(cluster, key=lambda im: im.left))
+    return ordered
+
+
 # The 3 CLASE_B_II*.pdf files (b2a/b2b/b2c) don't embed each picture as one
 # `pdftohtml`-exported image the way the other 6 PDFs do. Instead, every
 # real picture (e.g. a candidate traffic-sign icon for one alt column) is
@@ -418,6 +530,17 @@ def main() -> None:
     # into per-question bands *before* filtering avoids this entirely -
     # `filter_logo_images` never sees individual scanlines, only whole
     # pictures (see below).
+    #
+    # Deliberately plain `band_for_image` per raw image here, NOT
+    # `assign_images_to_questions`'s row-cluster/majority-vote logic - that
+    # logic is applied further below, once every image is a whole picture
+    # (see the comment there for why doing it at the raw-slice level
+    # breaks the 3 row-sliced PDFs specifically: confirmed regression,
+    # CLASE_B_IIA.pdf - adjacent questions' own icon columns are printed
+    # closely enough together that a naive top-proximity row-cluster over
+    # *raw 1px slices* chains straight through 4+ consecutive questions'
+    # worth of slices into one 358-member "row", whose majority vote then
+    # stole most of q14/q15/q16's own icons into q13).
     per_question: dict[int, list[ImageEl]] = {}
     for im in images:
         qnum = band_for_image(bands, im)
@@ -431,6 +554,22 @@ def main() -> None:
     # rather than done globally before band assignment).
     for qnum in per_question:
         per_question[qnum] = stitch_sliced_images(per_question[qnum], workdir, qnum)
+
+    # Now that every entry is a whole picture (an original single-image
+    # PDF's own images pass through unchanged; a row-sliced PDF's images
+    # are now the reassembled composites from above), re-run band
+    # assignment through `assign_images_to_questions`'s row-cluster +
+    # majority-vote logic to catch the class of leak a plain per-image
+    # `band_for_image` call misses: a whole picture landing fractionally
+    # on the wrong side of the digit-based band midpoint despite visually
+    # belonging, as part of the same printed row, to a neighboring
+    # picture that DID land on the correct side (see that function's
+    # docstring for the confirmed CLASE_A_IIIC.pdf q229/q230 case this
+    # exists to fix). Operating on whole pictures rather than raw slices
+    # keeps this safe for the row-sliced PDFs too (see the comment above).
+    per_question = assign_images_to_questions(
+        [im for qimages in per_question.values() for im in qimages], bands
+    )
 
     # A single physical picture in the row-sliced PDFs can straddle a
     # band's own boundary the same way a run of *text* lines can (see
@@ -528,13 +667,40 @@ def main() -> None:
         record = record_for(qnum)
         if record is None:
             continue
+        # row_major_sorted (not a flat (page, top, left) sort - see its
+        # own docstring for the concrete mislabeling bug that caused)
+        # orders images top-to-bottom by visual row, left-to-right within
+        # each row, so letter "a" is genuinely the top-left/first-read
+        # image and so on - matching how a human reads the row of
+        # options this image set illustrates.
         names = []
-        for i, im in enumerate(sorted(qimages, key=lambda x: (x.page, x.top, x.left))):
+        for i, im in enumerate(row_major_sorted(qimages)):
             suffix = letters[i] if i < len(letters) else str(i)
             name = f"q{qnum}_{suffix}_{exam_id}"
             convert_to_webp(im.src, IMAGES_DIR / f"{name}.webp")
             names.append(name)
         record["imagens"] = names
+
+        # Self-check (non-fatal, unlike the count safety check below):
+        # more images than non-empty options for one question is a
+        # concrete anomaly signal - both defects this fix round addressed
+        # (scrambled lettering was invisible this way since it never
+        # changed the *count*; but the cross-question leak did - a3c id
+        # 29 had 8 images against 4 options before the row-cluster fix)
+        # were detectable from data this script already computes. Logging
+        # rather than blocking: a question can legitimately have more
+        # images than options (e.g. one illustration shared by the whole
+        # question, plus one per option), so this is a prompt for a human
+        # to look, not proof of a bug.
+        option_count = sum(1 for o in record.get("options", []) if o and o.strip())
+        if option_count and len(names) > option_count:
+            print(
+                f"  [self-check] {exam_id} q{qnum} (id={record.get('id')}): "
+                f"{len(names)} images assigned but only {option_count} "
+                "non-empty options - possible leak or over-assignment, "
+                "worth a manual look",
+                file=sys.stderr,
+            )
 
     # Hard safety check: this script must be a strict no-op on the set of
     # questions and every field except `imagens` - it only annotates
