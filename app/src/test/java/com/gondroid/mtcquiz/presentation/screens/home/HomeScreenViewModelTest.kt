@@ -3,7 +3,6 @@ package com.gondroid.mtcquiz.presentation.screens.home
 import android.app.Activity
 import app.cash.turbine.test
 import com.gondroid.core.data.billing.BillingManager
-import com.gondroid.core.domain.model.CLASS_A
 import com.gondroid.core.domain.model.Category
 import com.gondroid.home.presentation.HomeScreenViewModel
 import com.gondroid.mtcquiz.presentation.screens.PreferenceRepositoryFake
@@ -61,18 +60,18 @@ class HomeScreenViewModelTest {
                 id = "1",
                 title = "CLASE A - CATEGORIA I",
                 category = "A-I",
-                classType = CLASS_A,
+                classType = "A",
                 description = "Es el más común y te permite manejar carros como sedanes, coupé , hatchback, convertibles, station wagon, SUV, Areneros, Pickup y furgones. Es necesaria para obtener las demás licencias de Clase A.",
-                image = "a",
+                image = null,
                 pdf = "CLASE_A_I.pdf"
             ),
             Category(
                 id = "2",
                 title = "CLASE A - CATEGORIA II-A",
                 category = "A-IIa",
-                classType = CLASS_A,
+                classType = "A",
                 description = "Los mismos que A-1 y también carros oficiales de transporte de pasajeros como Taxis, Buses, Ambulancias y Transporte Interprovincial. Primero debes obtener la Licencia A-I",
-                image = "a",
+                image = null,
                 pdf = "CLASE_A_I.pdf"
             ),
         )
