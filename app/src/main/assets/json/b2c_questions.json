@@ -176,7 +176,7 @@
                 "a) Informativas",
                 "b) Preventivas",
                 "c) Reguladoras",
-                ""
+                "d) Ninguna de las anteriores"
             ],
             "fundamento": "Articulo 42 del Código de Tránsito."
         },
@@ -191,7 +191,7 @@
                 "a)",
                 "b)",
                 "c)",
-                ""
+                "d) Ninguna de las anteriores"
             ],
             "fundamento": "Articulo 42 del Código de Tránsito y numeral 2.10.3 del Manual de dispositivos y Control de Tránsito.",
             "imagens": [
@@ -251,7 +251,7 @@
                 "a) Rectangular",
                 "b) Romboidal",
                 "c) Triangulo tipo banderola",
-                ""
+                "d) Circular"
             ],
             "fundamento": "Articulo 43 del Código de Tránsito"
         },
@@ -266,7 +266,7 @@
                 "a) Señales verticales reguladoras",
                 "b) Señales verticales de información",
                 "c) Señales verticales preventivas",
-                ""
+                "d) Ninguna de las anteriores"
             ],
             "fundamento": "Articulo 43 del Código de Tránsito"
         },
@@ -278,10 +278,10 @@
             "title": "La señal vertical preventiva \"Cruz de San Andrés\" significa:",
             "answer": "c",
             "options": [
-                "a) Paso a desnivel de autopista b) Está prohibido voltear a la izquierda, y por tanto también el giro en U",
+                "a) Paso a desnivel de autopista",
                 "b) Paso a nivel de autopista",
                 "c) Paso a nivel de línea férrea",
-                ""
+                "d) Paso a desnivel de línea férrea"
             ],
             "fundamento": "Numeral 2.10.2 del Manual de dispositivos y Control de Tránsito (Descripción de Señales - Señales de prevención)"
         },
@@ -329,7 +329,7 @@
                 "a) Notificar a los usuarios de la vía de la existencia de un peligro y la naturaleza de éste.",
                 "b) Advertir a los usuarios de la vía de la existencia de un peligro y la naturaleza de éste.",
                 "c) Identificar las vías y guiar al usuario proporcionándole la información que pueda necesitar.",
-                ""
+                "d) Ninguna de las anteriores"
             ],
             "fundamento": "Articulo 42 del Código de Tránsito"
         },
@@ -359,7 +359,7 @@
                 "a) Vehiculares y/o peatonales",
                 "b) Vehiculares y/o peatonales y/o especiales",
                 "c) Especiales",
-                ""
+                "d) Vehiculares y especiales"
             ],
             "fundamento": "Articulo 48 del Código de Tránsito"
         },
@@ -374,7 +374,7 @@
                 "a) Rojo, Amarillo y Verde.",
                 "b) Verde, Amarillo y Anaranjado.",
                 "c) Verde, Rosado y Anaranjado.",
-                ""
+                "d) Ninguna de las anteriores"
             ],
             "fundamento": "Articulo 49 del Código de Tránsito"
         },
@@ -806,8 +806,8 @@
             "title": "Si un conductor está tomando medicamentos y por ello, siente cansancio, o sueño ¿qué debe hacer?",
             "answer": "c",
             "options": [
-                "a) Manejar normalmente b) Manejar despacio",
-                "",
+                "a) Manejar normalmente",
+                "b) Manejar despacio",
                 "c) Abstenerse de manejar",
                 "d) Manejar con un copiloto"
             ],
@@ -1196,8 +1196,8 @@
             "title": "¿Cómo se denomina la medida preventiva, mediante el cual un vehículo es retirado de su ubicación en caso constituya un peligro o un obstáculo para el tránsito y la seguridad pública?",
             "answer": "b",
             "options": [
-                "a) Retención del vehículo b) Remoción del vehículo",
-                "",
+                "a) Retención del vehículo",
+                "b) Remoción del vehículo",
                 "c) Internamiento del vehículo",
                 "d) Traslado del vehículo hacia el domicilio del propietario"
             ],
@@ -1211,8 +1211,8 @@
             "title": "Es el acto de inmovilización del vehículo en la Comisaría de la jurisdicción dispuesto por la Policía Nacional del Perú",
             "answer": "a",
             "options": [
-                "a) Retención del vehículo b) Remoción del vehículo",
-                "",
+                "a) Retención del vehículo",
+                "b) Remoción del vehículo",
                 "c) Internamiento del vehículo",
                 "d) Traslado del vehículo hacia el domicilio del propietario"
             ],
