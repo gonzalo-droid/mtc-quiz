@@ -3,8 +3,8 @@ package com.gondroid.core.presentation.designsystem.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -47,14 +47,14 @@ fun CardQuestion(
                 LazyRow(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
+                        .padding(top = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally),
                 ) {
                     items(questionImages) { name ->
                         AsyncImage(
                             model = "file:///android_asset/images/$name.webp",
                             contentDescription = name,
-                            modifier = Modifier.height(150.dp),
+                            modifier = Modifier.size(220.dp),
                             contentScale = ContentScale.Fit,
                         )
                     }
