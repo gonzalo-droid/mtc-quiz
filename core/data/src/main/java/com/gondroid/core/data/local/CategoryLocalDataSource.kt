@@ -74,17 +74,8 @@ val categoriesLocalDataSource = listOf(
 
     /**
      * Class licence B
+     * (B-I / triciclos has no real balotario PDF yet, intentionally omitted)
      */
-    Category(
-        id = "7",
-        title = "CLASE B - CATEGORIA I",
-        category = "B-I",
-        classType = CLASS_B,
-        description = "Vehículos no motorizados de 3 ruedas (triciclos) para transporte público especial de pasajeros.",
-        image = CardTypeEnum.A1.drawable,
-        pdf = "CLASE_A_I.pdf",
-        pathJson = "a2a_questions.json"
-    ),
     Category(
         id = "8",
         title = "CLASE B - CATEGORIA II-A",
@@ -93,7 +84,7 @@ val categoriesLocalDataSource = listOf(
         description = "Bicimotos para transportar pasajeros o mercancías.",
         image = CardTypeEnum.A1.drawable,
         pdf = "CLASE_B_IIA.pdf",
-        pathJson = "a1_questions.json"
+        pathJson = "b2a_questions.json"
     ),
     Category(
         id = "9",
@@ -103,7 +94,7 @@ val categoriesLocalDataSource = listOf(
         description = "Los mismos que B-IIa y también Motocicletas (2 ruedas) o Motocicletas con Sidecar (3 ruedas) para transportar pasajeros o mercancías.",
         image = CardTypeEnum.A1.drawable,
         pdf = "CLASE_B_IIB.pdf",
-        pathJson = "a1_questions.json"
+        pathJson = "b2b_questions.json"
     ),
     Category(
         id = "10",
@@ -113,6 +104,6 @@ val categoriesLocalDataSource = listOf(
         description = "Los mismos que B-IIa y B-IIb y también Mototaxis y Trimotos (3 ruedas) destinadas al transporte de pasajeros",
         image = CardTypeEnum.A1.drawable,
         pdf = "CLASE_B_IIC.pdf",
-        pathJson = "a1_questions.json"
+        pathJson = "b2c_questions.json"
     ),
 )
