@@ -1,6 +1,8 @@
 package com.gondroid.detail.presentation
 
+import android.Manifest
 import android.app.Activity
+import androidx.annotation.RequiresPermission
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -53,6 +55,7 @@ import com.gondroid.core.presentation.designsystem.MTCQuizTheme
 import com.gondroid.core.presentation.ui.BannerAdSlot
 import com.gondroid.core.presentation.ui.ObserveAsEvents
 
+@RequiresPermission(Manifest.permission.INTERNET)
 @Composable
 fun DetailScreenRoot(
     viewModel: DetailScreenViewModel,

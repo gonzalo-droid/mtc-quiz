@@ -16,7 +16,7 @@ import com.google.android.gms.ads.AdView
  * loadAd, destroy) — see [BannerAdSlot] for the usual entry point.
  */
 @Composable
-fun BannerAdView(adView: AdView, modifier: Modifier = Modifier) {
+internal fun BannerAdView(adView: AdView, modifier: Modifier = Modifier) {
     // Ad load does not work in preview mode because it requires a network connection.
     if (LocalInspectionMode.current) {
         Box { Text(text = "Google Mobile Ads preview banner.", modifier.align(Alignment.Center)) }

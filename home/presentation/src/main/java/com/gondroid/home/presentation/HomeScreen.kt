@@ -70,6 +70,7 @@ fun HomeScreenRoot(
 
     HomeScreen(
         state = state,
+        bannerAdId = viewModel.bannerAdId,
         onAction = { action ->
             when (action) {
                 is HomeAction.OnClickCategory -> navigateToDetail(action.categoryId)
@@ -77,9 +78,6 @@ fun HomeScreenRoot(
                 is HomeAction.GoToPremium -> navigateToPremium()
             }
         },
-        content = {
-            BannerAdSlot(bannerAdId = viewModel.bannerAdId, isPremium = state.isPremium)
-        }
     )
 }
 
@@ -87,8 +85,8 @@ fun HomeScreenRoot(
 @Composable
 fun HomeScreen(
     state: HomeState,
+    bannerAdId: String,
     onAction: (HomeAction) -> Unit,
-    content: @Composable () -> Unit
 ) {
 
     Scaffold(
@@ -206,7 +204,7 @@ fun HomeScreen(
                     })
             }
 
-            content()
+            BannerAdSlot(bannerAdId = bannerAdId, isPremium = state.isPremium)
 
         }
     }
@@ -328,8 +326,8 @@ fun PreviewHomeScreenRoot() {
                     )
                 )
             ),
+            bannerAdId = "test-banner-id",
             onAction = {},
-            content = {}
         )
     }
 }

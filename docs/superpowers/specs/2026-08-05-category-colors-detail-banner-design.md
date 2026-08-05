@@ -38,7 +38,7 @@ New file `home/presentation/src/main/java/com/gondroid/home/presentation/Categor
 ```kotlin
 data class CategoryColorScheme(val container: Color, val content: Color)
 
-fun categoryColors(category: String): CategoryColorScheme
+fun categoryColors(category: String, fallback: CategoryColorScheme): CategoryColorScheme
 ```
 
 Unknown category codes fall back to
