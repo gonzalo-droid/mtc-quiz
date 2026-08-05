@@ -38,7 +38,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -226,7 +225,6 @@ fun EvaluationScreen(
                     CardQuestion(
                         modifier = Modifier.fillMaxWidth(),
                         title = "${state.question.id}.- ${state.question.title}",
-                        image = painterResource(id = R.drawable.card_background),
                         questionImages = state.question.imagens,
                     )
                     Spacer(modifier = Modifier.height(8.dp))
