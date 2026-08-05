@@ -289,8 +289,19 @@ fun CardCategoryItem(
 
     val pageOffSet = (pagerState.currentPage - index) + pagerState.currentPageOffsetFraction
 
+    val colors = categoryColors(
+        category = item.category,
+        fallback = CategoryColorScheme(
+            container = MaterialTheme.colorScheme.primary,
+            content = MaterialTheme.colorScheme.onPrimary,
+        ),
+    )
+
     Card(
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
+        colors = CardDefaults.cardColors(
+            containerColor = colors.container,
+            contentColor = colors.content,
+        ),
         modifier = Modifier
             .height(400.dp)
             .graphicsLayer {
@@ -320,14 +331,14 @@ fun CardCategoryItem(
                 Text(
                     text = item.classType,
                     fontSize = 15.sp,
-                    color = MaterialTheme.colorScheme.onPrimary,
+                    color = colors.content,
                     modifier = Modifier.padding(horizontal = 16.dp),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                 )
                 Text(
                     text = item.category,
-                    color = MaterialTheme.colorScheme.onPrimary,
+                    color = colors.content,
                     modifier = Modifier
                         .padding(horizontal = 16.dp),
                     style = MaterialTheme.typography.displayLarge,
@@ -339,7 +350,7 @@ fun CardCategoryItem(
                     modifier = Modifier.padding(horizontal = 16.dp),
                     maxLines = 4,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onPrimary,
+                    color = colors.content,
                     overflow = TextOverflow.Ellipsis
                 )
             }
