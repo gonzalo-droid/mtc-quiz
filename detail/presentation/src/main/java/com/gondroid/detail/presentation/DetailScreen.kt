@@ -176,6 +176,9 @@ fun DetailScreen(
                 },
             )
         },
+        bottomBar = {
+            BannerAdSlot(bannerAdId = bannerAdId, isPremium = state.isPremium)
+        },
     ) { paddingValues ->
         Column(
             modifier =
@@ -230,8 +233,6 @@ fun DetailScreen(
                 onGoToQuestions = { onAction(DetailAction.GoToQuestions(state.category.id)) },
                 onShowPdf = { onAction(DetailAction.ShowPDF(state.category.id)) }
             )
-
-            BannerAdSlot(bannerAdId = bannerAdId, isPremium = state.isPremium)
         }
 
     }

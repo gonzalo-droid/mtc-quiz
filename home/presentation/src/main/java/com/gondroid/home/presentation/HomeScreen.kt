@@ -133,6 +133,9 @@ fun HomeScreen(
                 },
             )
         },
+        bottomBar = {
+            BannerAdSlot(bannerAdId = bannerAdId, isPremium = state.isPremium)
+        },
     ) { paddingValues ->
         Column(
             modifier =
@@ -203,8 +206,6 @@ fun HomeScreen(
                         onAction(HomeAction.OnClickCategory(state.categories[index].id))
                     })
             }
-
-            BannerAdSlot(bannerAdId = bannerAdId, isPremium = state.isPremium)
 
         }
     }
