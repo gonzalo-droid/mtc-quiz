@@ -17,6 +17,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Book
@@ -48,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import com.gondroid.core.data.local.CardTypeEnum
 import com.gondroid.core.domain.model.Category
 import com.gondroid.core.presentation.designsystem.MTCQuizTheme
+import com.gondroid.core.presentation.ui.BannerAdSlot
 import com.gondroid.core.presentation.ui.ObserveAsEvents
 
 @Composable
@@ -99,6 +102,7 @@ fun DetailScreenRoot(
 
     DetailScreen(
         state = state,
+        bannerAdId = viewModel.bannerAdId,
         onAction = { action ->
             when (action) {
                 is DetailAction.Back -> navigateBack()
@@ -115,6 +119,7 @@ fun DetailScreenRoot(
 @Composable
 fun DetailScreen(
     state: DetailState,
+    bannerAdId: String,
     onAction: (DetailAction) -> Unit,
 ) {
     Scaffold(
@@ -173,7 +178,8 @@ fun DetailScreen(
             modifier =
                 Modifier
                     .padding(paddingValues)
-                    .padding(16.dp),
+                    .padding(16.dp)
+                    .verticalScroll(rememberScrollState()),
         ) {
             Row {
                 Column(
@@ -216,13 +222,13 @@ fun DetailScreen(
             )
 
 
-            Spacer(modifier = Modifier.weight(1f))
-
             ButtonsAction(
                 onGoToEvaluation = { onAction(DetailAction.GoToEvaluation(state.category.id)) },
                 onGoToQuestions = { onAction(DetailAction.GoToQuestions(state.category.id)) },
                 onShowPdf = { onAction(DetailAction.ShowPDF(state.category.id)) }
             )
+
+            BannerAdSlot(bannerAdId = bannerAdId, isPremium = state.isPremium)
         }
 
     }
@@ -304,6 +310,7 @@ fun PreviewDetailScreenRoot() {
                     pdf = "CLASE_A_I.pdf"
                 ),
             ),
+            bannerAdId = "test-banner-id",
             onAction = {}
         )
     }

@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.gondroid.core.data.ads.AdsManager
+import com.gondroid.core.data.billing.BillingManager
 import com.gondroid.core.domain.repository.QuizRepository
 import com.gondroid.core.presentation.ui.DetailScreenRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,10 +14,13 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import javax.inject.Named
 
 sealed interface DetailEvent {
     data class NavigateToEvaluation(val categoryId: String) : DetailEvent
@@ -29,7 +33,9 @@ class DetailScreenViewModel
 constructor(
     savedStateHandle: SavedStateHandle,
     private val repository: QuizRepository,
+    private val billingManager: BillingManager,
     val adsManager: AdsManager,
+    @Named("admobBannerId") val bannerAdId: String,
 ) : ViewModel() {
 
     private var _state = MutableStateFlow(DetailState())
@@ -50,6 +56,12 @@ constructor(
                 }
             }
         }
+
+        billingManager.isPremiumFlow.onEach { isPremium ->
+            _state.update {
+                it.copy(isPremium = isPremium)
+            }
+        }.launchIn(viewModelScope)
     }
 
     fun onStartEvaluation(categoryId: String) = viewModelScope.launch {
