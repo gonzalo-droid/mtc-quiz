@@ -24,7 +24,7 @@
             "answer": "d",
             "options": [
                 "a) Paso a desnivel",
-                "a) Paso a nivel",
+                "b) Paso a nivel",
                 "c) Paso Peatonal",
                 "d) Derecho de paso."
             ],
@@ -131,7 +131,7 @@
                 "a) Los conductores y los peatones están obligados a su obediencia solo cuando la Policía Nacional asignada al Tránsito lo indique.",
                 "b) Los conductores y los peatones están obligados a su obediencia, salvo instrucción en contrario de la Policía Nacional asignada al Tránsito.",
                 "c) Solo los conductores están obligados a su obediencia",
-                "c) Los conductores están obligados a su obediencia, sin excepción alguna."
+                "d) Los conductores están obligados a su obediencia, sin excepción alguna."
             ],
             "fundamento": "Articulo 38 del Código de Tránsito."
         },
@@ -293,7 +293,7 @@
             "title": "La señal vertical reglamentaria R-6 Prohibido voltear a la izquierda significa que:",
             "answer": "a",
             "options": [
-                "b) Está prohibido voltear a la izquierda, y por tanto también el giro en U",
+                "a) Está prohibido voltear a la izquierda, y por tanto también el giro en U",
                 "b) Está prohibido voltear a la izquierda, sin embargo, esta permitido el giro en U",
                 "c) No está permitido el giro a la izquierda con luz roja.",
                 "d) Ninguna de las anteriores."
@@ -2933,7 +2933,7 @@
                 "a) Solo Blanco",
                 "b) Solo Amarillo",
                 "c) Cualquier color siempre que no sean centellantes",
-                "c) Blanco o Amarillo"
+                "d) Blanco o Amarillo"
             ],
             "fundamento": "El numeral 1 del Anexo III del RNV, señala que la luz alumbrado interior es color Blanco y en la Nota 11 indica que las luces interiores de los vehículos no deben ser de colores distintos al blanco y en ningún caso podrán ser intermitentes, centellantes"
         },
