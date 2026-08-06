@@ -16,11 +16,11 @@ import javax.inject.Singleton
 class AdsManagerImpl @Inject constructor(
     private val prefs: AdsPreferences,
     @Named("admobInterstitialId") private val interstitialId: String,
-    private val billingManager: com.gondroid.core.data.billing.BillingManager,
+    private val premiumRepository: com.gondroid.core.domain.repository.PremiumRepository,
 ) : AdsManager {
 
     private val isPremium: Boolean
-        get() = (billingManager.isPremiumFlow as? kotlinx.coroutines.flow.StateFlow)?.value ?: false
+        get() = (premiumRepository.isPremiumFlow as? kotlinx.coroutines.flow.StateFlow)?.value ?: false
 
     private var interstitial: InterstitialAd? = null
     private var isLoading: Boolean = false

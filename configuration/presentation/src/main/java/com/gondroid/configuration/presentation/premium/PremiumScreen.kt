@@ -40,6 +40,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -62,6 +63,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.gondroid.core.domain.model.BillingPeriod
+import com.gondroid.core.domain.model.SubscriptionPlan
 import com.gondroid.core.presentation.designsystem.MTCQuizTheme
 
 private val premiumGold = Color(0xFFFFB300)
@@ -86,11 +89,25 @@ fun PremiumScreenRoot(
 ) {
     val isPremium by viewModel.isPremium.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
+    val availablePlans by viewModel.availablePlans.collectAsState()
+    val selectedPlan by viewModel.selectedPlan.collectAsState()
+    val restoreMessage by viewModel.restoreMessage.collectAsState()
     val activity = LocalContext.current as? Activity
+    val context = LocalContext.current
+
+    LaunchedEffect(restoreMessage) {
+        restoreMessage?.let {
+            android.widget.Toast.makeText(context, it, android.widget.Toast.LENGTH_LONG).show()
+            viewModel.clearRestoreMessage()
+        }
+    }
 
     PremiumScreen(
         isPremium = isPremium,
         isLoading = isLoading,
+        availablePlans = availablePlans,
+        selectedPlan = selectedPlan,
+        onSelectPlan = viewModel::selectPlan,
         onSubscribe = { activity?.let { viewModel.subscribe(it) } },
         onRestore = { viewModel.restorePurchases() },
         navigateBack = navigateBack,
@@ -102,6 +119,9 @@ fun PremiumScreenRoot(
 fun PremiumScreen(
     isPremium: Boolean,
     isLoading: Boolean,
+    availablePlans: List<SubscriptionPlan>,
+    selectedPlan: SubscriptionPlan?,
+    onSelectPlan: (SubscriptionPlan) -> Unit,
     onSubscribe: () -> Unit,
     onRestore: () -> Unit,
     navigateBack: () -> Unit,
@@ -235,14 +255,27 @@ fun PremiumScreen(
                     )
                     Spacer(Modifier.height(8.dp))
 
-                    PlanCard(
-                        label = "Anual",
-                        price = "S/ 19.99",
-                        period = "/año",
-                        badge = "Mejor valor",
-                        selected = true,
-                        onClick = { },
-                    )
+                    if (availablePlans.isEmpty()) {
+                        Text(
+                            text = "No hay planes disponibles en este momento. Intenta más tarde.",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = Color.White.copy(alpha = 0.6f),
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                    } else {
+                        availablePlans.forEach { plan ->
+                            PlanCard(
+                                label = if (plan.billingPeriod == BillingPeriod.MONTHLY) "Mensual" else "Anual",
+                                price = plan.formattedPrice,
+                                period = if (plan.billingPeriod == BillingPeriod.MONTHLY) "/mes" else "/año",
+                                badge = if (plan.billingPeriod == BillingPeriod.ANNUAL) "Mejor valor" else null,
+                                selected = plan == selectedPlan,
+                                onClick = { onSelectPlan(plan) },
+                            )
+                            Spacer(Modifier.height(8.dp))
+                        }
+                    }
 
                     Spacer(Modifier.height(24.dp))
 
@@ -252,7 +285,7 @@ fun PremiumScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(56.dp),
-                        enabled = !isLoading,
+                        enabled = !isLoading && selectedPlan != null,
                         shape = RoundedCornerShape(16.dp),
                         color = Color.Transparent,
                     ) {
@@ -475,10 +508,15 @@ private fun BenefitItem(icon: ImageVector, title: String, subtitle: String) {
 @Preview(showBackground = true)
 @Composable
 fun PremiumScreenPreview() {
+    val monthly = SubscriptionPlan("mtcquiz_premium_monthly", BillingPeriod.MONTHLY, "S/ 9.90")
+    val annual = SubscriptionPlan("mtcquiz_premium_annual", BillingPeriod.ANNUAL, "S/ 29.90")
     MTCQuizTheme {
         PremiumScreen(
             isPremium = false,
             isLoading = false,
+            availablePlans = listOf(monthly, annual),
+            selectedPlan = annual,
+            onSelectPlan = {},
             onSubscribe = {},
             onRestore = {},
             navigateBack = {},
@@ -493,6 +531,9 @@ fun PremiumScreenAlreadyPremiumPreview() {
         PremiumScreen(
             isPremium = true,
             isLoading = false,
+            availablePlans = emptyList(),
+            selectedPlan = null,
+            onSelectPlan = {},
             onSubscribe = {},
             onRestore = {},
             navigateBack = {},

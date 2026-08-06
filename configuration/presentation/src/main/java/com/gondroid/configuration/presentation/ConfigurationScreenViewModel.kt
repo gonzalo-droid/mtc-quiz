@@ -3,9 +3,9 @@ package com.gondroid.configuration.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gondroid.core.data.billing.BillingManager
 import com.gondroid.core.domain.repository.AuthRepository
 import com.gondroid.core.domain.repository.PreferenceRepository
+import com.gondroid.core.domain.repository.PremiumRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,7 +23,7 @@ class ConfigurationScreenViewModel
 @Inject constructor(
     private val repository: AuthRepository,
     private val preferenceRepository: PreferenceRepository,
-    private val billingManager: BillingManager,
+    private val premiumRepository: PremiumRepository,
 ) : ViewModel() {
 
     private var _state = MutableStateFlow(ConfigurationState())
@@ -45,7 +45,7 @@ class ConfigurationScreenViewModel
             }
             .launchIn(viewModelScope)
 
-        billingManager.isPremiumFlow
+        premiumRepository.isPremiumFlow
             .onEach { isPremium ->
                 _state.update { it.copy(isPremium = isPremium) }
             }

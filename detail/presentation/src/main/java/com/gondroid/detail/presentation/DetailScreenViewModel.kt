@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.gondroid.core.data.ads.AdsManager
-import com.gondroid.core.data.billing.BillingManager
+import com.gondroid.core.domain.repository.PremiumRepository
 import com.gondroid.core.domain.repository.QuizRepository
 import com.gondroid.core.presentation.ui.DetailScreenRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,7 +33,7 @@ class DetailScreenViewModel
 constructor(
     savedStateHandle: SavedStateHandle,
     private val repository: QuizRepository,
-    private val billingManager: BillingManager,
+    private val premiumRepository: PremiumRepository,
     val adsManager: AdsManager,
     @Named("admobBannerId") val bannerAdId: String,
 ) : ViewModel() {
@@ -57,7 +57,7 @@ constructor(
             }
         }
 
-        billingManager.isPremiumFlow.onEach { isPremium ->
+        premiumRepository.isPremiumFlow.onEach { isPremium ->
             _state.update {
                 it.copy(isPremium = isPremium)
             }

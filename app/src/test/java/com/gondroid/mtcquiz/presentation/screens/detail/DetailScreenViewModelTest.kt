@@ -1,11 +1,11 @@
 package com.gondroid.mtcquiz.presentation.screens.detail
 
-import android.app.Activity
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import com.gondroid.core.data.ads.AdsManager
-import com.gondroid.core.data.billing.BillingManager
+import com.gondroid.core.domain.model.SubscriptionPlan
+import com.gondroid.core.domain.repository.PremiumRepository
 import com.gondroid.detail.presentation.DetailEvent
 import com.gondroid.detail.presentation.DetailScreenViewModel
 import com.gondroid.mtcquiz.presentation.screens.QuizRepositoryFake
@@ -37,9 +37,10 @@ class DetailScreenViewModelTest {
         isPremium: Boolean = false,
         categoryId: String = "1",
     ): DetailScreenViewModel {
-        val billingManager = object : BillingManager {
+        val premiumRepository = object : PremiumRepository {
             override val isPremiumFlow: Flow<Boolean> = flowOf(isPremium)
-            override suspend fun launchSubscription(activity: Activity): Boolean = false
+            override val availablePlansFlow: Flow<List<SubscriptionPlan>> = flowOf(emptyList())
+            override suspend fun loadAvailablePlans() = Unit
             override suspend fun refreshPurchaseState() = Unit
             override suspend fun restorePurchases() = Unit
         }
@@ -47,7 +48,7 @@ class DetailScreenViewModelTest {
         return DetailScreenViewModel(
             savedStateHandle = savedStateHandle,
             repository = QuizRepositoryFake(),
-            billingManager = billingManager,
+            premiumRepository = premiumRepository,
             adsManager = adsManager,
             bannerAdId = "test-banner-id",
         )
@@ -71,9 +72,10 @@ class DetailScreenViewModelTest {
     @Test
     fun `state reflects isPremium changes from BillingManager flow emissions`() = runTest {
         val isPremiumFlow = MutableStateFlow(true)
-        val billingManager = object : BillingManager {
+        val premiumRepository = object : PremiumRepository {
             override val isPremiumFlow: Flow<Boolean> = isPremiumFlow
-            override suspend fun launchSubscription(activity: Activity): Boolean = false
+            override val availablePlansFlow: Flow<List<SubscriptionPlan>> = flowOf(emptyList())
+            override suspend fun loadAvailablePlans() = Unit
             override suspend fun refreshPurchaseState() = Unit
             override suspend fun restorePurchases() = Unit
         }
@@ -81,7 +83,7 @@ class DetailScreenViewModelTest {
         val vm = DetailScreenViewModel(
             savedStateHandle = savedStateHandle,
             repository = QuizRepositoryFake(),
-            billingManager = billingManager,
+            premiumRepository = premiumRepository,
             adsManager = adsManager,
             bannerAdId = "test-banner-id",
         )

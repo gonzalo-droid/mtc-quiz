@@ -1,9 +1,9 @@
 package com.gondroid.mtcquiz.presentation.screens.home
 
-import android.app.Activity
 import app.cash.turbine.test
-import com.gondroid.core.data.billing.BillingManager
 import com.gondroid.core.domain.model.Category
+import com.gondroid.core.domain.model.SubscriptionPlan
+import com.gondroid.core.domain.repository.PremiumRepository
 import com.gondroid.home.presentation.HomeScreenViewModel
 import com.gondroid.mtcquiz.presentation.screens.PreferenceRepositoryFake
 import com.gondroid.mtcquiz.presentation.screens.QuizRepositoryFake
@@ -31,9 +31,10 @@ class HomeScreenViewModelTest {
     private lateinit var repository: QuizRepositoryFake
     private lateinit var preferenceRepository: PreferenceRepositoryFake
 
-    private val fakeBillingManager = object : BillingManager {
+    private val fakePremiumRepository = object : PremiumRepository {
         override val isPremiumFlow: Flow<Boolean> = flowOf(false)
-        override suspend fun launchSubscription(activity: Activity): Boolean = false
+        override val availablePlansFlow: Flow<List<SubscriptionPlan>> = flowOf(emptyList())
+        override suspend fun loadAvailablePlans() = Unit
         override suspend fun refreshPurchaseState() = Unit
         override suspend fun restorePurchases() = Unit
     }
@@ -45,7 +46,7 @@ class HomeScreenViewModelTest {
         viewModel = HomeScreenViewModel(
             repository = repository,
             preferenceRepository = preferenceRepository,
-            billingManager = fakeBillingManager,
+            premiumRepository = fakePremiumRepository,
             bannerAdId = "test-banner-id"
         )
     }

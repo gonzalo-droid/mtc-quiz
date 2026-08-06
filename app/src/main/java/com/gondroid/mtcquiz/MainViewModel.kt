@@ -3,8 +3,8 @@ package com.gondroid.mtcquiz
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gondroid.core.data.billing.BillingManager
 import com.gondroid.core.domain.repository.PreferenceRepository
+import com.gondroid.core.domain.repository.PremiumRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -21,7 +21,7 @@ class MainViewModel
 @Inject
 constructor(
     private val preferenceRepository: PreferenceRepository,
-    private val billingManager: BillingManager,
+    private val premiumRepository: PremiumRepository,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(AuthState())
@@ -33,7 +33,7 @@ constructor(
     val themeMode = preferenceRepository.themeModeFlow
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "system")
 
-    val isPremium = billingManager.isPremiumFlow
+    val isPremium = premiumRepository.isPremiumFlow
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
 
     val isOnboardingShown = preferenceRepository.isOnboardingShownFlow
@@ -56,7 +56,7 @@ constructor(
         }.launchIn(viewModelScope)
 
         viewModelScope.launch {
-            billingManager.refreshPurchaseState()
+            premiumRepository.refreshPurchaseState()
         }
     }
 }
