@@ -3,7 +3,6 @@ package com.gondroid.home.presentation
 
 import android.Manifest
 import androidx.annotation.RequiresPermission
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -41,7 +40,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -51,6 +49,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
+import coil3.compose.AsyncImage
 import com.gondroid.core.data.local.CardTypeEnum
 import com.gondroid.core.domain.model.Category
 import com.gondroid.core.presentation.designsystem.MTCQuizTheme
@@ -287,8 +286,8 @@ fun CardCategoryItem(
                 )
             }
 
-            Image(
-                painter = painterResource(id = item.image?:R.drawable.a1_card),
+            AsyncImage(
+                model = "file:///android_asset/anim/${item.examId}_card.png",
                 contentDescription = "image_category",
                 modifier = Modifier.align(Alignment.BottomEnd),
                 contentScale = ContentScale.Fit

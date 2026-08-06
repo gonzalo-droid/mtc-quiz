@@ -9,4 +9,7 @@ data class Category(
     val image: Int? = null,
     val pdf: String = "",
     val pathJson: String = "",
-)
+) {
+    val examId: String
+        get() = pathJson.removeSuffix("_questions.json")
+}
