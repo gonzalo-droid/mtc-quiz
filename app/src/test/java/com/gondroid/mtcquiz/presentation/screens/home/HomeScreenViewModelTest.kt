@@ -62,7 +62,6 @@ class HomeScreenViewModelTest {
                 category = "A-I",
                 classType = "A",
                 description = "Es el más común y te permite manejar carros como sedanes, coupé , hatchback, convertibles, station wagon, SUV, Areneros, Pickup y furgones. Es necesaria para obtener las demás licencias de Clase A.",
-                image = null,
                 pdf = "CLASE_A_I.pdf"
             ),
             Category(
@@ -71,7 +70,6 @@ class HomeScreenViewModelTest {
                 category = "A-IIa",
                 classType = "A",
                 description = "Los mismos que A-1 y también carros oficiales de transporte de pasajeros como Taxis, Buses, Ambulancias y Transporte Interprovincial. Primero debes obtener la Licencia A-I",
-                image = null,
                 pdf = "CLASE_A_I.pdf"
             ),
         )

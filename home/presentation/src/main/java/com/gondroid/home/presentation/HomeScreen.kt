@@ -50,7 +50,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
 import coil3.compose.AsyncImage
-import com.gondroid.core.data.local.CardTypeEnum
 import com.gondroid.core.domain.model.Category
 import com.gondroid.core.presentation.designsystem.MTCQuizTheme
 import com.gondroid.core.presentation.ui.BannerAdSlot
@@ -312,7 +311,6 @@ fun PreviewHomeScreenRoot() {
                         category = "A-I",
                         classType = "CLASS A",
                         description = "Es el más común y te permite manejar carros como sedanes, coupé , hatchback, convertibles, station wagon, SUV, Areneros, Pickup y furgones. Es necesaria para obtener las demás licencias de Clase A.",
-                        image = CardTypeEnum.A2A.drawable,
                         pdf = "CLASE_A_I.pdf"
                     ),
                     Category(
@@ -321,7 +319,6 @@ fun PreviewHomeScreenRoot() {
                         category = "A-IIa",
                         classType = "CLASS A",
                         description = "Los mismos que A-1 y también carros oficiales de transporte de pasajeros como Taxis, Buses, Ambulancias y Transporte Interprovincial. Primero debes obtener la Licencia A-I",
-                        image = CardTypeEnum.A1.drawable,
                         pdf = "CLASE_A_I.pdf"
                     )
                 )

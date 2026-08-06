@@ -462,8 +462,7 @@ fun PreviewEvaluationScreenRoot() {
         EvaluationScreen(
             state = EvaluationState(
                 questions = listOf(question), question = question, category = Category(
-                    title = "CLASE A - CATEGORIA I",
-                    image = R.drawable.card_background
+                    title = "CLASE A - CATEGORIA I"
                 )
             ), onAction = {}, showCancelDialog = false
         )

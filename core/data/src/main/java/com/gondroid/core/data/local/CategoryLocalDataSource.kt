@@ -16,7 +16,6 @@ val categoriesLocalDataSource = listOf(
         category = "A-I",
         classType = CLASS_A,
         description = "Es el más común y te permite manejar carros como sedanes, coupé , hatchback, convertibles, station wagon, SUV, Areneros, Pickup y furgones. Es necesaria para obtener las demás licencias de Clase A.",
-        image = CardTypeEnum.A1.drawable,
         pdf = "CLASE_A_I.pdf",
         pathJson = "a1_questions.json"
     ),
@@ -26,7 +25,6 @@ val categoriesLocalDataSource = listOf(
         category = "A-IIa",
         classType = CLASS_A,
         description = "Los mismos que A-1 y también carros oficiales de transporte de pasajeros como Taxis, Buses, Ambulancias y Transporte Interprovincial. Primero debes obtener la Licencia A-I",
-        image = CardTypeEnum.A1.drawable,
         pdf = "CLASE_A_IIA.pdf",
         pathJson = "a2a_questions.json"
     ),
@@ -36,7 +34,6 @@ val categoriesLocalDataSource = listOf(
         category = "A-IIb",
         classType = CLASS_A,
         description = "Los mismos que A-1, A-IIa y también Microbuses de hasta 16 asientos y 4 toneladas de peso bruto y Minibuses hasta 33 asientos y 7 toneladas de peso bruto. Primero debes obtener la Licencia A-I",
-        image = CardTypeEnum.A1.drawable,
         pdf = "CLASE_A_IIB.pdf",
         pathJson = "a2b_questions.json"
     ),
@@ -46,7 +43,6 @@ val categoriesLocalDataSource = listOf(
         category = "A-IIIa",
         classType = CLASS_A,
         description = " Los mismos que A-I, A-IIa y AIIb y también vehiculos con más de 6 toneladas como omnibuses urbanos, interurbanos, panorámicos y articulados. Primero debes obtener la Licencia A-I",
-        image = CardTypeEnum.A1.drawable,
         pdf = "CLASE_A_IIIA.pdf",
         pathJson = "a3a_questions.json"
     ),
@@ -56,7 +52,6 @@ val categoriesLocalDataSource = listOf(
         category = "A-IIIb",
         classType = CLASS_A,
         description = "Los mismos que A-I, A-IIa y A-IIb (pero no A-IIIa) y también vehículos de chasis cabinado, remolques, gruas, cargobus, plataforma, baranda y volquetes. Primero debes obtener la Licencia A-I.",
-        image = CardTypeEnum.A1.drawable,
         pdf = "CLASE_A_IIIB.pdf",
         pathJson = "a3b_questions.json"
     ),
@@ -66,7 +61,6 @@ val categoriesLocalDataSource = listOf(
         category = "A-IIIc",
         classType = CLASS_A,
         description = "Los mismos que A-I, A-IIa, AIIb, A-IIIa y A-IIIb. Primero debes obtener la Licencia A-I.",
-        image = CardTypeEnum.A1.drawable,
         pdf = "CLASE_A_IIIC.pdf",
         pathJson = "a3c_questions.json"
     ),
@@ -82,7 +76,6 @@ val categoriesLocalDataSource = listOf(
         category = "B-IIa",
         classType = CLASS_B,
         description = "Bicimotos para transportar pasajeros o mercancías.",
-        image = CardTypeEnum.A1.drawable,
         pdf = "CLASE_B_IIA.pdf",
         pathJson = "b2a_questions.json"
     ),
@@ -92,7 +85,6 @@ val categoriesLocalDataSource = listOf(
         category = "B-IIb",
         classType = CLASS_B,
         description = "Los mismos que B-IIa y también Motocicletas (2 ruedas) o Motocicletas con Sidecar (3 ruedas) para transportar pasajeros o mercancías.",
-        image = CardTypeEnum.A1.drawable,
         pdf = "CLASE_B_IIB.pdf",
         pathJson = "b2b_questions.json"
     ),
@@ -102,7 +94,6 @@ val categoriesLocalDataSource = listOf(
         category = "B-IIc",
         classType = CLASS_B,
         description = "Los mismos que B-IIa y B-IIb y también Mototaxis y Trimotos (3 ruedas) destinadas al transporte de pasajeros",
-        image = CardTypeEnum.A1.drawable,
         pdf = "CLASE_B_IIC.pdf",
         pathJson = "b2c_questions.json"
     ),
