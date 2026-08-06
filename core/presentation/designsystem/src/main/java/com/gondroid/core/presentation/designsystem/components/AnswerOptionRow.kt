@@ -18,10 +18,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.gondroid.core.presentation.designsystem.MTCQuizTheme
+import com.gondroid.core.presentation.designsystem.R
 import com.gondroid.core.presentation.designsystem.extendedColors
 
 enum class AnswerOptionState {
@@ -117,14 +119,14 @@ fun AnswerOptionRow(
         when (state) {
             AnswerOptionState.RevealedCorrect, AnswerOptionState.CorrectAnswerHint -> Icon(
                 imageVector = Icons.Filled.Check,
-                contentDescription = "correct",
+                contentDescription = stringResource(R.string.answer_correct),
                 tint = colors.content,
                 modifier = Modifier.size(18.dp),
             )
 
             AnswerOptionState.RevealedIncorrect -> Icon(
                 imageVector = Icons.Filled.Close,
-                contentDescription = "incorrect",
+                contentDescription = stringResource(R.string.answer_incorrect),
                 tint = colors.content,
                 modifier = Modifier.size(18.dp),
             )
