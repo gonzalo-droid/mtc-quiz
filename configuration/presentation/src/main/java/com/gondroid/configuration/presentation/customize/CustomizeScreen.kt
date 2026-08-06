@@ -142,13 +142,13 @@ fun CustomizeScreen(
                         value = timeToFinishEvaluation,
                         label = stringResource(R.string.time_to_evaluation),
                         subLabel = "1 - 1000",
+                        isError = timeToFinishEvaluation.isNotBlank() &&
+                            (timeToFinishEvaluation.toIntOrNull() == null || timeToFinishEvaluation.toIntOrNull() !in 1..1000),
+                        errorMessage = "Debe ser un número entre 1 y 1000",
                         modifier = Modifier.fillMaxWidth()
                     ) { newValue ->
-                        val valueInt = newValue.toIntOrNull()
-                        if (valueInt != null && valueInt in 1..1000) {
+                        if (newValue.all { it.isDigit() }) {
                             timeToFinishEvaluation = newValue
-                        } else if (newValue.isEmpty()) {
-                            timeToFinishEvaluation = ""
                         }
                     }
 
@@ -158,13 +158,13 @@ fun CustomizeScreen(
                         value = numberQuestions,
                         label = stringResource(R.string.number_of_question_to_evaluation),
                         subLabel = "1 - 1000",
+                        isError = numberQuestions.isNotBlank() &&
+                            (numberQuestions.toIntOrNull() == null || numberQuestions.toIntOrNull() !in 1..1000),
+                        errorMessage = "Debe ser un número entre 1 y 1000",
                         modifier = Modifier.fillMaxWidth(),
                     ) { newValue ->
-                        val valueInt = newValue.toIntOrNull()
-                        if (valueInt != null && valueInt in 1..1000) {
+                        if (newValue.all { it.isDigit() }) {
                             numberQuestions = newValue
-                        } else if (newValue.isEmpty()) {
-                            numberQuestions = ""
                         }
                     }
 
@@ -174,14 +174,13 @@ fun CustomizeScreen(
                         value = percentageToApprovedEvaluation,
                         label = stringResource(R.string.percentage_approbe_to_evaluation),
                         subLabel = "1 - 100 (%)",
+                        isError = percentageToApprovedEvaluation.isNotBlank() &&
+                            (percentageToApprovedEvaluation.toIntOrNull() == null || percentageToApprovedEvaluation.toIntOrNull() !in 1..100),
+                        errorMessage = "Debe ser un número entre 1 y 100",
                         modifier = Modifier.fillMaxWidth(),
                     ) { newValue ->
-                        val valueInt = newValue.toIntOrNull()
-                        if (valueInt != null && valueInt in 1..100) {
+                        if (newValue.all { it.isDigit() }) {
                             percentageToApprovedEvaluation = newValue
-                        } else if (newValue.isEmpty()) {
-                            percentageToApprovedEvaluation = ""
-
                         }
                     }
                 }
@@ -189,7 +188,9 @@ fun CustomizeScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
             ButtonsAction(
-                enabled = numberQuestions.isNotBlank() && timeToFinishEvaluation.isNotBlank() && percentageToApprovedEvaluation.isNotBlank(),
+                enabled = timeToFinishEvaluation.toIntOrNull()?.let { it in 1..1000 } == true &&
+                    numberQuestions.toIntOrNull()?.let { it in 1..1000 } == true &&
+                    percentageToApprovedEvaluation.toIntOrNull()?.let { it in 1..100 } == true,
                 modifier = Modifier
                     .fillMaxWidth(),
                 updateData = {
@@ -212,6 +213,8 @@ fun ItemField(
     subLabel: String = "",
     modifier: Modifier,
     value: String,
+    isError: Boolean = false,
+    errorMessage: String = "",
     onValueChange: (String) -> Unit
 ) {
 
@@ -226,6 +229,7 @@ fun ItemField(
         onValueChange = { newValue ->
             onValueChange(newValue)
         },
+        isError = isError || value.isBlank(),
         maxLines = 1,
         singleLine = true,
         keyboardOptions = KeyboardOptions.Default.copy(
@@ -233,14 +237,18 @@ fun ItemField(
             imeAction = ImeAction.Done
         ),
     )
-    if (value.isBlank()) {
-        Text(
+    when {
+        value.isBlank() -> Text(
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.error,
             text = "Debe ingresar un valor"
         )
-    } else {
-        Text(
+        isError -> Text(
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.error,
+            text = errorMessage
+        )
+        else -> Text(
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.primary,
             text = subLabel
