@@ -234,15 +234,6 @@ fun CardCategoryItem(
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold
                 )
-                Spacer(modifier = Modifier.height(6.dp))
-                Text(
-                    text = item.description,
-                    maxLines = 3,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = colors.content,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.fillMaxWidth(0.68f),
-                )
             }
 
             AsyncImage(
