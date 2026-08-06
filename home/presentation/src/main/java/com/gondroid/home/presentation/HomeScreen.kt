@@ -175,15 +175,6 @@ fun HomeScreen(
 
             Spacer(modifier = Modifier.height(30.dp))
 
-            Text(
-                modifier = Modifier
-                    .padding(16.dp),
-                text = stringResource(R.string.selected_category),
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.primary,
-                fontWeight = FontWeight.Bold
-            )
-
             state.categories.forEach { category ->
                 CardCategoryItem(
                     item = category,
