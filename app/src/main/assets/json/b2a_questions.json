@@ -188,8 +188,8 @@
             "title": "Cuál de la siguiente señal vertical es informativa: [ver imagen en PDF]",
             "options": [
                 "a) Señal con distancias a Lurín/ICA (informativa de ruta)",
-                "b) Señal con figura de motocicleta (preventiva)",
-                "c) Señal de imagen no identificada",
+                "b) Señal de NO VOLTEAR A LA IZQUIERDA (reguladora)",
+                "c) Señal preventiva de reductor de velocidad",
                 "d) Ninguna de las anteriores"
             ],
             "answer": "a",
@@ -207,9 +207,9 @@
             "topic": "Obligaciones del conductor en materia de tránsito terrestre",
             "title": "Cuál de la siguiente señal vertical es preventiva: [ver imagen en PDF]",
             "options": [
-                "a) Señal preventiva curva a la derecha",
+                "a) Señal preventiva de camino sinuoso (curvas en S)",
                 "b) Señal de NO CAMIONES (reguladora)",
-                "c) Señal preventiva animales en la vía",
+                "c) Señal preventiva de ciclistas en pendiente",
                 "d) La a y c son correctas."
             ],
             "answer": "d",
@@ -227,9 +227,9 @@
             "topic": "Obligaciones del conductor en materia de tránsito terrestre",
             "title": "Cuál de la siguiente señal vertical es reguladora o de reglamentación: [ver imagen en PDF]",
             "options": [
-                "a) Señal de giro prohibido (reguladora)",
-                "b) Señal SALIDA 38 / PIUCUSANA (informativa)",
-                "c) Señal de ceda el paso reguladora (con flecha)",
+                "a) Señal de prohibido el paso a motocicletas (reguladora)",
+                "b) Señal SALIDA 58 / PUCUSANA (informativa)",
+                "c) Señal de MANTENGA SU DERECHA / prohibido adelantar (reguladora)",
                 "d) Solo la b es incorrecta"
             ],
             "answer": "d",
