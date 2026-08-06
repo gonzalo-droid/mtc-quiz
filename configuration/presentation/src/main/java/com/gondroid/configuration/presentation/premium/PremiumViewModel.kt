@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -69,7 +70,8 @@ class PremiumViewModel @Inject constructor(
         _isLoading.value = true
         premiumRepository.restorePurchases()
         _isLoading.value = false
-        _restoreMessage.value = if (isPremium.value) {
+        val restored = premiumRepository.isPremiumFlow.first()
+        _restoreMessage.value = if (restored) {
             "Compra restaurada correctamente"
         } else {
             "No se encontró ninguna suscripción activa"

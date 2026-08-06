@@ -255,16 +255,26 @@ fun PremiumScreen(
                     )
                     Spacer(Modifier.height(8.dp))
 
-                    availablePlans.forEach { plan ->
-                        PlanCard(
-                            label = if (plan.billingPeriod == BillingPeriod.MONTHLY) "Mensual" else "Anual",
-                            price = plan.formattedPrice,
-                            period = if (plan.billingPeriod == BillingPeriod.MONTHLY) "/mes" else "/año",
-                            badge = if (plan.billingPeriod == BillingPeriod.ANNUAL) "Mejor valor" else null,
-                            selected = plan == selectedPlan,
-                            onClick = { onSelectPlan(plan) },
+                    if (availablePlans.isEmpty()) {
+                        Text(
+                            text = "No hay planes disponibles en este momento. Intenta más tarde.",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = Color.White.copy(alpha = 0.6f),
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth(),
                         )
-                        Spacer(Modifier.height(8.dp))
+                    } else {
+                        availablePlans.forEach { plan ->
+                            PlanCard(
+                                label = if (plan.billingPeriod == BillingPeriod.MONTHLY) "Mensual" else "Anual",
+                                price = plan.formattedPrice,
+                                period = if (plan.billingPeriod == BillingPeriod.MONTHLY) "/mes" else "/año",
+                                badge = if (plan.billingPeriod == BillingPeriod.ANNUAL) "Mejor valor" else null,
+                                selected = plan == selectedPlan,
+                                onClick = { onSelectPlan(plan) },
+                            )
+                            Spacer(Modifier.height(8.dp))
+                        }
                     }
 
                     Spacer(Modifier.height(24.dp))
@@ -275,7 +285,7 @@ fun PremiumScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(56.dp),
-                        enabled = !isLoading,
+                        enabled = !isLoading && selectedPlan != null,
                         shape = RoundedCornerShape(16.dp),
                         color = Color.Transparent,
                     ) {

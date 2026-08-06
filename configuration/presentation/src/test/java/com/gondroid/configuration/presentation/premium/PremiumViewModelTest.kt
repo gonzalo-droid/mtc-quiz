@@ -84,4 +84,26 @@ class PremiumViewModelTest {
 
         coVerify { billingLauncher.launchSubscription(activity, "mtcquiz_premium_monthly") }
     }
+
+    @Test
+    fun `restorePurchases sets restored message when isPremiumFlow reflects true`() = runTest {
+        every { premiumRepository.isPremiumFlow } returns MutableStateFlow(true)
+        val vm = PremiumViewModel(premiumRepository, billingLauncher, analyticsManager)
+
+        vm.restorePurchases()
+
+        assertThat(vm.restoreMessage.value).isEqualTo("Compra restaurada correctamente")
+        coVerify { premiumRepository.restorePurchases() }
+    }
+
+    @Test
+    fun `restorePurchases sets not found message when isPremiumFlow reflects false`() = runTest {
+        every { premiumRepository.isPremiumFlow } returns MutableStateFlow(false)
+        val vm = PremiumViewModel(premiumRepository, billingLauncher, analyticsManager)
+
+        vm.restorePurchases()
+
+        assertThat(vm.restoreMessage.value).isEqualTo("No se encontró ninguna suscripción activa")
+        coVerify { premiumRepository.restorePurchases() }
+    }
 }
