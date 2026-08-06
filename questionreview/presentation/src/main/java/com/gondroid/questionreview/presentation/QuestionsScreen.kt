@@ -46,6 +46,7 @@ import com.gondroid.core.presentation.designsystem.components.AnswerOptionState
 import com.gondroid.core.presentation.designsystem.components.LinearProgressComponent
 import com.gondroid.core.presentation.designsystem.components.QuestionAnswerCard
 import com.gondroid.core.presentation.ui.normalizeText
+import com.gondroid.core.presentation.ui.stripOptionLetterPrefix
 
 
 @Composable
@@ -221,7 +222,7 @@ fun QuestionsScreen(
                                 } else {
                                     AnswerOptionState.Unselected
                                 }
-                                val cleanText = option.replaceFirst(Regex("^[a-dA-D]\\)\\s*"), "")
+                                val cleanText = option.stripOptionLetterPrefix()
                                 AnswerOption(letter = letter, text = cleanText, state = optionState)
                             },
                         )

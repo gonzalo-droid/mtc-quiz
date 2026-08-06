@@ -49,6 +49,7 @@ import com.gondroid.core.presentation.designsystem.components.AnswerOption
 import com.gondroid.core.presentation.designsystem.components.AnswerOptionState
 import com.gondroid.core.presentation.designsystem.components.LinearProgressComponent
 import com.gondroid.core.presentation.designsystem.components.QuestionAnswerCard
+import com.gondroid.core.presentation.ui.stripOptionLetterPrefix
 import com.gondroid.core.presentation.ui.toFormattedTime
 import kotlinx.coroutines.delay
 
@@ -238,7 +239,7 @@ fun EvaluationScreen(
                                 option == selectedOption -> AnswerOptionState.Selected
                                 else -> AnswerOptionState.Unselected
                             }
-                            val cleanText = option.replaceFirst(Regex("^[a-dA-D]\\)\\s*"), "")
+                            val cleanText = option.stripOptionLetterPrefix()
                             AnswerOption(letter = letter, text = cleanText, state = optionState)
                         },
                         onOptionClick = if (!state.answerWasSelected) {
