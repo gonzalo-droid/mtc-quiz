@@ -238,7 +238,8 @@ fun EvaluationScreen(
                                 option == selectedOption -> AnswerOptionState.Selected
                                 else -> AnswerOptionState.Unselected
                             }
-                            AnswerOption(letter = letter, text = option, state = optionState)
+                            val cleanText = option.replaceFirst(Regex("^[a-dA-D]\\)\\s*"), "")
+                            AnswerOption(letter = letter, text = cleanText, state = optionState)
                         },
                         onOptionClick = if (!state.answerWasSelected) {
                             { index -> selectedOption = state.question.options[index] }
