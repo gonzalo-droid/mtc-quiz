@@ -5,6 +5,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 
 private val lightScheme = lightColorScheme(
     primary = primaryLight,
@@ -88,10 +89,23 @@ fun MTCQuizTheme(
     content: @Composable () -> Unit,
 ) {
     val colorScheme = if (darkTheme) darkScheme else lightScheme
+    val extendedColors = if (darkTheme) {
+        ExtendedColors(
+            successContainer = successContainerDark,
+            onSuccessContainer = onSuccessContainerDark,
+        )
+    } else {
+        ExtendedColors(
+            successContainer = successContainerLight,
+            onSuccessContainer = onSuccessContainerLight,
+        )
+    }
 
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = AppTypography,
-        content = content,
-    )
+    CompositionLocalProvider(LocalExtendedColors provides extendedColors) {
+        MaterialTheme(
+            colorScheme = colorScheme,
+            typography = AppTypography,
+            content = content,
+        )
+    }
 }

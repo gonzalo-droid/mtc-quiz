@@ -9,6 +9,14 @@ fun String.normalizeText(): String {
         .lowercase() // Convierte a minúsculas
 }
 
+private val OPTION_LETTER_PREFIX = Regex("^[a-dA-D]\\)\\s*")
+
+/**
+ * Strips the leading letter prefix (e.g. "a) ") that raw [com.gondroid.core.domain.model.Question.options]
+ * strings embed, returning just the option's display text.
+ */
+fun String.stripOptionLetterPrefix(): String = replaceFirst(OPTION_LETTER_PREFIX, "")
+
 
 @SuppressLint("DefaultLocale")
 fun Int.toFormattedTime(): String {

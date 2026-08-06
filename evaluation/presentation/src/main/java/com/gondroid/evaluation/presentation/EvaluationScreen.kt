@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -46,9 +45,11 @@ import com.gondroid.core.domain.model.Category
 import com.gondroid.core.domain.model.Question
 import com.gondroid.core.domain.model.TypeActionQuestion
 import com.gondroid.core.presentation.designsystem.MTCQuizTheme
-import com.gondroid.core.presentation.designsystem.components.CardAnswer
-import com.gondroid.core.presentation.designsystem.components.CardQuestion
+import com.gondroid.core.presentation.designsystem.components.AnswerOption
+import com.gondroid.core.presentation.designsystem.components.AnswerOptionState
 import com.gondroid.core.presentation.designsystem.components.LinearProgressComponent
+import com.gondroid.core.presentation.designsystem.components.QuestionAnswerCard
+import com.gondroid.core.presentation.ui.stripOptionLetterPrefix
 import com.gondroid.core.presentation.ui.toFormattedTime
 import kotlinx.coroutines.delay
 
@@ -222,31 +223,31 @@ fun EvaluationScreen(
                 modifier = Modifier.weight(1f), verticalArrangement = Arrangement.Top
             ) {
                 item {
-                    CardQuestion(
+                    QuestionAnswerCard(
                         modifier = Modifier.fillMaxWidth(),
                         title = "${state.question.id}.- ${state.question.title}",
                         questionImages = state.question.imagens,
+                        options = state.question.options.mapIndexed { index, option ->
+                            val letter = ('a' + index).uppercaseChar().toString()
+                            val optionState = when {
+                                state.answerWasSelected -> when {
+                                    option == selectedOption && isCorrectAnswerSelected -> AnswerOptionState.RevealedCorrect
+                                    option == selectedOption && !isCorrectAnswerSelected -> AnswerOptionState.RevealedIncorrect
+                                    !isCorrectAnswerSelected && state.question.isCorrectAnswer(index) -> AnswerOptionState.CorrectAnswerHint
+                                    else -> AnswerOptionState.Unselected
+                                }
+                                option == selectedOption -> AnswerOptionState.Selected
+                                else -> AnswerOptionState.Unselected
+                            }
+                            val cleanText = option.stripOptionLetterPrefix()
+                            AnswerOption(letter = letter, text = cleanText, state = optionState)
+                        },
+                        onOptionClick = if (!state.answerWasSelected) {
+                            { index -> selectedOption = state.question.options[index] }
+                        } else {
+                            null
+                        },
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
-                }
-
-                item {
-                    Spacer(modifier = Modifier.weight(1f))
-                }
-
-                itemsIndexed(state.question.options) { index, option ->
-                    AnswerCard(
-                        state = state,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 8.dp),
-                        text = option,
-                        isCorrect = state.question.isCorrectAnswer(index),
-                        isSelected = selectedOption == option,
-                        isCorrectAnswerSelected = if (state.answerWasSelected) isCorrectAnswerSelected else null,
-                        onClick = {
-                            selectedOption = option
-                        })
                 }
             }
 
@@ -309,42 +310,6 @@ fun EvaluationScreen(
 
     }
 }
-
-@Composable
-fun AnswerCard(
-    state: EvaluationState,
-    text: String,
-    isCorrect: Boolean,
-    isSelected: Boolean,
-    isCorrectAnswerSelected: Boolean?,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit = {}
-) {
-    val (backgroundColor, borderColor) = when {
-        state.answerWasSelected -> when {
-            isSelected && isCorrect -> Color(0xFFC8E6C9) to Color(0xFF388E3C)
-            isSelected && !isCorrect -> Color(0xFFFFCDD2) to Color(0xFFD32F2F)
-            isCorrectAnswerSelected == false && isCorrect -> Color(0xFFC8E6C9) to Color(0xFF388E3C)
-            else -> Color.White to Color.Gray
-        }
-
-        isSelected -> MaterialTheme.colorScheme.secondary to MaterialTheme.colorScheme.secondary
-        else -> Color.White to Color.Gray
-    }
-
-    val textColor = if (isSelected && !state.answerWasSelected) Color.White else Color.Black
-
-    CardAnswer(
-        modifier = modifier.clickable(enabled = isCorrectAnswerSelected == null) {
-            onClick()
-        },
-        backgroundColor = backgroundColor,
-        borderColor = borderColor,
-        textColor = textColor,
-        text = text
-    )
-}
-
 
 @Composable
 fun ButtonsAction(
