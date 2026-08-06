@@ -41,9 +41,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.gondroid.core.domain.model.Question
 import com.gondroid.core.presentation.designsystem.MTCQuizTheme
-import com.gondroid.core.presentation.designsystem.components.CardAnswer
-import com.gondroid.core.presentation.designsystem.components.CardQuestion
+import com.gondroid.core.presentation.designsystem.components.AnswerOption
+import com.gondroid.core.presentation.designsystem.components.AnswerOptionState
 import com.gondroid.core.presentation.designsystem.components.LinearProgressComponent
+import com.gondroid.core.presentation.designsystem.components.QuestionAnswerCard
 import com.gondroid.core.presentation.ui.normalizeText
 
 
@@ -209,25 +210,23 @@ fun QuestionsScreen(
                         items = filteredItems,
                         key = { questions -> questions.id }
                     ) { question ->
-                        CardQuestion(
+                        QuestionAnswerCard(
                             modifier = Modifier.fillMaxWidth(),
                             title = "${question.id}.- ${question.title}",
                             questionImages = question.imagens,
+                            options = question.options.mapIndexed { index, option ->
+                                val letter = ('a' + index).uppercaseChar().toString()
+                                val optionState = if (question.isCorrectAnswer(index)) {
+                                    AnswerOptionState.RevealedCorrect
+                                } else {
+                                    AnswerOptionState.Unselected
+                                }
+                                val cleanText = option.replaceFirst(Regex("^[a-dA-D]\\)\\s*"), "")
+                                AnswerOption(letter = letter, text = cleanText, state = optionState)
+                            },
                         )
 
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        question.options.forEachIndexed { index, option ->
-                            ItemAnswerCard(
-                                text = option,
-                                isCorrectAnswer = question.isCorrectAnswer(index),
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(bottom = 8.dp)
-                            )
-                        }
-
-                        Spacer(modifier = Modifier.height(20.dp))
+                        Spacer(modifier = Modifier.height(16.dp))
                     }
 
                 }
@@ -236,25 +235,6 @@ fun QuestionsScreen(
 
         }
     }
-}
-
-
-@Composable
-fun ItemAnswerCard(
-    text: String,
-    isCorrectAnswer: Boolean,
-    modifier: Modifier = Modifier,
-) {
-    val backgroundColor = if (isCorrectAnswer) Color(0xFFC8E6C9) else Color.White
-
-    val borderColor = if (isCorrectAnswer) Color(0xFF388E3C) else Color.Gray
-
-    CardAnswer(
-        modifier = modifier,
-        backgroundColor = backgroundColor,
-        borderColor = borderColor,
-        text = text
-    )
 }
 
 
