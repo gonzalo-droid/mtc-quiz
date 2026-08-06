@@ -21,13 +21,12 @@ import com.android.billingclient.api.acknowledgePurchase
 import com.android.billingclient.api.queryProductDetails
 import com.android.billingclient.api.queryPurchasesAsync
 import com.gondroid.core.data.analytics.AnalyticsManager
+import com.gondroid.core.data.di.ApplicationScope
 import com.gondroid.core.domain.model.BillingPeriod
 import com.gondroid.core.domain.model.SubscriptionPlan
 import com.gondroid.core.domain.repository.PremiumRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -45,6 +44,7 @@ class PremiumRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context,
     private val dataStore: DataStore<Preferences>,
     private val analyticsManager: AnalyticsManager,
+    @ApplicationScope private val scope: CoroutineScope,
 ) : PremiumRepository, BillingLauncher {
 
     companion object {
@@ -53,8 +53,6 @@ class PremiumRepositoryImpl @Inject constructor(
         private val PRODUCT_IDS = listOf(PRODUCT_ID_MONTHLY, PRODUCT_ID_ANNUAL)
         val IS_PREMIUM_CACHED_KEY = booleanPreferencesKey("cached_is_premium")
     }
-
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     private val _isPremium = MutableStateFlow(false)
     override val isPremiumFlow: Flow<Boolean> = _isPremium.asStateFlow()

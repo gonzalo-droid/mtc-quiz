@@ -13,7 +13,8 @@ import io.mockk.mockk
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -46,12 +47,24 @@ class PremiumRepositoryImplTest {
     private lateinit var analyticsManager: AnalyticsManager
     private lateinit var repository: PremiumRepositoryImpl
 
+    /**
+     * [PremiumRepositoryImpl] takes its background [kotlinx.coroutines.CoroutineScope] as a
+     * constructor param (see the `@ApplicationScope` binding in `CoroutineScopeModule`) instead
+     * of building one internally, precisely so a test can hand it this [TestScope] — its
+     * fire-and-forget `scope.launch { ... }` calls (DataStore writes, cache-seeding in `init`)
+     * become children of this scope, and `testScope.runTest { advanceUntilIdle() }` can see and
+     * wait for them. A real `Dispatchers.IO`-backed scope built inside the class would be
+     * invisible to `advanceUntilIdle()` and make these two tests flaky/failing.
+     */
+    private val testDispatcher = StandardTestDispatcher()
+    private val testScope = TestScope(testDispatcher)
+
     @Before
     fun setUp() {
         context = mockk(relaxed = true)
         dataStore = FakeDataStore()
         analyticsManager = mockk(relaxed = true)
-        repository = PremiumRepositoryImpl(context, dataStore, analyticsManager)
+        repository = PremiumRepositoryImpl(context, dataStore, analyticsManager, testScope)
     }
 
     @Test
@@ -98,22 +111,22 @@ class PremiumRepositoryImplTest {
     }
 
     @Test
-    fun `isPremiumFlow seeds from cached DataStore value on init`() = runTest {
+    fun `isPremiumFlow seeds from cached DataStore value on init`() = testScope.runTest {
         dataStore.updateData { prefs ->
             prefs.toMutablePreferences().apply { this[PremiumRepositoryImpl.IS_PREMIUM_CACHED_KEY] = true }
         }
-        val seededRepository = PremiumRepositoryImpl(context, dataStore, analyticsManager)
+        val seededRepository = PremiumRepositoryImpl(context, dataStore, analyticsManager, testScope)
         advanceUntilIdle()
 
         assertThat((seededRepository.isPremiumFlow as kotlinx.coroutines.flow.StateFlow<Boolean>).value).isTrue()
     }
 
     @Test
-    fun `updateIsPremium writes through to DataStore`() = runTest {
+    fun `updateIsPremium writes through to DataStore`() = testScope.runTest {
         repository.updateIsPremium(true)
         advanceUntilIdle()
 
-        val cached = runBlocking { dataStore.data.first()[PremiumRepositoryImpl.IS_PREMIUM_CACHED_KEY] ?: false }
+        val cached = dataStore.data.first()[PremiumRepositoryImpl.IS_PREMIUM_CACHED_KEY] ?: false
         assertThat(cached).isTrue()
         assertThat((repository.isPremiumFlow as kotlinx.coroutines.flow.StateFlow<Boolean>).value).isTrue()
     }
