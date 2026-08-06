@@ -8,10 +8,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -115,9 +120,9 @@ fun CustomizeScreen(
     ) { paddingValues ->
         Column(
             modifier = Modifier
-                .fillMaxSize()
                 .padding(paddingValues)
-                .padding(16.dp),
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState()),
         ) {
             Text(
                 text = stringResource(R.string.custimize_setting),
@@ -125,61 +130,68 @@ fun CustomizeScreen(
                 color = MaterialTheme.colorScheme.onBackground,
                 fontWeight = FontWeight.Bold
             )
-            Spacer(modifier = Modifier.height(40.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
-            ItemField(
-                value = timeToFinishEvaluation,
-                label = stringResource(R.string.time_to_evaluation),
-                subLabel = "1 - 1000",
-                modifier = Modifier.fillMaxWidth()
-            ) { newValue ->
-                val valueInt = newValue.toIntOrNull()
-                if (valueInt != null && valueInt in 1..1000) {
-                    timeToFinishEvaluation = newValue
-                } else if (newValue.isEmpty()) {
-                    timeToFinishEvaluation = ""
-                }
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            ItemField(
-                value = numberQuestions,
-                label = stringResource(R.string.number_of_question_to_evaluation),
-                subLabel = "1 - 1000",
+            Card(
                 modifier = Modifier.fillMaxWidth(),
-            ) { newValue ->
-                val valueInt = newValue.toIntOrNull()
-                if (valueInt != null && valueInt in 1..1000) {
-                    numberQuestions = newValue
-                } else if (newValue.isEmpty()) {
-                    numberQuestions = ""
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
+                shape = RoundedCornerShape(16.dp),
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    ItemField(
+                        value = timeToFinishEvaluation,
+                        label = stringResource(R.string.time_to_evaluation),
+                        subLabel = "1 - 1000",
+                        modifier = Modifier.fillMaxWidth()
+                    ) { newValue ->
+                        val valueInt = newValue.toIntOrNull()
+                        if (valueInt != null && valueInt in 1..1000) {
+                            timeToFinishEvaluation = newValue
+                        } else if (newValue.isEmpty()) {
+                            timeToFinishEvaluation = ""
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    ItemField(
+                        value = numberQuestions,
+                        label = stringResource(R.string.number_of_question_to_evaluation),
+                        subLabel = "1 - 1000",
+                        modifier = Modifier.fillMaxWidth(),
+                    ) { newValue ->
+                        val valueInt = newValue.toIntOrNull()
+                        if (valueInt != null && valueInt in 1..1000) {
+                            numberQuestions = newValue
+                        } else if (newValue.isEmpty()) {
+                            numberQuestions = ""
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    ItemField(
+                        value = percentageToApprovedEvaluation,
+                        label = stringResource(R.string.percentage_approbe_to_evaluation),
+                        subLabel = "1 - 100 (%)",
+                        modifier = Modifier.fillMaxWidth(),
+                    ) { newValue ->
+                        val valueInt = newValue.toIntOrNull()
+                        if (valueInt != null && valueInt in 1..100) {
+                            percentageToApprovedEvaluation = newValue
+                        } else if (newValue.isEmpty()) {
+                            percentageToApprovedEvaluation = ""
+
+                        }
+                    }
                 }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            ItemField(
-                value = percentageToApprovedEvaluation,
-                label = stringResource(R.string.percentage_approbe_to_evaluation),
-                subLabel = "1 - 100 (%)",
-                modifier = Modifier.fillMaxWidth(),
-            ) { newValue ->
-                val valueInt = newValue.toIntOrNull()
-                if (valueInt != null && valueInt in 1..100) {
-                    percentageToApprovedEvaluation = newValue
-                } else if (newValue.isEmpty()) {
-                    percentageToApprovedEvaluation = ""
-
-                }
-            }
-
-            Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.height(32.dp))
             ButtonsAction(
                 enabled = numberQuestions.isNotBlank() && timeToFinishEvaluation.isNotBlank() && percentageToApprovedEvaluation.isNotBlank(),
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
+                    .fillMaxWidth(),
                 updateData = {
                     onAction(
                         CustomizeAction.UpdateValues(

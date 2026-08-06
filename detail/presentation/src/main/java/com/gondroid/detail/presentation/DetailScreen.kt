@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -26,8 +27,11 @@ import androidx.compose.material.icons.filled.Book
 import androidx.compose.material.icons.filled.DirectionsCar
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
@@ -139,21 +143,18 @@ fun DetailScreen(
                     )
                 },
                 navigationIcon = {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Back",
-                        tint = MaterialTheme.colorScheme.onBackground,
-                        modifier =
-                            Modifier
-                                .clickable {
-                                    onAction(
-                                        DetailAction.Back,
-                                    )
-                                }
-                                .semantics {
-                                    contentDescription = "back_button"
-                                },
-                    )
+                    IconButton(
+                        onClick = { onAction(DetailAction.Back) },
+                        modifier = Modifier.semantics {
+                            contentDescription = "back_button"
+                        },
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back",
+                            tint = MaterialTheme.colorScheme.onSurface,
+                        )
+                    }
                 },
                 actions = {
                     Box(
@@ -185,46 +186,55 @@ fun DetailScreen(
                     .padding(16.dp)
                     .verticalScroll(rememberScrollState()),
         ) {
-            Row {
-                Column(
-                    modifier = Modifier.weight(1f)
-                ) {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
+                shape = RoundedCornerShape(16.dp),
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Row {
+                        Column(
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text(
+                                modifier = Modifier,
+                                text = state.category.classType,
+                                color = MaterialTheme.colorScheme.primary,
+                                style = MaterialTheme.typography.titleMedium,
+                            )
+                            Text(
+                                text = state.category.category,
+                                modifier = Modifier,
+                                style = MaterialTheme.typography.displayLarge,
+                                color = MaterialTheme.colorScheme.primary,
+                                fontWeight = FontWeight.Bold,
+                            )
+                        }
+                        AsyncImage(
+                            model = "file:///android_asset/anim/${state.category.examId}_card.png",
+                            contentDescription = "card_background",
+                            modifier = Modifier.weight(1f),
+                            contentScale = ContentScale.Fit
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
                     Text(
                         modifier = Modifier,
-                        text = state.category.classType,
-                        color = MaterialTheme.colorScheme.primary,
-                        style = MaterialTheme.typography.titleMedium,
+                        text = state.category.description,
+                        style = MaterialTheme.typography.bodyLarge,
                     )
                     Text(
-                        text = state.category.category,
                         modifier = Modifier,
-                        style = MaterialTheme.typography.displayLarge,
-                        color = MaterialTheme.colorScheme.primary,
-                        fontWeight = FontWeight.Bold,
+                        text = "* Licencia de conducir para conductores no profesionales",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.secondary,
                     )
                 }
-                AsyncImage(
-                    model = "file:///android_asset/anim/${state.category.examId}_card.png",
-                    contentDescription = "card_background",
-                    modifier = Modifier.weight(1f),
-                    contentScale = ContentScale.Fit
-                )
             }
 
-            Spacer(modifier = Modifier.height(30.dp))
-
-            Text(
-                modifier = Modifier,
-                text = state.category.description,
-                style = MaterialTheme.typography.bodyLarge,
-            )
-            Text(
-                modifier = Modifier,
-                text = "* Licencia de conducir para conductores no profesionales",
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.secondary,
-            )
-
+            Spacer(modifier = Modifier.height(32.dp))
 
             ButtonsAction(
                 onGoToEvaluation = { onAction(DetailAction.GoToEvaluation(state.category.id)) },
