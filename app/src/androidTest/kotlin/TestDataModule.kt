@@ -1,7 +1,9 @@
 import android.content.Context
 import androidx.room.Room
-import com.gondroid.mtcquiz.data.di.DataModule
-import com.gondroid.mtcquiz.data.local.evaluation.EvaluationDao
+import com.gondroid.core.database.MTCDatabase
+import com.gondroid.core.database.dao.DismissedQuestionDao
+import com.gondroid.core.database.dao.EvaluationDao
+import com.gondroid.core.database.di.DataModule
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,5 +30,8 @@ object TestDataModule {
             .build()
 
     @Provides
-    fun provideEvaluationDao(database: MTCDatabase) : EvaluationDao = database.evaluationDao()
+    fun provideEvaluationDao(database: MTCDatabase): EvaluationDao = database.evaluationDao()
+
+    @Provides
+    fun provideDismissedQuestionDao(database: MTCDatabase): DismissedQuestionDao = database.dismissedQuestionDao()
 }

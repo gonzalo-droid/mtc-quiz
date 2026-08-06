@@ -152,6 +152,9 @@ dependencies {
     androidTestImplementation(libs.androidx.test.espresso.core)
     androidTestImplementation(libs.androidx.navigation.testing)
 
+    // Room Testing
+    androidTestImplementation(libs.room.runtime)
+    androidTestImplementation(libs.room.ktx)
 
     // Hilt Testing
     androidTestImplementation(libs.dagger.hilt.android.testing)
