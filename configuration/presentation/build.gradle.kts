@@ -27,4 +27,9 @@ dependencies {
 
     // In-App Review
     implementation(libs.play.review.ktx)
+
+    // Test
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.truth)
 }
