@@ -6,17 +6,14 @@ import androidx.annotation.RequiresPermission
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.PagerState
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -38,7 +35,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
@@ -48,12 +44,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.util.lerp
 import coil3.compose.AsyncImage
 import com.gondroid.core.domain.model.Category
 import com.gondroid.core.presentation.designsystem.MTCQuizTheme
 import com.gondroid.core.presentation.ui.BannerAdSlot
-import kotlin.math.absoluteValue
 
 
 @RequiresPermission(Manifest.permission.INTERNET)
@@ -190,19 +184,17 @@ fun HomeScreen(
                 fontWeight = FontWeight.Bold
             )
 
-            val pagerState = rememberPagerState(pageCount = { state.categories.size })
-            HorizontalPager(
-                state = pagerState,
-                contentPadding = PaddingValues(horizontal = 40.dp)
-            ) { index ->
-
+            state.categories.forEach { category ->
                 CardCategoryItem(
-                    pagerState = pagerState,
-                    index = index,
-                    item = state.categories[index],
+                    item = category,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
                     onItemSelected = {
-                        onAction(HomeAction.OnClickCategory(state.categories[index].id))
-                    })
+                        onAction(HomeAction.OnClickCategory(category.id))
+                    },
+                )
+                Spacer(modifier = Modifier.height(12.dp))
             }
 
         }
@@ -211,13 +203,10 @@ fun HomeScreen(
 
 @Composable
 fun CardCategoryItem(
-    pagerState: PagerState,
-    index: Int,
     item: Category,
+    modifier: Modifier = Modifier,
     onItemSelected: () -> Unit = {}
 ) {
-
-    val pageOffSet = (pagerState.currentPage - index) + pagerState.currentPageOffsetFraction
 
     val colors = categoryColors(
         category = item.category,
@@ -232,56 +221,36 @@ fun CardCategoryItem(
             containerColor = colors.container,
             contentColor = colors.content,
         ),
-        modifier = Modifier
-            .height(400.dp)
-            .graphicsLayer {
-                lerp(
-                    start = 0.85f,
-                    stop = 1f,
-                    fraction = 1f - pageOffSet.absoluteValue.coerceIn(0f, 1f)
-                ).also { scale ->
-                    scaleX = scale
-                    scaleY = scale
-                }
-                alpha = lerp(
-                    start = 0.5f,
-                    stop = 1f,
-                    fraction = 1f - pageOffSet.absoluteValue.coerceIn(0f, 1f)
-                )
-            },
+        modifier = modifier.height(160.dp),
         onClick = onItemSelected
     ) {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Box(modifier = Modifier.fillMaxSize()) {
 
             Column(
                 modifier = Modifier
-                    .padding(top = 16.dp, start = 16.dp, end = 16.dp)
+                    .padding(top = 12.dp, start = 16.dp, end = 16.dp)
                     .align(Alignment.TopStart)
             ) {
                 Text(
                     text = item.classType,
-                    fontSize = 15.sp,
                     color = colors.content,
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    style = MaterialTheme.typography.titleLarge,
+                    style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                 )
                 Text(
                     text = item.category,
                     color = colors.content,
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp),
-                    style = MaterialTheme.typography.displayLarge,
+                    style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold
                 )
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(6.dp))
                 Text(
                     text = item.description,
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    maxLines = 4,
+                    maxLines = 3,
                     style = MaterialTheme.typography.bodyMedium,
                     color = colors.content,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.fillMaxWidth(0.68f),
                 )
             }
 
