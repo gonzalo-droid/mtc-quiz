@@ -15,6 +15,7 @@ import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
@@ -68,8 +69,27 @@ class DetailScreenViewModelTest {
     }
 
     @Test
-    fun `state defaults isPremium to false when BillingManager reports not premium`() = runTest {
-        val vm = createViewModel(isPremium = false)
+    fun `state reflects isPremium changes from BillingManager flow emissions`() = runTest {
+        val isPremiumFlow = MutableStateFlow(true)
+        val billingManager = object : BillingManager {
+            override val isPremiumFlow: Flow<Boolean> = isPremiumFlow
+            override suspend fun launchSubscription(activity: Activity): Boolean = false
+            override suspend fun refreshPurchaseState() = Unit
+            override suspend fun restorePurchases() = Unit
+        }
+        val savedStateHandle = SavedStateHandle(mapOf("categoryId" to "1"))
+        val vm = DetailScreenViewModel(
+            savedStateHandle = savedStateHandle,
+            repository = QuizRepositoryFake(),
+            billingManager = billingManager,
+            adsManager = adsManager,
+            bannerAdId = "test-banner-id",
+        )
+        advanceUntilIdle()
+        assertThat(vm.state.value.isPremium).isTrue()
+
+        // Emit false and verify state reflects the change
+        isPremiumFlow.value = false
         advanceUntilIdle()
         assertThat(vm.state.value.isPremium).isFalse()
     }
