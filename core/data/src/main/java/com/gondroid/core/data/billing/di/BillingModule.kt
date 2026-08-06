@@ -1,7 +1,8 @@
 package com.gondroid.core.data.billing.di
 
-import com.gondroid.core.data.billing.BillingManager
-import com.gondroid.core.data.billing.BillingManagerImpl
+import com.gondroid.core.data.billing.BillingLauncher
+import com.gondroid.core.data.billing.PremiumRepositoryImpl
+import com.gondroid.core.domain.repository.PremiumRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -14,5 +15,9 @@ abstract class BillingModule {
 
     @Binds
     @Singleton
-    abstract fun bindBillingManager(impl: BillingManagerImpl): BillingManager
+    abstract fun bindPremiumRepository(impl: PremiumRepositoryImpl): PremiumRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindBillingLauncher(impl: PremiumRepositoryImpl): BillingLauncher
 }
