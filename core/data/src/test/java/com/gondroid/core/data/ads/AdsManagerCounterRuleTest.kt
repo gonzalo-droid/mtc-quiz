@@ -1,6 +1,5 @@
 package com.gondroid.core.data.ads
 
-import com.gondroid.core.data.billing.BillingManager
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
@@ -17,7 +16,7 @@ class AdsManagerCounterRuleTest {
         manager = AdsManagerImpl(
             prefs = prefs,
             interstitialId = "test-id",
-            billingManager = FakeBillingManager()
+            premiumRepository = FakePremiumRepository()
         )
     }
 

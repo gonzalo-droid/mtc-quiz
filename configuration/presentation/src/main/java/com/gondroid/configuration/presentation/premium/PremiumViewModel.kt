@@ -3,7 +3,8 @@ package com.gondroid.configuration.presentation.premium
 import android.app.Activity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gondroid.core.data.billing.BillingManager
+import com.gondroid.core.data.billing.BillingLauncher
+import com.gondroid.core.domain.repository.PremiumRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -14,10 +15,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PremiumViewModel @Inject constructor(
-    private val billingManager: BillingManager,
+    private val premiumRepository: PremiumRepository,
+    private val billingLauncher: BillingLauncher,
 ) : ViewModel() {
 
-    val isPremium = billingManager.isPremiumFlow
+    val isPremium = premiumRepository.isPremiumFlow
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
 
     private val _isLoading = MutableStateFlow(false)
@@ -25,13 +27,13 @@ class PremiumViewModel @Inject constructor(
 
     fun subscribe(activity: Activity) = viewModelScope.launch {
         _isLoading.value = true
-        billingManager.launchSubscription(activity)
+        billingLauncher.launchSubscription(activity, "")
         _isLoading.value = false
     }
 
     fun restorePurchases() = viewModelScope.launch {
         _isLoading.value = true
-        billingManager.restorePurchases()
+        premiumRepository.restorePurchases()
         _isLoading.value = false
     }
 }

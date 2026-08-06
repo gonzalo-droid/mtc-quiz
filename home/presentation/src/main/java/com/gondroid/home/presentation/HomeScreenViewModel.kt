@@ -2,8 +2,8 @@ package com.gondroid.home.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gondroid.core.data.billing.BillingManager
 import com.gondroid.core.domain.repository.PreferenceRepository
+import com.gondroid.core.domain.repository.PremiumRepository
 import com.gondroid.core.domain.repository.QuizRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,7 +21,7 @@ class HomeScreenViewModel
 constructor(
     private val repository: QuizRepository,
     private val preferenceRepository: PreferenceRepository,
-    private val billingManager: BillingManager,
+    private val premiumRepository: PremiumRepository,
     @Named("admobBannerId") val bannerAdId: String,
 ) : ViewModel() {
 
@@ -45,7 +45,7 @@ constructor(
             }
         }.launchIn(viewModelScope)
 
-        billingManager.isPremiumFlow.onEach { isPremium ->
+        premiumRepository.isPremiumFlow.onEach { isPremium ->
             _state.update {
                 it.copy(isPremium = isPremium)
             }
