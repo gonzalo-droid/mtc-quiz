@@ -96,7 +96,7 @@ private fun QuestionImage(name: String) {
     SubcomposeAsyncImage(
         model = "file:///android_asset/images/$name.webp",
         contentDescription = name,
-        modifier = Modifier.size(220.dp),
+        modifier = Modifier.size(150.dp),
         contentScale = ContentScale.Fit,
         loading = { QuestionImageStatePlaceholder(icon = Icons.Outlined.Image) },
         error = { QuestionImageStatePlaceholder(icon = Icons.Outlined.BrokenImage) },
