@@ -74,11 +74,11 @@ jetbrainsKotlinJvm = "2.2.21"
 
 # 📦 Project Info
 projectApplicationId = "com.gondroid.mtcquiz"
-projectVersionName = "1.2.0"
+projectVersionName = "1.2.1"
 projectMinSdkVersion = "26"
 projectTargetSdkVersion = "36"
 projectCompileSdkVersion = "36"
-projectVersionCode = "5"
+projectVersionCode = "6"
 
 [libraries]
 # 🔧 Build & Gradle Tools
