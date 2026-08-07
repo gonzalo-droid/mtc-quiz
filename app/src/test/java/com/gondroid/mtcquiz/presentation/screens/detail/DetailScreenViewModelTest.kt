@@ -16,6 +16,7 @@ import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
@@ -38,7 +39,7 @@ class DetailScreenViewModelTest {
         categoryId: String = "1",
     ): DetailScreenViewModel {
         val premiumRepository = object : PremiumRepository {
-            override val isPremiumFlow: Flow<Boolean> = flowOf(isPremium)
+            override val isPremiumFlow: StateFlow<Boolean> = MutableStateFlow(isPremium)
             override val availablePlansFlow: Flow<List<SubscriptionPlan>> = flowOf(emptyList())
             override suspend fun loadAvailablePlans() = Unit
             override suspend fun refreshPurchaseState() = Unit
@@ -63,17 +64,17 @@ class DetailScreenViewModelTest {
     }
 
     @Test
-    fun `state reflects isPremium from BillingManager`() = runTest {
+    fun `state reflects isPremium from PremiumRepository`() = runTest {
         val vm = createViewModel(isPremium = true)
         advanceUntilIdle()
         assertThat(vm.state.value.isPremium).isTrue()
     }
 
     @Test
-    fun `state reflects isPremium changes from BillingManager flow emissions`() = runTest {
+    fun `state reflects isPremium changes from PremiumRepository flow emissions`() = runTest {
         val isPremiumFlow = MutableStateFlow(true)
         val premiumRepository = object : PremiumRepository {
-            override val isPremiumFlow: Flow<Boolean> = isPremiumFlow
+            override val isPremiumFlow: StateFlow<Boolean> = isPremiumFlow
             override val availablePlansFlow: Flow<List<SubscriptionPlan>> = flowOf(emptyList())
             override suspend fun loadAvailablePlans() = Unit
             override suspend fun refreshPurchaseState() = Unit

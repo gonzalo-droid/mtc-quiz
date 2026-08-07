@@ -1,6 +1,8 @@
 package com.gondroid.core.data.ads
 
+import android.app.Activity
 import com.google.common.truth.Truth.assertThat
+import io.mockk.mockk
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -76,5 +78,49 @@ class AdsManagerCounterRuleTest {
         repeat(3) { manager.recordEvaluationStart() }
         assertThat(manager.shouldShowPdfInterstitial()).isTrue()
         assertThat(manager.shouldShowEvaluationInterstitial()).isTrue()
+    }
+
+    // Premium gating — a premium user must never see an ad, regardless of counters.
+
+    @Test fun `premium user never sees pdf interstitial regardless of counter`() = runTest {
+        val premiumManager = AdsManagerImpl(
+            prefs = prefs,
+            interstitialId = "test-id",
+            premiumRepository = FakePremiumRepository(isPremium = true),
+        )
+        repeat(6) { premiumManager.recordPdfDownload() }
+        assertThat(premiumManager.shouldShowPdfInterstitial()).isFalse()
+    }
+
+    @Test fun `premium user never sees evaluation interstitial regardless of counter`() = runTest {
+        val premiumManager = AdsManagerImpl(
+            prefs = prefs,
+            interstitialId = "test-id",
+            premiumRepository = FakePremiumRepository(isPremium = true),
+        )
+        repeat(6) { premiumManager.recordEvaluationStart() }
+        assertThat(premiumManager.shouldShowEvaluationInterstitial()).isFalse()
+    }
+
+    @Test fun `showPdfInterstitial dismisses immediately for premium user without showing an ad`() {
+        val premiumManager = AdsManagerImpl(
+            prefs = prefs,
+            interstitialId = "test-id",
+            premiumRepository = FakePremiumRepository(isPremium = true),
+        )
+        var dismissed = false
+        premiumManager.showPdfInterstitial(mockk<Activity>(relaxed = true)) { dismissed = true }
+        assertThat(dismissed).isTrue()
+    }
+
+    @Test fun `showEvaluationInterstitial dismisses immediately for premium user without showing an ad`() {
+        val premiumManager = AdsManagerImpl(
+            prefs = prefs,
+            interstitialId = "test-id",
+            premiumRepository = FakePremiumRepository(isPremium = true),
+        )
+        var dismissed = false
+        premiumManager.showEvaluationInterstitial(mockk<Activity>(relaxed = true)) { dismissed = true }
+        assertThat(dismissed).isTrue()
     }
 }

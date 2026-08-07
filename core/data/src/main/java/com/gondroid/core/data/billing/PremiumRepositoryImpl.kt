@@ -29,6 +29,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -55,7 +56,7 @@ class PremiumRepositoryImpl @Inject constructor(
     }
 
     private val _isPremium = MutableStateFlow(false)
-    override val isPremiumFlow: Flow<Boolean> = _isPremium.asStateFlow()
+    override val isPremiumFlow: StateFlow<Boolean> = _isPremium.asStateFlow()
 
     private val _availablePlans = MutableStateFlow<List<SubscriptionPlan>>(emptyList())
     override val availablePlansFlow: Flow<List<SubscriptionPlan>> = _availablePlans.asStateFlow()

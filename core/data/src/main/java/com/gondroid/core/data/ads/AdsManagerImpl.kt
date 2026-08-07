@@ -20,7 +20,7 @@ class AdsManagerImpl @Inject constructor(
 ) : AdsManager {
 
     private val isPremium: Boolean
-        get() = (premiumRepository.isPremiumFlow as? kotlinx.coroutines.flow.StateFlow)?.value ?: false
+        get() = premiumRepository.isPremiumFlow.value
 
     private var interstitial: InterstitialAd? = null
     private var isLoading: Boolean = false

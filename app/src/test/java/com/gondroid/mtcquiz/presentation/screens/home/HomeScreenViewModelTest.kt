@@ -11,6 +11,8 @@ import com.gondroid.mtcquiz.util.MainDispatcherRule
 import com.google.common.truth.Truth
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
@@ -32,7 +34,7 @@ class HomeScreenViewModelTest {
     private lateinit var preferenceRepository: PreferenceRepositoryFake
 
     private val fakePremiumRepository = object : PremiumRepository {
-        override val isPremiumFlow: Flow<Boolean> = flowOf(false)
+        override val isPremiumFlow: StateFlow<Boolean> = MutableStateFlow(false)
         override val availablePlansFlow: Flow<List<SubscriptionPlan>> = flowOf(emptyList())
         override suspend fun loadAvailablePlans() = Unit
         override suspend fun refreshPurchaseState() = Unit
