@@ -35,4 +35,15 @@ platform :android do
     gradle(task: "clean assembleRelease")
     upload_to_play_store
   end
+
+  desc "Build a release App Bundle and push it to the Google Play Internal Testing track"
+  lane :internal do
+    gradle(task: "clean bundleRelease")
+    upload_to_play_store(
+      track: "internal",
+      # Falls back to the Appfile's json_key_file for local runs; CI provides this env var
+      # instead since the Appfile path only exists on this machine.
+      json_key: ENV["SUPPLY_JSON_KEY"] || "/Users/gonzalo/AndroidStudioProjects/sign/quizzmtc-22c8303d73b2.json"
+    )
+  end
 end
