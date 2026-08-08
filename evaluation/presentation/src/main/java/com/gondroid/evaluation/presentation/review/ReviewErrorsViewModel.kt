@@ -16,7 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ReviewErrorsViewModel @Inject constructor(
     private val repository: QuizRepository,
-    private val dismissedDao: DismissedQuestionDao,
+    private val dismissedDao: DismissedQuestionDao
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ReviewErrorsState())
@@ -26,7 +26,7 @@ class ReviewErrorsViewModel @Inject constructor(
         viewModelScope.launch {
             combine(
                 repository.getAllEvaluations(),
-                dismissedDao.getAllDismissedIds(),
+                dismissedDao.getAllDismissedIds()
             ) { evaluations, dismissedIds ->
                 val allFailedResults = evaluations
                     .flatMap { it.questionResults }
@@ -44,7 +44,7 @@ class ReviewErrorsViewModel @Inject constructor(
                             question = latest.question,
                             failCount = results.size,
                             lastWrongAnswer = latest.option ?: "",
-                            correctAnswer = latest.correctAnswer,
+                            correctAnswer = latest.correctAnswer
                         )
                     }
                     .sortedByDescending { it.failCount }
@@ -52,7 +52,7 @@ class ReviewErrorsViewModel @Inject constructor(
                 _state.update {
                     it.copy(
                         frequentErrors = frequentErrors,
-                        isLoading = false,
+                        isLoading = false
                     )
                 }
             }

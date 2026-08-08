@@ -29,14 +29,13 @@ object RepositoryModule {
         @Named("dispatcherIO")
         dispatcherIO: CoroutineDispatcher,
         @ApplicationContext
-        context: Context,
+        context: Context
     ): QuizRepository = QuizRepositoryImpl(
         evaluationDao = evaluationDao,
         preferenceRepository = preferenceRepository,
         dispatcherIO = dispatcherIO,
         context = context
     )
-
 
     @Provides
     @Singleton

@@ -10,10 +10,15 @@ plugins {
     alias(libs.plugins.com.google.firebase.crashlytics) apply false
     alias(libs.plugins.jetbrains.kotlin.jvm) apply false
     alias(libs.plugins.android.library) apply false
+    alias(libs.plugins.ktlint) apply false
 }
 
 allprojects {
     repositories {
         maven { url = uri("https://oss.sonatype.org/content/repositories/snapshots/") }
     }
+}
+
+subprojects {
+    apply(plugin = "org.jlleitschuh.gradle.ktlint")
 }

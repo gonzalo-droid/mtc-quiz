@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun PremiumUpsellDialog(
     onGoToPremium: () -> Unit,
-    onDismiss: () -> Unit,
+    onDismiss: () -> Unit
 ) {
     BasicAlertDialog(onDismissRequest = onDismiss) {
         Column(
@@ -38,16 +38,16 @@ fun PremiumUpsellDialog(
                 .fillMaxWidth()
                 .background(
                     color = MaterialTheme.colorScheme.surface,
-                    shape = RoundedCornerShape(24.dp),
+                    shape = RoundedCornerShape(24.dp)
                 )
                 .padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Icon(
                 imageVector = Icons.Default.WorkspacePremium,
                 contentDescription = null,
                 modifier = Modifier.size(48.dp),
-                tint = Color(0xFFFFB300),
+                tint = Color(0xFFFFB300)
             )
 
             Spacer(Modifier.height(16.dp))
@@ -56,7 +56,7 @@ fun PremiumUpsellDialog(
                 text = "¿Cansado de los anuncios?",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center,
+                textAlign = TextAlign.Center
             )
 
             Spacer(Modifier.height(8.dp))
@@ -65,7 +65,7 @@ fun PremiumUpsellDialog(
                 text = "Hazte Premium y estudia sin interrupciones",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = TextAlign.Center,
+                textAlign = TextAlign.Center
             )
 
             Spacer(Modifier.height(24.dp))
@@ -75,13 +75,13 @@ fun PremiumUpsellDialog(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFFFB300),
-                ),
+                    containerColor = Color(0xFFFFB300)
+                )
             ) {
                 Text(
                     text = "Ver planes",
                     fontWeight = FontWeight.SemiBold,
-                    color = Color.White,
+                    color = Color.White
                 )
             }
 
@@ -89,11 +89,11 @@ fun PremiumUpsellDialog(
 
             TextButton(
                 onClick = onDismiss,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
                     text = "No, gracias",
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }

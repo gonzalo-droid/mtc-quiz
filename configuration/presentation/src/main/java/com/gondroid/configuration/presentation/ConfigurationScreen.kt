@@ -2,33 +2,31 @@ package com.gondroid.configuration.presentation
 
 import android.app.Activity
 import android.content.Context
-import com.google.android.play.core.review.ReviewManagerFactory
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.Assignment
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.AccountBalance
-import androidx.compose.material.icons.automirrored.filled.Assignment
+import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.DarkMode
-import androidx.compose.material.icons.filled.LightMode
-import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.History
+import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.WorkspacePremium
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -37,9 +35,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -56,9 +52,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.gondroid.configuration.presentation.R
 import com.gondroid.core.presentation.designsystem.MTCQuizTheme
-
+import com.google.android.play.core.review.ReviewManagerFactory
 
 private fun requestInAppReview(activity: Activity, context: Context) {
     val manager = ReviewManagerFactory.create(activity)
@@ -85,9 +80,8 @@ fun ConfigurationScreenRoot(
     navigateToLogout: () -> Unit,
     navigateToStats: () -> Unit = {},
     navigateToHistory: () -> Unit = {},
-    navigateToPremium: () -> Unit = {},
+    navigateToPremium: () -> Unit = {}
 ) {
-
     val context = LocalContext.current
     val event = viewModel.event
     val state by viewModel.state.collectAsState()
@@ -100,7 +94,6 @@ fun ConfigurationScreenRoot(
                 }
             }
         }
-
     }
 
     ConfigurationScreen(
@@ -134,7 +127,6 @@ fun ConfigurationScreenRoot(
                     viewModel.onAction(action)
                 }
             }
-
         }
     )
 }
@@ -144,38 +136,38 @@ fun ItemList(
     icon: ImageVector,
     title: String,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     Surface(
         onClick = onClick,
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
-        color = MaterialTheme.colorScheme.surfaceContainerLow,
+        color = MaterialTheme.colorScheme.surfaceContainerLow
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 14.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(24.dp),
+                    modifier = Modifier.size(24.dp)
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 Text(
                     text = title,
-                    style = MaterialTheme.typography.bodyLarge,
+                    style = MaterialTheme.typography.bodyLarge
                 )
             }
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     }
@@ -199,7 +191,7 @@ fun ConfigurationScreen(
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back",
-                            tint = MaterialTheme.colorScheme.onSurface,
+                            tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
                 }
@@ -211,13 +203,13 @@ fun ConfigurationScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
                 .verticalScroll(rememberScrollState())
-                .padding(16.dp),
+                .padding(16.dp)
         ) {
             Text(
                 text = stringResource(R.string.settings),
                 style = MaterialTheme.typography.headlineMedium,
                 color = MaterialTheme.colorScheme.onBackground,
-                fontWeight = FontWeight.Bold,
+                fontWeight = FontWeight.Bold
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -228,12 +220,12 @@ fun ConfigurationScreen(
                 ItemList(
                     icon = Icons.Default.BarChart,
                     title = "Estadísticas",
-                    onClick = { onAction(ConfigurationAction.GoToStats) },
+                    onClick = { onAction(ConfigurationAction.GoToStats) }
                 )
                 ItemList(
                     icon = Icons.Default.History,
                     title = "Historial de evaluaciones",
-                    onClick = { onAction(ConfigurationAction.GoToHistory) },
+                    onClick = { onAction(ConfigurationAction.GoToHistory) }
                 )
             }
 
@@ -245,12 +237,12 @@ fun ConfigurationScreen(
                 Surface(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
-                    color = MaterialTheme.colorScheme.surfaceContainerLow,
+                    color = MaterialTheme.colorScheme.surfaceContainerLow
                 ) {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(16.dp),
+                            .padding(16.dp)
                     ) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             val themeIcon = when (state.themeMode) {
@@ -262,18 +254,18 @@ fun ConfigurationScreen(
                                 imageVector = themeIcon,
                                 contentDescription = null,
                                 tint = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.size(24.dp),
+                                modifier = Modifier.size(24.dp)
                             )
                             Spacer(modifier = Modifier.width(16.dp))
                             Text(
                                 text = "Apariencia",
-                                style = MaterialTheme.typography.bodyLarge,
+                                style = MaterialTheme.typography.bodyLarge
                             )
                         }
                         Spacer(modifier = Modifier.height(12.dp))
                         Row(
                             modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             listOf("system" to "Sistema", "light" to "Claro", "dark" to "Oscuro").forEach { (mode, label) ->
                                 val selected = state.themeMode == mode
@@ -282,7 +274,7 @@ fun ConfigurationScreen(
                                     modifier = Modifier.weight(1f),
                                     shape = RoundedCornerShape(8.dp),
                                     color = if (selected) MaterialTheme.colorScheme.primary else Color.Transparent,
-                                    border = if (!selected) BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant) else null,
+                                    border = if (!selected) BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant) else null
                                 ) {
                                     Text(
                                         text = label,
@@ -290,7 +282,7 @@ fun ConfigurationScreen(
                                         textAlign = TextAlign.Center,
                                         style = MaterialTheme.typography.labelMedium,
                                         fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal,
-                                        color = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
+                                        color = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                 }
                             }
@@ -300,20 +292,20 @@ fun ConfigurationScreen(
                 ItemList(
                     icon = Icons.Default.Category,
                     title = stringResource(R.string.custom_values),
-                    onClick = { onAction(ConfigurationAction.GoToSCustomize) },
+                    onClick = { onAction(ConfigurationAction.GoToSCustomize) }
                 )
                 if (state.isPremium) {
                     ItemList(
                         icon = Icons.Default.WorkspacePremium,
                         title = "Premium ✓",
-                        onClick = { onAction(ConfigurationAction.GoToPremium) },
+                        onClick = { onAction(ConfigurationAction.GoToPremium) }
                     )
                 } else {
                     Surface(
                         onClick = { onAction(ConfigurationAction.GoToPremium) },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(16.dp),
-                        color = Color.Transparent,
+                        color = Color.Transparent
                     ) {
                         Row(
                             modifier = Modifier
@@ -322,21 +314,21 @@ fun ConfigurationScreen(
                                     brush = Brush.horizontalGradient(
                                         colors = listOf(
                                             Color(0xFFFFB300),
-                                            Color(0xFFFF8F00),
+                                            Color(0xFFFF8F00)
                                         )
                                     ),
-                                    shape = RoundedCornerShape(16.dp),
+                                    shape = RoundedCornerShape(16.dp)
                                 )
                                 .padding(horizontal = 16.dp, vertical = 16.dp),
                             horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 Icon(
                                     imageVector = Icons.Default.WorkspacePremium,
                                     contentDescription = null,
                                     tint = Color.White,
-                                    modifier = Modifier.size(28.dp),
+                                    modifier = Modifier.size(28.dp)
                                 )
                                 Spacer(modifier = Modifier.width(12.dp))
                                 Column {
@@ -344,19 +336,19 @@ fun ConfigurationScreen(
                                         text = "Hazte Premium",
                                         style = MaterialTheme.typography.titleSmall,
                                         fontWeight = FontWeight.Bold,
-                                        color = Color.White,
+                                        color = Color.White
                                     )
                                     Text(
                                         text = "Estudia sin anuncios",
                                         style = MaterialTheme.typography.bodySmall,
-                                        color = Color.White.copy(alpha = 0.85f),
+                                        color = Color.White.copy(alpha = 0.85f)
                                     )
                                 }
                             }
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                                 contentDescription = null,
-                                tint = Color.White,
+                                tint = Color.White
                             )
                         }
                     }
@@ -371,17 +363,17 @@ fun ConfigurationScreen(
                 ItemList(
                     icon = Icons.Default.AccountBalance,
                     title = stringResource(R.string.term_and_conditions),
-                    onClick = { onAction(ConfigurationAction.GoToTerm) },
+                    onClick = { onAction(ConfigurationAction.GoToTerm) }
                 )
                 ItemList(
                     icon = Icons.AutoMirrored.Filled.Assignment,
                     title = "Trámites asociados",
-                    onClick = { onAction(ConfigurationAction.GoToTarifas) },
+                    onClick = { onAction(ConfigurationAction.GoToTarifas) }
                 )
                 ItemList(
                     icon = Icons.Default.Star,
                     title = "Calificar app",
-                    onClick = { onAction(ConfigurationAction.GoToRating) },
+                    onClick = { onAction(ConfigurationAction.GoToRating) }
                 )
             }
 
@@ -397,9 +389,8 @@ fun ConfigurationScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 16.dp),
-                textAlign = TextAlign.Center,
+                textAlign = TextAlign.Center
             )
-
         }
     }
 }
@@ -411,7 +402,7 @@ private fun SectionTitle(title: String) {
         style = MaterialTheme.typography.titleSmall,
         color = MaterialTheme.colorScheme.primary,
         fontWeight = FontWeight.SemiBold,
-        modifier = Modifier.padding(bottom = 8.dp),
+        modifier = Modifier.padding(bottom = 8.dp)
     )
 }
 

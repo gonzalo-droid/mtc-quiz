@@ -1,6 +1,5 @@
 package com.gondroid.pdf.presentation
 
-
 import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
@@ -63,14 +62,12 @@ import timber.log.Timber
 import java.io.File
 import java.io.FileOutputStream
 
-
 @Composable
 fun PdfScreenRoot(
     viewModel: PdfScreenViewModel,
     navigateBack: () -> Boolean,
-    navigateToPremium: () -> Unit = {},
+    navigateToPremium: () -> Unit = {}
 ) {
-
     val state by viewModel.state.collectAsState()
     var showUpsellDialog by remember { mutableStateOf(false) }
 
@@ -105,7 +102,7 @@ fun PdfScreenRoot(
                 showUpsellDialog = false
                 navigateToPremium()
             },
-            onDismiss = { showUpsellDialog = false },
+            onDismiss = { showUpsellDialog = false }
         )
     }
 
@@ -150,8 +147,11 @@ fun PdfScreenRoot(
             context = context,
             nameFile = state.category.pdf
         ) { success ->
-            showMessage = if (success) context.getString(R.string.success_download_pdf)
-                          else context.getString(R.string.failure_download_pdf)
+            showMessage = if (success) {
+                context.getString(R.string.success_download_pdf)
+            } else {
+                context.getString(R.string.failure_download_pdf)
+            }
             viewModel.onDownloadFinished()
         }
     }
@@ -196,9 +196,8 @@ fun PdfScreenRoot(
                     viewModel.onDownloadClicked()
                 }
             }
-        },
+        }
     )
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -210,9 +209,8 @@ fun PdfScreen(
     emptyListSearch: () -> Unit,
     pdfUri: Uri?,
     renderedPages: List<Bitmap>,
-    searchResults: List<SearchResults>,
+    searchResults: List<SearchResults>
 ) {
-
     var searchText by remember {
         mutableStateOf("")
     }
@@ -235,7 +233,7 @@ fun PdfScreen(
                             onAction(
                                 PdfAction.Downloading
                             )
-                        },
+                        }
                     ) {
                         Text(
                             text = stringResource(R.string.download),
@@ -246,7 +244,7 @@ fun PdfScreen(
                         Icon(
                             imageVector = Icons.Default.Download,
                             contentDescription = "Download",
-                            tint = MaterialTheme.colorScheme.onBackground,
+                            tint = MaterialTheme.colorScheme.onBackground
                         )
                     }
                 },
@@ -256,15 +254,15 @@ fun PdfScreen(
                         contentDescription = "ArrowBack",
                         tint = MaterialTheme.colorScheme.onBackground,
                         modifier =
-                            Modifier.clickable {
-                                onAction(
-                                    PdfAction.Back,
-                                )
-                            },
+                        Modifier.clickable {
+                            onAction(
+                                PdfAction.Back
+                            )
+                        }
                     )
-                },
+                }
             )
-        },
+        }
     ) { paddingValues ->
         Box(
             modifier = Modifier.padding(paddingValues)
@@ -340,7 +338,6 @@ fun PdfPage(
     modifier: Modifier = Modifier,
     searchResults: SearchResults? = null
 ) {
-
     AsyncImage(
         model = page,
         contentDescription = null,
@@ -390,7 +387,6 @@ fun DownloadPdfIfPermitted(
     }
 }
 
-
 fun copyAssetToCache(context: Context, assetPath: String): Uri {
     val file = File(context.cacheDir, assetPath.substringAfterLast("/"))
     context.assets.open(assetPath).use { input ->
@@ -423,7 +419,6 @@ fun savePdfToDownloads(context: Context, assetPath: String, fileName: String): B
     }
 }
 
-
 @Preview(showBackground = true)
 @Composable
 fun PreviewPdfScreenRoot() {
@@ -435,7 +430,7 @@ fun PreviewPdfScreenRoot() {
             renderedPages = listOf(),
             onValueChange = {},
             emptyListSearch = {},
-            searchResults = listOf(),
+            searchResults = listOf()
         )
     }
 }

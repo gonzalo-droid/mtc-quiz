@@ -33,7 +33,6 @@ class GoogleAuthAdapter @Inject constructor(
 
             val response = credentialManager.getCredential(context, request)
             processGoogleResponse(response)
-
         } catch (e: GetCredentialCancellationException) {
             AuthResult.Cancelled
         } catch (e: Exception) {

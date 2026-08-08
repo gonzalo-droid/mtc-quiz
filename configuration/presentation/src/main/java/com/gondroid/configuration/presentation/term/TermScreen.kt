@@ -16,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.gondroid.core.presentation.designsystem.components.WebViewWithOffline
 
-
 @Composable
 fun TermScreenRoot(
     navigateBack: () -> Unit
@@ -25,7 +24,6 @@ fun TermScreenRoot(
         onNavigateUp = navigateBack
     )
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,7 +41,7 @@ fun TermScreen(
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back",
-                            tint = MaterialTheme.colorScheme.onSurface,
+                            tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
                 }
@@ -52,11 +50,10 @@ fun TermScreen(
     ) { paddingValues ->
         WebViewWithOffline(
             url = "https://gonzalo-lozg.me/term/quote-anime/",
-            modifier = Modifier.padding(paddingValues),
+            modifier = Modifier.padding(paddingValues)
         )
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable

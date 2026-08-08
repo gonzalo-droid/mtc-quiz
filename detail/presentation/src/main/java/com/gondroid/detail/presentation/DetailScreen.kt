@@ -3,9 +3,6 @@ package com.gondroid.detail.presentation
 import android.Manifest
 import android.app.Activity
 import androidx.annotation.RequiresPermission
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -42,6 +39,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -66,9 +66,8 @@ fun DetailScreenRoot(
     navigateToQuestions: (String) -> Unit,
     navigateToShowPDF: (String) -> Unit,
     navigateToEvaluation: (String) -> Unit,
-    navigateToPremium: () -> Unit = {},
+    navigateToPremium: () -> Unit = {}
 ) {
-
     val state by viewModel.state.collectAsState()
     val context = LocalContext.current
     val activity = context as? Activity
@@ -101,7 +100,7 @@ fun DetailScreenRoot(
                 showUpsellDialog = false
                 navigateToPremium()
             },
-            onDismiss = { showUpsellDialog = false },
+            onDismiss = { showUpsellDialog = false }
         )
     }
 
@@ -125,7 +124,7 @@ fun DetailScreenRoot(
 fun DetailScreen(
     state: DetailState,
     bannerAdId: String,
-    onAction: (DetailAction) -> Unit,
+    onAction: (DetailAction) -> Unit
 ) {
     Scaffold(
         modifier = Modifier
@@ -139,7 +138,7 @@ fun DetailScreen(
                     Text(
                         text = "",
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        fontWeight = FontWeight.Bold,
+                        fontWeight = FontWeight.Bold
                     )
                 },
                 navigationIcon = {
@@ -147,49 +146,48 @@ fun DetailScreen(
                         onClick = { onAction(DetailAction.Back) },
                         modifier = Modifier.semantics {
                             contentDescription = "back_button"
-                        },
+                        }
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back",
-                            tint = MaterialTheme.colorScheme.onSurface,
+                            tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
                 },
                 actions = {
                     Box(
                         modifier =
-                            Modifier
-                                .padding(8.dp)
-                                .clickable {
-                                    onAction(DetailAction.GoToConfiguration)
-                                },
+                        Modifier
+                            .padding(8.dp)
+                            .clickable {
+                                onAction(DetailAction.GoToConfiguration)
+                            }
                     ) {
                         Icon(
                             imageVector = Icons.Default.Menu,
                             contentDescription = "Add Task",
-                            tint = MaterialTheme.colorScheme.onSurface,
+                            tint = MaterialTheme.colorScheme.onSurface
                         )
-
                     }
-                },
+                }
             )
         },
         bottomBar = {
             BannerAdSlot(bannerAdId = bannerAdId, isPremium = state.isPremium)
-        },
+        }
     ) { paddingValues ->
         Column(
             modifier =
-                Modifier
-                    .padding(paddingValues)
-                    .padding(16.dp)
-                    .verticalScroll(rememberScrollState()),
+            Modifier
+                .padding(paddingValues)
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState())
         ) {
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
-                shape = RoundedCornerShape(16.dp),
+                shape = RoundedCornerShape(16.dp)
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Row {
@@ -200,14 +198,14 @@ fun DetailScreen(
                                 modifier = Modifier,
                                 text = state.category.classType,
                                 color = MaterialTheme.colorScheme.primary,
-                                style = MaterialTheme.typography.titleMedium,
+                                style = MaterialTheme.typography.titleMedium
                             )
                             Text(
                                 text = state.category.category,
                                 modifier = Modifier,
                                 style = MaterialTheme.typography.displayLarge,
                                 color = MaterialTheme.colorScheme.primary,
-                                fontWeight = FontWeight.Bold,
+                                fontWeight = FontWeight.Bold
                             )
                         }
                         AsyncImage(
@@ -223,13 +221,13 @@ fun DetailScreen(
                     Text(
                         modifier = Modifier,
                         text = state.category.description,
-                        style = MaterialTheme.typography.bodyLarge,
+                        style = MaterialTheme.typography.bodyLarge
                     )
                     Text(
                         modifier = Modifier,
                         text = "* Licencia de conducir para conductores no profesionales",
                         style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.secondary,
+                        color = MaterialTheme.colorScheme.secondary
                     )
                 }
             }
@@ -242,7 +240,6 @@ fun DetailScreen(
                 onShowPdf = { onAction(DetailAction.ShowPDF(state.category.id)) }
             )
         }
-
     }
 }
 
@@ -250,7 +247,7 @@ fun DetailScreen(
 fun ButtonsAction(
     onGoToEvaluation: () -> Unit = {},
     onGoToQuestions: () -> Unit = {},
-    onShowPdf: () -> Unit = {},
+    onShowPdf: () -> Unit = {}
 ) {
     Column(
         modifier = Modifier
@@ -280,7 +277,7 @@ fun ButtonsAction(
         ) {
             Icon(
                 imageVector = Icons.Default.DirectionsCar,
-                contentDescription = "PlayCircle",
+                contentDescription = "PlayCircle"
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(text = stringResource(R.string.study))
@@ -292,34 +289,34 @@ fun ButtonsAction(
                 .fillMaxWidth()
                 .semantics {
                     contentDescription = "download_pdf"
-                },
+                }
         ) {
             Text(text = stringResource(R.string.download_pdf))
             Spacer(modifier = Modifier.width(8.dp))
             Icon(
                 imageVector = Icons.Default.Book,
-                contentDescription = "PlayCircle",
+                contentDescription = "PlayCircle"
             )
         }
     }
 }
 
 @Preview(
-    showBackground = true,
+    showBackground = true
 )
 @Composable
 fun PreviewDetailScreenRoot() {
     MTCQuizTheme {
         DetailScreen(
             state = DetailState(
-                category =   Category(
+                category = Category(
                     id = "1",
                     title = "CLASE A - CATEGORIA I",
                     category = "A-I",
                     classType = "CLASE A",
                     description = "Es el más común y te permite manejar carros como sedanes, coupé , hatchback, convertibles, station wagon, SUV, Areneros, Pickup y furgones. Es necesaria para obtener las demás licencias de Clase A.",
                     pdf = "CLASE_A_I.pdf"
-                ),
+                )
             ),
             bannerAdId = "test-banner-id",
             onAction = {}

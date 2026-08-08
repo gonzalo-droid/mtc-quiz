@@ -8,13 +8,13 @@ import androidx.compose.ui.graphics.Color
 
 data class ExtendedColors(
     val successContainer: Color,
-    val onSuccessContainer: Color,
+    val onSuccessContainer: Color
 )
 
 val LocalExtendedColors = staticCompositionLocalOf {
     ExtendedColors(
         successContainer = successContainerLight,
-        onSuccessContainer = onSuccessContainerLight,
+        onSuccessContainer = onSuccessContainerLight
     )
 }
 

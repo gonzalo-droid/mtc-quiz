@@ -8,11 +8,11 @@ data class StatsState(
     val totalQuestionsAnswered: Int = 0,
     val totalCorrectAnswers: Int = 0,
     val categoryStats: List<CategoryStat> = emptyList(),
-    val isLoading: Boolean = true,
+    val isLoading: Boolean = true
 )
 
 data class CategoryStat(
     val categoryTitle: String,
     val evaluationCount: Int,
-    val approvalRate: Float,
+    val approvalRate: Float
 )

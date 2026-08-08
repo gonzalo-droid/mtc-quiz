@@ -25,7 +25,7 @@ class QuizRepositoryFake : QuizRepository {
             classType = "A",
             description = "Los mismos que A-1 y también carros oficiales de transporte de pasajeros como Taxis, Buses, Ambulancias y Transporte Interprovincial. Primero debes obtener la Licencia A-I",
             pdf = "CLASE_A_I.pdf"
-        ),
+        )
     )
 
     private val fakeQuestions = mapOf(

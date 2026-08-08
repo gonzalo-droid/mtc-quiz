@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class StatsViewModel @Inject constructor(
-    private val repository: QuizRepository,
+    private val repository: QuizRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow(StatsState())
     val state = _state.asStateFlow()
@@ -33,7 +33,7 @@ class StatsViewModel @Inject constructor(
                         CategoryStat(
                             categoryTitle = title,
                             evaluationCount = evals.size,
-                            approvalRate = evals.count { it.state == EvaluationState.APPROVED }.toFloat() / evals.size,
+                            approvalRate = evals.count { it.state == EvaluationState.APPROVED }.toFloat() / evals.size
                         )
                     }
                     .sortedBy { it.approvalRate }
@@ -47,7 +47,7 @@ class StatsViewModel @Inject constructor(
                         totalQuestionsAnswered = totalQuestions,
                         totalCorrectAnswers = totalCorrect,
                         categoryStats = categoryStats,
-                        isLoading = false,
+                        isLoading = false
                     )
                 }
             }

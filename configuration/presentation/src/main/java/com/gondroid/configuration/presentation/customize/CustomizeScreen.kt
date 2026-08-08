@@ -46,9 +46,8 @@ import com.gondroid.core.presentation.designsystem.MTCQuizTheme
 @Composable
 fun CustomizeScreenRoot(
     viewModel: CustomizeScreenViewModel,
-    navigateBack: () -> Unit,
+    navigateBack: () -> Unit
 ) {
-
     val state by viewModel.state.collectAsState()
     val event = viewModel.event
     val context = LocalContext.current
@@ -83,7 +82,6 @@ fun CustomizeScreenRoot(
     )
 }
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomizeScreen(
@@ -91,7 +89,6 @@ fun CustomizeScreen(
     onAction: (CustomizeAction) -> Unit,
     state: CustomizeState
 ) {
-
     var numberQuestions by remember { mutableStateOf("") }
     var timeToFinishEvaluation by remember { mutableStateOf("") }
     var percentageToApprovedEvaluation by remember { mutableStateOf("") }
@@ -111,7 +108,7 @@ fun CustomizeScreen(
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back",
-                            tint = MaterialTheme.colorScheme.onSurface,
+                            tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
                 }
@@ -122,7 +119,7 @@ fun CustomizeScreen(
             modifier = Modifier
                 .padding(paddingValues)
                 .padding(16.dp)
-                .verticalScroll(rememberScrollState()),
+                .verticalScroll(rememberScrollState())
         ) {
             Text(
                 text = stringResource(R.string.custimize_setting),
@@ -135,7 +132,7 @@ fun CustomizeScreen(
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
-                shape = RoundedCornerShape(16.dp),
+                shape = RoundedCornerShape(16.dp)
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     ItemField(
@@ -161,7 +158,7 @@ fun CustomizeScreen(
                         isError = numberQuestions.isNotBlank() &&
                             (numberQuestions.toIntOrNull() == null || numberQuestions.toIntOrNull() !in 1..1000),
                         errorMessage = "Debe ser un número entre 1 y 1000",
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth()
                     ) { newValue ->
                         if (newValue.all { it.isDigit() }) {
                             numberQuestions = newValue
@@ -177,7 +174,7 @@ fun CustomizeScreen(
                         isError = percentageToApprovedEvaluation.isNotBlank() &&
                             (percentageToApprovedEvaluation.toIntOrNull() == null || percentageToApprovedEvaluation.toIntOrNull() !in 1..100),
                         errorMessage = "Debe ser un número entre 1 y 100",
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth()
                     ) { newValue ->
                         if (newValue.all { it.isDigit() }) {
                             percentageToApprovedEvaluation = newValue
@@ -217,7 +214,6 @@ fun ItemField(
     errorMessage: String = "",
     onValueChange: (String) -> Unit
 ) {
-
     Text(
         style = MaterialTheme.typography.bodyLarge,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -235,7 +231,7 @@ fun ItemField(
         keyboardOptions = KeyboardOptions.Default.copy(
             keyboardType = KeyboardType.Number,
             imeAction = ImeAction.Done
-        ),
+        )
     )
     when {
         value.isBlank() -> Text(
@@ -254,10 +250,7 @@ fun ItemField(
             text = subLabel
         )
     }
-
-
 }
-
 
 @Composable
 fun ButtonsAction(
@@ -265,7 +258,6 @@ fun ButtonsAction(
     updateData: () -> Unit = {},
     enabled: Boolean = false
 ) {
-
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -281,7 +273,6 @@ fun ButtonsAction(
         }
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable

@@ -2,9 +2,8 @@ package com.gondroid.core.presentation.ui
 
 import com.gondroid.core.domain.util.DataError
 
-
 fun DataError.asUiText(): UiText {
-    return when(this) {
+    return when (this) {
         DataError.Local.DISK_FULL -> UiText.StringResource(
             R.string.error_disk_full
         )

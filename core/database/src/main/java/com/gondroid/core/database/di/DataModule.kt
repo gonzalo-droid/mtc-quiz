@@ -19,13 +19,13 @@ object DataModule {
     @Singleton
     fun provideDataBase(
         @ApplicationContext
-        context: Context,
+        context: Context
     ): MTCDatabase =
         Room
             .databaseBuilder(
                 context.applicationContext,
                 MTCDatabase::class.java,
-                "mtc_database",
+                "mtc_database"
             )
             .addMigrations(MTCDatabase.MIGRATION_1_2, MTCDatabase.MIGRATION_2_3)
             .build()

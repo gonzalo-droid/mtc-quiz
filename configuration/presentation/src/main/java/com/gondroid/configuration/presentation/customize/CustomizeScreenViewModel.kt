@@ -1,6 +1,5 @@
 package com.gondroid.configuration.presentation.customize
 
-
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gondroid.core.domain.model.PreferencesEvaluation
@@ -13,7 +12,6 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
 
 @HiltViewModel
 class CustomizeScreenViewModel
@@ -40,7 +38,6 @@ constructor(
                 }
             }
         }
-
     }
 
     fun updateValues(
@@ -63,8 +60,11 @@ constructor(
                     percentageToApprovedEvaluation = percentageToApprovedEvaluation
                 )
             )
-            if(result) eventChannel.send(CustomizeEvent.Success)
-            else eventChannel.send(CustomizeEvent.Error)
+            if (result) {
+                eventChannel.send(CustomizeEvent.Success)
+            } else {
+                eventChannel.send(CustomizeEvent.Error)
+            }
         }
     }
 }

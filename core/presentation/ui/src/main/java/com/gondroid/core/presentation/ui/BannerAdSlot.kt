@@ -71,7 +71,7 @@ fun BannerAdSlot(bannerAdId: String, isPremium: Boolean, modifier: Modifier = Mo
             .fillMaxWidth()
             .navigationBarsPadding()
             .padding(bottom = 8.dp),
-        contentAlignment = Alignment.Center,
+        contentAlignment = Alignment.Center
     ) {
         BannerAdView(adView)
     }

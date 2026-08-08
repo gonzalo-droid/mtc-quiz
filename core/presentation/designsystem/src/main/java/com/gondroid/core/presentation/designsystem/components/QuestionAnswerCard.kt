@@ -34,7 +34,7 @@ import com.gondroid.core.presentation.designsystem.MTCQuizTheme
 data class AnswerOption(
     val letter: String,
     val text: String,
-    val state: AnswerOptionState,
+    val state: AnswerOptionState
 )
 
 @Composable
@@ -43,26 +43,26 @@ fun QuestionAnswerCard(
     options: List<AnswerOption>,
     modifier: Modifier = Modifier,
     questionImages: List<String> = emptyList(),
-    onOptionClick: ((index: Int) -> Unit)? = null,
+    onOptionClick: ((index: Int) -> Unit)? = null
 ) {
     Card(
         modifier = modifier,
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(16.dp)
     ) {
         Column {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
                     text = title,
                     style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurface,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 if (questionImages.isNotEmpty()) {
                     LazyRow(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 8.dp),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally)
                     ) {
                         items(questionImages) { name ->
                             QuestionImage(name = name)
@@ -75,7 +75,7 @@ fun QuestionAnswerCard(
 
             Column(
                 modifier = Modifier.padding(horizontal = 6.dp, vertical = 6.dp),
-                verticalArrangement = Arrangement.spacedBy(4.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 options.forEachIndexed { index, option ->
                     AnswerOptionRow(
@@ -83,7 +83,7 @@ fun QuestionAnswerCard(
                         letter = option.letter,
                         text = option.text,
                         state = option.state,
-                        onClick = onOptionClick?.let { callback -> { callback(index) } },
+                        onClick = onOptionClick?.let { callback -> { callback(index) } }
                     )
                 }
             }
@@ -99,7 +99,7 @@ private fun QuestionImage(name: String) {
         modifier = Modifier.size(150.dp),
         contentScale = ContentScale.Fit,
         loading = { QuestionImageStatePlaceholder(icon = Icons.Outlined.Image) },
-        error = { QuestionImageStatePlaceholder(icon = Icons.Outlined.BrokenImage) },
+        error = { QuestionImageStatePlaceholder(icon = Icons.Outlined.BrokenImage) }
     )
 }
 
@@ -117,7 +117,7 @@ private fun SubcomposeAsyncImageScope.QuestionImageStatePlaceholder(icon: ImageV
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(8.dp)),
         contentScale = ContentScale.Fit,
-        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurfaceVariant),
+        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurfaceVariant)
     )
 }
 
@@ -133,8 +133,8 @@ private fun PreviewQuestionAnswerCardNoImage() {
             options = listOf(
                 AnswerOption("A", "Círculo rojo con número", AnswerOptionState.RevealedCorrect),
                 AnswerOption("B", "Triángulo amarillo", AnswerOptionState.Unselected),
-                AnswerOption("C", "Rombo azul", AnswerOptionState.Unselected),
-            ),
+                AnswerOption("C", "Rombo azul", AnswerOptionState.Unselected)
+            )
         )
     }
 }
@@ -152,9 +152,9 @@ private fun PreviewQuestionAnswerCardWithImages() {
             options = listOf(
                 AnswerOption("A", "Camino sinuoso", AnswerOptionState.Selected),
                 AnswerOption("B", "No camiones", AnswerOptionState.Unselected),
-                AnswerOption("C", "Ciclistas en pendiente", AnswerOptionState.Unselected),
+                AnswerOption("C", "Ciclistas en pendiente", AnswerOptionState.Unselected)
             ),
-            onOptionClick = {},
+            onOptionClick = {}
         )
     }
 }

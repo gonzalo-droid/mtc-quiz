@@ -1,4 +1,3 @@
 package com.gondroid.evaluationdomain
 
-class MyClass {
-}
+class MyClass

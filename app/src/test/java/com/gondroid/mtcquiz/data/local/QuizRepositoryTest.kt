@@ -31,7 +31,6 @@ class QuizRepositoryTest {
     fun setUp() {
         fakeDao = EvaluationDaoFake()
 
-
         val json = """
             {
                 "data": [
@@ -97,7 +96,5 @@ class QuizRepositoryTest {
         Truth.assertThat(questions).isNotEmpty()
         Truth.assertThat(questions.first().title).isEqualTo("Está permitido en la vía:")
         val q = questions.first()
-
     }
-
 }

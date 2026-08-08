@@ -2,12 +2,12 @@ package com.gondroid.mtcquiz.presentation.screens.pdf
 
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
-import com.google.common.truth.Truth.assertThat
 import com.gondroid.core.data.ads.AdsManager
 import com.gondroid.mtcquiz.presentation.screens.QuizRepositoryFake
 import com.gondroid.mtcquiz.util.MainDispatcherRule
 import com.gondroid.pdf.presentation.PdfEvent
 import com.gondroid.pdf.presentation.PdfScreenViewModel
+import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -35,7 +35,7 @@ class PdfScreenViewModelTest {
         return PdfScreenViewModel(
             savedStateHandle = savedStateHandle,
             repository = QuizRepositoryFake(),
-            adsManager = adsManager,
+            adsManager = adsManager
         )
     }
 

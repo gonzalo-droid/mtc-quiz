@@ -1,6 +1,5 @@
 package com.gondroid.auth.presentation
 
-
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialResponse
 import androidx.lifecycle.ViewModel
@@ -20,10 +19,9 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
-
 @HiltViewModel
 class LoginScreenViewModel @Inject constructor(
-    private val authRepository: AuthRepository,
+    private val authRepository: AuthRepository
 ) : ViewModel() {
 
     private var _uiState =
@@ -33,12 +31,10 @@ class LoginScreenViewModel @Inject constructor(
     private var eventChannel = Channel<LoginEvent>()
     val event = eventChannel.receiveAsFlow()
 
-
     init {
         // TODO implemented login
         // loadAvailableProviders()
     }
-
 
     private fun loadAvailableProviders() {
         viewModelScope.launch {
@@ -88,19 +84,19 @@ class LoginScreenViewModel @Inject constructor(
             when (val result = authRepository.authenticate(provider)) {
                 is AuthResult.Success -> {
                     _uiState.value = _uiState.value.copy(
-                        isLoading = false,
+                        isLoading = false
                     )
                 }
 
                 is AuthResult.Error -> {
                     _uiState.value = _uiState.value.copy(
-                        isLoading = false,
+                        isLoading = false
                     )
                 }
 
                 is AuthResult.Cancelled -> {
                     _uiState.value = _uiState.value.copy(
-                        isLoading = false,
+                        isLoading = false
                     )
                 }
             }
@@ -118,7 +114,6 @@ class LoginScreenViewModel @Inject constructor(
                             .createFrom(credential.data)
 
                         signInWithGoogle(googleIdTokenCredential.idToken)
-
                     } catch (e: GoogleIdTokenParsingException) {
                         Timber.tag("LoginVM").e(e, "Received an invalid google id token response")
                     }

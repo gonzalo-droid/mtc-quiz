@@ -15,7 +15,6 @@ import com.android.billingclient.api.ProductDetailsResponseListener
 import com.android.billingclient.api.Purchase
 import com.android.billingclient.api.PurchasesResponseListener
 import com.android.billingclient.api.PurchasesUpdatedListener
-import com.android.billingclient.api.QueryProductDetailsParams
 import com.android.billingclient.api.QueryProductDetailsResult
 import com.android.billingclient.api.QueryPurchasesParams
 import com.gondroid.core.data.analytics.AnalyticsManager
@@ -186,7 +185,7 @@ class PremiumRepositoryImplTest {
             val result = BillingResult.newBuilder().setResponseCode(responseCode).build()
             listenerSlot.captured.onProductDetailsResponse(
                 result,
-                QueryProductDetailsResult.create(details, emptyList()),
+                QueryProductDetailsResult.create(details, emptyList())
             )
         }
     }
@@ -202,7 +201,7 @@ class PremiumRepositoryImplTest {
 
         assertThat(repository.availablePlansFlow.first().map { it.productId }).containsExactly(
             PremiumRepositoryImpl.PRODUCT_ID_MONTHLY,
-            PremiumRepositoryImpl.PRODUCT_ID_ANNUAL,
+            PremiumRepositoryImpl.PRODUCT_ID_ANNUAL
         )
     }
 
@@ -308,7 +307,7 @@ class PremiumRepositoryImplTest {
         state: Int = Purchase.PurchaseState.PURCHASED,
         acknowledged: Boolean = false,
         products: List<String> = listOf(PremiumRepositoryImpl.PRODUCT_ID_MONTHLY),
-        token: String = "purchase-token",
+        token: String = "purchase-token"
     ): Purchase = mockk {
         every { purchaseState } returns state
         every { isAcknowledged } returns acknowledged
@@ -321,7 +320,7 @@ class PremiumRepositoryImplTest {
         val listenerSlot = slot<AcknowledgePurchaseResponseListener>()
         every { billingClient.acknowledgePurchase(any(), capture(listenerSlot)) } answers {
             listenerSlot.captured.onAcknowledgePurchaseResponse(
-                BillingResult.newBuilder().setResponseCode(BillingClient.BillingResponseCode.OK).build(),
+                BillingResult.newBuilder().setResponseCode(BillingClient.BillingResponseCode.OK).build()
             )
         }
         val purchase = purchaseMock(acknowledged = false)
@@ -374,7 +373,7 @@ class PremiumRepositoryImplTest {
         verify {
             analyticsManager.logPurchaseFailed(
                 productId = "unknown",
-                errorCode = BillingClient.BillingResponseCode.ERROR,
+                errorCode = BillingClient.BillingResponseCode.ERROR
             )
         }
     }

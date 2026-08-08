@@ -3,7 +3,6 @@ plugins {
     alias(libs.plugins.mtcquiz.android.hilt)
 }
 
-
 android {
     namespace = "com.gondroid.pdf.presentation"
 }

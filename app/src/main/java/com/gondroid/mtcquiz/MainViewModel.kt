@@ -1,6 +1,5 @@
 package com.gondroid.mtcquiz
 
-
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gondroid.core.domain.repository.PreferenceRepository
@@ -15,13 +14,12 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-
 @HiltViewModel
 class MainViewModel
 @Inject
 constructor(
     private val preferenceRepository: PreferenceRepository,
-    private val premiumRepository: PremiumRepository,
+    private val premiumRepository: PremiumRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(AuthState())
@@ -46,12 +44,12 @@ constructor(
     init {
         combine(
             preferenceRepository.isLoggedInFlow,
-            preferenceRepository.isOnboardingShownFlow,
+            preferenceRepository.isOnboardingShownFlow
         ) { isLoggedIn, isOnboardingShown ->
             _state.value = AuthState(
                 isLoggedIn = isLoggedIn,
                 isOnboardingShown = isOnboardingShown,
-                isLoading = false,
+                isLoading = false
             )
         }.launchIn(viewModelScope)
 
@@ -64,5 +62,5 @@ constructor(
 data class AuthState(
     val isLoggedIn: Boolean = false,
     val isOnboardingShown: Boolean = true,
-    val isLoading: Boolean = true,
+    val isLoading: Boolean = true
 )

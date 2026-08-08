@@ -1,6 +1,5 @@
 package com.gondroid.home.presentation
 
-
 import android.Manifest
 import androidx.annotation.RequiresPermission
 import androidx.compose.foundation.clickable
@@ -40,7 +39,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -49,14 +47,13 @@ import com.gondroid.core.domain.model.Category
 import com.gondroid.core.presentation.designsystem.MTCQuizTheme
 import com.gondroid.core.presentation.ui.BannerAdSlot
 
-
 @RequiresPermission(Manifest.permission.INTERNET)
 @Composable
 fun HomeScreenRoot(
     viewModel: HomeScreenViewModel,
     navigateToDetail: (String) -> Unit,
     navigateToConfiguration: () -> Unit,
-    navigateToPremium: () -> Unit = {},
+    navigateToPremium: () -> Unit = {}
 ) {
     val state by viewModel.state.collectAsState()
 
@@ -69,7 +66,7 @@ fun HomeScreenRoot(
                 is HomeAction.GoToConfiguration -> navigateToConfiguration()
                 is HomeAction.GoToPremium -> navigateToPremium()
             }
-        },
+        }
     )
 }
 
@@ -78,9 +75,8 @@ fun HomeScreenRoot(
 fun HomeScreen(
     state: HomeState,
     bannerAdId: String,
-    onAction: (HomeAction) -> Unit,
+    onAction: (HomeAction) -> Unit
 ) {
-
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
@@ -103,40 +99,38 @@ fun HomeScreen(
                             Icon(
                                 imageVector = Icons.Default.WorkspacePremium,
                                 contentDescription = "premium",
-                                tint = Color(0xFFFFB300),
+                                tint = Color(0xFFFFB300)
                             )
                         }
                     }
                     Box(
                         modifier =
-                            Modifier
-                                .padding(8.dp)
-                                .clickable {
-                                    onAction(HomeAction.GoToConfiguration)
-                                },
+                        Modifier
+                            .padding(8.dp)
+                            .clickable {
+                                onAction(HomeAction.GoToConfiguration)
+                            }
                     ) {
                         Icon(
                             imageVector = Icons.Default.Menu,
                             contentDescription = "menu_button",
-                            tint = MaterialTheme.colorScheme.onSurface,
+                            tint = MaterialTheme.colorScheme.onSurface
                         )
-
                     }
-                },
+                }
             )
         },
         bottomBar = {
             BannerAdSlot(bannerAdId = bannerAdId, isPremium = state.isPremium)
-        },
+        }
     ) { paddingValues ->
         Column(
             modifier =
-                Modifier
-                    .padding(paddingValues)
-                    .padding(vertical = 16.dp)
-                    .verticalScroll(rememberScrollState()),
+            Modifier
+                .padding(paddingValues)
+                .padding(vertical = 16.dp)
+                .verticalScroll(rememberScrollState())
         ) {
-
             Text(
                 modifier = Modifier.padding(horizontal = 16.dp),
                 text = stringResource(R.string.practice_to_evaluation),
@@ -155,20 +149,20 @@ fun HomeScreen(
                 Spacer(modifier = Modifier.height(8.dp))
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(horizontal = 16.dp),
+                    modifier = Modifier.padding(horizontal = 16.dp)
                 ) {
                     Icon(
                         imageVector = Icons.Default.LocalFireDepartment,
                         contentDescription = "Racha",
                         tint = Color(0xFFFF9800),
-                        modifier = Modifier.size(20.dp),
+                        modifier = Modifier.size(20.dp)
                     )
                     Spacer(Modifier.width(4.dp))
                     Text(
                         text = "${state.streak} día${if (state.streak > 1) "s" else ""}",
                         style = MaterialTheme.typography.labelLarge,
                         color = Color(0xFFFF9800),
-                        fontWeight = FontWeight.Bold,
+                        fontWeight = FontWeight.Bold
                     )
                 }
             }
@@ -183,11 +177,10 @@ fun HomeScreen(
                         .padding(horizontal = 16.dp),
                     onItemSelected = {
                         onAction(HomeAction.OnClickCategory(category.id))
-                    },
+                    }
                 )
                 Spacer(modifier = Modifier.height(12.dp))
             }
-
         }
     }
 }
@@ -198,25 +191,23 @@ fun CardCategoryItem(
     modifier: Modifier = Modifier,
     onItemSelected: () -> Unit = {}
 ) {
-
     val colors = categoryColors(
         category = item.category,
         fallback = CategoryColorScheme(
             container = MaterialTheme.colorScheme.primary,
-            content = MaterialTheme.colorScheme.onPrimary,
-        ),
+            content = MaterialTheme.colorScheme.onPrimary
+        )
     )
 
     Card(
         colors = CardDefaults.cardColors(
             containerColor = colors.container,
-            contentColor = colors.content,
+            contentColor = colors.content
         ),
         modifier = modifier.height(160.dp),
         onClick = onItemSelected
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
-
             Column(
                 modifier = Modifier
                     .padding(top = 12.dp, start = 16.dp, end = 16.dp)
@@ -226,7 +217,7 @@ fun CardCategoryItem(
                     text = item.classType,
                     color = colors.content,
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = FontWeight.Bold
                 )
                 Text(
                     text = item.category,
@@ -244,11 +235,10 @@ fun CardCategoryItem(
             )
         }
     }
-
 }
 
 @Preview(
-    showBackground = true,
+    showBackground = true
 )
 @Composable
 fun PreviewHomeScreenRoot() {
@@ -275,7 +265,7 @@ fun PreviewHomeScreenRoot() {
                 )
             ),
             bannerAdId = "test-banner-id",
-            onAction = {},
+            onAction = {}
         )
     }
 }

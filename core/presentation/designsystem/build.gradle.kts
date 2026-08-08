@@ -1,6 +1,5 @@
 plugins {
     alias(libs.plugins.mtcquiz.android.library.compose)
-
 }
 
 android {

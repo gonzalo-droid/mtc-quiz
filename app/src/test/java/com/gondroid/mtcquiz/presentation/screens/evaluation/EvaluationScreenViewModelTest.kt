@@ -24,7 +24,7 @@ class EvaluationScreenViewModelTest {
 
     @Test
     fun `getState category and question load fail`() {
-        // Check if state is not modified when repository.getCategoryById or 
+        // Check if state is not modified when repository.getCategoryById or
         // repository.getQuestionsByCategory return null or empty.
         // TODO implement test
     }
@@ -37,14 +37,14 @@ class EvaluationScreenViewModelTest {
 
     @Test
     fun `getResultsList after saveAnswer`() {
-        // Verify that `resultsList` contains the correct `QuestionResult` 
+        // Verify that `resultsList` contains the correct `QuestionResult`
         // after calling `saveAnswer` with `answerWasVerified` as true.
         // TODO implement test
     }
 
     @Test
     fun `getResultsList after multiple saveAnswer`() {
-        // Verify that `resultsList` contains all the `QuestionResult` 
+        // Verify that `resultsList` contains all the `QuestionResult`
         // after calling `saveAnswer` multiple times.
         // TODO implement test
     }
@@ -57,22 +57,22 @@ class EvaluationScreenViewModelTest {
 
     @Test
     fun `getEvent after saveExam success`() {
-        // Verify that `event` emits `EvaluationEvent.EvaluationCreated` 
+        // Verify that `event` emits `EvaluationEvent.EvaluationCreated`
         // with correct `evaluationId` after calling `saveExam`.
         // TODO implement test
     }
 
     @Test
     fun `nextQuestion valid index`() {
-        // Verify that `indexQuestion` increments by 1, 
-        // `answerWasSelected` and `answerWasVerified` reset to false and 
+        // Verify that `indexQuestion` increments by 1,
+        // `answerWasSelected` and `answerWasVerified` reset to false and
         // the correct next question is loaded.
         // TODO implement test
     }
 
     @Test
     fun `nextQuestion last question`() {
-        // Verify that when we are on last question and we run `nextQuestion()` the question changed 
+        // Verify that when we are on last question and we run `nextQuestion()` the question changed
         // correctly to the next one.
         // TODO implement test
     }
@@ -91,7 +91,7 @@ class EvaluationScreenViewModelTest {
 
     @Test
     fun `saveAnswer valid`() {
-        // Verify that if `answerWasVerified` is true, 
+        // Verify that if `answerWasVerified` is true,
         // a `QuestionResult` is added to `resultsList` with correct data.
         // TODO implement test
     }
@@ -104,7 +104,7 @@ class EvaluationScreenViewModelTest {
 
     @Test
     fun `saveExam success`() {
-        // Verify that `repository.saveEvaluation` is called with correct data, 
+        // Verify that `repository.saveEvaluation` is called with correct data,
         // and `event` emits `EvaluationEvent.EvaluationCreated`.
         // TODO implement test
     }
@@ -123,7 +123,7 @@ class EvaluationScreenViewModelTest {
 
     @Test
     fun `saveExam no questions`() {
-        // Verify the behavior when there are no questions 
+        // Verify the behavior when there are no questions
         // and `saveExam` is called, it should save with zero values.
         // TODO implement test
     }
@@ -145,5 +145,4 @@ class EvaluationScreenViewModelTest {
         // Verify the behavior when `repository.saveEvaluation` throws an exception.
         // TODO implement test
     }
-
 }

@@ -53,7 +53,7 @@ class ConfigurationScreenViewModelTest {
     private fun createViewModel() = ConfigurationScreenViewModel(
         repository = authRepository,
         preferenceRepository = preferenceRepository,
-        premiumRepository = premiumRepository,
+        premiumRepository = premiumRepository
     )
 
     @Test

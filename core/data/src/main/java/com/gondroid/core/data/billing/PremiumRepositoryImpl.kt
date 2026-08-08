@@ -43,7 +43,7 @@ class PremiumRepositoryImpl @Inject constructor(
     private val dataStore: DataStore<Preferences>,
     private val analyticsManager: AnalyticsManager,
     @ApplicationScope private val scope: CoroutineScope,
-    private val billingClientFactory: BillingClientFactory,
+    private val billingClientFactory: BillingClientFactory
 ) : PremiumRepository, BillingLauncher {
 
     companion object {
@@ -75,7 +75,7 @@ class PremiumRepositoryImpl @Inject constructor(
                 Timber.e("Billing: purchase failed with code ${billingResult.responseCode}")
                 analyticsManager.logPurchaseFailed(
                     productId = purchases?.firstOrNull()?.products?.firstOrNull() ?: "unknown",
-                    errorCode = billingResult.responseCode,
+                    errorCode = billingResult.responseCode
                 )
             }
         }
@@ -139,7 +139,7 @@ class PremiumRepositoryImpl @Inject constructor(
         return SubscriptionPlan(
             productId = details.productId,
             billingPeriod = period,
-            formattedPrice = pricingPhase.formattedPrice,
+            formattedPrice = pricingPhase.formattedPrice
         )
     }
 

@@ -12,9 +12,9 @@ import com.gondroid.core.database.entity.EvaluationEntity
 @Database(
     entities = [
         EvaluationEntity::class,
-        DismissedQuestionEntity::class,
+        DismissedQuestionEntity::class
     ],
-    version = 3,
+    version = 3
 )
 abstract class MTCDatabase : RoomDatabase() {
     abstract fun evaluationDao(): EvaluationDao
