@@ -21,12 +21,16 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '21'
+          cache: 'gradle'
 
       - name: Write google-services.json
         run: cp ci/google-services.dummy.json app/google-services.json
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
+
+      - name: Check code style (ktlint)
+        run: ./gradlew ktlintCheck --console=plain
 
       - name: Run unit tests
         run: ./gradlew test --console=plain
