@@ -16,16 +16,20 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
         with:
-          ruby-version: '3.2'
+          distribution: 'temurin'
+          java-version: '21'
 
-      - name: Install Fastlane
-        run: gem install fastlane
+      - name: Write google-services.json
+        run: cp ci/google-services.dummy.json app/google-services.json
 
-      - name: Run Fastlane
-        run: fastlane android beta
-        env:
-          FASTLANE_SKIP_UPDATE_CHECK: true
-          FASTLANE_DISABLE_COLORS: true
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Run unit tests
+        run: ./gradlew test --console=plain
+
+      - name: Build debug APK
+        run: ./gradlew assembleDebug --console=plain
