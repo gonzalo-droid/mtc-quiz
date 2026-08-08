@@ -33,24 +33,28 @@ class HomeScreenViewModelTest {
     private lateinit var repository: QuizRepositoryFake
     private lateinit var preferenceRepository: PreferenceRepositoryFake
 
-    private val fakePremiumRepository = object : PremiumRepository {
-        override val isPremiumFlow: StateFlow<Boolean> = MutableStateFlow(false)
-        override val availablePlansFlow: Flow<List<SubscriptionPlan>> = flowOf(emptyList())
-        override suspend fun loadAvailablePlans() = Unit
-        override suspend fun refreshPurchaseState() = Unit
-        override suspend fun restorePurchases() = Unit
-    }
+    private fun fakePremiumRepository(isPremiumFlow: StateFlow<Boolean> = MutableStateFlow(false)) =
+        object : PremiumRepository {
+            override val isPremiumFlow: StateFlow<Boolean> = isPremiumFlow
+            override val availablePlansFlow: Flow<List<SubscriptionPlan>> = flowOf(emptyList())
+            override suspend fun loadAvailablePlans() = Unit
+            override suspend fun refreshPurchaseState() = Unit
+            override suspend fun restorePurchases() = Unit
+        }
+
+    private fun createViewModel(premiumRepository: PremiumRepository = fakePremiumRepository()) =
+        HomeScreenViewModel(
+            repository = repository,
+            preferenceRepository = preferenceRepository,
+            premiumRepository = premiumRepository,
+            bannerAdId = "test-banner-id"
+        )
 
     @Before
     fun setUp() {
         repository = QuizRepositoryFake()
         preferenceRepository = PreferenceRepositoryFake()
-        viewModel = HomeScreenViewModel(
-            repository = repository,
-            preferenceRepository = preferenceRepository,
-            premiumRepository = fakePremiumRepository,
-            bannerAdId = "test-banner-id"
-        )
+        viewModel = createViewModel()
     }
 
     @Test
@@ -97,5 +101,26 @@ class HomeScreenViewModelTest {
             Truth.assertThat(state.userName).isEqualTo("Usuario de prueba")
             cancelAndIgnoreRemainingEvents()
         }
+    }
+
+    @Test
+    fun `state reflects isPremium from PremiumRepository`() = runTest {
+        val vm = createViewModel(premiumRepository = fakePremiumRepository(MutableStateFlow(true)))
+        advanceUntilIdle()
+
+        Truth.assertThat(vm.state.value.isPremium).isTrue()
+    }
+
+    @Test
+    fun `state reflects isPremium changes from PremiumRepository flow emissions`() = runTest {
+        val isPremiumFlow = MutableStateFlow(false)
+        val vm = createViewModel(premiumRepository = fakePremiumRepository(isPremiumFlow))
+        advanceUntilIdle()
+        Truth.assertThat(vm.state.value.isPremium).isFalse()
+
+        isPremiumFlow.value = true
+        advanceUntilIdle()
+
+        Truth.assertThat(vm.state.value.isPremium).isTrue()
     }
 }

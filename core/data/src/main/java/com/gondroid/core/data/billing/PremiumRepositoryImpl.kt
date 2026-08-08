@@ -1,7 +1,6 @@
 package com.gondroid.core.data.billing
 
 import android.app.Activity
-import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -11,7 +10,6 @@ import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingClientStateListener
 import com.android.billingclient.api.BillingFlowParams
 import com.android.billingclient.api.BillingResult
-import com.android.billingclient.api.PendingPurchasesParams
 import com.android.billingclient.api.ProductDetails
 import com.android.billingclient.api.ProductDetailsResult
 import com.android.billingclient.api.Purchase
@@ -26,7 +24,6 @@ import com.gondroid.core.data.di.ApplicationScope
 import com.gondroid.core.domain.model.BillingPeriod
 import com.gondroid.core.domain.model.SubscriptionPlan
 import com.gondroid.core.domain.repository.PremiumRepository
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -43,10 +40,10 @@ import kotlin.coroutines.resume
 
 @Singleton
 class PremiumRepositoryImpl @Inject constructor(
-    @ApplicationContext private val context: Context,
     private val dataStore: DataStore<Preferences>,
     private val analyticsManager: AnalyticsManager,
     @ApplicationScope private val scope: CoroutineScope,
+    private val billingClientFactory: BillingClientFactory,
 ) : PremiumRepository, BillingLauncher {
 
     companion object {
@@ -84,15 +81,7 @@ class PremiumRepositoryImpl @Inject constructor(
         }
     }
 
-    private val billingClient: BillingClient = BillingClient.newBuilder(context)
-        .setListener(purchasesUpdatedListener)
-        .enablePendingPurchases(
-            PendingPurchasesParams.newBuilder()
-                .enableOneTimeProducts()
-                .build()
-        )
-        .enableAutoServiceReconnection()
-        .build()
+    private val billingClient: BillingClient = billingClientFactory.create(purchasesUpdatedListener)
 
     init {
         scope.launch {
