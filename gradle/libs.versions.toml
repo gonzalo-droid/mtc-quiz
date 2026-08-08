@@ -47,7 +47,7 @@ googleService = "4.4.2"
 googleFirebaseCrashlytics = "3.0.3"
 playServicesAdMob = "24.9.0"
 playReview = "2.0.2"
-playBilling = "7.1.1"
+playBilling = "9.1.0"
 
 # 🧭 Navigation
 navigationCompose = "2.8.1"
