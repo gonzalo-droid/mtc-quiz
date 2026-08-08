@@ -26,7 +26,6 @@ import androidx.compose.material.icons.filled.AccountBalance
 import androidx.compose.material.icons.automirrored.filled.Assignment
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.DarkMode
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.History
@@ -383,11 +382,6 @@ fun ConfigurationScreen(
                     icon = Icons.Default.Star,
                     title = "Calificar app",
                     onClick = { onAction(ConfigurationAction.GoToRating) },
-                )
-                ItemList(
-                    icon = Icons.Default.Info,
-                    title = "Nosotros",
-                    onClick = { onAction(ConfigurationAction.GoToAbout) },
                 )
             }
 
