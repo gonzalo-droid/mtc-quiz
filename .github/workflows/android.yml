@@ -22,11 +22,8 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-      - name: Write local.properties
-        run: echo "API_KEY=${{ secrets.API_KEY }}" > local.properties
-
       - name: Write google-services.json
-        run: echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 -d > app/google-services.json
+        run: cp ci/google-services.dummy.json app/google-services.json
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
