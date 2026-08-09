@@ -1,6 +1,5 @@
 package com.gondroid.configuration.presentation
 
-
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gondroid.core.domain.repository.AuthRepository
@@ -17,13 +16,12 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-
 @HiltViewModel
 class ConfigurationScreenViewModel
 @Inject constructor(
     private val repository: AuthRepository,
     private val preferenceRepository: PreferenceRepository,
-    private val premiumRepository: PremiumRepository,
+    private val premiumRepository: PremiumRepository
 ) : ViewModel() {
 
     private var _state = MutableStateFlow(ConfigurationState())

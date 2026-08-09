@@ -18,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
 
-
 @Composable
 fun TarifasScreenRoot(
     navigateBack: () -> Unit
@@ -27,7 +26,6 @@ fun TarifasScreenRoot(
         onNavigateUp = navigateBack
     )
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,7 +43,7 @@ fun TarifasScreen(
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back",
-                            tint = MaterialTheme.colorScheme.onSurface,
+                            tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
                 }
@@ -67,7 +65,6 @@ fun TarifasScreen(
         )
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable

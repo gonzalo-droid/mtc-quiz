@@ -7,14 +7,13 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
-import java.time.LocalDate
 import com.gondroid.core.domain.model.PreferencesEvaluation
 import com.gondroid.core.domain.repository.PreferenceRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import java.time.LocalDate
 import javax.inject.Inject
-
 
 class PreferenceRepositoryImpl @Inject constructor(
     private val dataStore: DataStore<Preferences>
@@ -35,7 +34,6 @@ class PreferenceRepositoryImpl @Inject constructor(
         val CURRENT_STREAK = intPreferencesKey("current_streak")
         val LAST_STUDY_DATE = longPreferencesKey("last_study_date")
     }
-
 
     // DarkMode (legacy)
     override val darkModeFlow: Flow<Boolean> = dataStore.data
@@ -108,7 +106,6 @@ class PreferenceRepositoryImpl @Inject constructor(
         .map { preferences ->
             preferences[IS_ONBOARDING_SHOWN] ?: false
         }
-
 
     // Setting evaluation
     override val numberQuestionsFlow: Flow<String> = dataStore.data

@@ -7,7 +7,7 @@ data class Category(
     val classType: String = "",
     val description: String = "",
     val pdf: String = "",
-    val pathJson: String = "",
+    val pathJson: String = ""
 ) {
     val examId: String
         get() = pathJson.removeSuffix("_questions.json")

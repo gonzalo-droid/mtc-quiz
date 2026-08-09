@@ -19,7 +19,7 @@ import com.gondroid.core.presentation.designsystem.MTCQuizTheme
 fun LinearProgressComponent(
     modifier: Modifier = Modifier,
     progress: Float = 1f,
-    countProgress: String = "",
+    countProgress: String = ""
 ) {
     Row(
         modifier = modifier,
@@ -30,22 +30,21 @@ fun LinearProgressComponent(
             progress = { progress },
             modifier = Modifier
                 .height(8.dp)
-                .weight(1f),
+                .weight(1f)
         )
         Text(
             text = countProgress,
             style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
 }
 
 @Preview(
-    showBackground = true,
+    showBackground = true
 )
 @Composable
 fun PreviewQuestionsScreenRoot() {
-
     MTCQuizTheme {
         LinearProgressComponent(
             modifier = Modifier

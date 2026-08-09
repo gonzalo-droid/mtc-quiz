@@ -1,7 +1,6 @@
 package com.gondroid.core.data.di
 
 import android.content.Context
-import androidx.credentials.CredentialManager
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import dagger.Module

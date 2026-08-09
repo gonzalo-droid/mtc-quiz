@@ -36,7 +36,7 @@ class MainViewModelTest {
 
     private fun createViewModel() = MainViewModel(
         preferenceRepository = preferenceRepository,
-        premiumRepository = premiumRepository,
+        premiumRepository = premiumRepository
     )
 
     @Test

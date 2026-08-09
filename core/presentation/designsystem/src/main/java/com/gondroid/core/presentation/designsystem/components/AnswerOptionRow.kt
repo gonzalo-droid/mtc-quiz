@@ -31,14 +31,14 @@ enum class AnswerOptionState {
     Selected,
     RevealedCorrect,
     RevealedIncorrect,
-    CorrectAnswerHint,
+    CorrectAnswerHint
 }
 
 private data class AnswerOptionColors(
     val container: Color,
     val content: Color,
     val badgeContainer: Color,
-    val badgeContent: Color,
+    val badgeContent: Color
 )
 
 @Composable
@@ -50,28 +50,28 @@ private fun colorsFor(state: AnswerOptionState): AnswerOptionColors {
             container = Color.Transparent,
             content = scheme.onSurface,
             badgeContainer = scheme.surfaceContainerHighest,
-            badgeContent = scheme.onSurfaceVariant,
+            badgeContent = scheme.onSurfaceVariant
         )
 
         AnswerOptionState.Selected -> AnswerOptionColors(
             container = scheme.secondaryContainer,
             content = scheme.onSecondaryContainer,
             badgeContainer = scheme.secondaryContainer,
-            badgeContent = scheme.onSecondaryContainer,
+            badgeContent = scheme.onSecondaryContainer
         )
 
         AnswerOptionState.RevealedCorrect, AnswerOptionState.CorrectAnswerHint -> AnswerOptionColors(
             container = extended.successContainer,
             content = extended.onSuccessContainer,
             badgeContainer = extended.successContainer,
-            badgeContent = extended.onSuccessContainer,
+            badgeContent = extended.onSuccessContainer
         )
 
         AnswerOptionState.RevealedIncorrect -> AnswerOptionColors(
             container = scheme.errorContainer,
             content = scheme.onErrorContainer,
             badgeContainer = scheme.errorContainer,
-            badgeContent = scheme.onErrorContainer,
+            badgeContent = scheme.onErrorContainer
         )
     }
 }
@@ -82,7 +82,7 @@ fun AnswerOptionRow(
     text: String,
     state: AnswerOptionState,
     modifier: Modifier = Modifier,
-    onClick: (() -> Unit)? = null,
+    onClick: (() -> Unit)? = null
 ) {
     val colors = colorsFor(state)
 
@@ -91,19 +91,19 @@ fun AnswerOptionRow(
             .background(colors.container, RoundedCornerShape(10.dp))
             .then(if (onClick != null) Modifier.clickable { onClick() } else Modifier)
             .padding(horizontal = 10.dp, vertical = 10.dp),
-        verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
             modifier = Modifier
                 .size(20.dp)
                 .background(colors.badgeContainer, CircleShape),
-            contentAlignment = Alignment.Center,
+            contentAlignment = Alignment.Center
         ) {
             Text(
                 text = letter,
                 style = MaterialTheme.typography.labelSmall,
                 color = colors.badgeContent,
-                textAlign = TextAlign.Center,
+                textAlign = TextAlign.Center
             )
         }
 
@@ -113,7 +113,7 @@ fun AnswerOptionRow(
             color = colors.content,
             modifier = Modifier
                 .weight(1f)
-                .padding(start = 10.dp),
+                .padding(start = 10.dp)
         )
 
         when (state) {
@@ -121,14 +121,14 @@ fun AnswerOptionRow(
                 imageVector = Icons.Filled.Check,
                 contentDescription = stringResource(R.string.answer_correct),
                 tint = colors.content,
-                modifier = Modifier.size(18.dp),
+                modifier = Modifier.size(18.dp)
             )
 
             AnswerOptionState.RevealedIncorrect -> Icon(
                 imageVector = Icons.Filled.Close,
                 contentDescription = stringResource(R.string.answer_incorrect),
                 tint = colors.content,
-                modifier = Modifier.size(18.dp),
+                modifier = Modifier.size(18.dp)
             )
 
             else -> Unit
@@ -142,7 +142,7 @@ private fun PreviewAnswerOptionRowStates() {
     MTCQuizTheme {
         androidx.compose.foundation.layout.Column(
             modifier = Modifier.padding(12.dp),
-            verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(8.dp),
+            verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(8.dp)
         ) {
             AnswerOptionRow(letter = "A", text = "Opción sin seleccionar", state = AnswerOptionState.Unselected, onClick = {})
             AnswerOptionRow(letter = "B", text = "Opción seleccionada (sin verificar)", state = AnswerOptionState.Selected, onClick = {})

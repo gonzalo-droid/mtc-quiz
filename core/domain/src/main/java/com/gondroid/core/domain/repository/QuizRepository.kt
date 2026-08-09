@@ -1,6 +1,5 @@
 package com.gondroid.core.domain.repository
 
-
 import com.gondroid.core.domain.model.Category
 import com.gondroid.core.domain.model.Evaluation
 import com.gondroid.core.domain.model.Question

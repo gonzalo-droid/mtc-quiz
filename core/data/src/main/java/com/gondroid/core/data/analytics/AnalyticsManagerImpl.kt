@@ -7,7 +7,7 @@ import javax.inject.Singleton
 
 @Singleton
 class AnalyticsManagerImpl @Inject constructor(
-    private val firebaseAnalytics: FirebaseAnalytics,
+    private val firebaseAnalytics: FirebaseAnalytics
 ) : AnalyticsManager {
 
     override fun logPaywallViewed() {
@@ -17,28 +17,28 @@ class AnalyticsManagerImpl @Inject constructor(
     override fun logSubscribeClicked(productId: String) {
         firebaseAnalytics.logEvent(
             "premium_subscribe_clicked",
-            bundleOf("product_id" to productId),
+            bundleOf("product_id" to productId)
         )
     }
 
     override fun logPurchaseCompleted(productId: String) {
         firebaseAnalytics.logEvent(
             "premium_purchase_completed",
-            bundleOf("product_id" to productId),
+            bundleOf("product_id" to productId)
         )
     }
 
     override fun logPurchaseCanceled(productId: String) {
         firebaseAnalytics.logEvent(
             "premium_purchase_canceled",
-            bundleOf("product_id" to productId),
+            bundleOf("product_id" to productId)
         )
     }
 
     override fun logPurchaseFailed(productId: String, errorCode: Int) {
         firebaseAnalytics.logEvent(
             "premium_purchase_failed",
-            bundleOf("product_id" to productId, "error_code" to errorCode),
+            bundleOf("product_id" to productId, "error_code" to errorCode)
         )
     }
 
@@ -49,7 +49,7 @@ class AnalyticsManagerImpl @Inject constructor(
     override fun logRestoreCompleted(isPremium: Boolean) {
         firebaseAnalytics.logEvent(
             "premium_restore_completed",
-            bundleOf("is_premium" to isPremium),
+            bundleOf("is_premium" to isPremium)
         )
     }
 }

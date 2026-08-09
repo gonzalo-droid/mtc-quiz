@@ -17,7 +17,6 @@ private val OPTION_LETTER_PREFIX = Regex("^[a-dA-D]\\)\\s*")
  */
 fun String.stripOptionLetterPrefix(): String = replaceFirst(OPTION_LETTER_PREFIX, "")
 
-
 @SuppressLint("DefaultLocale")
 fun Int.toFormattedTime(): String {
     val minutes = this / 60

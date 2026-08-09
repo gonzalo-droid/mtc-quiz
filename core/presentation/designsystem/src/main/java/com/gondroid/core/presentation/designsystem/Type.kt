@@ -11,7 +11,7 @@ val bodyFontFamily = FontFamily(
     Font(resId = R.font.inter_regular, weight = FontWeight.Normal),
     Font(resId = R.font.inter_medium, weight = FontWeight.Medium),
     Font(resId = R.font.inter_semibold, weight = FontWeight.SemiBold),
-    Font(resId = R.font.inter_bold, weight = FontWeight.Bold),
+    Font(resId = R.font.inter_bold, weight = FontWeight.Bold)
 )
 
 val displayFontFamily = FontFamily(
@@ -19,7 +19,7 @@ val displayFontFamily = FontFamily(
     Font(resId = R.font.inter_regular, weight = FontWeight.Normal),
     Font(resId = R.font.inter_medium, weight = FontWeight.Medium),
     Font(resId = R.font.inter_semibold, weight = FontWeight.SemiBold),
-    Font(resId = R.font.inter_bold, weight = FontWeight.Bold),
+    Font(resId = R.font.inter_bold, weight = FontWeight.Bold)
 )
 
 val baseline = Typography()
@@ -39,5 +39,5 @@ val AppTypography = Typography(
     bodySmall = baseline.bodySmall.copy(fontFamily = bodyFontFamily),
     labelLarge = baseline.labelLarge.copy(fontFamily = bodyFontFamily, fontWeight = FontWeight.Medium),
     labelMedium = baseline.labelMedium.copy(fontFamily = bodyFontFamily, fontWeight = FontWeight.Medium),
-    labelSmall = baseline.labelSmall.copy(fontFamily = bodyFontFamily),
+    labelSmall = baseline.labelSmall.copy(fontFamily = bodyFontFamily)
 )

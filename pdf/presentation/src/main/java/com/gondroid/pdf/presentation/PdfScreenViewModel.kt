@@ -1,6 +1,5 @@
 package com.gondroid.pdf.presentation
 
-
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -27,7 +26,7 @@ sealed interface PdfEvent {
 class PdfScreenViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val repository: QuizRepository,
-    val adsManager: AdsManager,
+    val adsManager: AdsManager
 ) : ViewModel() {
 
     private var _state = MutableStateFlow(PdfState())
@@ -76,5 +75,4 @@ class PdfScreenViewModel @Inject constructor(
     fun onDownloadFinished() {
         _state.update { it.copy(shouldDownload = false, isLoading = false) }
     }
-
 }

@@ -24,7 +24,10 @@ internal fun Project.configureBuildTypes(
             buildConfig = true
         }
 
-        val apiKey = gradleLocalProperties(rootDir, rootProject.providers).getProperty("API_KEY")
+        // API_KEY is a local dev placeholder, not a real secret; default it so builds (and CI,
+        // which has no local.properties) don't require it to be set.
+        val apiKey = gradleLocalProperties(rootDir, rootProject.providers)
+            .getProperty("API_KEY") ?: "debug-placeholder-api-key"
         when(extensionType) {
             ExtensionType.APPLICATION -> {
                 extensions.configure<ApplicationExtension> {

@@ -8,5 +8,5 @@ import androidx.room.PrimaryKey
 data class DismissedQuestionEntity(
     @PrimaryKey
     @ColumnInfo(name = "question_id")
-    val questionId: Int,
+    val questionId: Int
 )

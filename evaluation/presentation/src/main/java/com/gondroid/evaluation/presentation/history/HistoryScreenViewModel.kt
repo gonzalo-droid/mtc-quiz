@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HistoryScreenViewModel @Inject constructor(
-    private val repository: QuizRepository,
+    private val repository: QuizRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(HistoryState())

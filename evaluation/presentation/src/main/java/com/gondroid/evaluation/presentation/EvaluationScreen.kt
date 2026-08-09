@@ -53,12 +53,11 @@ import com.gondroid.core.presentation.ui.stripOptionLetterPrefix
 import com.gondroid.core.presentation.ui.toFormattedTime
 import kotlinx.coroutines.delay
 
-
 @Composable
 fun EvaluationScreenRoot(
     viewModel: EvaluationScreenViewModel,
     navigateBack: () -> Boolean,
-    navigateToSummary: (String, String) -> Unit,
+    navigateToSummary: (String, String) -> Unit
 ) {
     val state by viewModel.state.collectAsState()
     val event = viewModel.event
@@ -80,7 +79,8 @@ fun EvaluationScreenRoot(
     }
 
     EvaluationScreen(
-        state = state, onAction = { action ->
+        state = state,
+        onAction = { action ->
             when (action) {
                 EvaluationAction.Back -> {
                     showCancelDialog = true
@@ -90,7 +90,8 @@ fun EvaluationScreenRoot(
                 EvaluationAction.VerifyAnswer -> viewModel.verifyAnswer()
                 EvaluationAction.NextQuestion -> viewModel.nextQuestion()
                 is EvaluationAction.SaveAnswer -> viewModel.saveAnswer(
-                    isCorrect = action.isCorrect, option = action.option
+                    isCorrect = action.isCorrect,
+                    option = action.option
                 )
 
                 is EvaluationAction.SummaryExam -> {
@@ -110,7 +111,8 @@ fun EvaluationScreenRoot(
                     blockExit = true
                 }
             }
-        }, showCancelDialog = showCancelDialog
+        },
+        showCancelDialog = showCancelDialog
     )
 }
 
@@ -119,14 +121,14 @@ fun EvaluationScreenRoot(
 fun EvaluationScreen(
     state: EvaluationState,
     onAction: (EvaluationAction) -> Unit,
-    showCancelDialog: Boolean,
+    showCancelDialog: Boolean
 ) {
-
     val progress by remember(state.indexQuestion) {
         derivedStateOf {
             if (state.questions.size > 1) {
                 (state.indexQuestion.toFloat() / (state.questions.size - 1).coerceAtLeast(1)).coerceIn(
-                    0f, 1f
+                    0f,
+                    1f
                 )
             } else {
                 0f
@@ -140,7 +142,6 @@ fun EvaluationScreen(
 
     var timeLeft by remember { mutableStateOf<Int?>(null) }
     var showFinishEvaluationDialog by remember { mutableStateOf(false) }
-
 
     LaunchedEffect(state.totalMinutes) {
         val totalMinutes = state.totalMinutes
@@ -156,7 +157,6 @@ fun EvaluationScreen(
             showFinishEvaluationDialog = true
         }
     }
-
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -177,9 +177,9 @@ fun EvaluationScreen(
                         tint = MaterialTheme.colorScheme.onBackground,
                         modifier = Modifier.clickable {
                             onAction(
-                                EvaluationAction.Back,
+                                EvaluationAction.Back
                             )
-                        },
+                        }
                     )
                 },
                 actions = {
@@ -188,7 +188,7 @@ fun EvaluationScreen(
                             .padding(8.dp)
                             .clickable {}
                             .clip(RoundedCornerShape(8.dp))
-                            .background(MaterialTheme.colorScheme.primary),
+                            .background(MaterialTheme.colorScheme.primary)
                     ) {
                         Text(
                             modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp),
@@ -196,19 +196,17 @@ fun EvaluationScreen(
                             color = Color.White,
                             text = timeLeft?.toFormattedTime() ?: "00:00"
                         )
-
                     }
-                },
+                }
             )
-        },
+        }
     ) { paddingValues ->
 
         Column(
             modifier = Modifier
                 .padding(paddingValues)
-                .padding(16.dp),
+                .padding(16.dp)
         ) {
-
             LinearProgressComponent(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -220,7 +218,8 @@ fun EvaluationScreen(
             Spacer(modifier = Modifier.height(20.dp))
 
             LazyColumn(
-                modifier = Modifier.weight(1f), verticalArrangement = Arrangement.Top
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.Top
             ) {
                 item {
                     QuestionAnswerCard(
@@ -246,7 +245,7 @@ fun EvaluationScreen(
                             { index -> selectedOption = state.question.options[index] }
                         } else {
                             null
-                        },
+                        }
                     )
                 }
             }
@@ -285,7 +284,8 @@ fun EvaluationScreen(
                             onAction(EvaluationAction.SummaryExam(state.category.id))
                         }
                     }
-                })
+                }
+            )
             Spacer(modifier = Modifier.height(16.dp))
         }
 
@@ -302,12 +302,11 @@ fun EvaluationScreen(
                     EvaluationAction.ConfirmCancel
                 )
             }, onDismiss = {
-                onAction(
-                    EvaluationAction.DismissDialog
-                )
-            })
+                    onAction(
+                        EvaluationAction.DismissDialog
+                    )
+                })
         }
-
     }
 }
 
@@ -316,7 +315,7 @@ fun ButtonsAction(
     state: EvaluationState,
     modifier: Modifier,
     onClickNextQuestion: (type: TypeActionQuestion) -> Unit = {},
-    selectedOption: String?,
+    selectedOption: String?
 ) {
     var typeQuestion = TypeActionQuestion.VERIFY
 
@@ -338,19 +337,20 @@ fun ButtonsAction(
     }
 
     Column(
-        modifier = modifier, verticalArrangement = Arrangement.spacedBy(16.dp)
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Button(
-            enabled = !selectedOption.isNullOrEmpty(), onClick = {
+            enabled = !selectedOption.isNullOrEmpty(),
+            onClick = {
                 onClickNextQuestion(typeQuestion)
-            }, modifier = Modifier.fillMaxWidth()
+            },
+            modifier = Modifier.fillMaxWidth()
         ) {
             Text(text = buttonText)
         }
-
     }
 }
-
 
 @Composable
 fun FinishedTimeDialog(onDismiss: () -> Unit) {
@@ -369,7 +369,8 @@ fun FinishedTimeDialog(onDismiss: () -> Unit) {
 
 @Composable
 fun CancelEvaluation(
-    onConfirmCancel: () -> Unit, onDismiss: () -> Unit
+    onConfirmCancel: () -> Unit,
+    onDismiss: () -> Unit
 ) {
     AlertDialog(
         onDismissRequest = {},
@@ -383,14 +384,16 @@ fun CancelEvaluation(
         confirmButton = {
             Row(modifier = Modifier.fillMaxWidth()) {
                 TextButton(
-                    onClick = onConfirmCancel, modifier = Modifier.weight(1f)
+                    onClick = onConfirmCancel,
+                    modifier = Modifier.weight(1f)
                 ) {
                     Text(stringResource(R.string.yes_cancel))
                 }
 
                 Spacer(modifier = Modifier.width(8.dp))
                 Button(
-                    onClick = onDismiss, modifier = Modifier.weight(1f)
+                    onClick = onDismiss,
+                    modifier = Modifier.weight(1f)
                 ) {
                     Text(stringResource(R.string.no))
                 }
@@ -400,13 +403,11 @@ fun CancelEvaluation(
     )
 }
 
-
 @Preview(
-    showBackground = true,
+    showBackground = true
 )
 @Composable
 fun PreviewEvaluationScreenRoot() {
-
     val answers = listOf(
         "a) Recoger o dejar pasajeros o carga en cualquier lugar",
         "b) Recoger o dejar pasajeros o carga en cualquier lugar",
@@ -420,16 +421,20 @@ fun PreviewEvaluationScreenRoot() {
         topic = "",
         section = "",
         options = answers,
-        answer = "a",
+        answer = "a"
     )
 
     MTCQuizTheme {
         EvaluationScreen(
             state = EvaluationState(
-                questions = listOf(question), question = question, category = Category(
+                questions = listOf(question),
+                question = question,
+                category = Category(
                     title = "CLASE A - CATEGORIA I"
                 )
-            ), onAction = {}, showCancelDialog = false
+            ),
+            onAction = {},
+            showCancelDialog = false
         )
     }
 }

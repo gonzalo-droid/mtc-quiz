@@ -20,5 +20,4 @@ class FacebookAuthAdapter @Inject constructor(
     override fun supports(provider: AuthProvider): Boolean {
         TODO("Not yet implemented")
     }
-
 }

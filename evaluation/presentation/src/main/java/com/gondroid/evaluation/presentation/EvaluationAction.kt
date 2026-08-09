@@ -6,6 +6,6 @@ sealed interface EvaluationAction {
     data object NextQuestion : EvaluationAction
     data class SummaryExam(val categoryId: String) : EvaluationAction
     data class SaveAnswer(val isCorrect: Boolean, val option: String) : EvaluationAction
-    data object ConfirmCancel: EvaluationAction
+    data object ConfirmCancel : EvaluationAction
     data object DismissDialog : EvaluationAction
 }

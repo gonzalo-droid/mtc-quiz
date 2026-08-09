@@ -6,5 +6,5 @@ import com.gondroid.core.domain.model.Evaluation
 data class SummaryState(
     val date: String = "",
     val category: Category = Category(),
-    val evaluation: Evaluation = Evaluation(),
+    val evaluation: Evaluation = Evaluation()
 )

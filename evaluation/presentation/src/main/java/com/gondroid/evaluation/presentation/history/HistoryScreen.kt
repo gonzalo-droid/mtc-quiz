@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.History
@@ -38,8 +37,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.gondroid.core.domain.model.Evaluation
@@ -50,7 +49,7 @@ import java.time.format.DateTimeFormatter
 fun HistoryScreenRoot(
     viewModel: HistoryScreenViewModel = hiltViewModel(),
     navigateBack: () -> Unit,
-    navigateToErrorReview: () -> Unit = {},
+    navigateToErrorReview: () -> Unit = {}
 ) {
     val state by viewModel.state.collectAsState()
     HistoryScreen(state = state, navigateBack = navigateBack, navigateToErrorReview = navigateToErrorReview)
@@ -67,7 +66,7 @@ fun HistoryScreen(state: HistoryState, navigateBack: () -> Unit, navigateToError
                     IconButton(onClick = navigateBack) {
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back",
+                            contentDescription = "Back"
                         )
                     }
                 },
@@ -75,7 +74,7 @@ fun HistoryScreen(state: HistoryState, navigateBack: () -> Unit, navigateToError
                     IconButton(onClick = navigateToErrorReview) {
                         Icon(Icons.Default.Replay, contentDescription = "Repasar errores")
                     }
-                },
+                }
             )
         }
     ) { padding ->
@@ -84,7 +83,7 @@ fun HistoryScreen(state: HistoryState, navigateBack: () -> Unit, navigateToError
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(padding),
-                contentAlignment = Alignment.Center,
+                contentAlignment = Alignment.Center
             ) {
                 CircularProgressIndicator()
             }
@@ -93,20 +92,20 @@ fun HistoryScreen(state: HistoryState, navigateBack: () -> Unit, navigateToError
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(padding),
-                contentAlignment = Alignment.Center,
+                contentAlignment = Alignment.Center
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Icon(
                         imageVector = Icons.Default.History,
                         contentDescription = null,
                         modifier = Modifier.size(64.dp),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Spacer(Modifier.height(16.dp))
                     Text(
                         text = "Aún no tienes evaluaciones",
                         style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
@@ -116,19 +115,19 @@ fun HistoryScreen(state: HistoryState, navigateBack: () -> Unit, navigateToError
                     .fillMaxSize()
                     .padding(padding),
                 contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 itemsIndexed(state.evaluations) { index, evaluation ->
                     val animatedAlpha by animateFloatAsState(
                         targetValue = 1f,
                         animationSpec = tween(durationMillis = 300, delayMillis = index * 50),
-                        label = "itemAlpha",
+                        label = "itemAlpha"
                     )
                     EvaluationHistoryCard(
                         evaluation = evaluation,
                         modifier = Modifier
                             .graphicsLayer { alpha = animatedAlpha }
-                            .animateItem(),
+                            .animateItem()
                     )
                 }
             }
@@ -146,47 +145,47 @@ fun EvaluationHistoryCard(evaluation: Evaluation, modifier: Modifier = Modifier)
     Card(
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
-        ),
+            containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+        )
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(16.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = evaluation.categoryTitle,
                         style = MaterialTheme.typography.titleSmall,
-                        fontWeight = FontWeight.SemiBold,
+                        fontWeight = FontWeight.SemiBold
                     )
                     Spacer(Modifier.height(4.dp))
                     Text(
                         text = evaluation.date.format(dateFormatter),
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Spacer(Modifier.height(4.dp))
                     Text(
                         text = "${evaluation.totalCorrect}/${evaluation.totalQuestions} correctas",
-                        style = MaterialTheme.typography.bodyMedium,
+                        style = MaterialTheme.typography.bodyMedium
                     )
                 }
                 Surface(
                     shape = RoundedCornerShape(8.dp),
-                    color = statusColor.copy(alpha = 0.12f),
+                    color = statusColor.copy(alpha = 0.12f)
                 ) {
                     Text(
                         text = statusText,
                         modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
                         style = MaterialTheme.typography.labelMedium,
                         color = statusColor,
-                        fontWeight = FontWeight.SemiBold,
+                        fontWeight = FontWeight.SemiBold
                     )
                 }
             }

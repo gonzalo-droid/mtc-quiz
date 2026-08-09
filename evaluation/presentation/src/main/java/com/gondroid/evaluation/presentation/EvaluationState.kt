@@ -11,5 +11,5 @@ data class EvaluationState(
     val answerWasVerified: Boolean = false,
     val isFinishExam: Boolean = false,
     val category: Category = Category(),
-    val totalMinutes : Int = 0
+    val totalMinutes: Int = 0
 )

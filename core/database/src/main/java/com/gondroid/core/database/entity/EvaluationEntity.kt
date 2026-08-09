@@ -3,9 +3,6 @@ package com.gondroid.core.database.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
 
 @Entity(tableName = "evaluations")
 data class EvaluationEntity(
@@ -23,5 +20,5 @@ data class EvaluationEntity(
     val state: String,
     val date: Long,
     @ColumnInfo(name = "question_results")
-    val questionResults: String = "[]",
+    val questionResults: String = "[]"
 )

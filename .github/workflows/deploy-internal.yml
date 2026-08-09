@@ -1,0 +1,53 @@
+name: Deploy to Play Store (Internal Testing)
+
+# Manual only — this publishes a real build to Google Play. Never triggered by
+# push or pull_request.
+on:
+  workflow_dispatch: {}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'gradle'
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+
+      - name: Install Fastlane
+        run: gem install fastlane
+
+      - name: Write real google-services.json
+        run: echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 -d > app/google-services.json
+
+      - name: Decode release keystore
+        run: echo "${{ secrets.MTC_KEYSTORE_BASE64 }}" | base64 -d > release.keystore
+
+      - name: Write Play Store service account key
+        run: echo '${{ secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON }}' > play-service-account.json
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Deploy to Internal Testing track
+        env:
+          MTC_KEYSTORE_PATH: ${{ github.workspace }}/release.keystore
+          MTC_KEYSTORE_PASSWORD: ${{ secrets.MTC_KEYSTORE_PASSWORD }}
+          MTC_KEY_ALIAS: ${{ secrets.MTC_KEY_ALIAS }}
+          MTC_KEY_PASSWORD: ${{ secrets.MTC_KEY_PASSWORD }}
+          SUPPLY_JSON_KEY: ${{ github.workspace }}/play-service-account.json
+          FASTLANE_SKIP_UPDATE_CHECK: true
+          FASTLANE_DISABLE_COLORS: true
+        run: fastlane android internal

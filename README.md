@@ -1,5 +1,7 @@
 # MTCQuiz
 
+[![Android CI/CD](https://github.com/gonzalo-droid/mtc-quiz/actions/workflows/android.yml/badge.svg)](https://github.com/gonzalo-droid/mtc-quiz/actions/workflows/android.yml)
+
 Aplicación Android para practicar el examen de reglas de tránsito del Ministerio de Transportes y Comunicaciones del Perú (MTC). Presenta preguntas de selección múltiple por categoría de licencia, registra evaluaciones y permite revisar el temario en PDF.
 
 ---

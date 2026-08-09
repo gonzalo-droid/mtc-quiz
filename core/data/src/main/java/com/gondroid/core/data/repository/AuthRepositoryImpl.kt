@@ -68,9 +68,7 @@ class AuthRepositoryImpl @Inject constructor(
         return adapter.authenticate(provider)
     }
 
-
     override suspend fun getAvailableProviders(): List<AuthProvider> {
         TODO("Not yet implemented")
     }
-
 }

@@ -1,7 +1,6 @@
 package com.gondroid.mtcquiz.util
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
@@ -11,7 +10,6 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import java.util.prefs.Preferences
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class CoroutineTestExample {
@@ -21,21 +19,19 @@ class CoroutineTestExample {
         return 42
     }
 
-
     @Test
-    fun givenDelayedOperation_whenUsingRunBlocking_thenWaitsForRealDelay() = runBlocking{
+    fun givenDelayedOperation_whenUsingRunBlocking_thenWaitsForRealDelay() = runBlocking {
         // This test will actually wait for 1 second
-         val result =  delayedOperation()
+        val result = delayedOperation()
         assertEquals(42, result)
     }
 
     @Test
-    fun givenDelayedOperation_whenUsingRunTest_thenWaitsForRealDelay() = runTest{
+    fun givenDelayedOperation_whenUsingRunTest_thenWaitsForRealDelay() = runTest {
         // This test will actually wait for 1 second
-        val result =  delayedOperation()
+        val result = delayedOperation()
         assertEquals(42, result)
     }
-
 
     // Simple function that takes 1 second to complete
     private suspend fun waitOneSecond(): Long {
@@ -77,7 +73,7 @@ class CoroutineTestExample {
     @Test
     fun flowWithTimeControl() = runTest {
         val numbers = mutableListOf<Int>()
-        
+
         // Start collecting
         val job = launch {
             numberFlow().collect { numbers.add(it) }
@@ -96,4 +92,4 @@ class CoroutineTestExample {
 
         job.cancel()
     }
-} 
+}

@@ -42,7 +42,7 @@ private val lightScheme = lightColorScheme(
     surfaceContainerLow = surfaceContainerLowLight,
     surfaceContainer = surfaceContainerLight,
     surfaceContainerHigh = surfaceContainerHighLight,
-    surfaceContainerHighest = surfaceContainerHighestLight,
+    surfaceContainerHighest = surfaceContainerHighestLight
 )
 
 private val darkScheme = darkColorScheme(
@@ -80,24 +80,24 @@ private val darkScheme = darkColorScheme(
     surfaceContainerLow = surfaceContainerLowDark,
     surfaceContainer = surfaceContainerDark,
     surfaceContainerHigh = surfaceContainerHighDark,
-    surfaceContainerHighest = surfaceContainerHighestDark,
+    surfaceContainerHighest = surfaceContainerHighestDark
 )
 
 @Composable
 fun MTCQuizTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable () -> Unit,
+    content: @Composable () -> Unit
 ) {
     val colorScheme = if (darkTheme) darkScheme else lightScheme
     val extendedColors = if (darkTheme) {
         ExtendedColors(
             successContainer = successContainerDark,
-            onSuccessContainer = onSuccessContainerDark,
+            onSuccessContainer = onSuccessContainerDark
         )
     } else {
         ExtendedColors(
             successContainer = successContainerLight,
-            onSuccessContainer = onSuccessContainerLight,
+            onSuccessContainer = onSuccessContainerLight
         )
     }
 
@@ -105,7 +105,7 @@ fun MTCQuizTheme(
         MaterialTheme(
             colorScheme = colorScheme,
             typography = AppTypography,
-            content = content,
+            content = content
         )
     }
 }

@@ -46,7 +46,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 @Composable
 fun StatsScreenRoot(
     viewModel: StatsViewModel = hiltViewModel(),
-    navigateBack: () -> Unit,
+    navigateBack: () -> Unit
 ) {
     val state by viewModel.state.collectAsState()
     StatsScreen(state = state, navigateBack = navigateBack)
@@ -63,7 +63,7 @@ fun StatsScreen(state: StatsState, navigateBack: () -> Unit) {
                     IconButton(onClick = navigateBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
-                },
+                }
             )
         }
     ) { padding ->
@@ -78,18 +78,18 @@ fun StatsScreen(state: StatsState, navigateBack: () -> Unit) {
                         Icons.Default.BarChart,
                         contentDescription = null,
                         modifier = Modifier.size(64.dp),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Spacer(Modifier.height(16.dp))
                     Text(
                         "Aún no tienes estadísticas",
-                        style = MaterialTheme.typography.titleMedium,
+                        style = MaterialTheme.typography.titleMedium
                     )
                     Spacer(Modifier.height(8.dp))
                     Text(
                         "Completa evaluaciones para ver tu progreso",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
@@ -97,33 +97,33 @@ fun StatsScreen(state: StatsState, navigateBack: () -> Unit) {
             LazyColumn(
                 modifier = Modifier.fillMaxSize().padding(padding),
                 contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 // Summary cards row
                 item {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         StatCard(
                             title = "Evaluaciones",
                             value = "${state.totalEvaluations}",
                             icon = Icons.Default.Assignment,
-                            modifier = Modifier.weight(1f),
+                            modifier = Modifier.weight(1f)
                         )
                         StatCard(
                             title = "Aprobadas",
                             value = "${state.totalApproved}",
                             icon = Icons.Default.CheckCircle,
                             color = Color(0xFF4CAF50),
-                            modifier = Modifier.weight(1f),
+                            modifier = Modifier.weight(1f)
                         )
                         StatCard(
                             title = "Reprobadas",
                             value = "${state.totalRejected}",
                             icon = Icons.Default.Cancel,
                             color = MaterialTheme.colorScheme.error,
-                            modifier = Modifier.weight(1f),
+                            modifier = Modifier.weight(1f)
                         )
                     }
                 }
@@ -132,7 +132,7 @@ fun StatsScreen(state: StatsState, navigateBack: () -> Unit) {
                 item {
                     Card(
                         modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow)
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
                             Text("Tasa de aprobación", style = MaterialTheme.typography.titleSmall)
@@ -141,14 +141,14 @@ fun StatsScreen(state: StatsState, navigateBack: () -> Unit) {
                                 progress = { state.approvalRate },
                                 modifier = Modifier.fillMaxWidth().height(8.dp).clip(RoundedCornerShape(4.dp)),
                                 color = Color(0xFF4CAF50),
-                                trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                                trackColor = MaterialTheme.colorScheme.surfaceVariant
                             )
                             Spacer(Modifier.height(8.dp))
                             Text(
                                 "${(state.approvalRate * 100).toInt()}%",
                                 style = MaterialTheme.typography.headlineMedium,
                                 fontWeight = FontWeight.Bold,
-                                color = Color(0xFF4CAF50),
+                                color = Color(0xFF4CAF50)
                             )
                         }
                     }
@@ -158,18 +158,18 @@ fun StatsScreen(state: StatsState, navigateBack: () -> Unit) {
                 item {
                     Card(
                         modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow)
                     ) {
                         Row(
                             modifier = Modifier.fillMaxWidth().padding(16.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
+                            horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Column {
                                 Text("Preguntas respondidas", style = MaterialTheme.typography.titleSmall)
                                 Text(
                                     "${state.totalQuestionsAnswered}",
                                     style = MaterialTheme.typography.headlineSmall,
-                                    fontWeight = FontWeight.Bold,
+                                    fontWeight = FontWeight.Bold
                                 )
                             }
                             Column(horizontalAlignment = Alignment.End) {
@@ -178,7 +178,7 @@ fun StatsScreen(state: StatsState, navigateBack: () -> Unit) {
                                     "${state.totalCorrectAnswers}",
                                     style = MaterialTheme.typography.headlineSmall,
                                     fontWeight = FontWeight.Bold,
-                                    color = Color(0xFF4CAF50),
+                                    color = Color(0xFF4CAF50)
                                 )
                             }
                         }
@@ -191,18 +191,18 @@ fun StatsScreen(state: StatsState, navigateBack: () -> Unit) {
                         Text(
                             "Rendimiento por categoría",
                             style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.SemiBold,
+                            fontWeight = FontWeight.SemiBold
                         )
                     }
                     items(state.categoryStats) { cat ->
                         Card(
                             modifier = Modifier.fillMaxWidth(),
-                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
+                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow)
                         ) {
                             Column(modifier = Modifier.padding(16.dp)) {
                                 Row(
                                     modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    horizontalArrangement = Arrangement.SpaceBetween
                                 ) {
                                     Text(cat.categoryTitle, style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Medium)
                                     Text("${(cat.approvalRate * 100).toInt()}%", style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Bold)
@@ -212,13 +212,13 @@ fun StatsScreen(state: StatsState, navigateBack: () -> Unit) {
                                     progress = { cat.approvalRate },
                                     modifier = Modifier.fillMaxWidth().height(6.dp).clip(RoundedCornerShape(3.dp)),
                                     color = if (cat.approvalRate >= 0.7f) Color(0xFF4CAF50) else MaterialTheme.colorScheme.error,
-                                    trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                                    trackColor = MaterialTheme.colorScheme.surfaceVariant
                                 )
                                 Spacer(Modifier.height(4.dp))
                                 Text(
                                     "${cat.evaluationCount} evaluaciones",
                                     style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
                         }
@@ -235,15 +235,15 @@ fun StatCard(
     value: String,
     icon: ImageVector,
     modifier: Modifier = Modifier,
-    color: Color = MaterialTheme.colorScheme.primary,
+    color: Color = MaterialTheme.colorScheme.primary
 ) {
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow)
     ) {
         Column(
             modifier = Modifier.padding(12.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Icon(icon, contentDescription = null, tint = color, modifier = Modifier.size(24.dp))
             Spacer(Modifier.height(8.dp))

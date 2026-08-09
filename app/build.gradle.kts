@@ -44,17 +44,29 @@ android {
     }
     buildTypes {
         debug {
-            buildConfigField("String", "ADMOB_BANNER_ID",
-                "\"ca-app-pub-3940256099942544/9214589741\"")
-            buildConfigField("String", "ADMOB_INTERSTITIAL_ID",
-                "\"ca-app-pub-3940256099942544/1033173712\"")
+            buildConfigField(
+                "String",
+                "ADMOB_BANNER_ID",
+                "\"ca-app-pub-3940256099942544/9214589741\""
+            )
+            buildConfigField(
+                "String",
+                "ADMOB_INTERSTITIAL_ID",
+                "\"ca-app-pub-3940256099942544/1033173712\""
+            )
         }
         getByName("release") {
             signingConfig = signingConfigs.getByName("release")
-            buildConfigField("String", "ADMOB_BANNER_ID",
-                "\"ca-app-pub-1427341798923689/1670669268\"")
-            buildConfigField("String", "ADMOB_INTERSTITIAL_ID",
-                "\"ca-app-pub-1427341798923689/6988630460\"")
+            buildConfigField(
+                "String",
+                "ADMOB_BANNER_ID",
+                "\"ca-app-pub-1427341798923689/8361981027\""
+            )
+            buildConfigField(
+                "String",
+                "ADMOB_INTERSTITIAL_ID",
+                "\"ca-app-pub-1427341798923689/3029763296\""
+            )
         }
     }
 }
@@ -123,13 +135,12 @@ dependencies {
     // adMob
     implementation(libs.play.services.admob)
 
-
     // Also add the dependencies for the Credential Manager libraries and specify their versions
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.googleid)
 
-    //Testing
+    // Testing
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
     testImplementation(libs.mockwebserver)
@@ -138,7 +149,7 @@ dependencies {
     testImplementation(libs.robolectric)
     testImplementation(libs.truth)
 
-    //Android Testing
+    // Android Testing
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.junit)
     androidTestImplementation(libs.mockk.android)
@@ -192,7 +203,6 @@ dependencies {
     implementation(projects.evaluation.presentation)
     implementation(projects.evaluation.domain)
     implementation(projects.evaluation.data)
-
 
     implementation(projects.questionreview.presentation)
     implementation(projects.questionreview.domain)

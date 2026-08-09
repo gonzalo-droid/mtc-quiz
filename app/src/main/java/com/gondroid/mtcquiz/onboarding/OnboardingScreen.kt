@@ -45,27 +45,27 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun OnboardingScreen(
-    onFinish: () -> Unit,
+    onFinish: () -> Unit
 ) {
     val pages = listOf(
         OnboardingPage(
             icon = Icons.Default.School,
             title = "Practica para tu examen",
             description = "Prepárate para el examen de licencia de conducir del MTC con cientos de preguntas actualizadas por categoría",
-            accentColor = Color(0xFF3949AB),
+            accentColor = Color(0xFF3949AB)
         ),
         OnboardingPage(
             icon = Icons.Default.BarChart,
             title = "Evalúa tu progreso",
             description = "Simulacros cronometrados, historial de evaluaciones y estadísticas para saber en qué mejorar",
-            accentColor = Color(0xFFFFB300),
+            accentColor = Color(0xFFFFB300)
         ),
         OnboardingPage(
             icon = Icons.Default.PhoneAndroid,
             title = "Estudia donde quieras",
             description = "Todo el contenido disponible offline. Revisa el temario en PDF y repasa tus errores frecuentes",
-            accentColor = Color(0xFF4CAF50),
-        ),
+            accentColor = Color(0xFF4CAF50)
+        )
     )
 
     val pagerState = rememberPagerState(pageCount = { pages.size })
@@ -76,31 +76,31 @@ fun OnboardingScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding),
+                .padding(padding)
         ) {
             TextButton(
                 onClick = onFinish,
                 modifier = Modifier
                     .align(Alignment.TopEnd)
-                    .padding(16.dp),
+                    .padding(16.dp)
             ) {
                 Text("Saltar", color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
 
             Column(
                 modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 HorizontalPager(
                     state = pagerState,
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.weight(1f)
                 ) { page ->
                     OnboardingPageContent(pages[page])
                 }
 
                 Row(
                     modifier = Modifier.padding(16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     repeat(pages.size) { index ->
                         val isSelected = pagerState.currentPage == index
@@ -110,10 +110,13 @@ fun OnboardingScreen(
                                 .width(if (isSelected) 24.dp else 8.dp)
                                 .clip(RoundedCornerShape(4.dp))
                                 .background(
-                                    if (isSelected) pages[pagerState.currentPage].accentColor
-                                    else MaterialTheme.colorScheme.outlineVariant,
+                                    if (isSelected) {
+                                        pages[pagerState.currentPage].accentColor
+                                    } else {
+                                        MaterialTheme.colorScheme.outlineVariant
+                                    }
                                 )
-                                .animateContentSize(),
+                                .animateContentSize()
                         )
                     }
                 }
@@ -134,13 +137,13 @@ fun OnboardingScreen(
                         .height(56.dp),
                     shape = RoundedCornerShape(16.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = pages[pagerState.currentPage].accentColor,
-                    ),
+                        containerColor = pages[pagerState.currentPage].accentColor
+                    )
                 ) {
                     Text(
                         text = if (isLastPage) "Comenzar" else "Siguiente",
                         style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold,
+                        fontWeight = FontWeight.SemiBold
                     )
                 }
 
@@ -157,20 +160,20 @@ private fun OnboardingPageContent(page: OnboardingPage) {
             .fillMaxSize()
             .padding(horizontal = 32.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.Center
     ) {
         Box(
             modifier = Modifier
                 .size(120.dp)
                 .clip(CircleShape)
                 .background(page.accentColor.copy(alpha = 0.12f)),
-            contentAlignment = Alignment.Center,
+            contentAlignment = Alignment.Center
         ) {
             Icon(
                 imageVector = page.icon,
                 contentDescription = null,
                 modifier = Modifier.size(64.dp),
-                tint = page.accentColor,
+                tint = page.accentColor
             )
         }
 
@@ -180,7 +183,7 @@ private fun OnboardingPageContent(page: OnboardingPage) {
             text = page.title,
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center,
+            textAlign = TextAlign.Center
         )
 
         Spacer(Modifier.height(16.dp))
@@ -190,7 +193,7 @@ private fun OnboardingPageContent(page: OnboardingPage) {
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
-            lineHeight = 24.sp,
+            lineHeight = 24.sp
         )
     }
 }
@@ -199,5 +202,5 @@ private data class OnboardingPage(
     val icon: ImageVector,
     val title: String,
     val description: String,
-    val accentColor: Color,
+    val accentColor: Color
 )

@@ -1,7 +1,5 @@
 package com.gondroid.mtcquiz.sendComment
 
-import android.content.Context
-
 /*
 class FirebaseInstance(context: Context) {
     private val database = Firebase.database
