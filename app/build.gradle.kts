@@ -60,12 +60,12 @@ android {
             buildConfigField(
                 "String",
                 "ADMOB_BANNER_ID",
-                "\"ca-app-pub-1427341798923689/8361981027\""
+                "\"ca-app-pub-1427341798923689/1670669268\""
             )
             buildConfigField(
                 "String",
                 "ADMOB_INTERSTITIAL_ID",
-                "\"ca-app-pub-1427341798923689/3029763296\""
+                "\"ca-app-pub-1427341798923689/6988630460\""
             )
         }
     }
