@@ -1,7 +1,7 @@
 package com.gondroid.core.data.analytics
 
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.common.truth.Truth.assertThat
+import com.google.firebase.analytics.FirebaseAnalytics
 import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify

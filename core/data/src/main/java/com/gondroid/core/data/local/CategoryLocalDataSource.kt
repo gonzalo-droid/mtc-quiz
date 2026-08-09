@@ -2,7 +2,6 @@ package com.gondroid.core.data.local
 
 import com.gondroid.core.domain.model.Category
 
-
 const val CLASS_A = "CLASE A"
 const val CLASS_B = "CLASE B"
 
@@ -65,7 +64,6 @@ val categoriesLocalDataSource = listOf(
         pathJson = "a3c_questions.json"
     ),
 
-
     /**
      * Class licence B
      * (B-I / triciclos has no real balotario PDF yet, intentionally omitted)
@@ -96,5 +94,5 @@ val categoriesLocalDataSource = listOf(
         description = "Los mismos que B-IIa y B-IIb y también Mototaxis y Trimotos (3 ruedas) destinadas al transporte de pasajeros",
         pdf = "CLASE_B_IIC.pdf",
         pathJson = "b2c_questions.json"
-    ),
+    )
 )

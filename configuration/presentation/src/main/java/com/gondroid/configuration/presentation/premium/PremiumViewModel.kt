@@ -22,7 +22,7 @@ import javax.inject.Inject
 class PremiumViewModel @Inject constructor(
     private val premiumRepository: PremiumRepository,
     private val billingLauncher: BillingLauncher,
-    private val analyticsManager: AnalyticsManager,
+    private val analyticsManager: AnalyticsManager
 ) : ViewModel() {
 
     val isPremium = premiumRepository.isPremiumFlow

@@ -16,7 +16,7 @@ class QuestionTest {
             id = 1,
             topic = "Sample Topic",
             title = "What is 2 + 2?",
-            answer = "b",  // index 1
+            answer = "b", // index 1
             options = listOf("3", "4", "5", "6") // index 1 = correct, index start -> 0 (a)
         )
     }
@@ -66,5 +66,4 @@ class QuestionTest {
         val question = Json.decodeFromString<Question>(json)
         Truth.assertThat(question.imagens).isEmpty()
     }
-
 }

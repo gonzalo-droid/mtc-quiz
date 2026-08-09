@@ -21,14 +21,14 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.IOException
 import kotlinx.serialization.json.Json
+import java.io.IOException
 
 class QuizRepositoryImpl(
     private val evaluationDao: EvaluationDao,
     private val preferenceRepository: PreferenceRepository,
     private val dispatcherIO: CoroutineDispatcher = Dispatchers.IO,
-    private val context: Context,
+    private val context: Context
 ) : QuizRepository {
 
     // Some balotario JSON assets carry extra bookkeeping fields (e.g. "part",
@@ -80,7 +80,6 @@ class QuizRepositoryImpl(
         }
 
     override suspend fun saveEvaluation(evaluation: Evaluation) = withContext(dispatcherIO) {
-
         val percentage =
             (evaluation.totalCorrect / evaluation.totalQuestions.toFloat()).times(100).toInt()
 

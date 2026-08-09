@@ -18,7 +18,7 @@ data class QuestionResultJson(
     val question: String,
     val option: String? = "",
     val isCorrect: Boolean = false,
-    val correctAnswer: String = "",
+    val correctAnswer: String = ""
 )
 
 private val json = Json { ignoreUnknownKeys = true }
@@ -32,7 +32,7 @@ fun EvaluationEntity.toDomain(): Evaluation {
                 question = it.question,
                 option = it.option,
                 isCorrect = it.isCorrect,
-                correctAnswer = it.correctAnswer,
+                correctAnswer = it.correctAnswer
             )
         }
     } catch (e: Exception) {
@@ -47,7 +47,7 @@ fun EvaluationEntity.toDomain(): Evaluation {
         totalQuestions = total,
         state = EvaluationState.valueOf(state),
         date = LocalDateTime.ofInstant(Instant.ofEpochMilli(date), ZoneId.systemDefault()),
-        questionResults = results,
+        questionResults = results
     )
 }
 
@@ -61,7 +61,7 @@ fun Evaluation.toEntity(): EvaluationEntity {
                     question = it.question,
                     option = it.option,
                     isCorrect = it.isCorrect,
-                    correctAnswer = it.correctAnswer,
+                    correctAnswer = it.correctAnswer
                 )
             }
         )
@@ -77,6 +77,6 @@ fun Evaluation.toEntity(): EvaluationEntity {
         total = totalQuestions,
         state = state.name,
         date = date.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
-        questionResults = resultsJson,
+        questionResults = resultsJson
     )
 }

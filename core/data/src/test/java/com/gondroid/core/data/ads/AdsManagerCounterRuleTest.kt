@@ -3,7 +3,6 @@ package com.gondroid.core.data.ads
 import android.app.Activity
 import com.google.common.truth.Truth.assertThat
 import io.mockk.mockk
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
@@ -86,7 +85,7 @@ class AdsManagerCounterRuleTest {
         val premiumManager = AdsManagerImpl(
             prefs = prefs,
             interstitialId = "test-id",
-            premiumRepository = FakePremiumRepository(isPremium = true),
+            premiumRepository = FakePremiumRepository(isPremium = true)
         )
         repeat(6) { premiumManager.recordPdfDownload() }
         assertThat(premiumManager.shouldShowPdfInterstitial()).isFalse()
@@ -96,7 +95,7 @@ class AdsManagerCounterRuleTest {
         val premiumManager = AdsManagerImpl(
             prefs = prefs,
             interstitialId = "test-id",
-            premiumRepository = FakePremiumRepository(isPremium = true),
+            premiumRepository = FakePremiumRepository(isPremium = true)
         )
         repeat(6) { premiumManager.recordEvaluationStart() }
         assertThat(premiumManager.shouldShowEvaluationInterstitial()).isFalse()
@@ -106,7 +105,7 @@ class AdsManagerCounterRuleTest {
         val premiumManager = AdsManagerImpl(
             prefs = prefs,
             interstitialId = "test-id",
-            premiumRepository = FakePremiumRepository(isPremium = true),
+            premiumRepository = FakePremiumRepository(isPremium = true)
         )
         var dismissed = false
         premiumManager.showPdfInterstitial(mockk<Activity>(relaxed = true)) { dismissed = true }
@@ -117,7 +116,7 @@ class AdsManagerCounterRuleTest {
         val premiumManager = AdsManagerImpl(
             prefs = prefs,
             interstitialId = "test-id",
-            premiumRepository = FakePremiumRepository(isPremium = true),
+            premiumRepository = FakePremiumRepository(isPremium = true)
         )
         var dismissed = false
         premiumManager.showEvaluationInterstitial(mockk<Activity>(relaxed = true)) { dismissed = true }

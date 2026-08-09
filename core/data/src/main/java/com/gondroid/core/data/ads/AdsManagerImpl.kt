@@ -16,7 +16,7 @@ import javax.inject.Singleton
 class AdsManagerImpl @Inject constructor(
     private val prefs: AdsPreferences,
     @Named("admobInterstitialId") private val interstitialId: String,
-    private val premiumRepository: com.gondroid.core.domain.repository.PremiumRepository,
+    private val premiumRepository: com.gondroid.core.domain.repository.PremiumRepository
 ) : AdsManager {
 
     private val isPremium: Boolean

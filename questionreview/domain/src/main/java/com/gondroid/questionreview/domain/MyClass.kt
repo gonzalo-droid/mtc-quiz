@@ -1,4 +1,3 @@
 package com.gondroid.questionreview.domain
 
-class MyClass {
-}
+class MyClass

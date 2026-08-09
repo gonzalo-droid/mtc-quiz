@@ -62,12 +62,10 @@ fun LoginScreenRoot(
                 LoginAction.GoogleSignOn -> {
                     viewModel.authenticateWithGoogle()
                 }
-
             }
         }
     )
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -80,11 +78,10 @@ fun LoginScreen(
     ) { paddingValues ->
         Box(
             modifier =
-                Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
+            Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
         ) {
-
             Column(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
@@ -93,12 +90,11 @@ fun LoginScreen(
                     .padding(horizontal = 16.dp, vertical = 32.dp)
 
             ) {
-
                 Text(
                     modifier = Modifier,
                     text = stringResource(R.string.small_title_header),
                     style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
 
                 Text(
@@ -106,7 +102,7 @@ fun LoginScreen(
                     text = stringResource(R.string.medium_title_header),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.displayMedium,
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = FontWeight.Bold
                 )
 
                 Spacer(modifier = Modifier.height(200.dp))
@@ -130,13 +126,10 @@ fun LoginScreen(
 
                     Text(stringResource(R.string.singing_google))
                 }
-
             }
         }
     }
-
 }
-
 
 @Preview(showBackground = true)
 @Composable

@@ -1,6 +1,5 @@
 package com.gondroid.detail.presentation
 
-
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -35,7 +34,7 @@ constructor(
     private val repository: QuizRepository,
     private val premiumRepository: PremiumRepository,
     val adsManager: AdsManager,
-    @Named("admobBannerId") val bannerAdId: String,
+    @Named("admobBannerId") val bannerAdId: String
 ) : ViewModel() {
 
     private var _state = MutableStateFlow(DetailState())

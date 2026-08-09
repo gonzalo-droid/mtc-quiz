@@ -16,7 +16,7 @@ class EvaluationDaoFake : EvaluationDao {
             categoryId = "1",
             categoryTitle = "Category $it",
             totalCorrect = 10,
-            totalIncorrect = 5,
+            totalIncorrect = 5
         )
     }.toMutableList()
 
@@ -45,7 +45,9 @@ class EvaluationDaoFake : EvaluationDao {
         return if (element != null) {
             evaluations.remove(element)
             1
-        } else 0
+        } else {
+            0
+        }
     }
 
     override suspend fun deleteAllEvaluations(): Int {
@@ -53,5 +55,4 @@ class EvaluationDaoFake : EvaluationDao {
         evaluations.clear()
         return count
     }
-
 }

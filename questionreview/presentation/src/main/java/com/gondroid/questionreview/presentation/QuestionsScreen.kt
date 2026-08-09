@@ -48,11 +48,10 @@ import com.gondroid.core.presentation.designsystem.components.QuestionAnswerCard
 import com.gondroid.core.presentation.ui.normalizeText
 import com.gondroid.core.presentation.ui.stripOptionLetterPrefix
 
-
 @Composable
 fun QuestionsScreenRoot(
     viewModel: QuestionsScreenViewModel,
-    navigateBack: () -> Boolean,
+    navigateBack: () -> Boolean
 ) {
     val state by viewModel.state.collectAsState()
 
@@ -64,14 +63,13 @@ fun QuestionsScreenRoot(
             }
         }
     )
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun QuestionsScreen(
     state: QuestionsState,
-    onAction: (QuestionsAction) -> Unit,
+    onAction: (QuestionsAction) -> Unit
 ) {
     var isSearchExpanded by remember { mutableStateOf(false) }
     var searchText by remember { mutableStateOf("") }
@@ -116,7 +114,7 @@ fun QuestionsScreen(
                             singleLine = true,
                             colors = TextFieldDefaults.colors(
                                 unfocusedContainerColor = Color.Transparent,
-                                focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+                                focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer
                             ),
                             leadingIcon = {
                                 IconButton(onClick = {
@@ -138,8 +136,6 @@ fun QuestionsScreen(
                             fontSize = MaterialTheme.typography.titleSmall.fontSize
                         )
                     }
-
-
                 },
                 navigationIcon = {
                     if (!isSearchExpanded) {
@@ -148,11 +144,11 @@ fun QuestionsScreen(
                             contentDescription = "Back",
                             tint = MaterialTheme.colorScheme.onBackground,
                             modifier =
-                                Modifier.clickable {
-                                    onAction(
-                                        QuestionsAction.Back,
-                                    )
-                                },
+                            Modifier.clickable {
+                                onAction(
+                                    QuestionsAction.Back
+                                )
+                            }
                         )
                     }
                 },
@@ -162,28 +158,26 @@ fun QuestionsScreen(
                             Icon(Icons.Default.Search, contentDescription = "Buscar")
                         }
                     }
-                },
+                }
             )
-        },
+        }
     ) { paddingValues ->
 
         Column(
             modifier =
-                Modifier
-                    .padding(paddingValues)
-                    .padding(horizontal = 16.dp),
+            Modifier
+                .padding(paddingValues)
+                .padding(horizontal = 16.dp)
         ) {
-
             if (!isSearchExpanded) {
                 LinearProgressComponent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 8.dp),
                     progress = progress,
-                    countProgress = "${startItemVisible}/${state.questions.size}"
+                    countProgress = "$startItemVisible/${state.questions.size}"
                 )
             }
-
 
             if (filteredItems.isEmpty()) {
                 Spacer(modifier = Modifier.height(16.dp))
@@ -202,10 +196,10 @@ fun QuestionsScreen(
                     fontWeight = FontWeight.Bold,
                     fontSize = MaterialTheme.typography.titleSmall.fontSize
                 )
-
             } else {
                 LazyColumn(
-                    state = scrollState, modifier = Modifier.weight(1f)
+                    state = scrollState,
+                    modifier = Modifier.weight(1f)
                 ) {
                     items(
                         items = filteredItems,
@@ -224,23 +218,19 @@ fun QuestionsScreen(
                                 }
                                 val cleanText = option.stripOptionLetterPrefix()
                                 AnswerOption(letter = letter, text = cleanText, state = optionState)
-                            },
+                            }
                         )
 
                         Spacer(modifier = Modifier.height(16.dp))
                     }
-
                 }
             }
-
-
         }
     }
 }
 
-
 @Preview(
-    showBackground = true,
+    showBackground = true
 )
 @Composable
 fun PreviewQuestionsScreenRoot() {
@@ -258,7 +248,7 @@ fun PreviewQuestionsScreenRoot() {
             topic = "",
             section = "",
             options = answers,
-            answer = "a",
+            answer = "a"
         ),
         Question(
             id = 2,
@@ -266,7 +256,7 @@ fun PreviewQuestionsScreenRoot() {
             topic = "",
             section = "",
             options = answers,
-            answer = "b",
+            answer = "b"
         ),
         Question(
             id = 3,
@@ -274,8 +264,8 @@ fun PreviewQuestionsScreenRoot() {
             topic = "",
             section = "",
             options = answers,
-            answer = "c",
-        ),
+            answer = "c"
+        )
     )
 
     MTCQuizTheme {

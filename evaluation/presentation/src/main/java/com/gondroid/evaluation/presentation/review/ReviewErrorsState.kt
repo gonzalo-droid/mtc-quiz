@@ -2,7 +2,7 @@ package com.gondroid.evaluation.presentation.review
 
 data class ReviewErrorsState(
     val frequentErrors: List<FrequentError> = emptyList(),
-    val isLoading: Boolean = true,
+    val isLoading: Boolean = true
 )
 
 data class FrequentError(
@@ -10,5 +10,5 @@ data class FrequentError(
     val question: String,
     val failCount: Int,
     val lastWrongAnswer: String,
-    val correctAnswer: String,
+    val correctAnswer: String
 )

@@ -68,7 +68,7 @@ private val rejectedColor = Color(0xFFE53935)
 @Composable
 fun SummaryScreenRoot(
     viewModel: SummaryScreenViewModel,
-    navigateToDetail: (String) -> Boolean,
+    navigateToDetail: (String) -> Boolean
 ) {
     val state = viewModel.state
     SummaryScreen(
@@ -85,7 +85,7 @@ fun SummaryScreenRoot(
 @Composable
 fun SummaryScreen(
     state: SummaryState,
-    onAction: (SummaryAction) -> Unit,
+    onAction: (SummaryAction) -> Unit
 ) {
     val isApproved = state.evaluation.state == EvaluationState.APPROVED
     val accentColor = if (isApproved) approvedColor else rejectedColor
@@ -99,17 +99,17 @@ fun SummaryScreen(
     val animatedPercentage by animateIntAsState(
         targetValue = if (startCounterAnim) percentage else 0,
         animationSpec = tween(durationMillis = 1200, easing = LinearEasing),
-        label = "percentage",
+        label = "percentage"
     )
     val animatedCorrect by animateIntAsState(
         targetValue = if (startCounterAnim) completedTasks else 0,
         animationSpec = tween(durationMillis = 1000, easing = LinearEasing),
-        label = "correct",
+        label = "correct"
     )
     val animatedIncorrect by animateIntAsState(
         targetValue = if (startCounterAnim) state.evaluation.totalIncorrect else 0,
         animationSpec = tween(durationMillis = 1000, easing = LinearEasing),
-        label = "incorrect",
+        label = "incorrect"
     )
 
     var showContent by remember { mutableStateOf(false) }
@@ -120,7 +120,7 @@ fun SummaryScreen(
         if (totalTask > 0) {
             angleRatio.animateTo(
                 targetValue = completedTasks.toFloat() / totalTask.toFloat(),
-                animationSpec = tween(durationMillis = 1200),
+                animationSpec = tween(durationMillis = 1200)
             )
         }
         startCounterAnim = true
@@ -139,14 +139,14 @@ fun SummaryScreen(
                     Text(
                         text = state.category.title,
                         style = MaterialTheme.typography.titleSmall,
-                        fontWeight = FontWeight.Medium,
+                        fontWeight = FontWeight.Medium
                     )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Transparent,
-                ),
+                    containerColor = Color.Transparent
+                )
             )
-        },
+        }
     ) { padding ->
         Column(
             modifier = Modifier
@@ -154,7 +154,7 @@ fun SummaryScreen(
                 .padding(padding)
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(Modifier.height(8.dp))
 
@@ -163,7 +163,7 @@ fun SummaryScreen(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .size(200.dp)
-                    .semantics { contentDescription = "$percentage por ciento de respuestas correctas" },
+                    .semantics { contentDescription = "$percentage por ciento de respuestas correctas" }
             ) {
                 val trackColor = MaterialTheme.colorScheme.surfaceVariant
                 Canvas(modifier = Modifier.size(180.dp)) {
@@ -173,23 +173,23 @@ fun SummaryScreen(
                         startAngle = -90f,
                         sweepAngle = 360f,
                         useCenter = false,
-                        style = Stroke(width = strokeWidth, cap = StrokeCap.Round),
+                        style = Stroke(width = strokeWidth, cap = StrokeCap.Round)
                     )
                     drawArc(
                         color = accentColor,
                         startAngle = -90f,
                         sweepAngle = 360f * angleRatio.value,
                         useCenter = false,
-                        style = Stroke(width = strokeWidth, cap = StrokeCap.Round),
+                        style = Stroke(width = strokeWidth, cap = StrokeCap.Round)
                     )
                 }
 
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        text = "${animatedPercentage}%",
+                        text = "$animatedPercentage%",
                         style = MaterialTheme.typography.displaySmall,
                         fontWeight = FontWeight.Bold,
-                        color = accentColor,
+                        color = accentColor
                     )
                 }
             }
@@ -199,7 +199,7 @@ fun SummaryScreen(
             // Status badge
             AnimatedVisibility(
                 visible = showContent,
-                enter = fadeIn() + slideInVertically { it / 2 },
+                enter = fadeIn() + slideInVertically { it / 2 }
             ) {
                 Row(
                     modifier = Modifier
@@ -207,20 +207,20 @@ fun SummaryScreen(
                         .background(accentColor.copy(alpha = 0.1f))
                         .padding(horizontal = 20.dp, vertical = 10.dp),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center,
+                    horizontalArrangement = Arrangement.Center
                 ) {
                     Icon(
                         imageVector = if (isApproved) Icons.Default.CheckCircle else Icons.Default.Cancel,
                         contentDescription = null,
                         tint = accentColor,
-                        modifier = Modifier.size(24.dp),
+                        modifier = Modifier.size(24.dp)
                     )
                     Spacer(Modifier.width(8.dp))
                     Text(
                         text = if (isApproved) stringResource(R.string.approved) else stringResource(R.string.rejected),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
-                        color = accentColor,
+                        color = accentColor
                     )
                 }
             }
@@ -229,12 +229,12 @@ fun SummaryScreen(
 
             AnimatedVisibility(
                 visible = showContent,
-                enter = fadeIn(animationSpec = tween(500)),
+                enter = fadeIn(animationSpec = tween(500))
             ) {
                 Text(
                     text = state.date,
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
 
@@ -243,29 +243,29 @@ fun SummaryScreen(
             // Stats cards
             AnimatedVisibility(
                 visible = showStats,
-                enter = fadeIn() + slideInVertically { it / 3 },
+                enter = fadeIn() + slideInVertically { it / 3 }
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     StatResultCard(
                         label = stringResource(R.string.total_correct),
                         value = animatedCorrect.toString(),
                         color = approvedColor,
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.weight(1f)
                     )
                     StatResultCard(
                         label = stringResource(R.string.total_incorrect),
                         value = animatedIncorrect.toString(),
                         color = rejectedColor,
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.weight(1f)
                     )
                     StatResultCard(
                         label = stringResource(R.string.total_question),
                         value = totalTask.toString(),
                         color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.weight(1f)
                     )
                 }
             }
@@ -275,25 +275,26 @@ fun SummaryScreen(
             // Message
             AnimatedVisibility(
                 visible = showStats,
-                enter = fadeIn(animationSpec = tween(600)),
+                enter = fadeIn(animationSpec = tween(600))
             ) {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+                        containerColor = MaterialTheme.colorScheme.surfaceContainerLow
                     ),
-                    shape = RoundedCornerShape(16.dp),
+                    shape = RoundedCornerShape(16.dp)
                 ) {
                     Text(
-                        text = if (isApproved)
+                        text = if (isApproved) {
                             "¡Felicidades! Estás listo para rendir el examen del MTC."
-                        else
-                            "Sigue practicando. Repasa tus errores frecuentes para mejorar.",
+                        } else {
+                            "Sigue practicando. Repasa tus errores frecuentes para mejorar."
+                        },
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.padding(16.dp),
-                        lineHeight = 22.sp,
+                        lineHeight = 22.sp
                     )
                 }
             }
@@ -303,7 +304,7 @@ fun SummaryScreen(
             // Button
             AnimatedVisibility(
                 visible = showButton,
-                enter = fadeIn() + slideInVertically { it },
+                enter = fadeIn() + slideInVertically { it }
             ) {
                 Button(
                     onClick = { onAction(SummaryAction.FinishExam) },
@@ -313,13 +314,13 @@ fun SummaryScreen(
                         .semantics { contentDescription = "Finalizar evaluación" },
                     shape = RoundedCornerShape(16.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                    ),
+                        containerColor = MaterialTheme.colorScheme.primary
+                    )
                 ) {
                     Text(
                         text = stringResource(R.string.finish_evaluation),
                         style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold,
+                        fontWeight = FontWeight.SemiBold
                     )
                 }
             }
@@ -334,33 +335,33 @@ private fun StatResultCard(
     label: String,
     value: String,
     color: Color,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     Card(
         modifier = modifier,
         colors = CardDefaults.cardColors(
-            containerColor = color.copy(alpha = 0.08f),
+            containerColor = color.copy(alpha = 0.08f)
         ),
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(16.dp)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 16.dp, horizontal = 12.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
                 text = value,
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
-                color = color,
+                color = color
             )
             Spacer(Modifier.height(4.dp))
             Text(
                 text = label,
                 style = MaterialTheme.typography.labelSmall,
                 color = color.copy(alpha = 0.8f),
-                textAlign = TextAlign.Center,
+                textAlign = TextAlign.Center
             )
         }
     }
@@ -372,7 +373,7 @@ fun PreviewSummaryScreenRoot() {
     MTCQuizTheme {
         SummaryScreen(
             state = SummaryState(),
-            onAction = {},
+            onAction = {}
         )
     }
 }

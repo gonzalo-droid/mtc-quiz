@@ -69,7 +69,6 @@ constructor(
                             question = questions[_state.value.indexQuestion]
                         )
                     }
-
                 }
         }
     }
@@ -105,7 +104,7 @@ constructor(
                 question = currentQuestion.title,
                 option = option,
                 isCorrect = isCorrect,
-                correctAnswer = currentQuestion.getOption(currentQuestion.answer),
+                correctAnswer = currentQuestion.getOption(currentQuestion.answer)
             )
             _resultsList.add(result)
         }
@@ -117,7 +116,6 @@ constructor(
         val incorrectAnswers = totalTask - correctAnswers
 
         viewModelScope.launch {
-
             val evaluation = Evaluation(
                 id = UUID.randomUUID().toString(),
                 categoryId = _state.value.category.id,
@@ -125,7 +123,7 @@ constructor(
                 totalCorrect = correctAnswers,
                 totalIncorrect = incorrectAnswers,
                 totalQuestions = totalTask,
-                questionResults = _resultsList.toList(),
+                questionResults = _resultsList.toList()
             )
             repository.saveEvaluation(evaluation = evaluation)
             preferenceRepository.recordStudySession()

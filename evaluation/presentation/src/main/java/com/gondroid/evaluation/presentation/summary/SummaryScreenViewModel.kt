@@ -1,6 +1,5 @@
 package com.gondroid.evaluation.presentation.summary
 
-
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -14,7 +13,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
-
 
 @HiltViewModel
 class SummaryScreenViewModel
@@ -44,9 +42,9 @@ constructor(
                 repository.getEvaluationById(it)?.let { evaluation ->
                     state = state.copy(
                         evaluation = evaluation,
-                        date = evaluation.date .let {
-                                DateTimeFormatter.ofPattern("EEEE, MMMM dd yyyy").format(it)
-                            },
+                        date = evaluation.date.let {
+                            DateTimeFormatter.ofPattern("EEEE, MMMM dd yyyy").format(it)
+                        }
                     )
                 }
             }

@@ -1,15 +1,5 @@
 package com.gondroid.mtcquiz.sendComment
 
-import android.util.Log
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.launch
-
 /*
 class SendCommentViewModel(firebaseInstance: FirebaseInstance) : ViewModel() {
 

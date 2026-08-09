@@ -11,9 +11,9 @@ data class Question(
     val topic: String = "",
     val title: String = "",
     val answer: String = "",
-    @SerialName("fundamento") val argument : String = "",
+    @SerialName("fundamento") val argument: String = "",
     val options: List<String> = listOf(),
-    val imagens: List<String> = emptyList(),
+    val imagens: List<String> = emptyList()
 ) {
     fun isCorrectAnswer(index: Int): Boolean {
         val indexAnswer = when (answer) {
@@ -40,7 +40,7 @@ data class Question(
 enum class TypeActionQuestion {
     NEXT,
     VERIFY,
-    FINISH,
+    FINISH
 }
 
 @Serializable

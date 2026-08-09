@@ -13,8 +13,8 @@ class OpenAppInPlayStore {
         val goToMarketIntent = Intent(Intent.ACTION_VIEW, uri).apply {
             addFlags(
                 Intent.FLAG_ACTIVITY_NO_HISTORY or
-                        Intent.FLAG_ACTIVITY_NEW_DOCUMENT or
-                        Intent.FLAG_ACTIVITY_MULTIPLE_TASK
+                    Intent.FLAG_ACTIVITY_NEW_DOCUMENT or
+                    Intent.FLAG_ACTIVITY_MULTIPLE_TASK
             )
         }
         try {

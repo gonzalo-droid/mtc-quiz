@@ -12,7 +12,6 @@ dependencies {
 
     implementation(libs.kotlinx.serialization.json)
 
-
     // Import the Firebase BoM
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)

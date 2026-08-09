@@ -31,7 +31,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 @Composable
 fun WebViewWithOffline(
     url: String,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     var loadError by remember { mutableStateOf(false) }
 
@@ -69,26 +69,26 @@ fun OfflineMessage(onRetry: () -> Unit) {
             .fillMaxSize()
             .padding(32.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.Center
     ) {
         Icon(
             imageVector = Icons.Default.WifiOff,
             contentDescription = null,
             modifier = Modifier.size(64.dp),
-            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            tint = MaterialTheme.colorScheme.onSurfaceVariant
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = "Sin conexión a internet",
             style = MaterialTheme.typography.titleMedium,
-            textAlign = TextAlign.Center,
+            textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = "Verifica tu conexión e intenta de nuevo",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
-            textAlign = TextAlign.Center,
+            textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(24.dp))
         Button(onClick = onRetry) {

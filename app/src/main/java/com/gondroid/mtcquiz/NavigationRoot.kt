@@ -1,10 +1,5 @@
 package com.gondroid.mtcquiz
 
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -19,9 +14,9 @@ import com.gondroid.configuration.presentation.ConfigurationScreenRoot
 import com.gondroid.configuration.presentation.ConfigurationScreenViewModel
 import com.gondroid.configuration.presentation.customize.CustomizeScreenRoot
 import com.gondroid.configuration.presentation.customize.CustomizeScreenViewModel
+import com.gondroid.configuration.presentation.premium.PremiumScreenRoot
 import com.gondroid.configuration.presentation.tarifas.TarifasScreenRoot
 import com.gondroid.configuration.presentation.term.TermScreenRoot
-import com.gondroid.configuration.presentation.premium.PremiumScreenRoot
 import com.gondroid.core.presentation.ui.ConfigurationScreenRoute
 import com.gondroid.core.presentation.ui.CustomizeScreenRoute
 import com.gondroid.core.presentation.ui.DetailScreenRoute
@@ -29,16 +24,15 @@ import com.gondroid.core.presentation.ui.ErrorReviewRoute
 import com.gondroid.core.presentation.ui.EvaluationHistoryRoute
 import com.gondroid.core.presentation.ui.EvaluationScreenRoute
 import com.gondroid.core.presentation.ui.HomeScreenRoute
-import com.gondroid.core.presentation.ui.OnboardingRoute
-import com.gondroid.core.presentation.ui.PremiumScreenRoute
-import com.gondroid.core.presentation.ui.StatsRoute
 import com.gondroid.core.presentation.ui.LoginScreenRoute
+import com.gondroid.core.presentation.ui.OnboardingRoute
 import com.gondroid.core.presentation.ui.PdfScreenRoute
+import com.gondroid.core.presentation.ui.PremiumScreenRoute
 import com.gondroid.core.presentation.ui.QuestionsScreenRoute
+import com.gondroid.core.presentation.ui.StatsRoute
 import com.gondroid.core.presentation.ui.SummaryScreenRoute
 import com.gondroid.core.presentation.ui.TarifasScreenRoute
 import com.gondroid.core.presentation.ui.TermScreenRoute
-import com.gondroid.mtcquiz.onboarding.OnboardingScreen
 import com.gondroid.detail.presentation.DetailScreenRoot
 import com.gondroid.detail.presentation.DetailScreenViewModel
 import com.gondroid.evaluation.presentation.EvaluationScreenRoot
@@ -50,6 +44,7 @@ import com.gondroid.evaluation.presentation.summary.SummaryScreenRoot
 import com.gondroid.evaluation.presentation.summary.SummaryScreenViewModel
 import com.gondroid.home.presentation.HomeScreenRoot
 import com.gondroid.home.presentation.HomeScreenViewModel
+import com.gondroid.mtcquiz.onboarding.OnboardingScreen
 import com.gondroid.pdf.presentation.PdfScreenRoot
 import com.gondroid.pdf.presentation.PdfScreenViewModel
 import com.gondroid.questionreview.presentation.QuestionsScreenRoot
@@ -57,16 +52,14 @@ import com.gondroid.questionreview.presentation.QuestionsScreenViewModel
 
 @Composable
 fun NavigationRoot(navController: NavHostController, isLoggedIn: Boolean, isOnboardingShown: Boolean) {
-
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize()
     ) {
         NavHost(
             navController = navController,
-            startDestination = if (!isOnboardingShown) OnboardingRoute else HomeScreenRoute,
+            startDestination = if (!isOnboardingShown) OnboardingRoute else HomeScreenRoute
             // if (isLoggedIn) HomeScreenRoute else LoginScreenRoute,
         ) {
-
             composable<OnboardingRoute> {
                 val mainViewModel: MainViewModel = hiltViewModel()
                 OnboardingScreen(
@@ -75,7 +68,7 @@ fun NavigationRoot(navController: NavHostController, isLoggedIn: Boolean, isOnbo
                         navController.navigate(HomeScreenRoute) {
                             popUpTo(OnboardingRoute) { inclusive = true }
                         }
-                    },
+                    }
                 )
             }
 
@@ -97,7 +90,7 @@ fun NavigationRoot(navController: NavHostController, isLoggedIn: Boolean, isOnbo
                     },
                     navigateToPremium = {
                         navController.navigate(PremiumScreenRoute)
-                    },
+                    }
                 )
             }
 
@@ -108,7 +101,7 @@ fun NavigationRoot(navController: NavHostController, isLoggedIn: Boolean, isOnbo
             composable<EvaluationHistoryRoute> {
                 HistoryScreenRoot(
                     navigateBack = { navController.navigateUp() },
-                    navigateToErrorReview = { navController.navigate(ErrorReviewRoute) },
+                    navigateToErrorReview = { navController.navigate(ErrorReviewRoute) }
                 )
             }
 
@@ -153,7 +146,7 @@ fun NavigationRoot(navController: NavHostController, isLoggedIn: Boolean, isOnbo
                     },
                     navigateToPremium = {
                         navController.navigate(PremiumScreenRoute)
-                    },
+                    }
                 )
             }
 
@@ -269,7 +262,7 @@ fun NavigationRoot(navController: NavHostController, isLoggedIn: Boolean, isOnbo
                     },
                     navigateToPremium = {
                         navController.navigate(PremiumScreenRoute)
-                    },
+                    }
                 )
             }
 
@@ -296,8 +289,6 @@ fun NavigationRoot(navController: NavHostController, isLoggedIn: Boolean, isOnbo
                     }
                 )
             }
-
         }
     }
 }
-

@@ -2,7 +2,6 @@ package com.gondroid.mtcquiz.presentation.screens.detail
 
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
-import com.google.common.truth.Truth.assertThat
 import com.gondroid.core.data.ads.AdsManager
 import com.gondroid.core.domain.model.SubscriptionPlan
 import com.gondroid.core.domain.repository.PremiumRepository
@@ -10,6 +9,7 @@ import com.gondroid.detail.presentation.DetailEvent
 import com.gondroid.detail.presentation.DetailScreenViewModel
 import com.gondroid.mtcquiz.presentation.screens.QuizRepositoryFake
 import com.gondroid.mtcquiz.util.MainDispatcherRule
+import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -36,7 +36,7 @@ class DetailScreenViewModelTest {
 
     private fun createViewModel(
         isPremium: Boolean = false,
-        categoryId: String = "1",
+        categoryId: String = "1"
     ): DetailScreenViewModel {
         val premiumRepository = object : PremiumRepository {
             override val isPremiumFlow: StateFlow<Boolean> = MutableStateFlow(isPremium)
@@ -51,7 +51,7 @@ class DetailScreenViewModelTest {
             repository = QuizRepositoryFake(),
             premiumRepository = premiumRepository,
             adsManager = adsManager,
-            bannerAdId = "test-banner-id",
+            bannerAdId = "test-banner-id"
         )
     }
 
@@ -86,7 +86,7 @@ class DetailScreenViewModelTest {
             repository = QuizRepositoryFake(),
             premiumRepository = premiumRepository,
             adsManager = adsManager,
-            bannerAdId = "test-banner-id",
+            bannerAdId = "test-banner-id"
         )
         advanceUntilIdle()
         assertThat(vm.state.value.isPremium).isTrue()

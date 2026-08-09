@@ -4,7 +4,7 @@ import androidx.compose.ui.graphics.Color
 
 data class CategoryColorScheme(
     val container: Color,
-    val content: Color,
+    val content: Color
 )
 
 private val categoryColorMap = mapOf(
@@ -16,7 +16,7 @@ private val categoryColorMap = mapOf(
     "A-IIIc" to CategoryColorScheme(Color(0xFF9EBCEF), Color(0xFF12233F)),
     "B-IIa" to CategoryColorScheme(Color(0xFFB5651D), Color.White),
     "B-IIb" to CategoryColorScheme(Color(0xFFD07A2B), Color.White),
-    "B-IIc" to CategoryColorScheme(Color(0xFFE89A4D), Color(0xFF12233F)),
+    "B-IIc" to CategoryColorScheme(Color(0xFFE89A4D), Color(0xFF12233F))
 )
 
 fun categoryColors(category: String, fallback: CategoryColorScheme): CategoryColorScheme =

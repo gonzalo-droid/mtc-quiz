@@ -24,7 +24,6 @@ class QuestionsScreenViewModel @Inject constructor(
 
     private val data = savedStateHandle.toRoute<QuestionsScreenRoute>()
 
-
     init {
         data.categoryId.let {
             viewModelScope.launch {
