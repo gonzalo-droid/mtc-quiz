@@ -31,13 +31,17 @@ Aplicación Android para practicar el examen de reglas de tránsito del Minister
 | Android Gradle Plugin | 8.10.0 |
 | Hilt | 2.57.2 |
 | Room | 2.8.4 |
-| Google Play Billing | 7.1.1 |
+| Google Play Billing | 9.1.0 |
 | Play In-App Review | 2.0.2 |
 | Compose BOM | 2025.02.00 |
+| Robolectric | 4.16.1 |
+| ktlint | 11.5.0 |
 | Min SDK | 26 |
-| Target / Compile SDK | 35 |
+| Target / Compile SDK | 36 (Android 16) |
 
 > ⚠️ Hilt se mantiene en `2.57.2` porque Hilt `2.59+` requiere AGP `9.0+`. Al actualizar AGP considera subir Hilt en el mismo cambio.
+>
+> ⚠️ Robolectric `4.16+` (requerido para tests contra SDK 36) necesita **JDK 21** para ejecutar tests — no alcanza con JDK 17.
 
 ---
 
@@ -230,8 +234,8 @@ Los repositorios de `core:domain` son las únicas interfaces que los ViewModels 
 
 ### Prerrequisitos
 
-- **JDK 17** instalado y configurado (el proyecto compila a bytecode Java 11/17 según el módulo).
-- **Android Studio** Ladybug o superior, con Android SDK 35.
+- **JDK 21** instalado y configurado (requerido por Robolectric 4.16+ para correr tests contra SDK 36; el bytecode compilado sigue siendo Java 17).
+- **Android Studio** Ladybug o superior, con Android SDK 36.
 - Un **dispositivo o emulador** con API 26+.
 - Un proyecto **Firebase** con:
   - Authentication (Google Sign-In habilitado)
@@ -296,6 +300,29 @@ Luego:
 
 ---
 
+## CI/CD
+
+**[.github/workflows/android.yml](.github/workflows/android.yml)** — corre en cada push a `master` y en cada PR: `ktlintCheck` → `./gradlew test` → `./gradlew assembleDebug`. No requiere ningún GitHub Secret: `API_KEY` tiene un valor placeholder por defecto en el convention plugin (`BuildTypes.kt`) cuando `local.properties` no lo define, y usa un `ci/google-services.dummy.json` committeado (datos falsos, mismo `applicationId`) en vez del `google-services.json` real.
+
+**[.github/workflows/deploy-internal.yml](.github/workflows/deploy-internal.yml)** — deploy a Google Play (track Internal Testing), **disparo 100% manual** (`workflow_dispatch`, nunca en push/PR — publicar es una acción deliberada). Corre `fastlane android internal` (`bundleRelease` + `upload_to_play_store`). Requiere 6 secrets reales (keystore, `google-services.json` real, credenciales de Play Console) que no están configurados todavía — ver `docs/superpowers/plans/2026-08-09-play-store-internal-deploy.md` para el checklist completo.
+
+### Estilo de código
+
+`ktlintCheck`/`ktlintFormat` corren sobre todos los módulos (aplicado vía `subprojects {}` en el `build.gradle.kts` raíz):
+
+```bash
+./gradlew ktlintCheck    # solo verifica
+./gradlew ktlintFormat   # corrige lo auto-corregible
+```
+
+---
+
+## Versionado
+
+`projectVersionCode`/`projectVersionName` (`gradle/libs.versions.toml`) se bumpean **manualmente** en cada release — no hay automatización todavía. `versionCode` es un entero secuencial (+1 por release); `versionName` sigue un esquema aproximado a SemVer, sin ser estricto. Historial completo de cambios por versión: **[CHANGELOG.md](CHANGELOG.md)**.
+
+---
+
 ## Monetización
 
 ### AdMob
@@ -310,12 +337,12 @@ Los IDs de anuncios están parametrizados por build type: IDs de prueba en `debu
 
 ### Google Play Billing — Suscripción Premium
 
-- Producto: `mtcquiz_premium_annual` (suscripción anual).
-- Verificación client-side con `queryPurchasesAsync()`.
-- Estado `isPremium` persistido en DataStore.
-- Arquitectura: `BillingManager` en `core/data/billing/`, `SubscriptionRepository` en `core/domain`.
+- Productos: `mtcquiz_premium_monthly` (mensual) y `mtcquiz_premium_annual` (anual), vía Google Play Billing Library **9.1.0**.
+- Verificación client-side con `queryPurchasesAsync()`; estado de compra pendiente declarado explícitamente con `PendingPurchasesParams` (obligatorio desde Billing Library 8+, aunque la app no venda productos de una sola compra).
+- Estado `isPremium` persistido en DataStore, tipado como `StateFlow<Boolean>` (no `Flow`) para que consumidores síncronos como `AdsManagerImpl` lean `.value` sin castear.
+- **Arquitectura**: `PremiumRepositoryImpl` (`core/data/billing/`) implementa `PremiumRepository` (`core/domain`, expone `isPremiumFlow`/`availablePlansFlow`) y `BillingLauncher` (`core/data/billing/`, expone `launchSubscription` — separado porque requiere una `Activity` y `core:domain` es Kotlin puro). El `BillingClient` real se construye vía `BillingClientFactory` inyectado por Hilt (`BillingModule`), no inline — permite testear el flujo de compra completo con un `BillingClient` mockeado.
 - Al ser premium: banner y ambos intersticiales se omiten completamente.
-- Acceso desde la pantalla **Hazte Premium** (gradiente oscuro) en la sección Configuración.
+- Acceso desde la pantalla **Hazte Premium** (gradiente oscuro) en la sección Configuración, con selector de plan mensual/anual y precios reales de Play Console.
 - Tras cerrar un intersticial se muestra un dialog de upsell ("¿Cansado de los anuncios? Suscríbete").
 
 ---
@@ -347,7 +374,6 @@ Los IDs de anuncios están parametrizados por build type: IDs de prueba en `debu
 - Términos y condiciones (WebView con manejo offline + retry)
 - Trámites asociados (WebView con manejo offline + retry)
 - Calificar la app (In-App Review API + fallback a Play Store)
-- Nosotros
 
 ### UX y diseño
 
@@ -391,7 +417,7 @@ Propuestas de diferenciación basadas en análisis de apps competidoras ([DMV Ge
 
 | Feature | Descripción | Estado |
 |---|---|---|
-| Suscripción anual | Integrar Google Play Billing Library (`billing-ktx:7.x`). Producto: `mtcquiz_premium_annual`. Verificación client-side con `queryPurchasesAsync()`. Estado `isPremium` en DataStore. Arquitectura: `BillingManager` interface+impl en `core/data/billing/`, `SubscriptionRepository` en `core/domain`. | Implementado |
+| Suscripción mensual/anual | Google Play Billing Library `billing-ktx:9.1.0`. Productos: `mtcquiz_premium_monthly`, `mtcquiz_premium_annual`. Verificación client-side con `queryPurchasesAsync()`. Estado `isPremium` en DataStore. Arquitectura: `PremiumRepositoryImpl` implementa `PremiumRepository` + `BillingLauncher`, `BillingClient` inyectado vía `BillingClientFactory`/Hilt. | Implementado |
 | Eliminar ads para premium | Todos los puntos de ads (`AdsManager`) verifican `isPremium` antes de mostrar. Banner en Home, intersticiales en PDF y evaluación se ocultan si el usuario es premium. | Implementado |
 | Popup post-ad | Después de cerrar un intersticial, mostrar dialog: "¿Cansado de los anuncios? Suscríbete por S/XX.XX/año". Botones: [Suscribirme] [No, gracias]. Se implementa en `onDismiss` callback del intersticial. | Implementado |
 | Item en configuración | Agregar "Premium" en la sección "Configuración" del menú lateral con badge/icono. Muestra estado actual y opción de compra. | Implementado |
