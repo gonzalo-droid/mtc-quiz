@@ -1,8 +1,6 @@
 package com.gondroid.configuration.presentation.premium
 
 import android.app.Activity
-import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -74,13 +72,12 @@ private val buttonGradient = Brush.horizontalGradient(
     colors = listOf(premiumGold, premiumAmber)
 )
 
-private const val TERMS_URL = "https://gonzalo-lozg.me/term/quote-anime/"
-private const val PRIVACY_URL = "https://gonzalo-lozg.me/term/quote-anime/"
-
 @Composable
 fun PremiumScreenRoot(
     viewModel: PremiumViewModel = hiltViewModel(),
-    navigateBack: () -> Unit
+    navigateBack: () -> Unit,
+    navigateToTerm: () -> Unit,
+    navigateToPrivacy: () -> Unit
 ) {
     val isPremium by viewModel.isPremium.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
@@ -105,7 +102,9 @@ fun PremiumScreenRoot(
         onSelectPlan = viewModel::selectPlan,
         onSubscribe = { activity?.let { viewModel.subscribe(it) } },
         onRestore = { viewModel.restorePurchases() },
-        navigateBack = navigateBack
+        navigateBack = navigateBack,
+        navigateToTerm = navigateToTerm,
+        navigateToPrivacy = navigateToPrivacy
     )
 }
 
@@ -119,10 +118,10 @@ fun PremiumScreen(
     onSelectPlan: (SubscriptionPlan) -> Unit,
     onSubscribe: () -> Unit,
     onRestore: () -> Unit,
-    navigateBack: () -> Unit
+    navigateBack: () -> Unit,
+    navigateToTerm: () -> Unit,
+    navigateToPrivacy: () -> Unit
 ) {
-    val context = LocalContext.current
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -347,9 +346,7 @@ fun PremiumScreen(
                             style = MaterialTheme.typography.bodySmall,
                             color = premiumGold.copy(alpha = 0.7f),
                             textDecoration = TextDecoration.Underline,
-                            modifier = Modifier.clickable {
-                                context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(TERMS_URL)))
-                            }
+                            modifier = Modifier.clickable(onClick = navigateToTerm)
                         )
                         Text(
                             text = "  •  ",
@@ -361,9 +358,7 @@ fun PremiumScreen(
                             style = MaterialTheme.typography.bodySmall,
                             color = premiumGold.copy(alpha = 0.7f),
                             textDecoration = TextDecoration.Underline,
-                            modifier = Modifier.clickable {
-                                context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(PRIVACY_URL)))
-                            }
+                            modifier = Modifier.clickable(onClick = navigateToPrivacy)
                         )
                     }
 
@@ -517,7 +512,9 @@ fun PremiumScreenPreview() {
             onSelectPlan = {},
             onSubscribe = {},
             onRestore = {},
-            navigateBack = {}
+            navigateBack = {},
+            navigateToTerm = {},
+            navigateToPrivacy = {}
         )
     }
 }
@@ -534,7 +531,9 @@ fun PremiumScreenAlreadyPremiumPreview() {
             onSelectPlan = {},
             onSubscribe = {},
             onRestore = {},
-            navigateBack = {}
+            navigateBack = {},
+            navigateToTerm = {},
+            navigateToPrivacy = {}
         )
     }
 }

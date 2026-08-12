@@ -15,6 +15,7 @@ import com.gondroid.configuration.presentation.ConfigurationScreenViewModel
 import com.gondroid.configuration.presentation.customize.CustomizeScreenRoot
 import com.gondroid.configuration.presentation.customize.CustomizeScreenViewModel
 import com.gondroid.configuration.presentation.premium.PremiumScreenRoot
+import com.gondroid.configuration.presentation.privacy.PrivacyScreenRoot
 import com.gondroid.configuration.presentation.tarifas.TarifasScreenRoot
 import com.gondroid.configuration.presentation.term.TermScreenRoot
 import com.gondroid.core.presentation.ui.ConfigurationScreenRoute
@@ -28,6 +29,7 @@ import com.gondroid.core.presentation.ui.LoginScreenRoute
 import com.gondroid.core.presentation.ui.OnboardingRoute
 import com.gondroid.core.presentation.ui.PdfScreenRoute
 import com.gondroid.core.presentation.ui.PremiumScreenRoute
+import com.gondroid.core.presentation.ui.PrivacyScreenRoute
 import com.gondroid.core.presentation.ui.QuestionsScreenRoute
 import com.gondroid.core.presentation.ui.StatsRoute
 import com.gondroid.core.presentation.ui.SummaryScreenRoute
@@ -181,6 +183,11 @@ fun NavigationRoot(navController: NavHostController, isLoggedIn: Boolean, isOnbo
                             TermScreenRoute
                         )
                     },
+                    navigateToPrivacy = {
+                        navController.navigate(
+                            PrivacyScreenRoute
+                        )
+                    },
                     navigateToCustomize = {
                         navController.navigate(
                             CustomizeScreenRoute
@@ -219,6 +226,14 @@ fun NavigationRoot(navController: NavHostController, isLoggedIn: Boolean, isOnbo
                 )
             }
 
+            composable<PrivacyScreenRoute> {
+                PrivacyScreenRoot(
+                    navigateBack = {
+                        navController.navigateUp()
+                    }
+                )
+            }
+
             composable<TarifasScreenRoute> {
                 TarifasScreenRoot(
                     navigateBack = {
@@ -239,7 +254,9 @@ fun NavigationRoot(navController: NavHostController, isLoggedIn: Boolean, isOnbo
 
             composable<PremiumScreenRoute> {
                 PremiumScreenRoot(
-                    navigateBack = { navController.navigateUp() }
+                    navigateBack = { navController.navigateUp() },
+                    navigateToTerm = { navController.navigate(TermScreenRoute) },
+                    navigateToPrivacy = { navController.navigate(PrivacyScreenRoute) }
                 )
             }
 
