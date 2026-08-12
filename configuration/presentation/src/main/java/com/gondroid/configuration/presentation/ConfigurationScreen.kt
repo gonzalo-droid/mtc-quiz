@@ -1,7 +1,5 @@
 package com.gondroid.configuration.presentation
 
-import android.app.Activity
-import android.content.Context
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -27,6 +25,8 @@ import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.LightMode
+import androidx.compose.material.icons.filled.PrivacyTip
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.WorkspacePremium
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -53,21 +53,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.gondroid.core.presentation.designsystem.MTCQuizTheme
-import com.google.android.play.core.review.ReviewManagerFactory
-
-private fun requestInAppReview(activity: Activity, context: Context) {
-    val manager = ReviewManagerFactory.create(activity)
-    manager.requestReviewFlow().addOnCompleteListener { task ->
-        if (task.isSuccessful) {
-            manager.launchReviewFlow(activity, task.result).addOnCompleteListener {
-                // Google doesn't tell us if user actually rated.
-                // Flow is complete — no further action needed.
-            }
-        } else {
-            OpenAppInPlayStore().invoke(context)
-        }
-    }
-}
 
 @Composable
 fun ConfigurationScreenRoot(
@@ -77,6 +62,7 @@ fun ConfigurationScreenRoot(
     navigateToCustomize: () -> Unit,
     navigateToTarifas: () -> Unit,
     navigateToAbout: () -> Unit,
+    navigateToPrivacy: () -> Unit,
     navigateToLogout: () -> Unit,
     navigateToStats: () -> Unit = {},
     navigateToHistory: () -> Unit = {},
@@ -102,17 +88,11 @@ fun ConfigurationScreenRoot(
         onAction = { action ->
             when (action) {
                 ConfigurationAction.GoToAbout -> navigateToAbout()
-                ConfigurationAction.GoToRating -> {
-                    val activity = context as? Activity
-                    if (activity != null) {
-                        requestInAppReview(activity, context)
-                    } else {
-                        OpenAppInPlayStore().invoke(context)
-                    }
-                }
-
+                ConfigurationAction.GoToRating -> OpenAppInPlayStore().invoke(context)
+                ConfigurationAction.GoToShare -> ShareApp().invoke(context)
                 ConfigurationAction.GoToSCustomize -> navigateToCustomize()
                 ConfigurationAction.GoToTerm -> navigateToTerm()
+                ConfigurationAction.GoToPrivacy -> navigateToPrivacy()
                 ConfigurationAction.GoToTarifas -> navigateToTarifas()
                 ConfigurationAction.GoToStats -> navigateToStats()
                 ConfigurationAction.GoToHistory -> navigateToHistory()
@@ -366,6 +346,11 @@ fun ConfigurationScreen(
                     onClick = { onAction(ConfigurationAction.GoToTerm) }
                 )
                 ItemList(
+                    icon = Icons.Default.PrivacyTip,
+                    title = "Política de privacidad",
+                    onClick = { onAction(ConfigurationAction.GoToPrivacy) }
+                )
+                ItemList(
                     icon = Icons.AutoMirrored.Filled.Assignment,
                     title = "Trámites asociados",
                     onClick = { onAction(ConfigurationAction.GoToTarifas) }
@@ -374,6 +359,11 @@ fun ConfigurationScreen(
                     icon = Icons.Default.Star,
                     title = "Calificar app",
                     onClick = { onAction(ConfigurationAction.GoToRating) }
+                )
+                ItemList(
+                    icon = Icons.Default.Share,
+                    title = "Compartir app",
+                    onClick = { onAction(ConfigurationAction.GoToShare) }
                 )
             }
 
