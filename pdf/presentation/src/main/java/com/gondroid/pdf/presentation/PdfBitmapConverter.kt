@@ -15,22 +15,16 @@ import kotlinx.coroutines.withContext
 class PdfBitmapConverter(
     private val context: Context
 ) {
-    var renderer: PdfRenderer? = null
-
     suspend fun pdfToBitmaps(contentUri: Uri): List<Bitmap> {
         return withContext(Dispatchers.IO) {
-            renderer?.close()
-
             context
                 .contentResolver
                 .openFileDescriptor(contentUri, "r")
                 ?.use { descriptor ->
-                    with(PdfRenderer(descriptor)) {
-                        renderer = this
-
-                        return@withContext (0 until pageCount).map { index ->
+                    PdfRenderer(descriptor).use { renderer ->
+                        (0 until renderer.pageCount).map { index ->
                             async {
-                                openPage(index).use { page ->
+                                renderer.openPage(index).use { page ->
                                     val bitmap = createBitmap(page.width, page.height)
 
                                     val canvas = Canvas(bitmap).apply {
@@ -50,8 +44,7 @@ class PdfBitmapConverter(
                             }
                         }.awaitAll()
                     }
-                }
-            return@withContext emptyList()
+                } ?: emptyList()
         }
     }
 }

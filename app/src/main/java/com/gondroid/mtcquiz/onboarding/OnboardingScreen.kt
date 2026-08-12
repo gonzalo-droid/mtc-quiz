@@ -78,15 +78,6 @@ fun OnboardingScreen(
                 .fillMaxSize()
                 .padding(padding)
         ) {
-            TextButton(
-                onClick = onFinish,
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(16.dp)
-            ) {
-                Text("Saltar", color = MaterialTheme.colorScheme.onSurfaceVariant)
-            }
-
             Column(
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -148,6 +139,15 @@ fun OnboardingScreen(
                 }
 
                 Spacer(Modifier.height(16.dp))
+            }
+
+            TextButton(
+                onClick = onFinish,
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(16.dp)
+            ) {
+                Text("Saltar", color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
     }

@@ -1,4 +1,4 @@
-package com.gondroid.configuration.presentation.term
+package com.gondroid.configuration.presentation.privacy
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -17,17 +17,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.gondroid.core.presentation.designsystem.components.WebViewWithOffline
 
 @Composable
-fun TermScreenRoot(
+fun PrivacyScreenRoot(
     navigateBack: () -> Unit
 ) {
-    TermScreen(
+    PrivacyScreen(
         onNavigateUp = navigateBack
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TermScreen(
+fun PrivacyScreen(
     onNavigateUp: () -> Unit
 ) {
     Scaffold(
@@ -49,7 +49,7 @@ fun TermScreen(
         }
     ) { paddingValues ->
         WebViewWithOffline(
-            url = "https://gonzalo-lozg.me/apps-docs/mtcquiz/term/",
+            url = "https://gonzalo-lozg.me/apps-docs/mtcquiz/politics/",
             modifier = Modifier.padding(paddingValues)
         )
     }
@@ -57,8 +57,8 @@ fun TermScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun TermScreenRootPreview() {
-    TermScreen(
+fun PrivacyScreenRootPreview() {
+    PrivacyScreen(
         onNavigateUp = {}
     )
 }
