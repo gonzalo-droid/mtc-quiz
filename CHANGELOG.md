@@ -13,12 +13,21 @@ Cambios ya en `master` pero pendientes del próximo bump de versión (`versionCo
 - `ktlintCheck` corriendo por primera vez en CI (el plugin estaba declarado pero nunca aplicado a ningún módulo).
 - Cache de Gradle y badge de estado de CI en el README.
 - Workflow de deploy manual a Google Play (Internal Testing) — `workflow_dispatch` únicamente, con spec y plan de implementación documentados.
+- Snackbar con acción "Abrir" al descargar el PDF del temario, para abrirlo directamente en un visor externo.
+- Zoom básico (pellizcar) en el visor de PDF, por página, con doble tap para resetear.
+- Opción "Compartir app" en Configuración (comparte el link de la ficha de Play Store).
+- Opción "Política de privacidad" en Configuración, con pantalla WebView propia (`PrivacyScreen`).
 
 ### Changed
 - Google Play Billing Library `7.1.1` → `9.1.0` (requisito de Google Play, deadline 2026-08-30). `BillingClient` ahora se inyecta vía `BillingClientFactory`/Hilt en vez de construirse inline, habilitando los tests de compra.
 - CI simplificado: de `fastlane android beta` (nunca había pasado, requería credenciales inexistentes) a `ktlintCheck` + `test` + `assembleDebug` directo con Gradle — sin necesidad de ningún GitHub Secret.
+- "Calificar app" ya no dispara el In-App Review API de Google desde el menú de Configuración — redirige directo a la ficha de Play Store. Google desaconseja disparar ese API desde un botón de menú, y el diálogo no se mostraba casi nunca por límite de cuota.
+- Descarga del PDF migrada a `MediaStore` en Android 10+ (antes usaba `File` directo a la carpeta pública de Descargas, lo que fallaba con `EACCES` bajo scoped storage).
+- URL de "Términos y condiciones" corregida (apuntaba a un placeholder). Los links legales de la pantalla Premium ahora abren las mismas pantallas WebView internas de Configuración en vez de un navegador externo — antes ambos links de Premium apuntaban por error a la misma URL placeholder.
 
 ### Fixed
+- Botón "Saltar" del onboarding no respondía al toque — el `HorizontalPager` quedaba encima del botón en el z-order de Compose y absorbía el tap.
+- Buscador de texto dentro del visor de PDF removido (solo funcionaba en API 35+ y complicaba el visor sin aportar mucho).
 - Banner de AdMob renderizado detrás de la barra de navegación del sistema en dispositivos con navegación de 3 botones (`BannerAdSlot` no consumía `WindowInsets.navigationBars`).
 - Botón "Nosotros" en Configuración ocultado — navegaba a una pantalla ("About") que nunca se implementó.
 - `.gitignore`: `/build` estaba anclado a la raíz y no excluía los `build/` de cada módulo.
