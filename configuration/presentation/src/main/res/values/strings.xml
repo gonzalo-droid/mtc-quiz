@@ -5,7 +5,7 @@
     <string name="ranting_app">Califica la aplicación</string>
     <string name="about_us">Nosotros</string>
     <string name="logout">Cerrar sesión</string>
-    <string name="custimize_setting">Personaliza tu configuración y sigue estudiando</string>
+    <string name="custimize_setting">Ajustes de evaluación</string>
     <string name="time_to_evaluation">Tiempo de duración de la evaluación. (Minutos)</string>
     <string name="number_of_question_to_evaluation">Número de preguntas para la evaluación</string>
     <string name="percentage_approbe_to_evaluation">Porcentage (%) de preguntas correctas para aprobar</string>
