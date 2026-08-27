@@ -32,8 +32,15 @@ jobs:
       - name: Check code style (ktlint)
         run: ./gradlew ktlintCheck --console=plain
 
-      - name: Run unit tests
-        run: ./gradlew test --console=plain
+      # One invocation instead of two: each `./gradlew` call re-runs Gradle's configuration
+      # phase for all ~27 modules, so running test+assembleDebug together (instead of as
+      # separate steps) avoids paying that cost twice.
+      - name: Run unit tests and build debug APK
+        run: ./gradlew test assembleDebug --console=plain
 
-      - name: Build debug APK
-        run: ./gradlew assembleDebug --console=plain
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-debug
+          path: app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 14
