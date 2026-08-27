@@ -11,6 +11,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.jvm) apply false
     alias(libs.plugins.android.library) apply false
     alias(libs.plugins.ktlint) apply false
+    alias(libs.plugins.kotlinx.kover) apply false
 }
 
 allprojects {
@@ -21,4 +22,9 @@ allprojects {
 
 subprojects {
     apply(plugin = "org.jlleitschuh.gradle.ktlint")
+    // Kover needs to be applied to every module that should contribute to the
+    // merged coverage report (not just the aggregating module), so it can
+    // expose its coverage data as a consumable variant. See app/build.gradle.kts
+    // for the aggregation (`dependencies { kover(project(...)) }`) and report tasks.
+    apply(plugin = "org.jetbrains.kotlinx.kover")
 }

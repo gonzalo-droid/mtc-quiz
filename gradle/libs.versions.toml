@@ -68,6 +68,7 @@ mockwebserver = "4.11.0"
 turbine = "0.7.0"
 truth = "1.1.3"
 robolectric = "4.16.1"
+kover = "0.9.9"
 
 # 🧰 Misc
 jetbrainsKotlinJvm = "2.2.21"
@@ -202,6 +203,9 @@ ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 # 🔥 Firebase & Servicios Google
 com-google-gms-google-services = { id = "com.google.gms.google-services", version.ref = "googleService" }
 com-google-firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "googleFirebaseCrashlytics" }
+
+# 📊 Code Coverage
+kotlinx-kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 
 # 🧩 Plugins Convention (MTCQuiz)
 mtcquiz-android-application = { id = "mtcquiz.android.application", version = "unspecified" }
