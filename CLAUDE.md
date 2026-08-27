@@ -32,6 +32,10 @@ MTCQuiz is an Android app for practicing Peru's MTC (Ministerio de Transportes y
 
 # Assemble release APK (requires signing env vars — see below)
 ./gradlew assembleRelease
+
+# Generate a merged, informational-only Kover HTML coverage report across all modules
+# Output: app/build/reports/kover/html/index.html
+./gradlew :app:koverHtmlReport
 ```
 
 ### Release Signing
