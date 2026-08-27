@@ -45,6 +45,7 @@ googleid = "1.1.1"
 firebaseBom = "33.10.0"
 googleService = "4.4.2"
 googleFirebaseCrashlytics = "3.0.3"
+googleFirebasePerf = "2.0.2"
 playServicesAdMob = "24.9.0"
 playReview = "2.0.2"
 playBilling = "9.1.0"
@@ -58,6 +59,9 @@ credentialsPlayServicesAuth = "1.5.0"
 
 # ⚙️ Logging
 timber = "5.0.1"
+
+# 🐛 Debug Tools
+leakcanary = "2.14"
 
 # 🧪 Testing
 junit = "4.13.2"
@@ -144,6 +148,7 @@ googleid = { module = "com.google.android.libraries.identity.googleid:googleid",
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
+firebase-perf = { module = "com.google.firebase:firebase-perf" }
 firebase-database = { module = "com.google.firebase:firebase-database" }
 firebase-auth = { module = "com.google.firebase:firebase-auth" }
 # adMob
@@ -166,6 +171,9 @@ androidx-credentials-play-services-auth = { module = "androidx.credentials:crede
 
 # ⚙️ Logging
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
+
+# 🐛 Debug Tools
+leakcanary-android = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "leakcanary" }
 
 # 🧪 Testing
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -203,6 +211,7 @@ ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 # 🔥 Firebase & Servicios Google
 com-google-gms-google-services = { id = "com.google.gms.google-services", version.ref = "googleService" }
 com-google-firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "googleFirebaseCrashlytics" }
+com-google-firebase-firebase-perf = { id = "com.google.firebase.firebase-perf", version.ref = "googleFirebasePerf" }
 
 # 📊 Code Coverage
 kotlinx-kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
