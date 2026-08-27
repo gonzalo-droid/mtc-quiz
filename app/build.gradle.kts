@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.com.google.gms.google.services)
     alias(libs.plugins.com.google.firebase.crashlytics)
+    alias(libs.plugins.kotlinx.kover)
 }
 
 android {
@@ -207,4 +208,40 @@ dependencies {
     implementation(projects.questionreview.presentation)
     implementation(projects.questionreview.domain)
     implementation(projects.questionreview.data)
+
+    // Kover: aggregate coverage from every module into this module's merged report.
+    // (`app` itself is included automatically since the plugin is applied here.)
+    kover(project(":core:presentation:designsystem"))
+    kover(project(":core:presentation:ui"))
+    kover(project(":core:domain"))
+    kover(project(":core:data"))
+    kover(project(":core:database"))
+
+    kover(project(":auth:presentation"))
+    kover(project(":auth:domain"))
+    kover(project(":auth:data"))
+
+    kover(project(":configuration:presentation"))
+    kover(project(":configuration:domain"))
+    kover(project(":configuration:data"))
+
+    kover(project(":home:presentation"))
+    kover(project(":home:domain"))
+    kover(project(":home:data"))
+
+    kover(project(":detail:presentation"))
+    kover(project(":detail:domain"))
+    kover(project(":detail:data"))
+
+    kover(project(":pdf:presentation"))
+    kover(project(":pdf:domain"))
+    kover(project(":pdf:data"))
+
+    kover(project(":evaluation:presentation"))
+    kover(project(":evaluation:domain"))
+    kover(project(":evaluation:data"))
+
+    kover(project(":questionreview:presentation"))
+    kover(project(":questionreview:domain"))
+    kover(project(":questionreview:data"))
 }
