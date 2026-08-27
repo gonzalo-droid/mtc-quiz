@@ -224,7 +224,11 @@ fun EvaluationScreen(
                 item {
                     QuestionAnswerCard(
                         modifier = Modifier.fillMaxWidth(),
-                        title = "${state.question.id}.- ${state.question.title}",
+                        // Display position (indexQuestion + 1), not question.id: id is the
+                        // question's fixed position in the full category bank, which only
+                        // matched display order back when questions weren't shuffled. Using it
+                        // here now that they are shuffled shows a jumbled-looking number.
+                        title = "${state.indexQuestion + 1}.- ${state.question.title}",
                         questionImages = state.question.imagens,
                         options = state.question.options.mapIndexed { index, option ->
                             val letter = ('a' + index).uppercaseChar().toString()
