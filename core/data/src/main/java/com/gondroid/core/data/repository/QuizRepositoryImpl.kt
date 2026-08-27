@@ -66,7 +66,7 @@ class QuizRepositoryImpl(
                         preferenceRepository.numberQuestionsFlow.first().toIntOrNull()
 
                     if (isTake && numberQuestion != null) {
-                        questionResponse.data.take(numberQuestion)
+                        questionResponse.data.shuffled().take(numberQuestion)
                     } else {
                         questionResponse.data
                     }
