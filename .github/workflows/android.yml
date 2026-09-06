@@ -21,22 +21,24 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '21'
-          cache: 'gradle'
+
+      # Replaces setup-java's `cache: 'gradle'`, which keyed the whole ~1.7 GB cache on a
+      # hash of every Gradle file — so any build-script edit invalidated it wholesale and
+      # runs restored nothing ("gradle cache is not found"). This action caches the
+      # dependency, build and configuration caches under finer-grained keys, and by default
+      # only writes from the default branch while every branch can read.
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
 
       - name: Write google-services.json
         run: cp ci/google-services.dummy.json app/google-services.json
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-
-      - name: Check code style (ktlint)
-        run: ./gradlew ktlintCheck --console=plain
-
-      # One invocation instead of two: each `./gradlew` call re-runs Gradle's configuration
-      # phase for all ~27 modules, so running test+assembleDebug together (instead of as
-      # separate steps) avoids paying that cost twice.
-      - name: Run unit tests and build debug APK
-        run: ./gradlew test assembleDebug --console=plain
+      # A single invocation for all three checks: every `./gradlew` call re-runs Gradle's
+      # configuration phase across the 32 modules, and ktlint was still paying it a second
+      # time as its own step (~2 min for a check that is itself near-instant). Gradle stops
+      # at the first failing task, so fail-fast is preserved.
+      - name: Check style, run tests and build debug APK
+        run: ./gradlew ktlintCheck test assembleDebug --console=plain
 
       - name: Upload debug APK
         uses: actions/upload-artifact@v4
