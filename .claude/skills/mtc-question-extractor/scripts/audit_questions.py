@@ -137,7 +137,11 @@ def _row_bands(tops, cap):
 
 
 def pdf_rows(pdf: Path):
-    """[(page, Nº, [letters]) ...] in document order; an empty list = unresolved row."""
+    """[(page, Nº, [letters], {tokens}) ...] in document order.
+
+    An empty letter list means the row's RESPUESTA cell could not be read. The token set
+    is everything printed in the row band, used to line JSON records up against rows.
+    """
     out = []
     for pno, frags in _pages(pdf):
         numcl = _clusters([f for f in frags if NUM.match(f["text"])])
@@ -160,8 +164,48 @@ def pdf_rows(pdf: Path):
                 found = [l for t, l in cl if lo <= t < hi]
                 if len(found) == 1:
                     break
-            out.append((pno, num, found))
+            words = {w for f in frags if lo <= f["top"] < hi for w in toks(f["text"])}
+            out.append((pno, num, found, words))
     return out
+
+
+def align(data, rows):
+    """Pair JSON records with PDF rows, tolerating a row that has no record (or vice versa).
+
+    b2c's JSON skips one source row (its RESPUESTA and 4th option are blank in the PDF),
+    and comparing by position after such a skip turns every later row into a false
+    mismatch. A row is matched on how much of the record's own wording it contains.
+    """
+    def score(rec, row):
+        want = set(toks(rec.get("title") or ""))
+        for o in rec.get("options") or []:
+            want |= set(toks(OPT_PREFIX.sub("", o)))
+        return len(want & row[3]) / len(want) if want else 1.0
+
+    def pair_score(k, m, depth=2):
+        """How well records k.. line up with rows m.. over the next few steps."""
+        vals = [score(data[k + n], rows[m + n])
+                for n in range(depth) if k + n < len(data) and m + n < len(rows)]
+        return sum(vals) / len(vals) if vals else 0.0
+
+    # Staying in step wins ties by a wide margin: neighbouring rows share a lot of
+    # vocabulary, so a single row whose wording is only partly readable (options printed
+    # as images, say) must not drag the walk out of sync. A skip is only taken when the
+    # two rows after it also line up better.
+    MARGIN = 0.15
+    pairs, i, j = [], 0, 0
+    while i < len(data) and j < len(rows):
+        in_step = pair_score(i, j)
+        if max(pair_score(i, j + 1), pair_score(i + 1, j)) < in_step + MARGIN:
+            pairs.append((i, j))
+            i, j = i + 1, j + 1
+        elif pair_score(i, j + 1) >= pair_score(i + 1, j):
+            j += 1                      # this PDF row has no record
+        else:
+            pairs.append((i, None))     # this record is in no PDF row
+            i += 1
+    pairs += [(k, None) for k in range(i, len(data))]
+    return pairs
 
 
 # ----------------------------------------------------------------------- audit
@@ -210,12 +254,14 @@ def audit(exam: str) -> dict:
     if len(rows) != len(data):
         r["struct"].append(f"PDF has {len(rows)} rows, JSON has {len(data)} questions "
                            f"({abs(len(rows) - len(data))} unaccounted for)")
-    for i in range(min(len(rows), len(data))):
+    for i, j in align(data, rows):
         tag = f"id{data[i].get('id')}@{i+1}"
-        if not rows[i][2]:
-            r["unresolved"].append(f"{tag}: no answer letter in the PDF (page {rows[i][0]})")
-        elif (data[i].get("answer") or "").strip().lower() != rows[i][2][0]:
-            r["answers"].append(f"{tag}: JSON {data[i].get('answer')} vs PDF {rows[i][2][0]}")
+        if j is None:
+            r["unresolved"].append(f"{tag}: no matching row in the PDF")
+        elif not rows[j][2]:
+            r["unresolved"].append(f"{tag}: no answer letter in the PDF (page {rows[j][0]})")
+        elif (data[i].get("answer") or "").strip().lower() != rows[j][2][0]:
+            r["answers"].append(f"{tag}: JSON {data[i].get('answer')} vs PDF {rows[j][2][0]}")
     return r
 
 
