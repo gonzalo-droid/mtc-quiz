@@ -6,7 +6,9 @@ El formato sigue (aproximadamente) [Keep a Changelog](https://keepachangelog.com
 
 ## [Sin publicar]
 
-Cambios ya en `master` pero pendientes del próximo bump de versión (`versionCode` 7 → 8).
+_Sin cambios pendientes._
+
+## [1.2.3] - 2026-09-06 (versionCode 8)
 
 ### Added
 - Cobertura de tests para el flujo completo de compra premium (`PremiumRepositoryImpl`: `loadAvailablePlans`, `launchSubscription`, listener de compras, restauración) y para `ConfigurationScreenViewModel`/`MainViewModel`, que no tenían tests.
@@ -17,6 +19,9 @@ Cambios ya en `master` pero pendientes del próximo bump de versión (`versionCo
 - Zoom básico (pellizcar) en el visor de PDF, por página, con doble tap para resetear.
 - Opción "Compartir app" en Configuración (comparte el link de la ficha de Play Store).
 - Opción "Política de privacidad" en Configuración, con pantalla WebView propia (`PrivacyScreen`).
+- Informe de cobertura HTML unificado con Kover, que agrega los 27 módulos en `app` (`./gradlew :app:koverHtmlReport`). Es informativo: no hay umbral mínimo que rompa el build.
+- Firebase Performance Monitoring en release y LeakCanary en debug, para detectar regresiones de arranque y fugas de memoria.
+- El APK debug de cada corrida de CI se publica como artefacto (`app-debug`, 14 días de retención), para poder probar un PR sin compilarlo localmente.
 
 ### Changed
 - Google Play Billing Library `7.1.1` → `9.1.0` (requisito de Google Play, deadline 2026-08-30). `BillingClient` ahora se inyecta vía `BillingClientFactory`/Hilt en vez de construirse inline, habilitando los tests de compra.
@@ -24,6 +29,9 @@ Cambios ya en `master` pero pendientes del próximo bump de versión (`versionCo
 - "Calificar app" ya no dispara el In-App Review API de Google desde el menú de Configuración — redirige directo a la ficha de Play Store. Google desaconseja disparar ese API desde un botón de menú, y el diálogo no se mostraba casi nunca por límite de cuota.
 - Descarga del PDF migrada a `MediaStore` en Android 10+ (antes usaba `File` directo a la carpeta pública de Descargas, lo que fallaba con `EACCES` bajo scoped storage).
 - URL de "Términos y condiciones" corregida (apuntaba a un placeholder). Los links legales de la pantalla Premium ahora abren las mismas pantallas WebView internas de Configuración en vez de un navegador externo — antes ambos links de Premium apuntaban por error a la misma URL placeholder.
+- Etiqueta "Personaliza tu configuración y sigue estudiando" reemplazada por "Ajustes de evaluación", que describe la pantalla en vez de acompañar.
+- Las preguntas de una evaluación ahora se barajan (`QuizRepositoryImpl`, `shuffled()`) antes de recortar al número configurado. Antes siempre salían las primeras N del banco y en el mismo orden, así que repetir una categoría daba exactamente el mismo examen.
+- CI: `test` y `assembleDebug` corren en una sola invocación de Gradle en vez de dos pasos separados — cada `./gradlew` reconfigura los ~27 módulos, así que dividirlos pagaba esa fase dos veces. Además se activaron `org.gradle.parallel` y `org.gradle.caching`.
 
 ### Fixed
 - Botón "Saltar" del onboarding no respondía al toque — el `HorizontalPager` quedaba encima del botón en el z-order de Compose y absorbía el tap.
@@ -31,6 +39,11 @@ Cambios ya en `master` pero pendientes del próximo bump de versión (`versionCo
 - Banner de AdMob renderizado detrás de la barra de navegación del sistema en dispositivos con navegación de 3 botones (`BannerAdSlot` no consumía `WindowInsets.navigationBars`).
 - Botón "Nosotros" en Configuración ocultado — navegaba a una pantalla ("About") que nunca se implementó.
 - `.gitignore`: `/build` estaba anclado a la raíz y no excluía los `build/` de cada módulo.
+- La evaluación numeraba cada pregunta con su `id` del banco de la categoría, que se veía desordenado desde que las preguntas se barajan; ahora usa la posición dentro de la evaluación.
+- El pipeline fallaba con `null cannot be cast to non-null type kotlin.String` al quitar las credenciales de firma de `gradle.properties`: el bloque `signingConfigs` se evalúa en la fase de configuración de *cualquier* tarea (ktlint y tests incluidos), y las leía como no-nulas. Ahora la config de firma release solo se crea si están las cuatro.
+
+### Removed
+- Credenciales de firma release (`MTC_KEYSTORE_PATH`, `MTC_KEYSTORE_PASSWORD`, `MTC_KEY_ALIAS`, `MTC_KEY_PASSWORD`) fuera de `gradle.properties`, que está versionado en un repo público. Ahora se leen de `~/.gradle/gradle.properties` o de variables de entorno.
 
 ## [1.2.2] - 2026-08-07 (versionCode 7)
 
