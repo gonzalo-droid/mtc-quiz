@@ -57,9 +57,11 @@ constructor(
 
     private companion object {
         // Without an explicit locale this follows the device language, which rendered
-        // "Sunday, September 06 2026" on an English device. The app ships Spanish-only
-        // for a Peruvian audience, so the locale is pinned rather than inherited.
+        // "Sunday, September 06 2026" on an English device. Pinned to generic Spanish
+        // rather than es-PE on purpose: es-PE is the only Spanish locale whose CLDR data
+        // spells the ninth month "setiembre", and the more familiar "septiembre" was
+        // preferred here.
         val DATE_FORMATTER: DateTimeFormatter =
-            DateTimeFormatter.ofPattern("EEEE, dd 'de' MMMM 'de' yyyy", Locale.forLanguageTag("es-PE"))
+            DateTimeFormatter.ofPattern("EEEE, dd 'de' MMMM 'de' yyyy", Locale.forLanguageTag("es"))
     }
 }
