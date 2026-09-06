@@ -8,6 +8,13 @@ on:
     branches:
       - master
 
+# Two master merges landing minutes apart raced each other for the same cache keys
+# (ReserveCacheError: "another job may be creating this cache"), so neither run could
+# restore anything. Newest run wins; superseded ones are cancelled.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest

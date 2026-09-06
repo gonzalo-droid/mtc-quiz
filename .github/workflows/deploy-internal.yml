@@ -3,7 +3,12 @@ name: Deploy to Play Store (Internal Testing)
 # Manual only — this publishes a real build to Google Play. Never triggered by
 # push or pull_request.
 on:
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Validate against Play without publishing (supply validate_only)'
+        type: boolean
+        default: true
 
 jobs:
   deploy:
@@ -18,16 +23,15 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '21'
-          cache: 'gradle'
 
-      - name: Set up Ruby
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Set up Ruby and install the Gemfile
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.2'
           bundler-cache: true
-
-      - name: Install Fastlane
-        run: gem install fastlane
 
       - name: Write real google-services.json
         run: echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 -d > app/google-services.json
@@ -38,9 +42,8 @@ jobs:
       - name: Write Play Store service account key
         run: echo '${{ secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON }}' > play-service-account.json
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-
+      # `bundle exec` so the fastlane version resolved here is the one pinned in
+      # Gemfile.lock, not whatever a separate `gem install` would have fetched.
       - name: Deploy to Internal Testing track
         env:
           MTC_KEYSTORE_PATH: ${{ github.workspace }}/release.keystore
@@ -50,4 +53,4 @@ jobs:
           SUPPLY_JSON_KEY: ${{ github.workspace }}/play-service-account.json
           FASTLANE_SKIP_UPDATE_CHECK: true
           FASTLANE_DISABLE_COLORS: true
-        run: fastlane android internal
+        run: bundle exec fastlane android internal dry_run:${{ inputs.dry_run }}
