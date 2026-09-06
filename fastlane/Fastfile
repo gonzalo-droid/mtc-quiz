@@ -17,15 +17,20 @@ default_platform(:android)
 
 platform :android do
   desc "Build a release App Bundle and push it to the Google Play Internal Testing track"
-  desc "Pass dry_run:true to validate against Play without publishing anything"
+  desc "Defaults to a dry run; pass dry_run:false to actually publish"
   lane :internal do |options|
+    # Omitting the flag validates rather than publishes, so that this lane and the
+    # deploy-internal workflow (whose dry_run input also defaults to true) behave the
+    # same way. Publishing is irreversible — Play never lets a versionCode be reused —
+    # so it has to be asked for explicitly.
+    dry_run = options[:dry_run]
     gradle(task: "clean bundleRelease")
     upload_to_play_store(
       track: "internal",
       # validate_only uploads and validates the bundle against Play — credentials,
       # permissions, versionCode collisions — then discards the edit instead of
       # committing it. Compared as a string because CLI args arrive as "true"/"false".
-      validate_only: options[:dry_run].to_s == "true",
+      validate_only: dry_run.nil? ? true : dry_run.to_s == "true",
       # Falls back to the Appfile's json_key_file for local runs; CI provides this env var
       # instead since the Appfile path only exists on this machine.
       json_key: ENV["SUPPLY_JSON_KEY"] || "/Volumes/Neko/AndroidStudioProjects/sign/quizzmtc-22c8303d73b2.json"

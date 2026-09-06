@@ -23,7 +23,7 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 Build a release App Bundle and push it to the Google Play Internal Testing track
 
-Pass dry_run:true to validate against Play without publishing anything
+Defaults to a dry run; pass dry_run:false to actually publish
 
 ----
 

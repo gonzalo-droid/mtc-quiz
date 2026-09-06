@@ -4,6 +4,10 @@
 >
 > **Human-in-the-loop notice:** Most tasks below require Gonzalo directly — they touch real production credentials (release keystore, Play Console service account) and an external system (GitHub repo secrets, Google Play Console) that Claude Code is not permitted to modify on its own (confirmed blocked by the harness's auto-mode classifier when `gh secret set` was attempted). An agentic worker executing this plan should perform the verification/read-only steps and the code step (Task 4, if needed), but must stop and hand Task 1–3's action items back to Gonzalo rather than attempting to obtain or enter credentials itself.
 
+> **Updated 2026-09-06.** Task 1 Steps 3 and 4 are now done, the workflow gained a `dry_run`
+> mode (PR #13), and the credential paths below are the real ones. Task 3 is now two runs:
+> a dry run first, then the real publish.
+
 **Goal:** Make the already-merged `deploy-internal.yml` workflow + Fastlane `internal` lane actually succeed end-to-end: manually triggered, produces a signed AAB, uploads it to Google Play's Internal Testing track.
 
 **Architecture:** No new code by default — this plan is primarily operational (Play Console verification, GitHub secret creation, a manual workflow run). Task 4 is a contingency: concrete code fixes for the specific failure modes identified in the design spec, included so a first failed run doesn't stall on "now what."
@@ -32,19 +36,19 @@ In [Play Console](https://play.google.com/console) → select the `com.gondroid.
 
 Open the JSON file referenced in `fastlane/Appfile`'s `json_key_file(...)` (locally, not in chat) and note its `"client_email"` field. In Play Console → Users and permissions, confirm that email is listed with at least "Release manager" access (or Admin) scoped to `com.gondroid.mtcquiz`. If it's missing, add it with Release manager access before Task 3.
 
-- [ ] **Step 3: Confirm the Play Developer API is enabled**
+- [x] **Step 3: Confirm the Play Developer API is enabled** — **DONE 2026-09-06**
 
-In [Google Cloud Console](https://console.cloud.google.com/) → APIs & Services → Library, search "Google Play Android Developer API", confirm it shows "API enabled" for the project tied to the service account above. Enable it if not.
+Gonzalo enabled the Google Play Android Developer API. The linked Google Cloud project is
+`mtcquiz-d8c5f` (project number `949408476336`), the same project Firebase uses — every Firebase
+project is a GCP project. Console:
+`https://console.cloud.google.com/apis/dashboard?project=mtcquiz-d8c5f`
 
-- [ ] **Step 4: Check for a `versionCode` collision**
+- [x] **Step 4: Check for a `versionCode` collision** — **DONE**
 
-Read `gradle/libs.versions.toml`, find `projectVersionCode`. Compare against the highest `versionCode` already used on any Play Console track (visible in each release's details). If they match, this exact `versionCode` was already published — bump `projectVersionCode` (and `projectVersionName` to match) in `gradle/libs.versions.toml` before Task 3, commit that change on its own:
-
-```bash
-git add gradle/libs.versions.toml
-git commit -m "chore: bump versionCode for internal testing release"
-git push
-```
+`projectVersionCode` was bumped `7` → `8` and `projectVersionName` `1.2.2` → `1.2.3` in commit
+`ae0e0ba`. Version 7 was the last published one, so 8 is free. Re-check this only if a future
+run is rejected with `versionCodeAlreadyUsed` — the dry run in Task 3 catches it without
+consuming the number.
 
 ---
 
@@ -57,11 +61,15 @@ git push
 - [ ] **Step 1: Set the keystore secrets**
 
 ```bash
-gh secret set MTC_KEYSTORE_BASE64 --body "$(base64 < /path/to/your/release.jks)" --repo gonzalo-droid/mtc-quiz
+gh secret set MTC_KEYSTORE_BASE64 --body "$(base64 < /Volumes/Neko/AndroidStudioProjects/keys/mtcquizkeys)" --repo gonzalo-droid/mtc-quiz
 gh secret set MTC_KEYSTORE_PASSWORD --body "YOUR_KEYSTORE_PASSWORD" --repo gonzalo-droid/mtc-quiz
 gh secret set MTC_KEY_ALIAS --body "YOUR_KEY_ALIAS" --repo gonzalo-droid/mtc-quiz
 gh secret set MTC_KEY_PASSWORD --body "YOUR_KEY_PASSWORD" --repo gonzalo-droid/mtc-quiz
 ```
+
+The keystore path is confirmed present (2554 bytes). The three plain-text values are in
+`~/.gradle/gradle.properties` — read them there and paste; do not pipe that file through
+anything that echoes it.
 
 - [ ] **Step 2: Set the real `google-services.json`**
 
@@ -76,8 +84,11 @@ gh secret set GOOGLE_SERVICES_JSON --body "$(base64 < app/google-services.json)"
 Using the same file whose `client_email` was checked in Task 1 Step 2:
 
 ```bash
-gh secret set PLAY_STORE_SERVICE_ACCOUNT_JSON --body "$(cat /path/to/quizzmtc-22c8303d73b2.json)" --repo gonzalo-droid/mtc-quiz
+gh secret set PLAY_STORE_SERVICE_ACCOUNT_JSON --body "$(cat /Volumes/Neko/AndroidStudioProjects/sign/quizzmtc-22c8303d73b2.json)" --repo gonzalo-droid/mtc-quiz
 ```
+
+Note the path: the file is under `/Volumes/Neko/`, not the `/Users/gonzalo/` path this plan
+originally listed — that directory no longer exists. `fastlane/Appfile` was corrected in PR #13.
 
 - [ ] **Step 4: Verify all 6 secrets exist (names only, values are never retrievable)**
 
@@ -95,12 +106,27 @@ Expected output: exactly these 6 names (order may vary) — `MTC_KEYSTORE_BASE64
 
 **Interfaces:** Consumes the 6 secrets from Task 2.
 
-- [ ] **Step 1: Trigger the workflow manually**
+Since PR #13 the workflow takes a `dry_run` boolean input, **defaulting to `true`**, wired to
+supply's `validate_only`. Do the dry run first: it exercises credentials, service-account
+permissions and `versionCode` against the real Play API, then discards the edit. If it fails,
+nothing was consumed and nothing reached testers.
 
-Either via GitHub UI (Actions tab → "Deploy to Play Store (Internal Testing)" → Run workflow → select `master` → Run workflow), or via CLI:
+- [ ] **Step 1a: Trigger a DRY RUN**
+
+Via GitHub UI (Actions tab → "Deploy to Play Store (Internal Testing)" → Run workflow → select
+`master` → leave **"Validate against Play without publishing" checked** → Run workflow), or via CLI:
 
 ```bash
-gh workflow run deploy-internal.yml --repo gonzalo-droid/mtc-quiz --ref master
+gh workflow run deploy-internal.yml --repo gonzalo-droid/mtc-quiz --ref master -f dry_run=true
+```
+
+Expect the log to end with supply reporting validation only — no release created. Confirm in
+Play Console → Testing → Internal testing that **no** new release appeared.
+
+- [ ] **Step 1b: Trigger the REAL run** — only after Step 1a is green
+
+```bash
+gh workflow run deploy-internal.yml --repo gonzalo-droid/mtc-quiz --ref master -f dry_run=false
 ```
 
 - [ ] **Step 2: Watch the run**
@@ -110,7 +136,7 @@ gh run list --workflow=deploy-internal.yml --repo gonzalo-droid/mtc-quiz --limit
 gh run watch --repo gonzalo-droid/mtc-quiz
 ```
 
-Expected: all steps green, ending with `fastlane android internal` succeeding.
+Expected: all steps green, ending with `bundle exec fastlane android internal` succeeding.
 
 - [ ] **Step 3: If it fails, capture the log before doing anything else**
 
@@ -120,16 +146,17 @@ gh run view --repo gonzalo-droid/mtc-quiz --log-failed
 
 Match the error against Task 4's failure modes before attempting a fix — each maps to a specific, known cause; guessing at a fix without matching the error first risks masking the real problem.
 
-- [ ] **Step 4: If it succeeds, confirm in Play Console**
+- [ ] **Step 4: If the real run succeeds, confirm in Play Console**
 
-Play Console → `com.gondroid.mtcquiz` → Testing → Internal testing → Releases. Confirm the new release appears with the expected `versionCode`/`versionName`.
+Play Console → `com.gondroid.mtcquiz` → Testing → Internal testing → Releases. Confirm the new
+release appears with `versionCode` 8 / `versionName` 1.2.3.
 
 ---
 
 ### Task 4: Contingency — fix the specific failure, if Task 3 failed
 
 **Files:**
-- Modify (only if the matching symptom below appears): `fastlane/Fastfile:39-46` (the `internal` lane)
+- Modify (only if the matching symptom below appears): the `internal` lane in `fastlane/Fastfile` (the only lane left after PR #12)
 
 **Interfaces:** None — this task only runs if Task 3 Step 3's log matches one of these exact symptoms. Do not apply a fix speculatively; match the log first.
 
@@ -137,11 +164,12 @@ Play Console → `com.gondroid.mtcquiz` → Testing → Internal testing → Rel
 
 | Log contains | Cause | Fix |
 |---|---|---|
-| `The caller does not have permission` / HTTP 403 | Service account lacks Play Console access, or Play Developer API not enabled | Redo Task 1 Steps 2–3; re-run Task 3 once fixed — no code change |
+| `The caller does not have permission` / HTTP 403 | Service account lacks Play Console access (the API-not-enabled half of this is resolved — see Task 1 Step 3) | Redo Task 1 Step 2; re-run Task 3 once fixed — no code change |
 | `APK specifies a version code that has already been used` / `versionCodeAlreadyUsed` | `versionCode` collision | Redo Task 1 Step 4 (bump and push), then re-run Task 3 |
 | `Package not found` / `applicationNotFound` | No manual release ever uploaded for this app (Task 1 Step 1 was skipped or wrong) | A release must be uploaded manually through the Play Console UI first — outside the scope of automation; do this once, then re-run Task 3 |
 | `keystore was tampered with, or password was incorrect` | Wrong `MTC_KEYSTORE_PASSWORD`/`MTC_KEY_PASSWORD`, or `MTC_KEYSTORE_BASE64` wasn't valid base64 of the real file | Redo Task 2 Step 1 — a copy/paste or `base64` command error is the most common cause |
 | `Malformed root json at .../google-services.json` | `GOOGLE_SERVICES_JSON` secret is empty/wrong | Redo Task 2 Step 2 — confirm `app/google-services.json` exists locally and is valid JSON (`python3 -c "import json; json.load(open('app/google-services.json'))"`) before re-encoding |
+| `Your bundle only supports platforms` / `Could not find gem ... in locally installed gems` | `Gemfile.lock` lists only `arm64-darwin-23` and `ruby`; the Linux runner needs its platform | `bundle lock --add-platform x86_64-linux`, commit `Gemfile.lock`, re-run Task 3 |
 | Anything not listed above | Unclassified — do not guess | Stop and report the exact log lines back to Gonzalo instead of attempting a fix |
 
 - [ ] **Step 2: If the symptom matched has no code fix (permission/versionCode/no-release/secret rows above), stop here**
@@ -155,5 +183,5 @@ Repeat Task 3 Steps 1–4 in full — do not assume success; verify the run and 
 ## Self-Review Notes
 
 - **Spec coverage:** every requirement in the design spec — required secrets (Task 2), the "can't bootstrap a new app" risk (Task 1 Step 1, Task 4 row 3), service-account-permission risk (Task 1 Step 2, Task 4 row 1), `versionCode` collision risk (Task 1 Step 4, Task 4 row 2), and the definition-of-done checklist (Task 3 Steps 2 and 4) — is covered by a task above.
-- **Placeholder scan:** the only non-literal values are secret contents themselves (`YOUR_KEYSTORE_PASSWORD`, file paths) — these are inherently per-machine/per-credential and cannot be hardcoded into a shared plan; every other step has an exact, runnable command.
+- **Placeholder scan:** as of 2026-09-06 every file path is concrete and verified to exist. The only remaining placeholders are the three plain-text passwords (`YOUR_KEYSTORE_PASSWORD`, `YOUR_KEY_ALIAS`, `YOUR_KEY_PASSWORD`), which live in `~/.gradle/gradle.properties` and must be pasted by hand — they must never be echoed into this repo or into chat.
 - **Type consistency:** the 6 secret names in Task 2 Step 4's expected output match exactly what `.github/workflows/deploy-internal.yml` (already merged) reads via `${{ secrets.* }}`, and match the table in the design spec.
