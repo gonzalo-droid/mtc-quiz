@@ -33,9 +33,6 @@ jobs:
       - name: Write google-services.json
         run: cp ci/google-services.dummy.json app/google-services.json
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-
       # A single invocation for all three checks: every `./gradlew` call re-runs Gradle's
       # configuration phase across the 32 modules, and ktlint was still paying it a second
       # time as its own step (~2 min for a check that is itself near-instant). Gradle stops
