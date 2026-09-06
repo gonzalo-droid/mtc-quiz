@@ -8,6 +8,26 @@ plugins {
     alias(libs.plugins.kotlinx.kover)
 }
 
+/**
+ * Credenciales de firma release: variables de entorno o ~/.gradle/gradle.properties.
+ * En CI (ktlint, tests, debug APK) no existen, por eso la config de firma solo se crea
+ * cuando estan las cuatro; leerlas como no-nulas rompia la fase de configuracion.
+ */
+val releaseKeystorePath: String? =
+    System.getenv("MTC_KEYSTORE_PATH") ?: project.findProperty("MTC_KEYSTORE_PATH") as String?
+val releaseKeystorePassword: String? =
+    System.getenv("MTC_KEYSTORE_PASSWORD")
+        ?: project.findProperty("MTC_KEYSTORE_PASSWORD") as String?
+val releaseKeyAlias: String? =
+    System.getenv("MTC_KEY_ALIAS") ?: project.findProperty("MTC_KEY_ALIAS") as String?
+val releaseKeyPassword: String? =
+    System.getenv("MTC_KEY_PASSWORD") ?: project.findProperty("MTC_KEY_PASSWORD") as String?
+
+val hasReleaseSigning: Boolean = !releaseKeystorePath.isNullOrBlank() &&
+    !releaseKeystorePassword.isNullOrBlank() &&
+    !releaseKeyAlias.isNullOrBlank() &&
+    !releaseKeyPassword.isNullOrBlank()
+
 android {
 
     namespace = "com.gondroid.mtcquiz"
@@ -17,17 +37,13 @@ android {
     }
 
     signingConfigs {
-        create("release") {
-            storeFile = file(
-                System.getenv("MTC_KEYSTORE_PATH")
-                    ?: project.findProperty("MTC_KEYSTORE_PATH") as String
-            )
-            storePassword = System.getenv("MTC_KEYSTORE_PASSWORD")
-                ?: project.findProperty("MTC_KEYSTORE_PASSWORD") as String
-            keyAlias =
-                System.getenv("MTC_KEY_ALIAS") ?: project.findProperty("MTC_KEY_ALIAS") as String
-            keyPassword = System.getenv("MTC_KEY_PASSWORD")
-                ?: project.findProperty("MTC_KEY_PASSWORD") as String
+        if (hasReleaseSigning) {
+            create("release") {
+                storeFile = file(releaseKeystorePath!!)
+                storePassword = releaseKeystorePassword
+                keyAlias = releaseKeyAlias
+                keyPassword = releaseKeyPassword
+            }
         }
     }
     defaultConfig {
@@ -58,7 +74,7 @@ android {
             )
         }
         getByName("release") {
-            signingConfig = signingConfigs.getByName("release")
+            signingConfig = signingConfigs.findByName("release")
             buildConfigField(
                 "String",
                 "ADMOB_BANNER_ID",
