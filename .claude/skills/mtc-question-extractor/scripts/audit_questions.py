@@ -151,10 +151,15 @@ def pdf_rows(pdf: Path):
         numc = min((c for c in numcl if len(c) == widest), key=lambda c: _centre(c[0]))
         nums = sorted((f["top"], int(f["text"])) for f in numc)
 
-        # a page that ends one table and starts another carries two answer columns at
-        # different x, so clusters are tried densest-first and a row falls through
+        # A page that ends one table and starts another carries two answer columns at
+        # different x, so clusters are tried in turn and a row falls through. Bare letters
+        # come first: an answer cell is written "a", while "a)" is an option's prefix, and
+        # a row whose RESPUESTA cell is empty would otherwise take the neighbouring
+        # option's letter as its answer.
+        groups = _clusters([f for f in frags if LET.match(f["text"])])
+        bare = [c for c in groups if sum(f["text"].strip() in "abcdABCD" for f in c) * 2 > len(c)]
         letcls = [sorted((f["top"], LET.match(f["text"]).group(1).lower()) for f in c)
-                  for c in _clusters([f for f in frags if LET.match(f["text"])])]
+                  for c in (bare or groups)]
         gaps = [b[0] - a[0] for a, b in zip(nums, nums[1:])]
         cap = (median(gaps) if gaps else 40) * 2.5
 
@@ -205,6 +210,23 @@ def align(data, rows):
             pairs.append((i, None))     # this record is in no PDF row
             i += 1
     pairs += [(k, None) for k in range(i, len(data))]
+
+    # A record can sit out of document order: b2c's row Nº28 was extracted last, after the
+    # rest of its table, because the PDF leaves its answer blank. Sweep the rows nothing
+    # claimed and give each to the leftover record whose wording it carries.
+    taken = {j for _k, j in pairs if j is not None}
+    free = [j for j in range(len(rows)) if j not in taken]
+    if free:
+        resolved = {}
+        for k, j in pairs:
+            if j is not None:
+                continue
+            best = max(((score(data[k], rows[m]), m) for m in free), default=(0.0, None))
+            if best[0] >= 0.9:
+                resolved[k] = best[1]
+                free.remove(best[1])
+        if resolved:
+            pairs = [(k, resolved.get(k, j)) for k, j in pairs]
     return pairs
 
 
