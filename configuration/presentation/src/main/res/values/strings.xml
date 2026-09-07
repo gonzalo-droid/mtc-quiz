@@ -6,9 +6,20 @@
     <string name="about_us">Nosotros</string>
     <string name="logout">Cerrar sesión</string>
     <string name="custimize_setting">Ajustes de evaluación</string>
-    <string name="time_to_evaluation">Tiempo de duración de la evaluación. (Minutos)</string>
-    <string name="number_of_question_to_evaluation">Número de preguntas para la evaluación</string>
-    <string name="percentage_approbe_to_evaluation">Porcentage (%) de preguntas correctas para aprobar</string>
-    <string name="update_preferences_evaluation">Actualizar valores</string>
+    <string name="time_to_evaluation">Duración</string>
+    <string name="number_of_question_to_evaluation">Preguntas</string>
+    <string name="percentage_approbe_to_evaluation">Aprobación</string>
+    <string name="update_preferences_evaluation">Guardar ajustes</string>
     <string name="dark_mode">Modo oscuro</string>
+
+    <string name="customize_intro">Ajusta el simulacro y mira cómo queda de exigente.</string>
+    <string name="customize_minutes">%1$d min</string>
+    <string name="customize_percentage">%1$d %%</string>
+    <string name="customize_pace_comfortable">Ritmo cómodo</string>
+    <string name="customize_pace_tight">Ritmo ajustado</string>
+    <string name="customize_pace_against_clock">Contrarreloj</string>
+    <string name="customize_pace_seconds">%1$d s por pregunta</string>
+    <string name="customize_pace_minutes">%1$d:%2$02d por pregunta</string>
+    <string name="customize_summary">Apruebas con %1$d de %2$d correctas: puedes fallar %3$d.</string>
+    <string name="customize_summary_strict">Apruebas solo con las %1$d correctas: no puedes fallar ninguna.</string>
 </resources>
