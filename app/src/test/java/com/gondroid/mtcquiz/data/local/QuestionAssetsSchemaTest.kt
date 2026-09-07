@@ -20,6 +20,19 @@ class QuestionAssetsSchemaTest {
     private val jsonDir = File("src/main/assets/json")
     private val validLetters = setOf("a", "b", "c", "d")
 
+    /**
+     * Questions the source balotario prints with fewer than four alternatives.
+     *
+     * `CLASE_B_IIC.pdf` page 20, Nº28 of its second table ("Periodicidad de la
+     * capacitación en materia de seguridad vial") has three options and an empty
+     * RESPUESTA cell: the fourth alternative simply is not in the document. The
+     * question is real and its answer is settled by the norm the row cites
+     * (literal c of article 19 of the Reglamento Nacional de Vehículos Menores,
+     * which makes the training annual), so it ships with the three alternatives
+     * the PDF prints rather than a fourth one we would have to invent.
+     */
+    private val fewerThanFourOptions = setOf("b2c_questions.json" to 244)
+
     // Mirrors the Json config QuizRepositoryImpl actually uses to decode
     // these same asset files at runtime (core/data/.../QuizRepositoryImpl.kt).
     // Some balotario JSON assets (a3b, a3c) carry an extra "part" bookkeeping
@@ -42,8 +55,12 @@ class QuestionAssetsSchemaTest {
         for (file in questionFiles()) {
             val response = questionsOf(file)
             for (q in response.data) {
-                if (q.options.size != 4) {
+                val allowsFewer = (file.name to q.id) in fewerThanFourOptions
+                if (q.options.size != 4 && !allowsFewer) {
                     errors += "${file.name}#${q.id}: expected 4 options, got ${q.options.size}"
+                }
+                if (allowsFewer && q.options.size !in 2..3) {
+                    errors += "${file.name}#${q.id}: documented as short, but has ${q.options.size} options"
                 }
                 if (q.answer.lowercase() !in validLetters) {
                     errors += "${file.name}#${q.id}: answer '${q.answer}' not in a-d"

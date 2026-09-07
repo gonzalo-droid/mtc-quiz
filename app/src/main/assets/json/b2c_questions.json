@@ -3656,6 +3656,20 @@
                 "d) Todas son correctas"
             ],
             "fundamento": "Artículo 101 RETRAN"
+        },
+        {
+            "id": 244,
+            "section": "Materias específicas",
+            "category": "BIIC",
+            "topic": "Regulación de actividad de transporte",
+            "title": "Periodicidad de la capacitación en materia de seguridad vial",
+            "answer": "b",
+            "options": [
+                "a) cada dos años",
+                "b) anualmente",
+                "c) cada tres años"
+            ],
+            "fundamento": "Literal c) del artículo 19º del Reglamento Nacional de Vehículos Menores"
         }
     ]
 }
