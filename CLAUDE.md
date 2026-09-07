@@ -90,9 +90,54 @@ Navigation uses type-safe routes via `@Serializable` objects/data classes define
 
 Hilt is used throughout. Each module provides its own `@Module` classes. The `app` module aggregates all feature DI graphs. Use `@InstallIn(SingletonComponent::class)` for app-scoped dependencies and `@InstallIn(ViewModelComponent::class)` for ViewModel-scoped ones.
 
+## Question Banks
+
+The nine question banks live in `app/src/main/assets/`: `json/<examId>_questions.json`, the
+source balotarios in `pdf/`, and the sign artwork in `images/` as `.webp`. `QuizRepositoryImpl`
+reads the JSON straight from assets — there is no remote question source.
+
+**The PDF is the source of truth.** When a bank disagrees with its balotario the PDF wins:
+questions, answers and images, the source's own typos included. The exam is marked against
+that document, so a "more correct" answer would make the user fail the real test; nuance
+belongs in `fundamento`.
+
+Extraction and auditing scripts are in `.claude/skills/mtc-question-extractor/scripts/`
+(see `SKILL.md` for the extractors). The two auditors take nothing from the extractors, so an
+extraction bug cannot hide inside its own audit:
+
+```bash
+# structure, every title/option present in the PDF, and the answer letter read
+# from the PDF's own RESPUESTA column
+python3 .claude/skills/mtc-question-extractor/scripts/audit_questions.py [examId ...]
+
+# every .webp compared pixel by pixel with the picture printed in its PDF row
+python3 .claude/skills/mtc-question-extractor/scripts/audit_images.py [examId ...]
+python3 .claude/skills/mtc-question-extractor/scripts/audit_images.py --render b2a 13 14 15
+```
+
+Both need `pdftotext`/`pdftohtml` (poppler) and Pillow. `QuestionAssetsSchemaTest` guards the
+structural invariants at build time; the assets are declared as an input of the test task in
+`app/build.gradle.kts` so an asset-only change actually re-runs it.
+
+A bank is only ever compared against its own balotario. What another PDF says about the same
+question is irrelevant, even when they disagree — each bank mirrors the document its users are
+examined on.
+
+Two caveats when acting on a finding. The cell reader is ~90-93% accurate per cell, so never
+bulk-overwrite JSON text with it; confirm the change against the PDF itself first — every word
+of the new text must appear among that row's own fragments, or read the row with
+`audit_images.py --render`. And two things look like PDF content but are artifacts of the
+reader: hyphens left by line breaks ("contra- curva") and the underscores of fill-in-the-blank
+questions, which `pdftohtml` drops.
+
+Known gaps in the source documents (not defects to fix): `b2c` is missing the row at page 20
+Nº28 of its second table, whose fourth option and answer cells are blank; and the RESPUESTA
+cell is blank for "La hoja de ruta electrónica se debe elaborar" in a3a/a3b/a3c. Some banks
+also repeat a question verbatim, because their PDF does.
+
 ## Key Technology Decisions
 
-- **Data source**: Firebase Realtime Database (questions/categories fetched remotely), Room (evaluations stored locally), DataStore (user preferences)
+- **Data source**: local JSON assets (questions), a hardcoded `CategoryLocalDataSource` (categories), Room (evaluations stored locally), DataStore (user preferences)
 - **Auth**: Firebase Authentication + Google Sign-In via Credential Manager
 - **Async**: Coroutines + Flow throughout; no RxJava
 - **Testing**: JUnit4 + MockK + Turbine (Flow testing) + Truth (assertions) + Robolectric (unit tests with Android APIs) + MockWebServer
