@@ -4,7 +4,7 @@ Todos los cambios notables de este proyecto se documentan en este archivo.
 
 El formato sigue (aproximadamente) [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). El versionado **no** es SemVer estricto: `versionName` sigue un esquema aproximado `MAJOR.MINOR.PATCH` a criterio del mantenedor, y `versionCode` es un entero secuencial que sube en 1 en cada release — ambos se bumpean manualmente en `gradle/libs.versions.toml` (`projectVersionName`/`projectVersionCode`). No hay automatización de versionado todavía (ver `README.md` → sección Versionado).
 
-## [Sin publicar]
+## [1.2.4] - 2026-08-07 (versionCode 9)
 
 ### Added
 - 39 preguntas nuevas en el banco B-IIC (ids 205–243). `CLASE_B_IIC.pdf` trae dos tablas numeradas y solo se había extraído la primera, así que faltaba entera la sección de materias específicas. La fila Nº28 de esa tabla queda fuera a propósito: en el PDF no tiene cuarta opción ni respuesta.
