@@ -37,6 +37,27 @@ data class AnswerOption(
     val state: AnswerOptionState
 )
 
+/**
+ * Fill-in-the-blank questions carry their gap in the question text itself. The balotario
+ * PDFs they are extracted from spell that gap inconsistently: sometimes a run of
+ * non-breaking spaces, which renders as an invisible hole the reader cannot recognise as a
+ * blank, and sometimes underscores of whatever width the PDF happened to lay out.
+ *
+ * The question JSON is normalised to ten underscores, so this is a guard rather than the
+ * fix: it keeps a re-extracted batch from silently reintroducing invisible gaps.
+ */
+private const val BLANK_MARKER = "__________"
+private val INVISIBLE_BLANK = Regex("[\u00a0]{4,}|_{4,}")
+private val BLANK_TIGHT_LEFT = Regex("([\\w,;:])$BLANK_MARKER")
+private val BLANK_TIGHT_RIGHT = Regex("$BLANK_MARKER(\\w)")
+
+private fun String.withVisibleBlanks(): String =
+    replace(INVISIBLE_BLANK, BLANK_MARKER)
+        // A run of non-breaking spaces can sit flush against the surrounding words; the
+        // marker that replaces it needs the spaces the run was standing in for.
+        .replace(BLANK_TIGHT_LEFT, "$1 $BLANK_MARKER")
+        .replace(BLANK_TIGHT_RIGHT, "$BLANK_MARKER $1")
+
 @Composable
 fun QuestionAnswerCard(
     title: String,
@@ -53,7 +74,7 @@ fun QuestionAnswerCard(
         Column {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
-                    text = title,
+                    text = title.withVisibleBlanks(),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurface
                 )

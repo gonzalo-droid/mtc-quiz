@@ -12,6 +12,7 @@ import com.gondroid.core.presentation.ui.SummaryScreenRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -43,11 +44,24 @@ constructor(
                     state = state.copy(
                         evaluation = evaluation,
                         date = evaluation.date.let {
-                            DateTimeFormatter.ofPattern("EEEE, MMMM dd yyyy").format(it)
+                            DATE_FORMATTER.format(it)
+                                // Spanish leaves weekday and month lowercase; this string is
+                                // shown on its own, so it reads better sentence-capitalised.
+                                .replaceFirstChar { char -> char.uppercase() }
                         }
                     )
                 }
             }
         }
+    }
+
+    private companion object {
+        // Without an explicit locale this follows the device language, which rendered
+        // "Sunday, September 06 2026" on an English device. Pinned to generic Spanish
+        // rather than es-PE on purpose: es-PE is the only Spanish locale whose CLDR data
+        // spells the ninth month "setiembre", and the more familiar "septiembre" was
+        // preferred here.
+        val DATE_FORMATTER: DateTimeFormatter =
+            DateTimeFormatter.ofPattern("EEEE, dd 'de' MMMM 'de' yyyy", Locale.forLanguageTag("es"))
     }
 }

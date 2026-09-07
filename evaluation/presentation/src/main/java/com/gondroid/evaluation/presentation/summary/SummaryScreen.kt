@@ -12,8 +12,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -246,26 +248,37 @@ fun SummaryScreen(
                 enter = fadeIn() + slideInVertically { it / 3 }
             ) {
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    // IntrinsicSize.Min sizes the row to the tallest card, and fillMaxHeight
+                    // below stretches the others to match. Without it a label that wraps to
+                    // two lines makes its card taller than its siblings.
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(IntrinsicSize.Min),
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     StatResultCard(
                         label = stringResource(R.string.total_correct),
                         value = animatedCorrect.toString(),
                         color = approvedColor,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
                     )
                     StatResultCard(
                         label = stringResource(R.string.total_incorrect),
                         value = animatedIncorrect.toString(),
                         color = rejectedColor,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
                     )
                     StatResultCard(
                         label = stringResource(R.string.total_question),
                         value = totalTask.toString(),
                         color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
                     )
                 }
             }

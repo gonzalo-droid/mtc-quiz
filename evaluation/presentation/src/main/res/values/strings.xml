@@ -12,6 +12,6 @@
     <string name="rejected">Rechazado</string>
     <string name="results">Resultados</string>
     <string name="total_correct">Total correctas</string>
-    <string name="total_incorrect">Toral incorrectas</string>
+    <string name="total_incorrect">Total incorrectas</string>
     <string name="total_question">Total</string>
 </resources>
