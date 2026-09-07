@@ -89,6 +89,18 @@ android {
     }
 }
 
+/**
+ * QuestionAssetsSchemaTest lee los bancos de preguntas con File("src/main/assets/json"),
+ * una ruta que Gradle no puede ver, asi que un cambio solo de assets no invalidaba nada y
+ * la tarea servia el resultado cacheado: en CI el test aparecia FROM-CACHE sin llegar a
+ * validar los datos nuevos. Declarar la carpeta como entrada lo vuelve a ejecutar.
+ */
+tasks.withType<Test>().configureEach {
+    inputs.dir(layout.projectDirectory.dir("src/main/assets/json"))
+        .withPropertyName("questionAssets")
+        .withPathSensitivity(PathSensitivity.RELATIVE)
+}
+
 dependencies {
 
     // Librerias Android y compose

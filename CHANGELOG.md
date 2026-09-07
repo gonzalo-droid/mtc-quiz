@@ -6,7 +6,16 @@ El formato sigue (aproximadamente) [Keep a Changelog](https://keepachangelog.com
 
 ## [Sin publicar]
 
-_Sin cambios pendientes._
+### Added
+- 39 preguntas nuevas en el banco B-IIC (ids 205–243). `CLASE_B_IIC.pdf` trae dos tablas numeradas y solo se había extraído la primera, así que faltaba entera la sección de materias específicas. La fila Nº28 de esa tabla queda fuera a propósito: en el PDF no tiene cuarta opción ni respuesta.
+- `audit_questions.py`: audita los nueve bancos contra su balotario — estructura, presencia de cada título y opción en el PDF, y la letra de respuesta leída directamente de la columna RESPUESTA. No reutiliza los scripts de extracción, para que un fallo del extractor no pueda esconderse en su propia auditoría.
+- `audit_images.py`: comprueba píxel a píxel que cada `.webp` sea la imagen que imprime su fila del PDF, y no la de otra pregunta.
+
+### Fixed
+- 111 campos de los bancos que no coincidían con su balotario. B-IIA concentra la mayoría: 13 respuestas que contradecían al PDF —"No respetar los límites de velocidad" estaba marcada como falta Grave cuando el balotario dice Muy Grave, y el límite en caminos rurales como 40 km/h cuando dice 60—, más 56 opciones y 5 títulos.
+- Opciones truncadas en A-IIB y A-IIIA: a la opción c de la 85 le faltaba la segunda mitad ("para los asientos posteriores no hay restricción"), y a la a de la 90 y la 159 el final de la frase.
+- Opción d de la pregunta 8 en B-IIB y B-IIC: arrastraba pegado el texto de la opción c de otra pregunta.
+- Opción d de la 148 en B-IIA: decía que los elementos añadidos a la placa deben ser "del mismo color", cuando el balotario dice justo lo contrario.
 
 ## [1.2.3] - 2026-09-06 (versionCode 8)
 

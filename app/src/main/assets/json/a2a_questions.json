@@ -939,7 +939,7 @@
             "section": "Materias generales",
             "category": "Todas",
             "topic": "Reglamento de Tránsito y Manual de Dispositivos de Control de Tránsito",
-            "title": "Si una licencia de conducir consigna alguna restricción, es correcto afirmar que:",
+            "title": "Si una licencia de conducir consiga alguna restricción, es correcto afirmar que:",
             "answer": "b",
             "options": [
                 "a) Dicha restricción es meramente informativa.",
@@ -2104,7 +2104,7 @@
             "section": "Materias generales",
             "category": "Todas",
             "topic": "Reglamento de Tránsito y Manual de Dispositivos de Control de Tránsito",
-            "title": "Si al conducir su vehículo se encuentra con la señal vertical que se muestra (desvío por prohibición de giro izquierda), usted debe entender que:",
+            "title": "Si al conducir su vehículo se encuentra con la señal vertical que se muestra, usted debe entender que:",
             "answer": "b",
             "options": [
                 "a) La vía está interrumpida y debe tomar el camino alternativo que muestra la señal.",
@@ -2376,7 +2376,7 @@
             "answer": "d",
             "options": [
                 "a) Nunca.",
-                "b) Sí, siempre y cuando vaya acompañada de una persona mayor de edad y titular de una licencia de conducir.",
+                "b) Sí, siempre y cuando vaya acompañada de una personas mayor de edad y titular de una licencia de conducir.",
                 "c) No, salvo que conduzca un vehículo de dimensión reducida.",
                 "d) Sí, siempre y cuando sea mayor de 16 años y cuente con licencia de conducir o permiso provisional, conforme a lo dispuesto en el Reglamento Nacional del Sistema de Emisión de Licencias de Conducir."
             ]
@@ -2448,7 +2448,7 @@
                 "a) Baja - carreteras - alta.",
                 "b) Alta - vías urbanas - baja.",
                 "c) Rompenieblas - carreteras - baja.",
-                "d) Alta - carreteras - baja."
+                "d) Alta - carretereras - baja."
             ]
         },
         {
@@ -2798,7 +2798,7 @@
             "section": "Materias generales",
             "category": "Todas",
             "topic": "Reglamento de Tránsito y Manual de Dispositivos de Control de Tránsito",
-            "title": "¿Cuál es la acción correcta del conductor, según las normas de tránsito, en la situación que plantea el siguiente gráfico? (vehículo girando a la derecha con peatón cruzando)",
+            "title": "¿Cuál es la acción correcta del conductor, según las normas de tránsito, en la situación que plantea el siguiente gráfico?",
             "answer": "b",
             "options": [
                 "a) Girar rápidamente a la derecha antes que el peatón cruce la calzada.",
@@ -2941,7 +2941,7 @@
             "section": "Materias generales",
             "category": "Todas",
             "topic": "Reglamento de Tránsito y Manual de Dispositivos de Control de Tránsito",
-            "title": "El siguiente gráfico muestra (zona escolar con señalización):",
+            "title": "El siguiente gráfico muestra:",
             "answer": "a",
             "options": [
                 "a) Señalización de tránsito vertical y horizontal en una zona escolar.",
@@ -2989,7 +2989,7 @@
             "section": "Materias generales",
             "category": "Todas",
             "topic": "Reglamento de Tránsito y Manual de Dispositivos de Control de Tránsito",
-            "title": "De acuerdo al siguiente gráfico (líneas amarillas continuas con camión), es correcto afirmar que:",
+            "title": "De acuerdo al siguiente gráfico, es correcto afirmar que:",
             "answer": "c",
             "options": [
                 "a) La zona que permite adelantar inicia con las líneas amarillas continuas.",
@@ -3186,7 +3186,7 @@
             "section": "Materias específicas",
             "category": "AIIA",
             "topic": "Regulación de actividad de transporte",
-            "title": "El vehículo que presta el servicio de transporte provincial de personas debe contar con el siguiente Seguro:",
+            "title": "El vehículo que prestan el servicio de transporte provincial de personas debe contar con el siguiente Seguro:",
             "answer": "c",
             "fundamento": "Artículo 30 de la Ley General de Transporte y Tránsito Terrestre, Ley N° 27181 del RENAT",
             "options": [
@@ -3223,7 +3223,7 @@
                 "a) 60 años.",
                 "b) 55 años.",
                 "c) 65 años.",
-                "d) No existe dicha exigencia en la norma."
+                "d) No existe dicho exigencia en la norma."
             ]
         },
         {
