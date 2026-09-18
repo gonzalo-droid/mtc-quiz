@@ -35,8 +35,9 @@ SAME = 0.06          # mean absolute pixel difference below which two pictures a
 MIN_SIDE = 20        # smaller than this is a rule or a hairline, not a sign
 
 
-def pdf_images(pdf: Path, outdir: Path):
-    """[(page, top, left, w, h, file)] for every picture embedded in the document."""
+def pdf_images(pdf: Path, outdir: Path, strips: bool = False):
+    """[(page, top, left, w, h, file)] for every picture embedded in the document; with
+    strips=True, the hairline slices (below MIN_SIDE) instead."""
     subprocess.run(["pdftohtml", "-xml", "-nodrm", "-q", str(pdf), str(outdir / "x")],
                    check=True, capture_output=True)
     root = ET.fromstring((outdir / "x.xml").read_text(encoding="utf-8", errors="replace"))
@@ -45,7 +46,7 @@ def pdf_images(pdf: Path, outdir: Path):
         pno = int(page.get("number"))
         for im in page.iter("image"):
             w, h = int(im.get("width")), int(im.get("height"))
-            if w >= MIN_SIDE and h >= MIN_SIDE:
+            if (w >= MIN_SIDE and h >= MIN_SIDE) != strips:
                 out.append((pno, int(im.get("top")), int(im.get("left")), w, h,
                             Path(im.get("src"))))
     return out
@@ -74,7 +75,8 @@ def row_bands(pdf: Path):
 
 
 def by_row(exam: str, tmp: Path):
-    """{document position: [(top, left, file)]} — the pictures the PDF prints per row."""
+    """{document position: [(top, left, file)]} — the pictures the PDF prints per row —
+    and {document position: count} of the hairline strips drawn in each row."""
     pdf = PDF_DIR / EXAMS[exam][0]
     bands = row_bands(pdf)
     per_row: dict[int, list] = {}
@@ -82,19 +84,30 @@ def by_row(exam: str, tmp: Path):
     # pictures printed side by side belong to one cell, so a whole line of them goes to a
     # single row: a band drawn between two Nº positions can otherwise cut a line in half
     lines: dict[tuple, list] = {}
-    for pno, top, left, _w, _h, src in sorted(pdf_images(pdf, tmp)):
+    for pno, top, left, _w, h, src in sorted(pdf_images(pdf, tmp)):
         key = next((k for k in lines if k[0] == pno and abs(k[1] - top) <= 10), (pno, top))
-        lines.setdefault(key, []).append((top, left, src))
+        lines.setdefault(key, []).append((top, left, src, top + h))
     for (pno, _t), members in lines.items():
-        mid = sorted(m[0] for m in members)[len(members) // 2]
-        hit = [k for k, (p, _n, lo, hi) in enumerate(bands) if p == pno and lo <= mid < hi]
-        if hit:
-            per_row.setdefault(hit[0], []).extend(members)
+        # the line goes to the row that holds most of its height, not the one its top edge
+        # falls in: a tall figure in a tall row starts well above that row's Nº, so its top
+        # can poke a few px past the midpoint into the row above (a1..a3c id 93 did)
+        top = min(m[0] for m in members)
+        bottom = max(m[3] for m in members)
+        cover = [(min(hi, bottom) - max(lo, top), k)
+                 for k, (p, _n, lo, hi) in enumerate(bands) if p == pno]
+        best = max(cover, default=(0, -1))
+        if best[0] > 0:
+            per_row.setdefault(best[1], []).extend(m[:3] for m in members)
         else:
-            orphans += members
+            orphans += [m[:3] for m in members]
     for k in per_row:
         per_row[k].sort(key=lambda m: m[1])
-    return bands, per_row, orphans
+    strips: dict[int, int] = {}
+    for pno, top, _l, _w, h, _src in pdf_images(pdf, tmp, strips=True):
+        hit = [k for k, (p, _n, lo, hi) in enumerate(bands) if p == pno and lo <= top + h / 2 < hi]
+        if hit:
+            strips[hit[0]] = strips.get(hit[0], 0) + 1
+    return bands, per_row, orphans, strips
 
 
 def diff(a: Path, b: Path) -> float:
@@ -112,14 +125,20 @@ def audit(exam: str):
     data = json.loads((JSON_DIR / f"{exam}_questions.json").read_text())["data"]
     problems, checked, unreadable = [], 0, 0
     with tempfile.TemporaryDirectory() as td:
-        _bands, per_row, _orph = by_row(exam, Path(td))
+        _bands, per_row, _orph, strips = by_row(exam, Path(td))
         for i, q in enumerate(data):
             pool = list(per_row.get(i, []))
             names = q.get("imagens") or []
             if names and len(pool) < len(names):
-                # the B-class PDFs draw their signs as stacks of hairline strips, so the
-                # row has no embedded picture to compare against: check it with --render
-                unreadable += len(names)
+                if strips.get(i):
+                    # the B-class PDFs draw their signs as stacks of hairline strips, so
+                    # the row has no embedded picture to compare against: check it with
+                    # --render
+                    unreadable += len(names)
+                else:
+                    # nothing drawn at all: the image belongs to another row
+                    problems.append(f"id{q['id']}@{i+1}: declares {len(names)} image(s), "
+                                    f"the PDF row prints {len(pool)} and no sign strips")
                 continue
             for name in names:
                 checked += 1
@@ -132,6 +151,12 @@ def audit(exam: str):
                     problems.append(f"id{q['id']}@{i+1}: {name} is not printed in this row")
                 else:
                     pool.pop(best[1])
+            if pool and not names:
+                # the row prints a picture and the question shows none; B-class sign rows do
+                # not land here, their hairline strips are below MIN_SIDE and never pooled
+                problems.append(f"id{q['id']}@{i+1}: the PDF prints {len(pool)} picture(s) "
+                                f"and the JSON declares no imagens")
+                continue
             for leftover in pool:
                 problems.append(f"id{q['id']}@{i+1}: the PDF prints a picture the JSON omits")
     return checked, unreadable, problems
