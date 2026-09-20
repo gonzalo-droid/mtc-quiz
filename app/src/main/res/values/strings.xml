@@ -25,7 +25,7 @@
     <string name="selected_category">Selecciona tu categoría</string>
     <string name="hi_name">👋 Hola, %s</string>
     <string name="test_evaluation">Simulacro de evaluación - Perú 🇵🇪</string>
-    <string name="start_evaluation">Iniciar evalución</string>
+    <string name="start_evaluation">Iniciar evaluación</string>
     <string name="study">Estudiar</string>
     <string name="download_pdf">Descargar PDF</string>
     <string name="success_download_pdf">PDF guardado en Descargas</string>
