@@ -83,6 +83,7 @@ val surfaceContainerHighestDark = Color(0xFF35343A)
 // Premium — the gold of the paywall, the upsell dialog, the Settings banner and the Home badge.
 val PremiumGold = Color(0xFFFFB300)
 val PremiumAmber = Color(0xFFFF8F00)
+
 // Text and icons on top of PremiumGold. Not white: white on #FFB300 is 1.79:1, below even
 // WCAG's 3:1 for large bold text. This is the paywall's own dark, 9.5:1 on gold.
 val OnPremiumGold = Color(0xFF1A1A2E)

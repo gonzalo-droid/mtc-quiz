@@ -1,6 +1,5 @@
 package com.gondroid.mtcquiz.onboarding
 
-import com.gondroid.core.presentation.designsystem.PremiumGold
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -41,6 +40,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.gondroid.core.presentation.designsystem.PremiumGold
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)

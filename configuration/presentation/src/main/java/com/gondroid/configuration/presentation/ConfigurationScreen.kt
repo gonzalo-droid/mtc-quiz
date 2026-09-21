@@ -1,8 +1,5 @@
 package com.gondroid.configuration.presentation
 
-import com.gondroid.core.presentation.designsystem.PremiumGold
-import com.gondroid.core.presentation.designsystem.PremiumAmber
-import com.gondroid.core.presentation.designsystem.OnPremiumGold
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -56,6 +53,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.gondroid.core.presentation.designsystem.MTCQuizTheme
+import com.gondroid.core.presentation.designsystem.OnPremiumGold
+import com.gondroid.core.presentation.designsystem.PremiumAmber
+import com.gondroid.core.presentation.designsystem.PremiumGold
 
 @Composable
 fun ConfigurationScreenRoot(

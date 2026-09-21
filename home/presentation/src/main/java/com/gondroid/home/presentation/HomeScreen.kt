@@ -1,6 +1,5 @@
 package com.gondroid.home.presentation
 
-import com.gondroid.core.presentation.designsystem.PremiumGold
 import android.Manifest
 import androidx.annotation.RequiresPermission
 import androidx.compose.foundation.clickable
@@ -46,6 +45,7 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.gondroid.core.domain.model.Category
 import com.gondroid.core.presentation.designsystem.MTCQuizTheme
+import com.gondroid.core.presentation.designsystem.PremiumGold
 import com.gondroid.core.presentation.ui.BannerAdSlot
 
 @RequiresPermission(Manifest.permission.INTERNET)

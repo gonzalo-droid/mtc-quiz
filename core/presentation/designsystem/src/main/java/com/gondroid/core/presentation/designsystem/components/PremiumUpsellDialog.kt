@@ -1,7 +1,5 @@
 package com.gondroid.core.presentation.designsystem.components
 
-import com.gondroid.core.presentation.designsystem.PremiumGold
-import com.gondroid.core.presentation.designsystem.OnPremiumGold
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -23,10 +21,11 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.gondroid.core.presentation.designsystem.OnPremiumGold
+import com.gondroid.core.presentation.designsystem.PremiumGold
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

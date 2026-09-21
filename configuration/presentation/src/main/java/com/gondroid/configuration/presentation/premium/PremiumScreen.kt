@@ -1,8 +1,5 @@
 package com.gondroid.configuration.presentation.premium
 
-import com.gondroid.core.presentation.designsystem.PremiumGold
-import com.gondroid.core.presentation.designsystem.PremiumAmber
-import com.gondroid.core.presentation.designsystem.OnPremiumGold
 import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -62,6 +59,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.gondroid.core.domain.model.BillingPeriod
 import com.gondroid.core.domain.model.SubscriptionPlan
 import com.gondroid.core.presentation.designsystem.MTCQuizTheme
+import com.gondroid.core.presentation.designsystem.OnPremiumGold
+import com.gondroid.core.presentation.designsystem.PremiumAmber
+import com.gondroid.core.presentation.designsystem.PremiumGold
 
 private val premiumGold = PremiumGold
 private val premiumAmber = PremiumAmber
