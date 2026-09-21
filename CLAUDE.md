@@ -45,7 +45,7 @@ Release builds require these env vars (or `gradle.properties` entries):
 
 ### Firebase Setup
 
-Place `google-services.json` in `app/` before building. Required for Firebase Auth, Realtime Database, Analytics, and Crashlytics.
+Place `google-services.json` in `app/` before building. Required for Firebase Auth, Analytics, and Crashlytics. (Realtime Database is no longer a dependency: its only user was the commented-out `sendComment/` prototype, removed.)
 
 ## Module Architecture
 
@@ -62,7 +62,7 @@ Current features: `auth`, `home`, `detail`, `evaluation`, `questionreview`, `pdf
 
 Core modules:
 - `core:domain` — shared domain models (`Category`, `Question`, `Answer`, `Evaluation`, `QuizRepository`, `AuthRepository`)
-- `core:data` — shared data implementations (Firebase Realtime DB, DataStore preferences, Google Sign-In)
+- `core:data` — shared data implementations (DataStore preferences, AdMob, Google Sign-In)
 - `core:database` — Room database (`MTCDatabase`) with DAOs and entity mappers
 - `core:presentation:designsystem` — single `MaterialTheme` entry point, reusable Compose components
 - `core:presentation:ui` — type-safe navigation routes, `UiText`, `ObserveAsEvents`, shared utilities
@@ -138,7 +138,7 @@ also repeat a question verbatim, because their PDF does.
 ## Key Technology Decisions
 
 - **Data source**: local JSON assets (questions), a hardcoded `CategoryLocalDataSource` (categories), Room (evaluations stored locally), DataStore (user preferences)
-- **Auth**: Firebase Authentication + Google Sign-In via Credential Manager
+- **Auth**: Firebase Authentication + Google Sign-In via Credential Manager. **The login flow is disconnected on purpose** — the `isLoggedIn` gate in `NavigationRoot.kt` is commented out, so nothing reaches `LoginScreenRoute`. The `auth` modules are kept for when it is re-enabled; don't delete them as dead code.
 - **Async**: Coroutines + Flow throughout; no RxJava
 - **Testing**: JUnit4 + MockK + Turbine (Flow testing) + Truth (assertions) + Robolectric (unit tests with Android APIs) + MockWebServer
 - **Serialization**: `kotlinx.serialization` (not Gson/Moshi in active use)

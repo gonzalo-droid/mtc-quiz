@@ -61,7 +61,6 @@ fun ConfigurationScreenRoot(
     navigateToTerm: () -> Unit,
     navigateToCustomize: () -> Unit,
     navigateToTarifas: () -> Unit,
-    navigateToAbout: () -> Unit,
     navigateToPrivacy: () -> Unit,
     navigateToLogout: () -> Unit,
     navigateToStats: () -> Unit = {},
@@ -87,7 +86,6 @@ fun ConfigurationScreenRoot(
         onNavigateUp = navigateBack,
         onAction = { action ->
             when (action) {
-                ConfigurationAction.GoToAbout -> navigateToAbout()
                 ConfigurationAction.GoToRating -> OpenAppInPlayStore().invoke(context)
                 ConfigurationAction.GoToShare -> ShareApp().invoke(context)
                 ConfigurationAction.GoToSCustomize -> navigateToCustomize()

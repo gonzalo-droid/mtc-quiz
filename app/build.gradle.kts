@@ -129,7 +129,6 @@ dependencies {
     // implementation(libs.coil.compose)
 
     // Lotiee
-    // implementation(libs.lottie.compose)
 
     // Librerias Room
     // implementation(libs.room.ktx)
@@ -160,7 +159,6 @@ dependencies {
     // Import the Firebase BoM
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
-    implementation(libs.firebase.database)
     implementation(libs.firebase.auth)
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.perf)

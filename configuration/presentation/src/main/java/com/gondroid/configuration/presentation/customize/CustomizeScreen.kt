@@ -205,8 +205,7 @@ fun CustomizeScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
             ButtonsAction(
-                enabled = loaded &&
-                    minutes in 1..1000 && questions in 1..1000 && passMark in 1..100,
+                enabled = loaded,
                 modifier = Modifier.fillMaxWidth(),
                 updateData = {
                     onAction(

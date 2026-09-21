@@ -18,7 +18,4 @@ interface DismissedQuestionDao {
 
     @Query("DELETE FROM dismissed_questions WHERE question_id = :questionId")
     suspend fun restore(questionId: Int)
-
-    @Query("DELETE FROM dismissed_questions")
-    suspend fun restoreAll()
 }
