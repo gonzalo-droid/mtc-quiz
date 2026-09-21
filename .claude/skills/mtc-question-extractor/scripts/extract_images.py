@@ -148,34 +148,64 @@ def assign_images_to_questions(images: list[ImageEl], bands) -> dict[int, list[I
 
     Fix: first cluster all of a document's images into visual rows by
     `top`-proximity alone (`_cluster_rows`, page/digit-boundary-agnostic),
-    then assign every image in a cluster to whichever question the
-    *majority* of that cluster's images individually band-matched to.
-    A single 1-image minority within an otherwise-coherent row cluster
-    gets pulled along with the majority instead of leaking to a
-    neighboring question. Logs (to stderr, non-fatal) every case where
-    this majority vote overrides an individual image's own band match -
+    then assign the whole cluster to the question whose band covers most
+    of the cluster's height (`band_covering_most`), falling back to the
+    majority of its images' own band matches only if it overlaps no band.
+    That handles both a 1-image minority in a coherent row and a single
+    tall figure whose top edge crosses the midpoint into the row above
+    (question 93 in every A-class PDF). Logs (to stderr, non-fatal) every
+    case where this overrides an individual image's own band match -
     that's exactly the class of leak this exists to catch, and is worth a
     human being able to scan for it on future PDFs this hasn't been
     checked against.
     """
     pairs = [(im, band_for_image(bands, im)) for im in images]
-    pairs = [(im, q) for im, q in pairs if q is not None]
 
     per_question: dict[int, list[ImageEl]] = {}
     for cluster in _cluster_rows(pairs, page_of=lambda p: p[0].page, top_of=lambda p: p[0].top):
-        qnums = [q for _, q in cluster]
-        majority_q, _ = Counter(qnums).most_common(1)[0]
+        # The whole line goes to the row holding most of its height. Its top edge alone is not
+        # enough: a tall figure in a tall row starts well above that row's Nº, so its top can
+        # poke a few px past the digit midpoint into the row above — the lane diagram of
+        # question 93 in every A-class PDF sits 2px over that line and was assigned to 92.
+        # Same rule audit_images.py uses. The majority vote below it is only a fallback for a
+        # line that overlaps no band at all.
+        target = band_covering_most(bands, [im for im, _ in cluster])
+        if target is None:
+            qnums = [q for _, q in cluster if q is not None]
+            if not qnums:
+                continue
+            target, _ = Counter(qnums).most_common(1)[0]
         for im, own_q in cluster:
-            per_question.setdefault(majority_q, []).append(im)
-            if own_q != majority_q:
+            per_question.setdefault(target, []).append(im)
+            if own_q != target:
                 print(
-                    f"  [row-cluster fix] image page={im.page} top={im.top} "
+                    f"  [row fix] image page={im.page} top={im.top} "
                     f"left={im.left} own band={own_q} reassigned to "
-                    f"majority band={majority_q} (row-cluster of "
-                    f"{len(cluster)})",
+                    f"band={target} (the row holding most of its line's height, "
+                    f"line of {len(cluster)})",
                     file=sys.stderr,
                 )
     return per_question
+
+
+def band_covering_most(bands, line: list[ImageEl]) -> int | None:
+    """The question whose band overlaps the most of `line`'s vertical extent, or None if it
+    overlaps none. All of a line's images are on one page (`_cluster_rows` splits on page
+    changes); a band that starts on an earlier page or ends on a later one is open-ended there.
+    """
+    page = line[0].page
+    top = min(im.top for im in line)
+    bottom = max(im.top + im.height for im in line)
+    best_q, best_cover = None, 0
+    for qnum, sp, st, ep, et in bands:
+        if not (sp <= page <= ep):
+            continue
+        lo = st if sp == page else float("-inf")
+        hi = et if ep == page else float("inf")
+        cover = min(hi, bottom) - max(lo, top)
+        if cover > best_cover:
+            best_q, best_cover = qnum, cover
+    return best_q
 
 
 def row_major_sorted(images: list[ImageEl]) -> list[ImageEl]:
