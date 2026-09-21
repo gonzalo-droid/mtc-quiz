@@ -1,5 +1,8 @@
 package com.gondroid.configuration.presentation
 
+import com.gondroid.core.presentation.designsystem.PremiumGold
+import com.gondroid.core.presentation.designsystem.PremiumAmber
+import com.gondroid.core.presentation.designsystem.OnPremiumGold
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -293,8 +296,8 @@ fun ConfigurationScreen(
                                 .background(
                                     brush = Brush.horizontalGradient(
                                         colors = listOf(
-                                            Color(0xFFFFB300),
-                                            Color(0xFFFF8F00)
+                                            PremiumGold,
+                                            PremiumAmber
                                         )
                                     ),
                                     shape = RoundedCornerShape(16.dp)
@@ -307,7 +310,7 @@ fun ConfigurationScreen(
                                 Icon(
                                     imageVector = Icons.Default.WorkspacePremium,
                                     contentDescription = null,
-                                    tint = Color.White,
+                                    tint = OnPremiumGold,
                                     modifier = Modifier.size(28.dp)
                                 )
                                 Spacer(modifier = Modifier.width(12.dp))
@@ -316,19 +319,19 @@ fun ConfigurationScreen(
                                         text = "Hazte Premium",
                                         style = MaterialTheme.typography.titleSmall,
                                         fontWeight = FontWeight.Bold,
-                                        color = Color.White
+                                        color = OnPremiumGold
                                     )
                                     Text(
                                         text = "Estudia sin anuncios",
                                         style = MaterialTheme.typography.bodySmall,
-                                        color = Color.White.copy(alpha = 0.85f)
+                                        color = OnPremiumGold.copy(alpha = 0.85f)
                                     )
                                 }
                             }
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                                 contentDescription = null,
-                                tint = Color.White
+                                tint = OnPremiumGold
                             )
                         }
                     }

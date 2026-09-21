@@ -1,5 +1,6 @@
 package com.gondroid.mtcquiz.onboarding
 
+import com.gondroid.core.presentation.designsystem.PremiumGold
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -58,7 +59,7 @@ fun OnboardingScreen(
             icon = Icons.Default.BarChart,
             title = "Evalúa tu progreso",
             description = "Simulacros cronometrados, historial de evaluaciones y estadísticas para saber en qué mejorar",
-            accentColor = Color(0xFFFFB300)
+            accentColor = PremiumGold
         ),
         OnboardingPage(
             icon = Icons.Default.PhoneAndroid,

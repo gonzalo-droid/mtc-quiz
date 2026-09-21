@@ -1,5 +1,7 @@
 package com.gondroid.core.presentation.designsystem.components
 
+import com.gondroid.core.presentation.designsystem.PremiumGold
+import com.gondroid.core.presentation.designsystem.OnPremiumGold
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -47,7 +49,7 @@ fun PremiumUpsellDialog(
                 imageVector = Icons.Default.WorkspacePremium,
                 contentDescription = null,
                 modifier = Modifier.size(48.dp),
-                tint = Color(0xFFFFB300)
+                tint = PremiumGold
             )
 
             Spacer(Modifier.height(16.dp))
@@ -75,13 +77,13 @@ fun PremiumUpsellDialog(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFFFB300)
+                    containerColor = PremiumGold
                 )
             ) {
                 Text(
                     text = "Ver planes",
                     fontWeight = FontWeight.SemiBold,
-                    color = Color.White
+                    color = OnPremiumGold
                 )
             }
 

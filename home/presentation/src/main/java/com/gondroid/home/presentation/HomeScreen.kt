@@ -1,5 +1,6 @@
 package com.gondroid.home.presentation
 
+import com.gondroid.core.presentation.designsystem.PremiumGold
 import android.Manifest
 import androidx.annotation.RequiresPermission
 import androidx.compose.foundation.clickable
@@ -99,7 +100,7 @@ fun HomeScreen(
                             Icon(
                                 imageVector = Icons.Default.WorkspacePremium,
                                 contentDescription = "premium",
-                                tint = Color(0xFFFFB300)
+                                tint = PremiumGold
                             )
                         }
                     }
