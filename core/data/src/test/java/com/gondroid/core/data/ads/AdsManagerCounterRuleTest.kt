@@ -107,9 +107,9 @@ class AdsManagerCounterRuleTest {
             interstitialId = "test-id",
             premiumRepository = FakePremiumRepository(isPremium = true)
         )
-        var dismissed = false
-        premiumManager.showPdfInterstitial(mockk<Activity>(relaxed = true)) { dismissed = true }
-        assertThat(dismissed).isTrue()
+        var adWasShown: Boolean? = null
+        premiumManager.showPdfInterstitial(mockk<Activity>(relaxed = true)) { adWasShown = it }
+        assertThat(adWasShown).isFalse()
     }
 
     @Test fun `showEvaluationInterstitial dismisses immediately for premium user without showing an ad`() {
@@ -118,8 +118,22 @@ class AdsManagerCounterRuleTest {
             interstitialId = "test-id",
             premiumRepository = FakePremiumRepository(isPremium = true)
         )
-        var dismissed = false
-        premiumManager.showEvaluationInterstitial(mockk<Activity>(relaxed = true)) { dismissed = true }
-        assertThat(dismissed).isTrue()
+        var adWasShown: Boolean? = null
+        premiumManager.showEvaluationInterstitial(mockk<Activity>(relaxed = true)) { adWasShown = it }
+        assertThat(adWasShown).isFalse()
+    }
+
+    // The flag is what decides whether "¿Cansado de los anuncios?" is offered: with no ad loaded
+    // the callback still runs (the caller has to proceed), but it must not claim an ad was shown.
+    @Test fun `showPdfInterstitial reports no ad shown when none is loaded`() {
+        var adWasShown: Boolean? = null
+        manager.showPdfInterstitial(mockk<Activity>(relaxed = true)) { adWasShown = it }
+        assertThat(adWasShown).isFalse()
+    }
+
+    @Test fun `showEvaluationInterstitial reports no ad shown when none is loaded`() {
+        var adWasShown: Boolean? = null
+        manager.showEvaluationInterstitial(mockk<Activity>(relaxed = true)) { adWasShown = it }
+        assertThat(adWasShown).isFalse()
     }
 }
