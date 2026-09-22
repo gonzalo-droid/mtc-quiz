@@ -19,7 +19,6 @@ dependencies {
     implementation(libs.coil.compose)
 
     // Lotiee
-    implementation(libs.lottie.compose)
 
     implementation(projects.evaluation.domain)
     implementation(projects.core.domain)

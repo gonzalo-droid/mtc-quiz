@@ -7,7 +7,6 @@ sealed interface ConfigurationAction {
     data object Logout : ConfigurationAction
     data object GoToRating : ConfigurationAction
     data object GoToShare : ConfigurationAction
-    data object GoToAbout : ConfigurationAction
     data object GoToTarifas : ConfigurationAction
     data object GoToStats : ConfigurationAction
     data object GoToHistory : ConfigurationAction

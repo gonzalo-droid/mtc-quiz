@@ -62,8 +62,4 @@ class ReviewErrorsViewModel @Inject constructor(
     fun dismissQuestion(questionId: Int) = viewModelScope.launch {
         dismissedDao.dismiss(DismissedQuestionEntity(questionId))
     }
-
-    fun restoreAllDismissed() = viewModelScope.launch {
-        dismissedDao.restoreAll()
-    }
 }

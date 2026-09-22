@@ -196,9 +196,6 @@ fun NavigationRoot(navController: NavHostController, isLoggedIn: Boolean, isOnbo
                     navigateToTarifas = {
                         navController.navigate(TarifasScreenRoute)
                     },
-                    navigateToAbout = {
-                        // TODO: Implementar navegación a About
-                    },
                     navigateToStats = {
                         navController.navigate(StatsRoute)
                     },
