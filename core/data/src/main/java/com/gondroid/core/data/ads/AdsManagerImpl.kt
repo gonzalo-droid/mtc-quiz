@@ -55,22 +55,22 @@ class AdsManagerImpl @Inject constructor(
         return count > 0 && count % 3 == 0
     }
 
-    override fun showPdfInterstitial(activity: Activity, onDismiss: () -> Unit) {
-        if (isPremium) { onDismiss(); return }
+    override fun showPdfInterstitial(activity: Activity, onDismiss: (adWasShown: Boolean) -> Unit) {
+        if (isPremium) { onDismiss(false); return }
         val ad = interstitial
         if (ad == null) {
-            onDismiss()
+            onDismiss(false)
             return
         }
         ad.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdDismissedFullScreenContent() {
                 interstitial = null
                 preloadPdfInterstitial(activity.applicationContext)
-                onDismiss()
+                onDismiss(true)
             }
             override fun onAdFailedToShowFullScreenContent(err: AdError) {
                 interstitial = null
-                onDismiss()
+                onDismiss(false)
             }
         }
         ad.show(activity)
@@ -107,22 +107,22 @@ class AdsManagerImpl @Inject constructor(
         return count > 0 && count % 3 == 0
     }
 
-    override fun showEvaluationInterstitial(activity: Activity, onDismiss: () -> Unit) {
-        if (isPremium) { onDismiss(); return }
+    override fun showEvaluationInterstitial(activity: Activity, onDismiss: (adWasShown: Boolean) -> Unit) {
+        if (isPremium) { onDismiss(false); return }
         val ad = evaluationInterstitial
         if (ad == null) {
-            onDismiss()
+            onDismiss(false)
             return
         }
         ad.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdDismissedFullScreenContent() {
                 evaluationInterstitial = null
                 preloadEvaluationInterstitial(activity.applicationContext)
-                onDismiss()
+                onDismiss(true)
             }
             override fun onAdFailedToShowFullScreenContent(err: AdError) {
                 evaluationInterstitial = null
-                onDismiss()
+                onDismiss(false)
             }
         }
         ad.show(activity)

@@ -48,6 +48,7 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -78,7 +79,7 @@ fun PdfScreenRoot(
     navigateToPremium: () -> Unit = {}
 ) {
     val state by viewModel.state.collectAsState()
-    var showUpsellDialog by remember { mutableStateOf(false) }
+    var showUpsellDialog by rememberSaveable { mutableStateOf(false) }
 
     val context = LocalContext.current
 
@@ -93,8 +94,8 @@ fun PdfScreenRoot(
             PdfEvent.ShowInterstitial -> {
                 val act = activity
                 if (act != null) {
-                    viewModel.adsManager.showPdfInterstitial(act) {
-                        showUpsellDialog = true
+                    viewModel.adsManager.showPdfInterstitial(act) { adWasShown ->
+                        if (adWasShown) showUpsellDialog = true
                         viewModel.onInterstitialClosed()
                     }
                 } else {

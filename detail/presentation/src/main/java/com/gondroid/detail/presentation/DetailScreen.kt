@@ -40,7 +40,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -71,7 +71,10 @@ fun DetailScreenRoot(
     val state by viewModel.state.collectAsState()
     val context = LocalContext.current
     val activity = context as? Activity
-    var showUpsellDialog by remember { mutableStateOf(false) }
+    // rememberSaveable, not remember: the flag is raised right before navigating to the
+    // evaluation, and Navigation Compose disposes this destination while the evaluation is on
+    // top — a plain remember came back false, so the dialog never appeared.
+    var showUpsellDialog by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         viewModel.adsManager.preloadEvaluationInterstitial(context)
@@ -83,8 +86,8 @@ fun DetailScreenRoot(
             DetailEvent.ShowEvaluationInterstitial -> {
                 val act = activity
                 if (act != null) {
-                    viewModel.adsManager.showEvaluationInterstitial(act) {
-                        showUpsellDialog = true
+                    viewModel.adsManager.showEvaluationInterstitial(act) { adWasShown ->
+                        if (adWasShown) showUpsellDialog = true
                         viewModel.onInterstitialClosed(state.category.id)
                     }
                 } else {

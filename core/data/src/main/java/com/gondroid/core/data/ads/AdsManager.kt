@@ -20,8 +20,10 @@ interface AdsManager {
     /**
      * Muestra el intersticial precargado. Si está cargado, al cerrarse invoca [onDismiss].
      * Si no está cargado o falla al mostrar, invoca [onDismiss] inmediatamente. Nunca bloquea.
+     * `adWasShown` es true sólo si el usuario llegó a ver el anuncio: sirve para no ofrecer
+     * "quita los anuncios" cuando no hubo ninguno.
      */
-    fun showPdfInterstitial(activity: Activity, onDismiss: () -> Unit)
+    fun showPdfInterstitial(activity: Activity, onDismiss: (adWasShown: Boolean) -> Unit)
 
     /**
      * Incrementa el contador persistente de descargas. Se llama ANTES de decidir si mostrar
@@ -42,9 +44,9 @@ interface AdsManager {
 
     /**
      * Muestra el intersticial de evaluación precargado. Si no está cargado o falla, invoca
-     * [onDismiss] inmediatamente. Nunca bloquea.
+     * [onDismiss] inmediatamente. Nunca bloquea. `adWasShown` es true sólo si el anuncio se vio.
      */
-    fun showEvaluationInterstitial(activity: Activity, onDismiss: () -> Unit)
+    fun showEvaluationInterstitial(activity: Activity, onDismiss: (adWasShown: Boolean) -> Unit)
 
     /**
      * Incrementa el contador persistente de evaluaciones iniciadas. Se llama ANTES de decidir
