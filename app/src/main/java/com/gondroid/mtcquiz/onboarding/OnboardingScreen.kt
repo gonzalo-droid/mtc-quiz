@@ -40,6 +40,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.gondroid.core.presentation.designsystem.PremiumGold
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -58,7 +59,7 @@ fun OnboardingScreen(
             icon = Icons.Default.BarChart,
             title = "Evalúa tu progreso",
             description = "Simulacros cronometrados, historial de evaluaciones y estadísticas para saber en qué mejorar",
-            accentColor = Color(0xFFFFB300)
+            accentColor = PremiumGold
         ),
         OnboardingPage(
             icon = Icons.Default.PhoneAndroid,

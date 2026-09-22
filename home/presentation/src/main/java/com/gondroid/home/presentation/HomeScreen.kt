@@ -45,6 +45,7 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.gondroid.core.domain.model.Category
 import com.gondroid.core.presentation.designsystem.MTCQuizTheme
+import com.gondroid.core.presentation.designsystem.PremiumGold
 import com.gondroid.core.presentation.ui.BannerAdSlot
 
 @RequiresPermission(Manifest.permission.INTERNET)
@@ -99,7 +100,7 @@ fun HomeScreen(
                             Icon(
                                 imageVector = Icons.Default.WorkspacePremium,
                                 contentDescription = "premium",
-                                tint = Color(0xFFFFB300)
+                                tint = PremiumGold
                             )
                         }
                     }

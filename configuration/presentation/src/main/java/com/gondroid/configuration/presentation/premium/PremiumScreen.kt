@@ -59,9 +59,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.gondroid.core.domain.model.BillingPeriod
 import com.gondroid.core.domain.model.SubscriptionPlan
 import com.gondroid.core.presentation.designsystem.MTCQuizTheme
+import com.gondroid.core.presentation.designsystem.OnPremiumGold
+import com.gondroid.core.presentation.designsystem.PremiumAmber
+import com.gondroid.core.presentation.designsystem.PremiumGold
 
-private val premiumGold = Color(0xFFFFB300)
-private val premiumAmber = Color(0xFFFF8F00)
+private val premiumGold = PremiumGold
+private val premiumAmber = PremiumAmber
 private val premiumDark = Color(0xFF1A1A2E)
 private val premiumDarkEnd = Color(0xFF16213E)
 
@@ -295,7 +298,7 @@ fun PremiumScreen(
                             if (isLoading) {
                                 CircularProgressIndicator(
                                     modifier = Modifier.size(24.dp),
-                                    color = Color.White,
+                                    color = OnPremiumGold,
                                     strokeWidth = 2.dp
                                 )
                             } else {
@@ -303,7 +306,7 @@ fun PremiumScreen(
                                     text = "Suscribirme ahora",
                                     style = MaterialTheme.typography.titleMedium,
                                     fontWeight = FontWeight.Bold,
-                                    color = Color.White
+                                    color = OnPremiumGold
                                 )
                             }
                         }

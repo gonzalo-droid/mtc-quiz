@@ -21,10 +21,11 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.gondroid.core.presentation.designsystem.OnPremiumGold
+import com.gondroid.core.presentation.designsystem.PremiumGold
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -47,7 +48,7 @@ fun PremiumUpsellDialog(
                 imageVector = Icons.Default.WorkspacePremium,
                 contentDescription = null,
                 modifier = Modifier.size(48.dp),
-                tint = Color(0xFFFFB300)
+                tint = PremiumGold
             )
 
             Spacer(Modifier.height(16.dp))
@@ -75,13 +76,13 @@ fun PremiumUpsellDialog(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFFFB300)
+                    containerColor = PremiumGold
                 )
             ) {
                 Text(
                     text = "Ver planes",
                     fontWeight = FontWeight.SemiBold,
-                    color = Color.White
+                    color = OnPremiumGold
                 )
             }
 
