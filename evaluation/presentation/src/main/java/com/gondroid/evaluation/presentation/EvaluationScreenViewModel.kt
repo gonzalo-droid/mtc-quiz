@@ -85,20 +85,13 @@ constructor(
         }
     }
 
-    fun verifyAnswer() {
-        _state.update {
-            it.copy(
-                answerWasSelected = true,
-                answerWasVerified = true,
-                isFinishExam = _state.value.indexQuestion == _state.value.questions.size.dec()
-            )
-        }
-    }
-
-    fun saveAnswer(isCorrect: Boolean, option: String) {
-        if (_state.value.answerWasVerified) {
-            val currentQuestion = _state.value.question
-            val result = QuestionResult(
+    // The answer is recorded the moment it is verified, not when the user moves on: if the
+    // timer runs out between "Verificar" and "Siguiente", a verified answer must still count.
+    fun verifyAnswer(isCorrect: Boolean, option: String) {
+        if (_state.value.answerWasVerified) return
+        val currentQuestion = _state.value.question
+        _resultsList.add(
+            QuestionResult(
                 id = UUID.randomUUID().toString(),
                 questionId = currentQuestion.id,
                 question = currentQuestion.title,
@@ -106,7 +99,13 @@ constructor(
                 isCorrect = isCorrect,
                 correctAnswer = currentQuestion.getOption(currentQuestion.answer)
             )
-            _resultsList.add(result)
+        )
+        _state.update {
+            it.copy(
+                answerWasSelected = true,
+                answerWasVerified = true,
+                isFinishExam = _state.value.indexQuestion == _state.value.questions.size.dec()
+            )
         }
     }
 

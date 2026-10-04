@@ -225,7 +225,7 @@ fun PdfScreen(
                         )
                         Icon(
                             imageVector = Icons.Default.Download,
-                            contentDescription = "Download",
+                            contentDescription = "Descargar",
                             tint = MaterialTheme.colorScheme.onBackground
                         )
                     }

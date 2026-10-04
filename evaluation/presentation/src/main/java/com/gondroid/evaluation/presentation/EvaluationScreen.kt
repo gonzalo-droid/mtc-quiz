@@ -87,12 +87,11 @@ fun EvaluationScreenRoot(
                     blockExit = false
                 }
 
-                EvaluationAction.VerifyAnswer -> viewModel.verifyAnswer()
-                EvaluationAction.NextQuestion -> viewModel.nextQuestion()
-                is EvaluationAction.SaveAnswer -> viewModel.saveAnswer(
+                is EvaluationAction.VerifyAnswer -> viewModel.verifyAnswer(
                     isCorrect = action.isCorrect,
                     option = action.option
                 )
+                EvaluationAction.NextQuestion -> viewModel.nextQuestion()
 
                 is EvaluationAction.SummaryExam -> {
                     viewModel.saveExam()
@@ -263,27 +262,20 @@ fun EvaluationScreen(
                 onClickNextQuestion = { type ->
                     when (type) {
                         TypeActionQuestion.VERIFY -> {
-                            onAction(EvaluationAction.VerifyAnswer)
+                            onAction(
+                                EvaluationAction.VerifyAnswer(
+                                    option = selectedOption.toString(),
+                                    isCorrect = isCorrectAnswerSelected
+                                )
+                            )
                         }
 
                         TypeActionQuestion.NEXT -> {
-                            onAction(
-                                EvaluationAction.SaveAnswer(
-                                    option = selectedOption.toString(),
-                                    isCorrect = isCorrectAnswerSelected == true
-                                )
-                            )
                             selectedOption = null
                             onAction(EvaluationAction.NextQuestion)
                         }
 
                         TypeActionQuestion.FINISH -> {
-                            onAction(
-                                EvaluationAction.SaveAnswer(
-                                    option = selectedOption.toString(),
-                                    isCorrect = isCorrectAnswerSelected == true
-                                )
-                            )
                             selectedOption = null
                             onAction(EvaluationAction.SummaryExam(state.category.id))
                         }

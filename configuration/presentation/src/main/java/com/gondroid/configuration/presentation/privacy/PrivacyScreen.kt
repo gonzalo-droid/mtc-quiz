@@ -35,7 +35,7 @@ fun PrivacyScreen(
         topBar = {
             TopAppBar(
                 modifier = Modifier,
-                title = { Text(text = "") },
+                title = { Text(text = "Política de privacidad") },
                 navigationIcon = {
                     IconButton(onClick = onNavigateUp) {
                         Icon(

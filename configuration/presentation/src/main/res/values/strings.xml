@@ -1,7 +1,7 @@
 <resources>
     <string name="settings">Configuraciones</string>
     <string name="custom_values">Personalización</string>
-    <string name="term_and_conditions"><![CDATA[Términos & Condiciones]]></string>
+    <string name="term_and_conditions">Términos y condiciones</string>
     <string name="ranting_app">Califica la aplicación</string>
     <string name="about_us">Nosotros</string>
     <string name="logout">Cerrar sesión</string>

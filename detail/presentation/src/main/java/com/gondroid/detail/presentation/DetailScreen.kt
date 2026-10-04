@@ -169,7 +169,7 @@ fun DetailScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Menu,
-                            contentDescription = "Add Task",
+                            contentDescription = "Configuraciones",
                             tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
