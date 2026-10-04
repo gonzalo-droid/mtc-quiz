@@ -4,6 +4,14 @@ Todos los cambios notables de este proyecto se documentan en este archivo.
 
 El formato sigue (aproximadamente) [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). El versionado **no** es SemVer estricto: `versionName` sigue un esquema aproximado `MAJOR.MINOR.PATCH` a criterio del mantenedor, y `versionCode` es un entero secuencial que sube en 1 en cada release — ambos se bumpean manualmente en `gradle/libs.versions.toml` (`projectVersionName`/`projectVersionCode`). No hay automatización de versionado todavía (ver `README.md` → sección Versionado).
 
+## [Unreleased]
+
+### Fixed
+- Una respuesta verificada se perdía si el tiempo se acababa antes de pulsar "Siguiente": ahora se registra al pulsar "Verificar", como en iOS.
+- Textos alineados con iOS: "Términos y condiciones" (antes "Términos & Condiciones") y el diálogo de tiempo agotado ("Tiempo finalizado", "La evaluación se ha finalizado").
+- Las pantallas de Términos y de Política de privacidad ahora muestran su título.
+- Etiquetas de accesibilidad: el ícono de menú de Detail decía "Add Task" y el botón de descarga del PDF "Download".
+
 ## [1.2.4] - 2026-08-07 (versionCode 9)
 
 ### Added

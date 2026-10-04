@@ -35,7 +35,7 @@ fun TermScreen(
         topBar = {
             TopAppBar(
                 modifier = Modifier,
-                title = { Text(text = "") },
+                title = { Text(text = "Términos y condiciones") },
                 navigationIcon = {
                     IconButton(onClick = onNavigateUp) {
                         Icon(
