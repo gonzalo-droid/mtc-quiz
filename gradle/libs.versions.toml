@@ -1,11 +1,11 @@
 # 📦 Version Catalog for libs.versions.toml
 [versions]
 # 🔧 Build & Gradle Tools
-agp = "8.13.2"
+agp = "9.5.1"
 androidTools = "31.8.0"
 kotlin = "2.2.21"
-ksp = "2.2.21-2.0.5"
-ktlint = "11.5.0"
+ksp = "2.3.13"
+ktlint = "14.2.0"
 
 # 🧱 Core AndroidX & Kotlin
 coreKtx = "1.13.1"
@@ -27,7 +27,7 @@ foundationAndroid = "1.7.2"
 foundationLayoutAndroid = "1.7.2"
 
 # 📦 Dependency Injection (Hilt)
-hilt = "2.57.2"
+hilt = "2.60.1"
 navigationComposeHilt = "1.2.0"
 
 # 🗂️ Data Persistence
@@ -195,7 +195,6 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 
 # ⚙️ Kotlin Plugins
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }

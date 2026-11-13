@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<baseline version="1.0">
+    <file name="src/main/java/com/gondroid/pdf/presentation/PdfAction.kt">
+        <error line="5" column="5" source="standard:blank-line-before-declaration" />
+    </file>
+    <file name="src/main/java/com/gondroid/pdf/presentation/PdfBitmapConverter.kt">
+        <error line="16" column="33" source="standard:trailing-comma-on-declaration-site" />
+        <error line="18" column="61" source="standard:function-expression-body" />
+        <error line="25" column="53" source="standard:chain-method-continuation" />
+        <error line="30" column="50" source="standard:multiline-expression-wrapping" />
+        <error line="39" column="81" source="standard:trailing-comma-on-call-site" />
+    </file>
+    <file name="src/main/java/com/gondroid/pdf/presentation/PdfScreen.kt">
+        <error line="76" column="5" source="standard:function-naming" />
+        <error line="79" column="39" source="standard:trailing-comma-on-declaration-site" />
+        <error line="115" column="53" source="standard:trailing-comma-on-call-site" />
+        <error line="119" column="30" source="standard:multiline-expression-wrapping" />
+        <error line="154" column="42" source="standard:trailing-comma-on-call-site" />
+        <error line="159" column="34" source="standard:multiline-expression-wrapping" />
+        <error line="162" column="57" source="standard:trailing-comma-on-call-site" />
+        <error line="186" column="10" source="standard:trailing-comma-on-call-site" />
+        <error line="192" column="5" source="standard:function-naming" />
+        <error line="197" column="76" source="standard:trailing-comma-on-declaration-site" />
+        <error line="209" column="81" source="standard:trailing-comma-on-call-site" />
+        <error line="214" column="36" source="standard:multiline-expression-wrapping" />
+        <error line="216" column="54" source="standard:trailing-comma-on-call-site" />
+        <error line="218" column="26" source="standard:trailing-comma-on-call-site" />
+        <error line="224" column="85" source="standard:trailing-comma-on-call-site" />
+        <error line="229" column="74" source="standard:trailing-comma-on-call-site" />
+        <error line="239" column="1" source="standard:indent" />
+        <error line="240" column="1" source="standard:indent" />
+        <error line="241" column="1" source="standard:indent" />
+        <error line="241" column="47" source="standard:trailing-comma-on-call-site" />
+        <error line="242" column="1" source="standard:indent" />
+        <error line="243" column="1" source="standard:indent" />
+        <error line="243" column="26" source="standard:trailing-comma-on-call-site" />
+        <error line="245" column="18" source="standard:trailing-comma-on-call-site" />
+        <error line="247" column="10" source="standard:trailing-comma-on-call-site" />
+        <error line="250" column="55" source="standard:trailing-comma-on-call-site" />
+        <error line="256" column="54" source="standard:trailing-comma-on-call-site" />
+        <error line="272" column="5" source="standard:function-naming" />
+        <error line="274" column="20" source="standard:multiline-expression-wrapping" />
+        <error line="276" column="44" source="standard:trailing-comma-on-call-site" />
+        <error line="286" column="5" source="standard:function-naming" />
+        <error line="288" column="34" source="standard:trailing-comma-on-declaration-site" />
+        <error line="295" column="20" source="standard:multiline-expression-wrapping" />
+        <error line="298" column="28" source="standard:trailing-comma-on-call-site" />
+        <error line="303" column="24" source="standard:multiline-expression-wrapping" />
+        <error line="311" column="17" source="standard:chain-method-continuation" />
+        <error line="316" column="34" source="standard:multiline-expression-wrapping" />
+        <error line="319" column="89" source="standard:trailing-comma-on-call-site" />
+        <error line="327" column="17" source="standard:chain-method-continuation" />
+        <error line="334" column="42" source="standard:multiline-expression-wrapping" />
+        <error line="336" column="100" source="standard:trailing-comma-on-call-site" />
+        <error line="342" column="22" source="standard:trailing-comma-on-call-site" />
+        <error line="344" column="17" source="standard:chain-method-continuation" />
+        <error line="349" column="18" source="standard:trailing-comma-on-call-site" />
+        <error line="355" column="5" source="standard:function-signature" />
+        <error line="355" column="50" source="standard:function-signature" />
+        <error line="355" column="50" source="standard:trailing-comma-on-declaration-site" />
+        <error line="374" column="5" source="standard:function-naming" />
+        <error line="377" column="29" source="standard:trailing-comma-on-declaration-site" />
+        <error line="385" column="22" source="standard:function-signature" />
+        <error line="385" column="40" source="standard:function-signature" />
+        <error line="385" column="57" source="standard:function-signature" />
+        <error line="395" column="13" source="standard:trailing-comma-on-call-site" />
+        <error line="399" column="24" source="standard:function-signature" />
+        <error line="399" column="42" source="standard:function-signature" />
+        <error line="399" column="61" source="standard:function-signature" />
+        <error line="399" column="77" source="standard:function-signature" />
+        <error line="399" column="85" source="standard:function-expression-body" />
+        <error line="412" column="31" source="standard:function-signature" />
+        <error line="412" column="49" source="standard:function-signature" />
+        <error line="412" column="68" source="standard:function-signature" />
+        <error line="412" column="84" source="standard:function-signature" />
+        <error line="414" column="18" source="standard:multiline-expression-wrapping" />
+        <error line="429" column="31" source="standard:function-signature" />
+        <error line="429" column="49" source="standard:function-signature" />
+        <error line="429" column="68" source="standard:function-signature" />
+        <error line="429" column="84" source="standard:function-signature" />
+        <error line="438" column="19" source="standard:trailing-comma-on-call-site" />
+        <error line="442" column="23" source="standard:function-signature" />
+        <error line="442" column="41" source="standard:function-signature" />
+        <error line="442" column="49" source="standard:function-signature" />
+        <error line="443" column="18" source="standard:multiline-expression-wrapping" />
+        <error line="456" column="5" source="standard:function-naming" />
+        <error line="462" column="37" source="standard:trailing-comma-on-call-site" />
+    </file>
+    <file name="src/main/java/com/gondroid/pdf/presentation/PdfScreenViewModel.kt">
+        <error line="22" column="5" source="standard:blank-line-before-declaration" />
+        <error line="26" column="25" source="standard:annotation" />
+        <error line="26" column="33" source="standard:annotation" />
+        <error line="29" column="31" source="standard:trailing-comma-on-declaration-site" />
+        <error line="31" column="1" source="standard:no-empty-first-line-in-class-body" />
+        <error line="58" column="31" source="standard:multiline-expression-wrapping" />
+        <error line="58" column="31" source="standard:function-signature" />
+        <error line="67" column="34" source="standard:multiline-expression-wrapping" />
+        <error line="67" column="34" source="standard:function-signature" />
+    </file>
+    <file name="src/main/java/com/gondroid/pdf/presentation/PdfState.kt">
+        <error line="8" column="40" source="standard:trailing-comma-on-declaration-site" />
+    </file>
+    <file name="src/main/java/com/gondroid/pdf/presentation/Permissions.kt">
+        <error line="11" column="1" source="standard:no-empty-first-line-in-class-body" />
+        <error line="13" column="9" source="standard:function-naming" />
+        <error line="14" column="34" source="standard:multiline-expression-wrapping" />
+        <error line="16" column="63" source="standard:trailing-comma-on-call-site" />
+    </file>
+</baseline>
