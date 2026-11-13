@@ -77,3 +77,11 @@
 -dontwarn com.gondroid.questionreview.presentation.QuestionsScreenKt
 -dontwarn com.gondroid.questionreview.presentation.QuestionsScreenViewModel
 -dontwarn com.gondroid.questionreview.presentation.QuestionsScreenViewModel_HiltModules$KeyModule
+# AGP 9 turns on R8's strict full mode for keep rules: a bare `-keep class X` no longer keeps
+# X's no-arg constructor. These libraries ship rules in that bare form but instantiate the
+# classes reflectively, so restore the constructor explicitly.
+# Firebase builds its components from ComponentRegistrar via reflection; without <init> the
+# release build crashed at startup with "FirebaseCrashlytics component is not present".
+-keep class * implements com.google.firebase.components.ComponentRegistrar { <init>(); }
+# WorkManager (pulled in by play-services-ads) creates InputMergers by class name.
+-keep class * extends androidx.work.InputMerger { <init>(); }
