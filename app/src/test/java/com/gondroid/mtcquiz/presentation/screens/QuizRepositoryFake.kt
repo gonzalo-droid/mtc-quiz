@@ -15,7 +15,10 @@ class QuizRepositoryFake : QuizRepository {
             title = "CLASE A - CATEGORIA I",
             category = "A-I",
             classType = "A",
-            description = "Es el más común y te permite manejar carros como sedanes, coupé , hatchback, convertibles, station wagon, SUV, Areneros, Pickup y furgones. Es necesaria para obtener las demás licencias de Clase A.",
+            description =
+            "Es el más común y te permite manejar carros como sedanes, coupé , hatchback, " +
+                "convertibles, station wagon, SUV, Areneros, Pickup y furgones. Es necesaria " +
+                "para obtener las demás licencias de Clase A.",
             pdf = "CLASE_A_I.pdf"
         ),
         Category(
@@ -23,7 +26,10 @@ class QuizRepositoryFake : QuizRepository {
             title = "CLASE A - CATEGORIA II-A",
             category = "A-IIa",
             classType = "A",
-            description = "Los mismos que A-1 y también carros oficiales de transporte de pasajeros como Taxis, Buses, Ambulancias y Transporte Interprovincial. Primero debes obtener la Licencia A-I",
+            description =
+            "Los mismos que A-1 y también carros oficiales de transporte de pasajeros como " +
+                "Taxis, Buses, Ambulancias y Transporte Interprovincial. Primero debes obtener " +
+                "la Licencia A-I",
             pdf = "CLASE_A_I.pdf"
         )
     )

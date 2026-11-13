@@ -253,7 +253,11 @@ fun ConfigurationScreen(
                                     onClick = { onAction(ConfigurationAction.SetThemeMode(mode)) },
                                     modifier = Modifier.weight(1f),
                                     shape = RoundedCornerShape(8.dp),
-                                    color = if (selected) MaterialTheme.colorScheme.primary else Color.Transparent,
+                                    color = if (selected) {
+                                        MaterialTheme.colorScheme.primary
+                                    } else {
+                                        Color.Transparent
+                                    },
                                     border = if (!selected) {
                                         BorderStroke(
                                             1.dp,
@@ -268,8 +272,16 @@ fun ConfigurationScreen(
                                         modifier = Modifier.padding(vertical = 8.dp),
                                         textAlign = TextAlign.Center,
                                         style = MaterialTheme.typography.labelMedium,
-                                        fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal,
-                                        color = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
+                                        fontWeight = if (selected) {
+                                            FontWeight.SemiBold
+                                        } else {
+                                            FontWeight.Normal
+                                        },
+                                        color = if (selected) {
+                                            MaterialTheme.colorScheme.onPrimary
+                                        } else {
+                                            MaterialTheme.colorScheme.onSurfaceVariant
+                                        }
                                     )
                                 }
                             }

@@ -6,25 +6,25 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class FakeAdsPreferences : AdsPreferences(dataStore = ThrowingDataStore) {
-    private val _pdfCount = MutableStateFlow(0)
-    override val pdfDownloadCount: Flow<Int> get() = _pdfCount
+    private val _pdfDownloadCount = MutableStateFlow(0)
+    override val pdfDownloadCount: Flow<Int> get() = _pdfDownloadCount
 
     override suspend fun incrementPdfDownloadCount(): Int {
-        _pdfCount.value += 1
-        return _pdfCount.value
+        _pdfDownloadCount.value += 1
+        return _pdfDownloadCount.value
     }
 
-    override suspend fun currentPdfDownloadCount(): Int = _pdfCount.value
+    override suspend fun currentPdfDownloadCount(): Int = _pdfDownloadCount.value
 
-    private val _evalCount = MutableStateFlow(0)
-    override val evaluationStartCount: Flow<Int> get() = _evalCount
+    private val _evaluationStartCount = MutableStateFlow(0)
+    override val evaluationStartCount: Flow<Int> get() = _evaluationStartCount
 
     override suspend fun incrementEvaluationStartCount(): Int {
-        _evalCount.value += 1
-        return _evalCount.value
+        _evaluationStartCount.value += 1
+        return _evaluationStartCount.value
     }
 
-    override suspend fun currentEvaluationStartCount(): Int = _evalCount.value
+    override suspend fun currentEvaluationStartCount(): Int = _evaluationStartCount.value
 }
 
 private object ThrowingDataStore : DataStore<Preferences> {

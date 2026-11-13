@@ -237,8 +237,10 @@ fun EvaluationScreen(
                             val letter = ('a' + index).uppercaseChar().toString()
                             val optionState = when {
                                 state.answerWasSelected -> when {
-                                    option == selectedOption && isCorrectAnswerSelected -> AnswerOptionState.RevealedCorrect
-                                    option == selectedOption && !isCorrectAnswerSelected -> AnswerOptionState.RevealedIncorrect
+                                    option == selectedOption && isCorrectAnswerSelected ->
+                                        AnswerOptionState.RevealedCorrect
+                                    option == selectedOption && !isCorrectAnswerSelected ->
+                                        AnswerOptionState.RevealedIncorrect
                                     !isCorrectAnswerSelected &&
                                         state.question.isCorrectAnswer(
                                             index

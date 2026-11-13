@@ -83,7 +83,8 @@ class MainViewModelTest {
         val vm = createViewModel()
 
         vm.themeMode.test {
-            assertThat(awaitItem()).isEqualTo("system") // seeded default before WhileSubscribed catches up
+            // seeded default before WhileSubscribed catches up
+            assertThat(awaitItem()).isEqualTo("system")
             assertThat(awaitItem()).isEqualTo("dark")
         }
     }

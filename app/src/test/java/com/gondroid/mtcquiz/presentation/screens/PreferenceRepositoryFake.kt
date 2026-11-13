@@ -11,12 +11,12 @@ class PreferenceRepositoryFake : PreferenceRepository {
     private val _userNameFlow = MutableStateFlow("Usuario de prueba")
     private val _darkModeFlow = MutableStateFlow(true)
     private val _themeModeFlow = MutableStateFlow("system")
-    private val _isLoggedIn = MutableStateFlow(false)
+    private val _isLoggedInFlow = MutableStateFlow(false)
     private val _isOnboardingShownFlow = MutableStateFlow(false)
     private val _photoUrlFlow = MutableStateFlow("image.png")
     private val _numberQuestionsFlow = MutableStateFlow("40")
-    private val _percentageFlow = MutableStateFlow("70")
-    private val _timeFlow = MutableStateFlow("40")
+    private val _percentageToApprovedEvaluationFlow = MutableStateFlow("70")
+    private val _timeToFinishEvaluationFlow = MutableStateFlow("40")
 
     override val currentStreakFlow: Flow<Int> = _currentStreakFlow
     override val lastStudyDateFlow: Flow<Long> = _lastStudyDateFlow
@@ -46,10 +46,10 @@ class PreferenceRepositoryFake : PreferenceRepository {
         _photoUrlFlow.value = url
     }
 
-    override val isLoggedInFlow: Flow<Boolean> = _isLoggedIn
+    override val isLoggedInFlow: Flow<Boolean> = _isLoggedInFlow
 
     override suspend fun setIsLoggedIn(isLoggedIn: Boolean) {
-        _isLoggedIn.value = isLoggedIn
+        _isLoggedInFlow.value = isLoggedIn
     }
 
     override val isOnboardingShownFlow: Flow<Boolean> = _isOnboardingShownFlow
@@ -64,16 +64,17 @@ class PreferenceRepositoryFake : PreferenceRepository {
         _numberQuestionsFlow.value = value
     }
 
-    override val percentageToApprovedEvaluationFlow: Flow<String> = _percentageFlow
+    override val percentageToApprovedEvaluationFlow: Flow<String> =
+        _percentageToApprovedEvaluationFlow
 
     override suspend fun setPercentageToApprovedEvaluation(value: String) {
-        _percentageFlow.value = value
+        _percentageToApprovedEvaluationFlow.value = value
     }
 
-    override val timeToFinishEvaluationFlow: Flow<String> = _timeFlow
+    override val timeToFinishEvaluationFlow: Flow<String> = _timeToFinishEvaluationFlow
 
     override suspend fun setTimeToFinishEvaluation(value: String) {
-        _timeFlow.value = value
+        _timeToFinishEvaluationFlow.value = value
     }
 
     override suspend fun getInitEvaluation(): PreferencesEvaluation = PreferencesEvaluation(

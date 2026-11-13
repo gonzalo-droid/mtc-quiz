@@ -32,7 +32,7 @@ constructor(
     private var _state = MutableStateFlow(EvaluationState())
     val state = _state.asStateFlow()
 
-    private val _resultsList = mutableListOf<QuestionResult>()
+    private val resultsList = mutableListOf<QuestionResult>()
 
     private var eventChannel = Channel<EvaluationEvent>()
     val event = eventChannel.receiveAsFlow()
@@ -90,7 +90,7 @@ constructor(
     fun verifyAnswer(isCorrect: Boolean, option: String) {
         if (_state.value.answerWasVerified) return
         val currentQuestion = _state.value.question
-        _resultsList.add(
+        resultsList.add(
             QuestionResult(
                 id = UUID.randomUUID().toString(),
                 questionId = currentQuestion.id,
@@ -110,7 +110,7 @@ constructor(
     }
 
     fun saveExam() {
-        val correctAnswers = _resultsList.count { it.isCorrect }
+        val correctAnswers = resultsList.count { it.isCorrect }
         val totalTask = _state.value.questions.size
         val incorrectAnswers = totalTask - correctAnswers
 
@@ -122,7 +122,7 @@ constructor(
                 totalCorrect = correctAnswers,
                 totalIncorrect = incorrectAnswers,
                 totalQuestions = totalTask,
-                questionResults = _resultsList.toList()
+                questionResults = resultsList.toList()
             )
             repository.saveEvaluation(evaluation = evaluation)
             preferenceRepository.recordStudySession()

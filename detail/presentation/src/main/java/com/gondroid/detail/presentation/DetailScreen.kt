@@ -315,7 +315,10 @@ fun PreviewDetailScreenRoot() {
                     title = "CLASE A - CATEGORIA I",
                     category = "A-I",
                     classType = "CLASE A",
-                    description = "Es el más común y te permite manejar carros como sedanes, coupé , hatchback, convertibles, station wagon, SUV, Areneros, Pickup y furgones. Es necesaria para obtener las demás licencias de Clase A.",
+                    description =
+                    "Es el más común y te permite manejar carros como sedanes, coupé , " +
+                        "hatchback, convertibles, station wagon, SUV, Areneros, Pickup y " +
+                        "furgones. Es necesaria para obtener las demás licencias de Clase A.",
                     pdf = "CLASE_A_I.pdf"
                 )
             ),

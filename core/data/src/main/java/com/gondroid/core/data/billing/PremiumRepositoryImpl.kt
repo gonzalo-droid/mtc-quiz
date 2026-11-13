@@ -54,11 +54,12 @@ class PremiumRepositoryImpl @Inject constructor(
         val IS_PREMIUM_CACHED_KEY = booleanPreferencesKey("cached_is_premium")
     }
 
-    private val _isPremium = MutableStateFlow(false)
-    override val isPremiumFlow: StateFlow<Boolean> = _isPremium.asStateFlow()
+    private val _isPremiumFlow = MutableStateFlow(false)
+    override val isPremiumFlow: StateFlow<Boolean> = _isPremiumFlow.asStateFlow()
 
-    private val _availablePlans = MutableStateFlow<List<SubscriptionPlan>>(emptyList())
-    override val availablePlansFlow: Flow<List<SubscriptionPlan>> = _availablePlans.asStateFlow()
+    private val _availablePlansFlow = MutableStateFlow<List<SubscriptionPlan>>(emptyList())
+    override val availablePlansFlow: Flow<List<SubscriptionPlan>> =
+        _availablePlansFlow.asStateFlow()
 
     /** ProductDetails reales cacheados desde la última consulta a Play, para lanzar la compra sin re-consultar. */
     private val productDetailsCache = mutableMapOf<String, ProductDetails>()
@@ -88,7 +89,7 @@ class PremiumRepositoryImpl @Inject constructor(
 
     init {
         scope.launch {
-            _isPremium.value = dataStore.data.map { it[IS_PREMIUM_CACHED_KEY] ?: false }.first()
+            _isPremiumFlow.value = dataStore.data.map { it[IS_PREMIUM_CACHED_KEY] ?: false }.first()
         }
     }
 
@@ -134,7 +135,7 @@ class PremiumRepositoryImpl @Inject constructor(
             productDetailsCache[details.productId] = details
             mapToSubscriptionPlan(details)
         }
-        _availablePlans.value = plans
+        _availablePlansFlow.value = plans
     }
 
     internal fun mapToSubscriptionPlan(details: ProductDetails): SubscriptionPlan? {
@@ -209,7 +210,7 @@ class PremiumRepositoryImpl @Inject constructor(
     }
 
     internal fun updateIsPremium(value: Boolean) {
-        _isPremium.value = value
+        _isPremiumFlow.value = value
         scope.launch {
             dataStore.edit { prefs -> prefs[IS_PREMIUM_CACHED_KEY] = value }
         }
@@ -238,6 +239,6 @@ class PremiumRepositoryImpl @Inject constructor(
     override suspend fun restorePurchases() {
         analyticsManager.logRestoreClicked()
         refreshPurchaseState()
-        analyticsManager.logRestoreCompleted(_isPremium.value)
+        analyticsManager.logRestoreCompleted(_isPremiumFlow.value)
     }
 }

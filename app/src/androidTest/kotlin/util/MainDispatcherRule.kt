@@ -19,4 +19,4 @@ class MainDispatcherRule(private val testDispatcher: TestDispatcher = Unconfined
     override fun finished(description: Description) {
         Dispatchers.resetMain()
     }
-} 
+}

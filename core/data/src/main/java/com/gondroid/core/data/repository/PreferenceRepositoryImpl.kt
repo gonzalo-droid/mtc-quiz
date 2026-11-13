@@ -26,8 +26,8 @@ class PreferenceRepositoryImpl @Inject constructor(private val dataStore: DataSt
         val IS_LOGGED_IN = booleanPreferencesKey("is_logged_in")
         val IS_ONBOARDING_SHOWN = booleanPreferencesKey("is_onboarding_shown")
 
-        var NUMBER_QUESTIONS = stringPreferencesKey("number_questions")
-        var PERCENTAGE_TO_APPROVED_EVALUATION =
+        val NUMBER_QUESTIONS = stringPreferencesKey("number_questions")
+        val PERCENTAGE_TO_APPROVED_EVALUATION =
             stringPreferencesKey("percentage_to_approved_evaluation")
         val TIME_TO_FINISH_EVALUATION = stringPreferencesKey("time_to_finish_evaluation")
         val CURRENT_STREAK = intPreferencesKey("current_streak")

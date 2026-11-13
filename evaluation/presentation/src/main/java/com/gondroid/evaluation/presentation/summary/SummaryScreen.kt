@@ -215,7 +215,11 @@ fun SummaryScreen(state: SummaryState, onAction: (SummaryAction) -> Unit) {
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Icon(
-                        imageVector = if (isApproved) Icons.Default.CheckCircle else Icons.Default.Cancel,
+                        imageVector = if (isApproved) {
+                            Icons.Default.CheckCircle
+                        } else {
+                            Icons.Default.Cancel
+                        },
                         contentDescription = null,
                         tint = accentColor,
                         modifier = Modifier.size(24.dp)
