@@ -27,27 +27,8 @@ class ReviewErrorsViewModel @Inject constructor(
             combine(
                 repository.getAllEvaluations(),
                 dismissedDao.getAllDismissedIds()
-            ) { evaluations, dismissedIds ->
-                val allFailedResults = evaluations
-                    .flatMap { it.questionResults }
-                    .filter { !it.isCorrect }
-
-                allFailedResults
-                    .groupBy { it.questionId }
-                    .filter { (questionId, results) ->
-                        results.size >= 3 && questionId !in dismissedIds
-                    }
-                    .map { (questionId, results) ->
-                        val latest = results.last()
-                        FrequentError(
-                            questionId = questionId,
-                            question = latest.question,
-                            failCount = results.size,
-                            lastWrongAnswer = latest.option ?: "",
-                            correctAnswer = latest.correctAnswer
-                        )
-                    }
-                    .sortedByDescending { it.failCount }
+            ) { evaluations, dismissedKeys ->
+                frequentErrors(evaluations, dismissedKeys.toSet())
             }.collect { frequentErrors ->
                 _state.update {
                     it.copy(
@@ -59,7 +40,8 @@ class ReviewErrorsViewModel @Inject constructor(
         }
     }
 
-    fun dismissQuestion(questionId: Int) = viewModelScope.launch {
-        dismissedDao.dismiss(DismissedQuestionEntity(questionId))
+    /** [key] is the error's [errorKey], stored in the `question_id` column. */
+    fun dismissQuestion(key: Int) = viewModelScope.launch {
+        dismissedDao.dismiss(DismissedQuestionEntity(key))
     }
 }

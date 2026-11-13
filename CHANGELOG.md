@@ -8,6 +8,7 @@ El formato sigue (aproximadamente) [Keep a Changelog](https://keepachangelog.com
 
 ### Fixed
 - La pantalla de Estudio de A-IIIB y A-IIIC podía cerrarse sola al buscar: esos bancos repiten ids (el PDF reinicia la numeración en su segunda tabla) y la lista usaba el id como clave, así que dos resultados con el mismo id en pantalla —buscar "asiento" en A-IIIB— rompían la lista. Ahora la clave es la posición de la pregunta en el banco.
+- "Revisar errores" mezclaba preguntas distintas que compartían número: la 5 de A-I con la 5 de B-IIC, o las dos 63 de A-IIIB. Sumaba sus fallos en una sola entrada y, al descartarla, ocultaba esa pregunta en todos los bancos. Ahora cada error se identifica por banco, número y texto. Los descartes hechos antes de esta versión dejan de aplicarse (no se podía saber a qué pregunta se referían).
 - Una respuesta verificada se perdía si el tiempo se acababa antes de pulsar "Siguiente": ahora se registra al pulsar "Verificar", como en iOS.
 - Textos alineados con iOS: "Términos y condiciones" (antes "Términos & Condiciones") y el diálogo de tiempo agotado ("Tiempo finalizado", "La evaluación se ha finalizado").
 - Las pantallas de Términos y de Política de privacidad ahora muestran su título.
