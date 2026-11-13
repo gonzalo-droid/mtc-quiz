@@ -15,7 +15,6 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
         target.run {
             pluginManager.run {
                 apply("com.android.library")
-                apply("org.jetbrains.kotlin.android")
             }
 
             extensions.configure<LibraryExtension> {
@@ -34,7 +33,7 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
 
             dependencies {
                 "implementation"(libs.findLibrary("timber").get())
-                "testImplementation"(kotlin("test"))
+                "testImplementation"(kotlin("test-junit"))
             }
         }
     }

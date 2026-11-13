@@ -202,7 +202,7 @@ dependencies {
     kspAndroidTest(libs.dagger.hilt.compiler)
 
     // Debug dependencies
-    testImplementation(kotlin("test"))
+    testImplementation(kotlin("test-junit"))
 
     implementation(projects.core.presentation.designsystem)
     implementation(projects.core.presentation.ui)

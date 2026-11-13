@@ -10,19 +10,17 @@ import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 
 internal fun Project.configureBuildTypes(
-    commonExtension: CommonExtension<*, *, *, *, *, *>,
+    commonExtension: CommonExtension,
     extensionType: ExtensionType
 ) {
     // keytool -list -v -keystore /Users/gonzalo/AndroidStudioProjects/keys/mtcquizkeys -alias mtcquizkeys -> hash firebase
 
     commonExtension.run {
-        buildFeatures {
-            /**
-             * Habilita la generación de la clase BuildConfig.
-             * Necesario para que las constantes como BuildConfig.API_KEY estén disponibles.
-             */
-            buildConfig = true
-        }
+        /**
+         * Habilita la generación de la clase BuildConfig.
+         * Necesario para que las constantes como BuildConfig.API_KEY estén disponibles.
+         */
+        buildFeatures.buildConfig = true
 
         // API_KEY is a local dev placeholder, not a real secret; default it so builds (and CI,
         // which has no local.properties) don't require it to be set.
@@ -30,7 +28,7 @@ internal fun Project.configureBuildTypes(
             .getProperty("API_KEY") ?: "debug-placeholder-api-key"
         when(extensionType) {
             ExtensionType.APPLICATION -> {
-                extensions.configure<ApplicationExtension> {
+                this@configureBuildTypes.extensions.configure<ApplicationExtension> {
                     buildTypes {
                         debug {
                             configureDebugBuildType(apiKey)
@@ -42,7 +40,7 @@ internal fun Project.configureBuildTypes(
                 }
             }
             ExtensionType.LIBRARY -> {
-                extensions.configure<LibraryExtension> {
+                this@configureBuildTypes.extensions.configure<LibraryExtension> {
                     buildTypes {
                         debug {
                             configureDebugBuildType(apiKey)
@@ -55,7 +53,7 @@ internal fun Project.configureBuildTypes(
                 }
             }
             ExtensionType.DYNAMIC_FEATURE -> {
-                extensions.configure<DynamicFeatureExtension> {
+                this@configureBuildTypes.extensions.configure<DynamicFeatureExtension> {
                     buildTypes {
                         debug {
                             configureDebugBuildType(apiKey)
@@ -76,7 +74,7 @@ private fun BuildType.configureDebugBuildType(apiKey: String) {
 }
 
 private fun BuildType.configureReleaseBuildType(
-    commonExtension: CommonExtension<*, *, *, *, *, *>,
+    commonExtension: CommonExtension,
     apiKey: String
 ) {
     buildConfigField("String", "API_KEY", "\"$apiKey\"")
