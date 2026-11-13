@@ -67,10 +67,10 @@ import coil3.compose.AsyncImage
 import com.gondroid.core.presentation.designsystem.MTCQuizTheme
 import com.gondroid.core.presentation.ui.ObserveAsEvents
 import com.gondroid.presentation.screens.util.Permissions.RequestPermissionIfNeeded
-import kotlinx.coroutines.launch
-import timber.log.Timber
 import java.io.File
 import java.io.FileOutputStream
+import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @Composable
 fun PdfScreenRoot(
@@ -275,7 +275,10 @@ fun CircularProgress() {
             .fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center), color = MaterialTheme.colorScheme.primary)
+        CircularProgressIndicator(
+            modifier = Modifier.align(Alignment.Center),
+            color = MaterialTheme.colorScheme.primary
+        )
     }
 }
 
@@ -283,10 +286,7 @@ private const val MIN_ZOOM_SCALE = 1f
 private const val MAX_ZOOM_SCALE = 3f
 
 @Composable
-fun PdfPage(
-    page: Bitmap,
-    modifier: Modifier = Modifier
-) {
+fun PdfPage(page: Bitmap, modifier: Modifier = Modifier) {
     var scale by remember { mutableFloatStateOf(MIN_ZOOM_SCALE) }
     var offset by remember { mutableStateOf(Offset.Zero) }
     val isZoomed = scale > MIN_ZOOM_SCALE
@@ -371,11 +371,7 @@ private suspend fun PointerInputScope.detectPinchZoom(
 }
 
 @Composable
-fun DownloadPdfIfPermitted(
-    context: Context,
-    nameFile: String,
-    onResult: (Uri?) -> Unit
-) {
+fun DownloadPdfIfPermitted(context: Context, nameFile: String, onResult: (Uri?) -> Unit) {
     RequestPermissionIfNeeded {
         val downloadedUri = savePdfToDownloads(context, "pdf/$nameFile", nameFile)
         onResult(downloadedUri)
@@ -396,17 +392,15 @@ fun copyAssetToCache(context: Context, assetPath: String): Uri {
     )
 }
 
-fun savePdfToDownloads(context: Context, assetPath: String, fileName: String): Uri? {
-    return try {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            saveViaMediaStore(context, assetPath, fileName)
-        } else {
-            saveViaLegacyFile(context, assetPath, fileName)
-        }
-    } catch (e: Exception) {
-        Timber.e(e, "Error al guardar PDF en Descargas")
-        null
+fun savePdfToDownloads(context: Context, assetPath: String, fileName: String): Uri? = try {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        saveViaMediaStore(context, assetPath, fileName)
+    } else {
+        saveViaLegacyFile(context, assetPath, fileName)
     }
+} catch (e: Exception) {
+    Timber.e(e, "Error al guardar PDF en Descargas")
+    null
 }
 
 private fun saveViaMediaStore(context: Context, assetPath: String, fileName: String): Uri? {
@@ -427,7 +421,9 @@ private fun saveViaMediaStore(context: Context, assetPath: String, fileName: Str
 }
 
 private fun saveViaLegacyFile(context: Context, assetPath: String, fileName: String): Uri {
-    val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+    val downloadsDir = Environment.getExternalStoragePublicDirectory(
+        Environment.DIRECTORY_DOWNLOADS
+    )
     val outputFile = File(downloadsDir, fileName)
     context.assets.open(assetPath).use { input ->
         FileOutputStream(outputFile).use { output -> input.copyTo(output) }

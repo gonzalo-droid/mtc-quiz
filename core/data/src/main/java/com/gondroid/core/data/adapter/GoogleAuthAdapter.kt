@@ -42,8 +42,8 @@ class GoogleAuthAdapter @Inject constructor(
 
     override fun supports(provider: AuthProvider): Boolean = provider is AuthProvider.Google
 
-    private fun processGoogleResponse(response: GetCredentialResponse): AuthResult {
-        return when (val credential = response.credential) {
+    private fun processGoogleResponse(response: GetCredentialResponse): AuthResult =
+        when (val credential = response.credential) {
             is GoogleIdTokenCredential -> {
                 AuthResult.Success(
                     AuthCredential(
@@ -58,5 +58,4 @@ class GoogleAuthAdapter @Inject constructor(
 
             else -> AuthResult.Error("Invalid Google credential type")
         }
-    }
 }

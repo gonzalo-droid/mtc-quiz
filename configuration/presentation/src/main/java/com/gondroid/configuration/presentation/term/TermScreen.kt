@@ -17,9 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.gondroid.core.presentation.designsystem.components.WebViewWithOffline
 
 @Composable
-fun TermScreenRoot(
-    navigateBack: () -> Unit
-) {
+fun TermScreenRoot(navigateBack: () -> Unit) {
     TermScreen(
         onNavigateUp = navigateBack
     )
@@ -27,9 +25,7 @@ fun TermScreenRoot(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TermScreen(
-    onNavigateUp: () -> Unit
-) {
+fun TermScreen(onNavigateUp: () -> Unit) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {

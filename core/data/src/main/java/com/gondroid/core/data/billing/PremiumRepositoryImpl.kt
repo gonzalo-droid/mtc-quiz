@@ -24,6 +24,9 @@ import com.gondroid.core.data.di.ApplicationScope
 import com.gondroid.core.domain.model.BillingPeriod
 import com.gondroid.core.domain.model.SubscriptionPlan
 import com.gondroid.core.domain.repository.PremiumRepository
+import javax.inject.Inject
+import javax.inject.Singleton
+import kotlin.coroutines.resume
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,9 +37,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import timber.log.Timber
-import javax.inject.Inject
-import javax.inject.Singleton
-import kotlin.coroutines.resume
 
 @Singleton
 class PremiumRepositoryImpl @Inject constructor(
@@ -44,7 +44,8 @@ class PremiumRepositoryImpl @Inject constructor(
     private val analyticsManager: AnalyticsManager,
     @ApplicationScope private val scope: CoroutineScope,
     private val billingClientFactory: BillingClientFactory
-) : PremiumRepository, BillingLauncher {
+) : PremiumRepository,
+    BillingLauncher {
 
     companion object {
         const val PRODUCT_ID_MONTHLY = "mtcquiz_premium_monthly"
@@ -69,7 +70,9 @@ class PremiumRepositoryImpl @Inject constructor(
             }
             BillingClient.BillingResponseCode.USER_CANCELED -> {
                 Timber.d("Billing: user canceled subscription flow")
-                analyticsManager.logPurchaseCanceled(purchases?.firstOrNull()?.products?.firstOrNull() ?: "unknown")
+                analyticsManager.logPurchaseCanceled(
+                    purchases?.firstOrNull()?.products?.firstOrNull() ?: "unknown"
+                )
             }
             else -> {
                 Timber.e("Billing: purchase failed with code ${billingResult.responseCode}")
@@ -121,7 +124,9 @@ class PremiumRepositoryImpl @Inject constructor(
         val result: ProductDetailsResult = billingClient.queryProductDetails(params)
 
         if (result.billingResult.responseCode != BillingClient.BillingResponseCode.OK) {
-            Timber.e("Billing: failed to query product details: ${result.billingResult.debugMessage}")
+            Timber.e(
+                "Billing: failed to query product details: ${result.billingResult.debugMessage}"
+            )
             return
         }
 

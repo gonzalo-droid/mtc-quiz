@@ -12,6 +12,7 @@ import com.gondroid.core.domain.model.Question
 import com.gondroid.core.domain.model.QuestionResponse
 import com.gondroid.core.domain.repository.PreferenceRepository
 import com.gondroid.core.domain.repository.QuizRepository
+import java.io.IOException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -22,7 +23,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
-import java.io.IOException
 
 class QuizRepositoryImpl(
     private val evaluationDao: EvaluationDao,
@@ -44,40 +44,41 @@ class QuizRepositoryImpl(
             )
         }
 
-    override suspend fun getCategoryById(categoryId: String): Category? {
-        return categoriesLocalDataSource.find { it.id == categoryId }
-    }
+    override suspend fun getCategoryById(categoryId: String): Category? =
+        categoriesLocalDataSource.find {
+            it.id == categoryId
+        }
 
     override suspend fun getQuestionsByCategory(
         categoryId: String,
         pathJson: String,
         isTake: Boolean
-    ): Flow<List<Question>> =
-        channelFlow {
-            launch(dispatcherIO) { // Se ejecuta en IO
-                val questions = try {
-                    val jsonString = context.assets.open("json/$pathJson")
-                        .bufferedReader().use { it.readText() }
+    ): Flow<List<Question>> = channelFlow {
+        launch(dispatcherIO) {
+            // Se ejecuta en IO
+            val questions = try {
+                val jsonString = context.assets.open("json/$pathJson")
+                    .bufferedReader().use { it.readText() }
 
-                    val questionResponse =
-                        questionJson.decodeFromString<QuestionResponse>(jsonString)
+                val questionResponse =
+                    questionJson.decodeFromString<QuestionResponse>(jsonString)
 
-                    val numberQuestion =
-                        preferenceRepository.numberQuestionsFlow.first().toIntOrNull()
+                val numberQuestion =
+                    preferenceRepository.numberQuestionsFlow.first().toIntOrNull()
 
-                    if (isTake && numberQuestion != null) {
-                        questionResponse.data.shuffled().take(numberQuestion)
-                    } else {
-                        questionResponse.data
-                    }
-                } catch (e: IOException) {
-                    emptyList() // En caso de error, devuelve una lista vacía
+                if (isTake && numberQuestion != null) {
+                    questionResponse.data.shuffled().take(numberQuestion)
+                } else {
+                    questionResponse.data
                 }
-
-                send(questions) // Usa send() para enviar los datos al flujo
-                close() // Cierra el canal después de enviar los datos
+            } catch (e: IOException) {
+                emptyList() // En caso de error, devuelve una lista vacía
             }
+
+            send(questions) // Usa send() para enviar los datos al flujo
+            close() // Cierra el canal después de enviar los datos
         }
+    }
 
     override suspend fun saveEvaluation(evaluation: Evaluation) = withContext(dispatcherIO) {
         val percentage =

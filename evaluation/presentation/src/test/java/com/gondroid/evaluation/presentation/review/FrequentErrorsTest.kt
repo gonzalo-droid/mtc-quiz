@@ -26,7 +26,11 @@ class FrequentErrorsTest {
         assertEquals(237896178, errorKey("a1", 5, "Pregunta"))
         assertEquals(
             -1597544078,
-            errorKey("a3b", 63, "¿A partir de qué edad los menores de edad deben ocupar su propio asiento?")
+            errorKey(
+                "a3b",
+                63,
+                "¿A partir de qué edad los menores de edad deben ocupar su propio asiento?"
+            )
         )
     }
 
@@ -46,8 +50,10 @@ class FrequentErrorsTest {
     @Test
     fun `a repeated id inside a3b does not merge its two questions`() {
         // a3b's PDF restarts numbering for its second table: id 63 is two different questions.
-        val first = failed(63, "¿A partir de qué año de antigüedad debe realizarse la inspección técnica?")
-        val second = failed(63, "¿A partir de qué edad los menores de edad deben ocupar su propio asiento?")
+        val first =
+            failed(63, "¿A partir de qué año de antigüedad debe realizarse la inspección técnica?")
+        val second =
+            failed(63, "¿A partir de qué edad los menores de edad deben ocupar su propio asiento?")
         val evaluations = listOf(
             evaluation("a3b", first, second),
             evaluation("a3b", first),
@@ -83,6 +89,11 @@ class FrequentErrorsTest {
         val evaluations = List(3) { evaluation("a1", failed(1, "Uno")) } +
             List(5) { evaluation("a1", failed(2, "Dos")) }
 
-        assertEquals(listOf("Dos", "Uno"), frequentErrors(evaluations, emptySet()).map { it.question })
+        assertEquals(
+            listOf("Dos", "Uno"),
+            frequentErrors(evaluations, emptySet()).map {
+                it.question
+            }
+        )
     }
 }

@@ -26,8 +26,10 @@ import org.junit.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class PremiumViewModelTest {
 
-    private val monthlyPlan = SubscriptionPlan("mtcquiz_premium_monthly", BillingPeriod.MONTHLY, "S/ 9.90")
-    private val annualPlan = SubscriptionPlan("mtcquiz_premium_annual", BillingPeriod.ANNUAL, "S/ 29.90")
+    private val monthlyPlan =
+        SubscriptionPlan("mtcquiz_premium_monthly", BillingPeriod.MONTHLY, "S/ 9.90")
+    private val annualPlan =
+        SubscriptionPlan("mtcquiz_premium_annual", BillingPeriod.ANNUAL, "S/ 29.90")
 
     private lateinit var premiumRepository: PremiumRepository
     private lateinit var billingLauncher: BillingLauncher

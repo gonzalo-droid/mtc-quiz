@@ -29,10 +29,7 @@ import com.gondroid.core.presentation.designsystem.PremiumGold
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PremiumUpsellDialog(
-    onGoToPremium: () -> Unit,
-    onDismiss: () -> Unit
-) {
+fun PremiumUpsellDialog(onGoToPremium: () -> Unit, onDismiss: () -> Unit) {
     BasicAlertDialog(onDismissRequest = onDismiss) {
         Column(
             modifier = Modifier

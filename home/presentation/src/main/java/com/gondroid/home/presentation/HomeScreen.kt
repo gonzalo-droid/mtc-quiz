@@ -73,11 +73,7 @@ fun HomeScreenRoot(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(
-    state: HomeState,
-    bannerAdId: String,
-    onAction: (HomeAction) -> Unit
-) {
+fun HomeScreen(state: HomeState, bannerAdId: String, onAction: (HomeAction) -> Unit) {
     Scaffold(
         modifier = Modifier
             .fillMaxSize()

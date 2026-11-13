@@ -52,12 +52,20 @@ fun HistoryScreenRoot(
     navigateToErrorReview: () -> Unit = {}
 ) {
     val state by viewModel.state.collectAsState()
-    HistoryScreen(state = state, navigateBack = navigateBack, navigateToErrorReview = navigateToErrorReview)
+    HistoryScreen(
+        state = state,
+        navigateBack = navigateBack,
+        navigateToErrorReview = navigateToErrorReview
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HistoryScreen(state: HistoryState, navigateBack: () -> Unit, navigateToErrorReview: () -> Unit = {}) {
+fun HistoryScreen(
+    state: HistoryState,
+    navigateBack: () -> Unit,
+    navigateToErrorReview: () -> Unit = {}
+) {
     Scaffold(
         topBar = {
             TopAppBar(

@@ -32,10 +32,7 @@ import androidx.compose.ui.unit.dp
 import com.gondroid.core.presentation.designsystem.MTCQuizTheme
 
 @Composable
-fun LoginScreenRoot(
-    viewModel: LoginScreenViewModel,
-    navigateToHome: () -> Unit
-) {
+fun LoginScreenRoot(viewModel: LoginScreenViewModel, navigateToHome: () -> Unit) {
     val context = LocalContext.current
     val event = viewModel.event
 
@@ -69,10 +66,7 @@ fun LoginScreenRoot(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(
-    navigateToDetail: () -> Unit,
-    onAction: (LoginAction) -> Unit
-) {
+fun LoginScreen(navigateToDetail: () -> Unit, onAction: (LoginAction) -> Unit) {
     Scaffold(
         containerColor = MaterialTheme.colorScheme.primary
     ) { paddingValues ->

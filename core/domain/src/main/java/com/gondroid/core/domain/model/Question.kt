@@ -44,6 +44,4 @@ enum class TypeActionQuestion {
 }
 
 @Serializable
-data class QuestionResponse(
-    val data: List<Question>
-)
+data class QuestionResponse(val data: List<Question>)

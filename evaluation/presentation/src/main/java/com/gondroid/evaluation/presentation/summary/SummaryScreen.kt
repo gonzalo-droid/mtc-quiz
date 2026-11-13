@@ -68,10 +68,7 @@ private val approvedColor = Color(0xFF4CAF50)
 private val rejectedColor = Color(0xFFE53935)
 
 @Composable
-fun SummaryScreenRoot(
-    viewModel: SummaryScreenViewModel,
-    navigateToDetail: (String) -> Boolean
-) {
+fun SummaryScreenRoot(viewModel: SummaryScreenViewModel, navigateToDetail: (String) -> Boolean) {
     val state = viewModel.state
     SummaryScreen(
         state = state,
@@ -85,16 +82,19 @@ fun SummaryScreenRoot(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SummaryScreen(
-    state: SummaryState,
-    onAction: (SummaryAction) -> Unit
-) {
+fun SummaryScreen(state: SummaryState, onAction: (SummaryAction) -> Unit) {
     val isApproved = state.evaluation.state == EvaluationState.APPROVED
     val accentColor = if (isApproved) approvedColor else rejectedColor
 
     val completedTasks = state.evaluation.totalCorrect
     val totalTask = state.evaluation.totalQuestions
-    val percentage = if (totalTask > 0) (completedTasks / totalTask.toFloat()).times(100).toInt() else 0
+    val percentage = if (totalTask >
+        0
+    ) {
+        (completedTasks / totalTask.toFloat()).times(100).toInt()
+    } else {
+        0
+    }
 
     val angleRatio = remember { Animatable(0f) }
     var startCounterAnim by remember { mutableStateOf(false) }
@@ -165,7 +165,10 @@ fun SummaryScreen(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .size(200.dp)
-                    .semantics { contentDescription = "$percentage por ciento de respuestas correctas" }
+                    .semantics {
+                        contentDescription =
+                            "$percentage por ciento de respuestas correctas"
+                    }
             ) {
                 val trackColor = MaterialTheme.colorScheme.surfaceVariant
                 Canvas(modifier = Modifier.size(180.dp)) {
@@ -219,7 +222,13 @@ fun SummaryScreen(
                     )
                     Spacer(Modifier.width(8.dp))
                     Text(
-                        text = if (isApproved) stringResource(R.string.approved) else stringResource(R.string.rejected),
+                        text = if (isApproved) {
+                            stringResource(
+                                R.string.approved
+                            )
+                        } else {
+                            stringResource(R.string.rejected)
+                        },
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = accentColor

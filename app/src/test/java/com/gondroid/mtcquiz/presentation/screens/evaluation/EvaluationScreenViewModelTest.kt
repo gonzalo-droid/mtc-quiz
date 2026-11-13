@@ -89,7 +89,11 @@ class EvaluationScreenViewModelTest {
         assertThat(vm.state.value.isFinishExam).isTrue()
 
         val evaluation = savedEvaluationOf(vm)
-        assertThat(evaluation.questionResults.map { it.isCorrect }).containsExactly(true, false).inOrder()
+        assertThat(
+            evaluation.questionResults.map {
+                it.isCorrect
+            }
+        ).containsExactly(true, false).inOrder()
         assertThat(evaluation.questionResults.last().correctAnswer).isEqualTo("Portugués")
     }
 }

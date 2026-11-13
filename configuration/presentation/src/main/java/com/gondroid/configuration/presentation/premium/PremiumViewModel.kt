@@ -9,6 +9,7 @@ import com.gondroid.core.domain.model.BillingPeriod
 import com.gondroid.core.domain.model.SubscriptionPlan
 import com.gondroid.core.domain.repository.PremiumRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -16,7 +17,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
 class PremiumViewModel @Inject constructor(
@@ -48,8 +48,9 @@ class PremiumViewModel @Inject constructor(
         viewModelScope.launch {
             premiumRepository.availablePlansFlow.collect { plans ->
                 if (_selectedPlan.value == null) {
-                    _selectedPlan.value = plans.firstOrNull { it.billingPeriod == BillingPeriod.ANNUAL }
-                        ?: plans.firstOrNull()
+                    _selectedPlan.value =
+                        plans.firstOrNull { it.billingPeriod == BillingPeriod.ANNUAL }
+                            ?: plans.firstOrNull()
                 }
             }
         }

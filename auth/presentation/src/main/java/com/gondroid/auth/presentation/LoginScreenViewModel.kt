@@ -11,18 +11,17 @@ import com.gondroid.core.presentation.ui.UiText
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import javax.inject.Inject
 
 @HiltViewModel
-class LoginScreenViewModel @Inject constructor(
-    private val authRepository: AuthRepository
-) : ViewModel() {
+class LoginScreenViewModel @Inject constructor(private val authRepository: AuthRepository) :
+    ViewModel() {
 
     private var _uiState =
         MutableStateFlow(LoginState(error = "Google authentication not available"))

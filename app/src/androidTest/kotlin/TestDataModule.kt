@@ -6,7 +6,6 @@ import com.gondroid.core.database.dao.EvaluationDao
 import com.gondroid.core.database.di.DataModule
 import dagger.Module
 import dagger.Provides
-import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
@@ -19,19 +18,19 @@ object TestDataModule {
     @Singleton
     fun provideDataBase(
         @ApplicationContext
-        context: Context,
-    ): MTCDatabase =
-        Room
-            .inMemoryDatabaseBuilder(
-                context.applicationContext,
-                MTCDatabase::class.java
-            )
-            .allowMainThreadQueries()
-            .build()
+        context: Context
+    ): MTCDatabase = Room
+        .inMemoryDatabaseBuilder(
+            context.applicationContext,
+            MTCDatabase::class.java
+        )
+        .allowMainThreadQueries()
+        .build()
 
     @Provides
     fun provideEvaluationDao(database: MTCDatabase): EvaluationDao = database.evaluationDao()
 
     @Provides
-    fun provideDismissedQuestionDao(database: MTCDatabase): DismissedQuestionDao = database.dismissedQuestionDao()
+    fun provideDismissedQuestionDao(database: MTCDatabase): DismissedQuestionDao =
+        database.dismissedQuestionDao()
 }

@@ -4,16 +4,14 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
+import javax.inject.Inject
+import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import javax.inject.Inject
-import javax.inject.Singleton
 
 @Singleton
-open class AdsPreferences @Inject constructor(
-    private val dataStore: DataStore<Preferences>
-) {
+open class AdsPreferences @Inject constructor(private val dataStore: DataStore<Preferences>) {
     open val pdfDownloadCount: Flow<Int> by lazy {
         dataStore.data.map { prefs -> prefs[PDF_DOWNLOAD_COUNT] ?: 0 }
     }

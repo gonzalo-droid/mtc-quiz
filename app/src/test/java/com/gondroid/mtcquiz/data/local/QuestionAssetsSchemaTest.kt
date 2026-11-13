@@ -2,9 +2,9 @@ package com.gondroid.mtcquiz.data.local
 
 import com.gondroid.core.domain.model.QuestionResponse
 import com.google.common.truth.Truth.assertThat
+import java.io.File
 import kotlinx.serialization.json.Json
 import org.junit.Test
-import java.io.File
 
 /**
  * Validates structural invariants of every question bank shipped under
@@ -41,13 +41,14 @@ class QuestionAssetsSchemaTest {
     // failing on a field production itself tolerates.
     private val json = Json { ignoreUnknownKeys = true }
 
-    private fun questionFiles(): List<File> =
-        jsonDir.listFiles { f -> f.name.endsWith("_questions.json") && f.name != "a1_questions_test.json" }
-            ?.sortedBy { it.name }
-            ?: error("assets/json directory not found at ${jsonDir.absolutePath}")
+    private fun questionFiles(): List<File> = jsonDir.listFiles { f ->
+        f.name.endsWith("_questions.json") &&
+            f.name != "a1_questions_test.json"
+    }
+        ?.sortedBy { it.name }
+        ?: error("assets/json directory not found at ${jsonDir.absolutePath}")
 
-    private fun questionsOf(file: File): QuestionResponse =
-        json.decodeFromString(file.readText())
+    private fun questionsOf(file: File): QuestionResponse = json.decodeFromString(file.readText())
 
     @Test
     fun `every question file parses and has 4 options with a valid answer`() {
@@ -60,7 +61,8 @@ class QuestionAssetsSchemaTest {
                     errors += "${file.name}#${q.id}: expected 4 options, got ${q.options.size}"
                 }
                 if (allowsFewer && q.options.size !in 2..3) {
-                    errors += "${file.name}#${q.id}: documented as short, but has ${q.options.size} options"
+                    errors +=
+                        "${file.name}#${q.id}: documented as short, but has ${q.options.size} options"
                 }
                 if (q.answer.lowercase() !in validLetters) {
                     errors += "${file.name}#${q.id}: answer '${q.answer}' not in a-d"
@@ -123,7 +125,11 @@ class QuestionAssetsSchemaTest {
             val ids = questionsOf(file).data.map { it.id }
             errors += when {
                 file.name in restartFiles -> validateRestartSequence(file.name, ids)
-                file.name in knownGaps -> validateGappedSequence(file.name, ids, knownGaps.getValue(file.name))
+                file.name in knownGaps -> validateGappedSequence(
+                    file.name,
+                    ids,
+                    knownGaps.getValue(file.name)
+                )
                 else -> validateStrictSequence(file.name, ids)
             }
         }
@@ -137,7 +143,8 @@ class QuestionAssetsSchemaTest {
         }
         val expected = (1..ids.size).toList()
         if (ids.sorted() != expected) {
-            errors += "$fileName: ids not contiguous 1..${ids.size}, got range ${ids.min()}..${ids.max()}"
+            errors +=
+                "$fileName: ids not contiguous 1..${ids.size}, got range ${ids.min()}..${ids.max()}"
         }
         return errors
     }
@@ -162,12 +169,14 @@ class QuestionAssetsSchemaTest {
         segments += ids.subList(segmentStart, ids.size)
 
         if (segments.size != 2) {
-            errors += "$fileName: expected exactly one id-sequence restart (known second-table numbering), found ${segments.size - 1}"
+            errors +=
+                "$fileName: expected exactly one id-sequence restart (known second-table numbering), found ${segments.size - 1}"
         }
         segments.forEachIndexed { index, segment ->
             val expected = (1..segment.size).toList()
             if (segment != expected) {
-                errors += "$fileName: segment ${index + 1} is not contiguous 1..${segment.size}, got " +
+                errors +=
+                    "$fileName: segment ${index + 1} is not contiguous 1..${segment.size}, got " +
                     "${segment.firstOrNull()}..${segment.lastOrNull()}"
             }
         }
@@ -179,7 +188,11 @@ class QuestionAssetsSchemaTest {
      * ids absent (a documented, verified gap in the source PDF's own
      * numbering) -- nothing else missing, and no duplicates.
      */
-    private fun validateGappedSequence(fileName: String, ids: List<Int>, knownMissing: Set<Int>): List<String> {
+    private fun validateGappedSequence(
+        fileName: String,
+        ids: List<Int>,
+        knownMissing: Set<Int>
+    ): List<String> {
         val errors = mutableListOf<String>()
         if (ids.toSet().size != ids.size) {
             errors += "$fileName: duplicate ids found"
@@ -187,7 +200,8 @@ class QuestionAssetsSchemaTest {
         val max = ids.maxOrNull() ?: 0
         val expected = (1..max).toList() - knownMissing
         if (ids.sorted() != expected) {
-            errors += "$fileName: ids don't match expected sequence 1..$max minus known gap(s) $knownMissing"
+            errors +=
+                "$fileName: ids don't match expected sequence 1..$max minus known gap(s) $knownMissing"
         }
         return errors
     }
@@ -201,7 +215,8 @@ class QuestionAssetsSchemaTest {
             for (q in response.data) {
                 for (name in q.imagens) {
                     if (!pattern.matches(name)) {
-                        errors += "${file.name}#${q.id}: imagens entry '$name' doesn't match naming convention"
+                        errors +=
+                            "${file.name}#${q.id}: imagens entry '$name' doesn't match naming convention"
                     }
                 }
             }

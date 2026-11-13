@@ -10,6 +10,8 @@ import com.gondroid.core.domain.repository.PreferenceRepository
 import com.gondroid.core.domain.repository.QuizRepository
 import com.gondroid.core.presentation.ui.EvaluationScreenRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.util.UUID
+import javax.inject.Inject
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,8 +19,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.util.UUID
-import javax.inject.Inject
 
 @HiltViewModel
 class EvaluationScreenViewModel

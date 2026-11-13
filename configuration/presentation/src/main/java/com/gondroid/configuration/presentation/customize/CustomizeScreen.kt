@@ -63,10 +63,7 @@ private val QUESTIONS_RANGE = 5..100
 private val PASS_MARK_RANGE = 50..100
 
 @Composable
-fun CustomizeScreenRoot(
-    viewModel: CustomizeScreenViewModel,
-    navigateBack: () -> Unit
-) {
+fun CustomizeScreenRoot(viewModel: CustomizeScreenViewModel, navigateBack: () -> Unit) {
     val state by viewModel.state.collectAsState()
     val event = viewModel.event
     val context = LocalContext.current

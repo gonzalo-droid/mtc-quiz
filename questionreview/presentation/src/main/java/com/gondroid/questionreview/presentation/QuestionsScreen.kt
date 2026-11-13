@@ -49,10 +49,7 @@ import com.gondroid.core.presentation.ui.normalizeText
 import com.gondroid.core.presentation.ui.stripOptionLetterPrefix
 
 @Composable
-fun QuestionsScreenRoot(
-    viewModel: QuestionsScreenViewModel,
-    navigateBack: () -> Boolean
-) {
+fun QuestionsScreenRoot(viewModel: QuestionsScreenViewModel, navigateBack: () -> Boolean) {
     val state by viewModel.state.collectAsState()
 
     QuestionsScreen(
@@ -67,10 +64,7 @@ fun QuestionsScreenRoot(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun QuestionsScreen(
-    state: QuestionsState,
-    onAction: (QuestionsAction) -> Unit
-) {
+fun QuestionsScreen(state: QuestionsState, onAction: (QuestionsAction) -> Unit) {
     var isSearchExpanded by remember { mutableStateOf(false) }
     var searchText by remember { mutableStateOf("") }
     // Keep each question's position in the full bank: it is the LazyColumn key. question.id
@@ -127,7 +121,9 @@ fun QuestionsScreen(
                                 }) {
                                     Icon(
                                         Icons.Default.Clear,
-                                        contentDescription = stringResource(R.string.close_searching)
+                                        contentDescription = stringResource(
+                                            R.string.close_searching
+                                        )
                                     )
                                 }
                             }

@@ -24,30 +24,19 @@ object TarifasScreenRoute
 object CustomizeScreenRoute
 
 @Serializable
-data class DetailScreenRoute(
-    val categoryId: String
-)
+data class DetailScreenRoute(val categoryId: String)
 
 @Serializable
-data class EvaluationScreenRoute(
-    val categoryId: String
-)
+data class EvaluationScreenRoute(val categoryId: String)
 
 @Serializable
-data class QuestionsScreenRoute(
-    val categoryId: String
-)
+data class QuestionsScreenRoute(val categoryId: String)
 
 @Serializable
-data class PdfScreenRoute(
-    val categoryId: String
-)
+data class PdfScreenRoute(val categoryId: String)
 
 @Serializable
-data class SummaryScreenRoute(
-    val categoryId: String,
-    val evaluationId: String
-)
+data class SummaryScreenRoute(val categoryId: String, val evaluationId: String)
 
 @Serializable
 data object EvaluationHistoryRoute

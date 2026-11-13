@@ -144,11 +144,25 @@ private fun PreviewAnswerOptionRowStates() {
             modifier = Modifier.padding(12.dp),
             verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(8.dp)
         ) {
-            AnswerOptionRow(letter = "A", text = "Opción sin seleccionar", state = AnswerOptionState.Unselected, onClick = {})
-            AnswerOptionRow(letter = "B", text = "Opción seleccionada (sin verificar)", state = AnswerOptionState.Selected, onClick = {})
-            AnswerOptionRow(letter = "C", text = "Respuesta correcta revelada", state = AnswerOptionState.RevealedCorrect)
-            AnswerOptionRow(letter = "D", text = "Respuesta incorrecta elegida", state = AnswerOptionState.RevealedIncorrect)
-            AnswerOptionRow(letter = "A", text = "Esta era la correcta (el usuario eligió otra)", state = AnswerOptionState.CorrectAnswerHint)
+            AnswerOptionRow(letter = "A", text = "Opción sin seleccionar", state = AnswerOptionState.Unselected, onClick = {
+            })
+            AnswerOptionRow(letter = "B", text = "Opción seleccionada (sin verificar)", state = AnswerOptionState.Selected, onClick = {
+            })
+            AnswerOptionRow(
+                letter = "C",
+                text = "Respuesta correcta revelada",
+                state = AnswerOptionState.RevealedCorrect
+            )
+            AnswerOptionRow(
+                letter = "D",
+                text = "Respuesta incorrecta elegida",
+                state = AnswerOptionState.RevealedIncorrect
+            )
+            AnswerOptionRow(
+                letter = "A",
+                text = "Esta era la correcta (el usuario eligió otra)",
+                state = AnswerOptionState.CorrectAnswerHint
+            )
         }
     }
 }

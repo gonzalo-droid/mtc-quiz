@@ -17,9 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.gondroid.core.presentation.designsystem.components.WebViewWithOffline
 
 @Composable
-fun PrivacyScreenRoot(
-    navigateBack: () -> Unit
-) {
+fun PrivacyScreenRoot(navigateBack: () -> Unit) {
     PrivacyScreen(
         onNavigateUp = navigateBack
     )
@@ -27,9 +25,7 @@ fun PrivacyScreenRoot(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PrivacyScreen(
-    onNavigateUp: () -> Unit
-) {
+fun PrivacyScreen(onNavigateUp: () -> Unit) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {

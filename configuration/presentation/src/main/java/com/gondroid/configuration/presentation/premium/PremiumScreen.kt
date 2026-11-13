@@ -263,10 +263,28 @@ fun PremiumScreen(
                     } else {
                         availablePlans.forEach { plan ->
                             PlanCard(
-                                label = if (plan.billingPeriod == BillingPeriod.MONTHLY) "Mensual" else "Anual",
+                                label = if (plan.billingPeriod ==
+                                    BillingPeriod.MONTHLY
+                                ) {
+                                    "Mensual"
+                                } else {
+                                    "Anual"
+                                },
                                 price = plan.formattedPrice,
-                                period = if (plan.billingPeriod == BillingPeriod.MONTHLY) "/mes" else "/año",
-                                badge = if (plan.billingPeriod == BillingPeriod.ANNUAL) "Mejor valor" else null,
+                                period = if (plan.billingPeriod ==
+                                    BillingPeriod.MONTHLY
+                                ) {
+                                    "/mes"
+                                } else {
+                                    "/año"
+                                },
+                                badge = if (plan.billingPeriod ==
+                                    BillingPeriod.ANNUAL
+                                ) {
+                                    "Mejor valor"
+                                } else {
+                                    null
+                                },
                                 selected = plan == selectedPlan,
                                 onClick = { onSelectPlan(plan) }
                             )
@@ -408,7 +426,11 @@ private fun PlanCard(
                     modifier = Modifier
                         .size(20.dp)
                         .clip(CircleShape)
-                        .border(2.dp, if (selected) premiumGold else Color.White.copy(alpha = 0.3f), CircleShape)
+                        .border(
+                            2.dp,
+                            if (selected) premiumGold else Color.White.copy(alpha = 0.3f),
+                            CircleShape
+                        )
                         .then(
                             if (selected) {
                                 Modifier.background(premiumGold, CircleShape)

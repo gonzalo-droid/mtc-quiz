@@ -22,12 +22,6 @@ allprojects {
 
 subprojects {
     apply(plugin = "org.jlleitschuh.gradle.ktlint")
-    // ktlint-gradle 14 (needed to see AGP 9's built-in Kotlin) runs the ktlint 1.x engine,
-    // whose rules flag ~2200 pre-existing violations. The per-module baseline freezes those
-    // so new code is still checked; reformat the code and delete the baselines to retire it.
-    configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
-        baseline.set(file("config/ktlint/baseline.xml"))
-    }
     // Kover needs to be applied to every module that should contribute to the
     // merged coverage report (not just the aggregating module), so it can
     // expose its coverage data as a consumable variant. See app/build.gradle.kts

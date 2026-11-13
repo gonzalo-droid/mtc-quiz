@@ -9,6 +9,8 @@ import com.gondroid.core.domain.repository.PremiumRepository
 import com.gondroid.core.domain.repository.QuizRepository
 import com.gondroid.core.presentation.ui.DetailScreenRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
+import javax.inject.Named
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,8 +20,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-import javax.inject.Named
 
 sealed interface DetailEvent {
     data class NavigateToEvaluation(val categoryId: String) : DetailEvent

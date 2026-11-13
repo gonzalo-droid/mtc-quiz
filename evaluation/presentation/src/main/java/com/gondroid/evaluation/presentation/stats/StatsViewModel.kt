@@ -5,16 +5,14 @@ import androidx.lifecycle.viewModelScope
 import com.gondroid.core.domain.model.EvaluationState
 import com.gondroid.core.domain.repository.QuizRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
-class StatsViewModel @Inject constructor(
-    private val repository: QuizRepository
-) : ViewModel() {
+class StatsViewModel @Inject constructor(private val repository: QuizRepository) : ViewModel() {
     private val _state = MutableStateFlow(StatsState())
     val state = _state.asStateFlow()
 
@@ -23,7 +21,12 @@ class StatsViewModel @Inject constructor(
             repository.getAllEvaluations().collect { evaluations ->
                 val totalApproved = evaluations.count { it.state == EvaluationState.APPROVED }
                 val totalRejected = evaluations.count { it.state == EvaluationState.REJECTED }
-                val approvalRate = if (evaluations.isNotEmpty()) totalApproved.toFloat() / evaluations.size else 0f
+                val approvalRate = if (evaluations.isNotEmpty()) {
+                    totalApproved.toFloat() /
+                        evaluations.size
+                } else {
+                    0f
+                }
                 val totalQuestions = evaluations.sumOf { it.totalQuestions }
                 val totalCorrect = evaluations.sumOf { it.totalCorrect }
 
@@ -33,7 +36,9 @@ class StatsViewModel @Inject constructor(
                         CategoryStat(
                             categoryTitle = title,
                             evaluationCount = evals.size,
-                            approvalRate = evals.count { it.state == EvaluationState.APPROVED }.toFloat() / evals.size
+                            approvalRate =
+                            evals.count { it.state == EvaluationState.APPROVED }.toFloat() /
+                                evals.size
                         )
                     }
                     .sortedBy { it.approvalRate }

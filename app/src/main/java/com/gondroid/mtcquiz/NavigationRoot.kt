@@ -53,7 +53,11 @@ import com.gondroid.questionreview.presentation.QuestionsScreenRoot
 import com.gondroid.questionreview.presentation.QuestionsScreenViewModel
 
 @Composable
-fun NavigationRoot(navController: NavHostController, isLoggedIn: Boolean, isOnboardingShown: Boolean) {
+fun NavigationRoot(
+    navController: NavHostController,
+    isLoggedIn: Boolean,
+    isOnboardingShown: Boolean
+) {
     Box(
         modifier = Modifier.fillMaxSize()
     ) {

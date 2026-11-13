@@ -33,26 +33,25 @@ internal fun errorKey(categoryId: String, questionId: Int, question: String): In
 internal fun frequentErrors(
     evaluations: List<Evaluation>,
     dismissedKeys: Collection<Int>
-): List<FrequentError> =
-    evaluations
-        .flatMap { evaluation ->
-            evaluation.questionResults
-                .filter { !it.isCorrect }
-                .map { errorKey(evaluation.categoryId, it.questionId, it.question) to it }
-        }
-        .groupBy(keySelector = { it.first }, valueTransform = { it.second })
-        .filter { (key, results) ->
-            results.size >= FREQUENT_ERROR_THRESHOLD && key !in dismissedKeys
-        }
-        .map { (key, results) ->
-            val latest = results.last()
-            FrequentError(
-                key = key,
-                questionId = latest.questionId,
-                question = latest.question,
-                failCount = results.size,
-                lastWrongAnswer = latest.option ?: "",
-                correctAnswer = latest.correctAnswer
-            )
-        }
-        .sortedByDescending { it.failCount }
+): List<FrequentError> = evaluations
+    .flatMap { evaluation ->
+        evaluation.questionResults
+            .filter { !it.isCorrect }
+            .map { errorKey(evaluation.categoryId, it.questionId, it.question) to it }
+    }
+    .groupBy(keySelector = { it.first }, valueTransform = { it.second })
+    .filter { (key, results) ->
+        results.size >= FREQUENT_ERROR_THRESHOLD && key !in dismissedKeys
+    }
+    .map { (key, results) ->
+        val latest = results.last()
+        FrequentError(
+            key = key,
+            questionId = latest.questionId,
+            question = latest.question,
+            failCount = results.size,
+            lastWrongAnswer = latest.option ?: "",
+            correctAnswer = latest.correctAnswer
+        )
+    }
+    .sortedByDescending { it.failCount }

@@ -9,15 +9,14 @@ import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.gondroid.core.domain.model.PreferencesEvaluation
 import com.gondroid.core.domain.repository.PreferenceRepository
+import java.time.LocalDate
+import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import java.time.LocalDate
-import javax.inject.Inject
 
-class PreferenceRepositoryImpl @Inject constructor(
-    private val dataStore: DataStore<Preferences>
-) : PreferenceRepository {
+class PreferenceRepositoryImpl @Inject constructor(private val dataStore: DataStore<Preferences>) :
+    PreferenceRepository {
 
     companion object {
         val DARK_MODE_KEY = booleanPreferencesKey("dark_mode_enabled")
@@ -153,15 +152,13 @@ class PreferenceRepositoryImpl @Inject constructor(
         )
     }
 
-    override suspend fun setPreferencesEvaluation(data: PreferencesEvaluation): Boolean {
-        return try {
-            setNumberQuestions(data.numberQuestions)
-            setTimeToFinishEvaluation(data.timeToFinishEvaluation)
-            setPercentageToApprovedEvaluation(data.percentageToApprovedEvaluation)
-            true
-        } catch (e: Exception) {
-            false
-        }
+    override suspend fun setPreferencesEvaluation(data: PreferencesEvaluation): Boolean = try {
+        setNumberQuestions(data.numberQuestions)
+        setTimeToFinishEvaluation(data.timeToFinishEvaluation)
+        setPercentageToApprovedEvaluation(data.percentageToApprovedEvaluation)
+        true
+    } catch (e: Exception) {
+        false
     }
 
     // Streak

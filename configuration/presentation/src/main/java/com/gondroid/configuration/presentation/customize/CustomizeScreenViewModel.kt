@@ -5,20 +5,19 @@ import androidx.lifecycle.viewModelScope
 import com.gondroid.core.domain.model.PreferencesEvaluation
 import com.gondroid.core.domain.repository.PreferenceRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
 class CustomizeScreenViewModel
 @Inject
-constructor(
-    private val repository: PreferenceRepository
-) : ViewModel() {
+constructor(private val repository: PreferenceRepository) :
+    ViewModel() {
 
     private var _state = MutableStateFlow(CustomizeState())
     val state = _state.asStateFlow()

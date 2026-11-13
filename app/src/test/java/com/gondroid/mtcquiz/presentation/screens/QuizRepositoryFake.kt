@@ -57,7 +57,12 @@ class QuizRepositoryFake : QuizRepository {
                 topic = "Informática",
                 title = "¿Qué es HTML?",
                 answer = "c",
-                options = listOf("Un lenguaje de backend", "Un compilador", "Un lenguaje de marcado", "Una base de datos")
+                options = listOf(
+                    "Un lenguaje de backend",
+                    "Un compilador",
+                    "Un lenguaje de marcado",
+                    "Una base de datos"
+                )
             )
         )
     )
@@ -67,8 +72,8 @@ class QuizRepositoryFake : QuizRepository {
     override val categoriesFlow: Flow<List<Category>>
         get() = flow { emit(fakeCategories) }
 
-    override suspend fun getCategoryById(categoryId: String): Category? {
-        return fakeCategories.find { it.id == categoryId }
+    override suspend fun getCategoryById(categoryId: String): Category? = fakeCategories.find {
+        it.id == categoryId
     }
 
     override suspend fun getQuestionsByCategory(
@@ -85,11 +90,12 @@ class QuizRepositoryFake : QuizRepository {
         fakeEvaluations.add(evaluation)
     }
 
-    override suspend fun getEvaluationById(evaluationId: String): Evaluation? {
-        return fakeEvaluations.find { it.id == evaluationId }
-    }
+    override suspend fun getEvaluationById(evaluationId: String): Evaluation? =
+        fakeEvaluations.find {
+            it.id == evaluationId
+        }
 
-    override fun getAllEvaluations(): Flow<List<Evaluation>> {
-        return flow { emit(fakeEvaluations.toList()) }
+    override fun getAllEvaluations(): Flow<List<Evaluation>> = flow {
+        emit(fakeEvaluations.toList())
     }
 }

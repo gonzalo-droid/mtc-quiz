@@ -17,7 +17,5 @@ class CustomTestRunner : AndroidJUnitRunner() {
         cl: ClassLoader?,
         className: String?,
         context: Context?
-    ): Application? {
-        return super.newApplication(cl, HiltTestApplication::class.java.name, context)
-    }
+    ): Application? = super.newApplication(cl, HiltTestApplication::class.java.name, context)
 }

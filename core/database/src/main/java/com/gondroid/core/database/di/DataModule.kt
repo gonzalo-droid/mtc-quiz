@@ -20,19 +20,19 @@ object DataModule {
     fun provideDataBase(
         @ApplicationContext
         context: Context
-    ): MTCDatabase =
-        Room
-            .databaseBuilder(
-                context.applicationContext,
-                MTCDatabase::class.java,
-                "mtc_database"
-            )
-            .addMigrations(MTCDatabase.MIGRATION_1_2, MTCDatabase.MIGRATION_2_3)
-            .build()
+    ): MTCDatabase = Room
+        .databaseBuilder(
+            context.applicationContext,
+            MTCDatabase::class.java,
+            "mtc_database"
+        )
+        .addMigrations(MTCDatabase.MIGRATION_1_2, MTCDatabase.MIGRATION_2_3)
+        .build()
 
     @Provides
     fun provideEvaluationDao(database: MTCDatabase): EvaluationDao = database.evaluationDao()
 
     @Provides
-    fun provideDismissedQuestionDao(database: MTCDatabase): DismissedQuestionDao = database.dismissedQuestionDao()
+    fun provideDismissedQuestionDao(database: MTCDatabase): DismissedQuestionDao =
+        database.dismissedQuestionDao()
 }

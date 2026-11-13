@@ -124,11 +124,7 @@ fun DetailScreenRoot(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailScreen(
-    state: DetailState,
-    bannerAdId: String,
-    onAction: (DetailAction) -> Unit
-) {
+fun DetailScreen(state: DetailState, bannerAdId: String, onAction: (DetailAction) -> Unit) {
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
@@ -189,7 +185,9 @@ fun DetailScreen(
         ) {
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+                ),
                 shape = RoundedCornerShape(16.dp)
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {

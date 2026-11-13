@@ -122,10 +122,11 @@ class MainViewModelTest {
     }
 
     @Test
-    fun `init triggers a purchase state refresh so isPremium is up to date on app start`() = runTest {
-        createViewModel()
-        advanceUntilIdle()
+    fun `init triggers a purchase state refresh so isPremium is up to date on app start`() =
+        runTest {
+            createViewModel()
+            advanceUntilIdle()
 
-        coVerify { premiumRepository.refreshPurchaseState() }
-    }
+            coVerify { premiumRepository.refreshPurchaseState() }
+        }
 }
