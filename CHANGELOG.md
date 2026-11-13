@@ -6,7 +6,10 @@ El formato sigue (aproximadamente) [Keep a Changelog](https://keepachangelog.com
 
 ## [Unreleased]
 
+## [1.2.5] - 2026-11-13 (versionCode 10)
+
 ### Fixed
+- B-IIA, B-IIB y B-IIC, preguntas 13 a 15 (señales en imagen): las opciones decían el tipo de cada señal —"(informativa de ruta)", "(reguladora)", "preventiva"—, justo lo que la pregunta evalúa. El PDF solo trae las imágenes; ahora el texto describe lo que se ve en cada señal sin clasificarla. Las respuestas no cambian.
 - La pantalla de Estudio de A-IIIB y A-IIIC podía cerrarse sola al buscar: esos bancos repiten ids (el PDF reinicia la numeración en su segunda tabla) y la lista usaba el id como clave, así que dos resultados con el mismo id en pantalla —buscar "asiento" en A-IIIB— rompían la lista. Ahora la clave es la posición de la pregunta en el banco.
 - "Revisar errores" mezclaba preguntas distintas que compartían número: la 5 de A-I con la 5 de B-IIC, o las dos 63 de A-IIIB. Sumaba sus fallos en una sola entrada y, al descartarla, ocultaba esa pregunta en todos los bancos. Ahora cada error se identifica por banco, número y texto. Los descartes hechos antes de esta versión dejan de aplicarse (no se podía saber a qué pregunta se referían).
 - Una respuesta verificada se perdía si el tiempo se acababa antes de pulsar "Siguiente": ahora se registra al pulsar "Verificar", como en iOS.
