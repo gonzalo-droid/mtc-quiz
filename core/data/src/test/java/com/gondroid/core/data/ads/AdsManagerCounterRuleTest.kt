@@ -119,7 +119,9 @@ class AdsManagerCounterRuleTest {
             premiumRepository = FakePremiumRepository(isPremium = true)
         )
         var adWasShown: Boolean? = null
-        premiumManager.showEvaluationInterstitial(mockk<Activity>(relaxed = true)) { adWasShown = it }
+        premiumManager.showEvaluationInterstitial(mockk<Activity>(relaxed = true)) {
+            adWasShown = it
+        }
         assertThat(adWasShown).isFalse()
     }
 

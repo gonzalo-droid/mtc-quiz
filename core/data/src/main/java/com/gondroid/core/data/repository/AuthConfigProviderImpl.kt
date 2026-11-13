@@ -8,19 +8,15 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class AuthConfigProviderImpl @Inject constructor(
-    @ApplicationContext private val context: Context
-) : AuthConfigProvider {
+class AuthConfigProviderImpl @Inject constructor(@ApplicationContext private val context: Context) :
+    AuthConfigProvider {
 
-    override suspend fun getGoogleClientId(): String {
-        return context.getString(R.string.default_web_client_id)
-    }
+    override suspend fun getGoogleClientId(): String =
+        context.getString(R.string.default_web_client_id)
 
-    override suspend fun getFacebookAppId(): String {
-        return context.getString(R.string.default_web_client_id)
-    }
+    override suspend fun getFacebookAppId(): String =
+        context.getString(R.string.default_web_client_id)
 
-    override suspend fun getAppleServiceId(): String {
-        return context.getString(R.string.default_web_client_id)
-    }
+    override suspend fun getAppleServiceId(): String =
+        context.getString(R.string.default_web_client_id)
 }

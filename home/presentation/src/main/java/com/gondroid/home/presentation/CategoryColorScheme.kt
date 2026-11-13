@@ -2,10 +2,7 @@ package com.gondroid.home.presentation
 
 import androidx.compose.ui.graphics.Color
 
-data class CategoryColorScheme(
-    val container: Color,
-    val content: Color
-)
+data class CategoryColorScheme(val container: Color, val content: Color)
 
 private val categoryColorMap = mapOf(
     "A-I" to CategoryColorScheme(Color(0xFF274C93), Color.White),

@@ -53,7 +53,9 @@ class PremiumRepositoryImplTest {
     private class FakeDataStore : DataStore<Preferences> {
         private val state = MutableStateFlow<Preferences>(mutablePreferencesOf())
         override val data: Flow<Preferences> = state
-        override suspend fun updateData(transform: suspend (Preferences) -> Preferences): Preferences {
+        override suspend fun updateData(
+            transform: suspend (Preferences) -> Preferences
+        ): Preferences {
             val updated = transform(state.value)
             state.value = updated
             return updated
@@ -142,7 +144,10 @@ class PremiumRepositoryImplTest {
     @Test
     fun `isPremiumFlow seeds from cached DataStore value on init`() = testScope.runTest {
         dataStore.updateData { prefs ->
-            prefs.toMutablePreferences().apply { this[PremiumRepositoryImpl.IS_PREMIUM_CACHED_KEY] = true }
+            prefs.toMutablePreferences().apply {
+                this[PremiumRepositoryImpl.IS_PREMIUM_CACHED_KEY] =
+                    true
+            }
         }
         val seededRepository = buildRepository()
         advanceUntilIdle()
@@ -179,7 +184,10 @@ class PremiumRepositoryImplTest {
         }
     }
 
-    private fun stubQueryProductDetails(responseCode: Int, details: List<ProductDetails> = emptyList()) {
+    private fun stubQueryProductDetails(
+        responseCode: Int,
+        details: List<ProductDetails> = emptyList()
+    ) {
         val listenerSlot = slot<ProductDetailsResponseListener>()
         every { billingClient.queryProductDetailsAsync(any(), capture(listenerSlot)) } answers {
             val result = BillingResult.newBuilder().setResponseCode(responseCode).build()
@@ -206,54 +214,65 @@ class PremiumRepositoryImplTest {
     }
 
     @Test
-    fun `loadAvailablePlans leaves availablePlansFlow empty when query fails`() = testScope.runTest {
-        stubQueryProductDetails(BillingClient.BillingResponseCode.ERROR)
+    fun `loadAvailablePlans leaves availablePlansFlow empty when query fails`() =
+        testScope.runTest {
+            stubQueryProductDetails(BillingClient.BillingResponseCode.ERROR)
 
-        repository.loadAvailablePlans()
-        advanceUntilIdle()
+            repository.loadAvailablePlans()
+            advanceUntilIdle()
 
-        assertThat(repository.availablePlansFlow.first()).isEmpty()
-    }
-
-    @Test
-    fun `loadAvailablePlans does nothing when billing client fails to connect`() = testScope.runTest {
-        every { billingClient.isReady } returns false
-        every { billingClient.startConnection(any()) } answers {
-            val listener = firstArg<BillingClientStateListener>()
-            val result = BillingResult.newBuilder()
-                .setResponseCode(BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE)
-                .build()
-            listener.onBillingSetupFinished(result)
+            assertThat(repository.availablePlansFlow.first()).isEmpty()
         }
 
-        repository.loadAvailablePlans()
-        advanceUntilIdle()
+    @Test
+    fun `loadAvailablePlans does nothing when billing client fails to connect`() =
+        testScope.runTest {
+            every { billingClient.isReady } returns false
+            every { billingClient.startConnection(any()) } answers {
+                val listener = firstArg<BillingClientStateListener>()
+                val result = BillingResult.newBuilder()
+                    .setResponseCode(BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE)
+                    .build()
+                listener.onBillingSetupFinished(result)
+            }
 
-        verify(exactly = 0) { billingClient.queryProductDetailsAsync(any(), any()) }
-        assertThat(repository.availablePlansFlow.first()).isEmpty()
-    }
+            repository.loadAvailablePlans()
+            advanceUntilIdle()
+
+            verify(exactly = 0) { billingClient.queryProductDetailsAsync(any(), any()) }
+            assertThat(repository.availablePlansFlow.first()).isEmpty()
+        }
 
     // --- launchSubscription ---
 
     @Test
-    fun `launchSubscription launches billing flow with cached product and returns true`() = testScope.runTest {
-        val monthly = productDetailsFor(PremiumRepositoryImpl.PRODUCT_ID_MONTHLY, "S/ 9.90")
-        stubQueryProductDetails(BillingClient.BillingResponseCode.OK, listOf(monthly))
-        every {
-            billingClient.launchBillingFlow(any(), any())
-        } returns BillingResult.newBuilder().setResponseCode(BillingClient.BillingResponseCode.OK).build()
-        repository.loadAvailablePlans()
-        advanceUntilIdle()
-        val activity = mockk<Activity>()
+    fun `launchSubscription launches billing flow with cached product and returns true`() =
+        testScope.runTest {
+            val monthly = productDetailsFor(PremiumRepositoryImpl.PRODUCT_ID_MONTHLY, "S/ 9.90")
+            stubQueryProductDetails(BillingClient.BillingResponseCode.OK, listOf(monthly))
+            every {
+                billingClient.launchBillingFlow(any(), any())
+            } returns
+                BillingResult.newBuilder().setResponseCode(
+                    BillingClient.BillingResponseCode.OK
+                ).build()
+            repository.loadAvailablePlans()
+            advanceUntilIdle()
+            val activity = mockk<Activity>()
 
-        val launched = repository.launchSubscription(activity, PremiumRepositoryImpl.PRODUCT_ID_MONTHLY)
-        advanceUntilIdle()
+            val launched = repository.launchSubscription(
+                activity,
+                PremiumRepositoryImpl.PRODUCT_ID_MONTHLY
+            )
+            advanceUntilIdle()
 
-        assertThat(launched).isTrue()
-        val paramsSlot = slot<BillingFlowParams>()
-        verify { billingClient.launchBillingFlow(activity, capture(paramsSlot)) }
-        verify { analyticsManager.logSubscribeClicked(PremiumRepositoryImpl.PRODUCT_ID_MONTHLY) }
-    }
+            assertThat(launched).isTrue()
+            val paramsSlot = slot<BillingFlowParams>()
+            verify { billingClient.launchBillingFlow(activity, capture(paramsSlot)) }
+            verify {
+                analyticsManager.logSubscribeClicked(PremiumRepositoryImpl.PRODUCT_ID_MONTHLY)
+            }
+        }
 
     @Test
     fun `launchSubscription loads plans first when cache is empty`() = testScope.runTest {
@@ -261,10 +280,14 @@ class PremiumRepositoryImplTest {
         stubQueryProductDetails(BillingClient.BillingResponseCode.OK, listOf(annual))
         every {
             billingClient.launchBillingFlow(any(), any())
-        } returns BillingResult.newBuilder().setResponseCode(BillingClient.BillingResponseCode.OK).build()
+        } returns
+            BillingResult.newBuilder().setResponseCode(BillingClient.BillingResponseCode.OK).build()
         val activity = mockk<Activity>()
 
-        val launched = repository.launchSubscription(activity, PremiumRepositoryImpl.PRODUCT_ID_ANNUAL)
+        val launched = repository.launchSubscription(
+            activity,
+            PremiumRepositoryImpl.PRODUCT_ID_ANNUAL
+        )
         advanceUntilIdle()
 
         assertThat(launched).isTrue()
@@ -272,34 +295,39 @@ class PremiumRepositoryImplTest {
     }
 
     @Test
-    fun `launchSubscription returns false when product is not found in Play Console`() = testScope.runTest {
-        stubQueryProductDetails(BillingClient.BillingResponseCode.OK, emptyList())
-        val activity = mockk<Activity>()
+    fun `launchSubscription returns false when product is not found in Play Console`() =
+        testScope.runTest {
+            stubQueryProductDetails(BillingClient.BillingResponseCode.OK, emptyList())
+            val activity = mockk<Activity>()
 
-        val launched = repository.launchSubscription(activity, "unknown_product")
-        advanceUntilIdle()
+            val launched = repository.launchSubscription(activity, "unknown_product")
+            advanceUntilIdle()
 
-        assertThat(launched).isFalse()
-        verify(exactly = 0) { billingClient.launchBillingFlow(any(), any()) }
-    }
+            assertThat(launched).isFalse()
+            verify(exactly = 0) { billingClient.launchBillingFlow(any(), any()) }
+        }
 
     @Test
-    fun `launchSubscription returns false when billing client fails to connect`() = testScope.runTest {
-        every { billingClient.isReady } returns false
-        every { billingClient.startConnection(any()) } answers {
-            val listener = firstArg<BillingClientStateListener>()
-            val result = BillingResult.newBuilder()
-                .setResponseCode(BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE)
-                .build()
-            listener.onBillingSetupFinished(result)
+    fun `launchSubscription returns false when billing client fails to connect`() =
+        testScope.runTest {
+            every { billingClient.isReady } returns false
+            every { billingClient.startConnection(any()) } answers {
+                val listener = firstArg<BillingClientStateListener>()
+                val result = BillingResult.newBuilder()
+                    .setResponseCode(BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE)
+                    .build()
+                listener.onBillingSetupFinished(result)
+            }
+            val activity = mockk<Activity>()
+
+            val launched = repository.launchSubscription(
+                activity,
+                PremiumRepositoryImpl.PRODUCT_ID_MONTHLY
+            )
+            advanceUntilIdle()
+
+            assertThat(launched).isFalse()
         }
-        val activity = mockk<Activity>()
-
-        val launched = repository.launchSubscription(activity, PremiumRepositoryImpl.PRODUCT_ID_MONTHLY)
-        advanceUntilIdle()
-
-        assertThat(launched).isFalse()
-    }
 
     // --- purchasesUpdatedListener / handlePurchase ---
 
@@ -316,67 +344,79 @@ class PremiumRepositoryImplTest {
     }
 
     @Test
-    fun `purchasesUpdatedListener OK marks premium true and acknowledges unacknowledged purchase`() = testScope.runTest {
-        val listenerSlot = slot<AcknowledgePurchaseResponseListener>()
-        every { billingClient.acknowledgePurchase(any(), capture(listenerSlot)) } answers {
-            listenerSlot.captured.onAcknowledgePurchaseResponse(
-                BillingResult.newBuilder().setResponseCode(BillingClient.BillingResponseCode.OK).build()
-            )
+    fun `purchasesUpdatedListener OK marks premium true and acknowledges unacknowledged purchase`() =
+        testScope.runTest {
+            val listenerSlot = slot<AcknowledgePurchaseResponseListener>()
+            every { billingClient.acknowledgePurchase(any(), capture(listenerSlot)) } answers {
+                listenerSlot.captured.onAcknowledgePurchaseResponse(
+                    BillingResult.newBuilder().setResponseCode(
+                        BillingClient.BillingResponseCode.OK
+                    ).build()
+                )
+            }
+            val purchase = purchaseMock(acknowledged = false)
+            val okResult = BillingResult.newBuilder().setResponseCode(
+                BillingClient.BillingResponseCode.OK
+            ).build()
+
+            capturedListener.onPurchasesUpdated(okResult, listOf(purchase))
+            advanceUntilIdle()
+
+            assertThat(repository.isPremiumFlow.value).isTrue()
+            verify {
+                analyticsManager.logPurchaseCompleted(PremiumRepositoryImpl.PRODUCT_ID_MONTHLY)
+            }
+            val paramsSlot = slot<AcknowledgePurchaseParams>()
+            verify { billingClient.acknowledgePurchase(capture(paramsSlot), any()) }
         }
-        val purchase = purchaseMock(acknowledged = false)
-        val okResult = BillingResult.newBuilder().setResponseCode(BillingClient.BillingResponseCode.OK).build()
-
-        capturedListener.onPurchasesUpdated(okResult, listOf(purchase))
-        advanceUntilIdle()
-
-        assertThat(repository.isPremiumFlow.value).isTrue()
-        verify { analyticsManager.logPurchaseCompleted(PremiumRepositoryImpl.PRODUCT_ID_MONTHLY) }
-        val paramsSlot = slot<AcknowledgePurchaseParams>()
-        verify { billingClient.acknowledgePurchase(capture(paramsSlot), any()) }
-    }
 
     @Test
-    fun `purchasesUpdatedListener does not re-acknowledge an already-acknowledged purchase`() = testScope.runTest {
-        val purchase = purchaseMock(acknowledged = true)
-        val okResult = BillingResult.newBuilder().setResponseCode(BillingClient.BillingResponseCode.OK).build()
+    fun `purchasesUpdatedListener does not re-acknowledge an already-acknowledged purchase`() =
+        testScope.runTest {
+            val purchase = purchaseMock(acknowledged = true)
+            val okResult = BillingResult.newBuilder().setResponseCode(
+                BillingClient.BillingResponseCode.OK
+            ).build()
 
-        capturedListener.onPurchasesUpdated(okResult, listOf(purchase))
-        advanceUntilIdle()
+            capturedListener.onPurchasesUpdated(okResult, listOf(purchase))
+            advanceUntilIdle()
 
-        assertThat(repository.isPremiumFlow.value).isTrue()
-        verify(exactly = 0) { billingClient.acknowledgePurchase(any(), any()) }
-    }
-
-    @Test
-    fun `purchasesUpdatedListener USER_CANCELED logs analytics without granting premium`() = testScope.runTest {
-        val canceledResult = BillingResult.newBuilder()
-            .setResponseCode(BillingClient.BillingResponseCode.USER_CANCELED)
-            .build()
-
-        capturedListener.onPurchasesUpdated(canceledResult, emptyList())
-        advanceUntilIdle()
-
-        assertThat(repository.isPremiumFlow.value).isFalse()
-        verify { analyticsManager.logPurchaseCanceled("unknown") }
-    }
-
-    @Test
-    fun `purchasesUpdatedListener error logs analytics without granting premium`() = testScope.runTest {
-        val errorResult = BillingResult.newBuilder()
-            .setResponseCode(BillingClient.BillingResponseCode.ERROR)
-            .build()
-
-        capturedListener.onPurchasesUpdated(errorResult, emptyList())
-        advanceUntilIdle()
-
-        assertThat(repository.isPremiumFlow.value).isFalse()
-        verify {
-            analyticsManager.logPurchaseFailed(
-                productId = "unknown",
-                errorCode = BillingClient.BillingResponseCode.ERROR
-            )
+            assertThat(repository.isPremiumFlow.value).isTrue()
+            verify(exactly = 0) { billingClient.acknowledgePurchase(any(), any()) }
         }
-    }
+
+    @Test
+    fun `purchasesUpdatedListener USER_CANCELED logs analytics without granting premium`() =
+        testScope.runTest {
+            val canceledResult = BillingResult.newBuilder()
+                .setResponseCode(BillingClient.BillingResponseCode.USER_CANCELED)
+                .build()
+
+            capturedListener.onPurchasesUpdated(canceledResult, emptyList())
+            advanceUntilIdle()
+
+            assertThat(repository.isPremiumFlow.value).isFalse()
+            verify { analyticsManager.logPurchaseCanceled("unknown") }
+        }
+
+    @Test
+    fun `purchasesUpdatedListener error logs analytics without granting premium`() =
+        testScope.runTest {
+            val errorResult = BillingResult.newBuilder()
+                .setResponseCode(BillingClient.BillingResponseCode.ERROR)
+                .build()
+
+            capturedListener.onPurchasesUpdated(errorResult, emptyList())
+            advanceUntilIdle()
+
+            assertThat(repository.isPremiumFlow.value).isFalse()
+            verify {
+                analyticsManager.logPurchaseFailed(
+                    productId = "unknown",
+                    errorCode = BillingClient.BillingResponseCode.ERROR
+                )
+            }
+        }
 
     // --- refreshPurchaseState / restorePurchases ---
 
@@ -389,27 +429,29 @@ class PremiumRepositoryImplTest {
     }
 
     @Test
-    fun `refreshPurchaseState sets isPremium true when an active matching subscription exists`() = testScope.runTest {
-        val activePurchase = purchaseMock(state = Purchase.PurchaseState.PURCHASED)
-        stubQueryPurchases(BillingClient.BillingResponseCode.OK, listOf(activePurchase))
+    fun `refreshPurchaseState sets isPremium true when an active matching subscription exists`() =
+        testScope.runTest {
+            val activePurchase = purchaseMock(state = Purchase.PurchaseState.PURCHASED)
+            stubQueryPurchases(BillingClient.BillingResponseCode.OK, listOf(activePurchase))
 
-        repository.refreshPurchaseState()
-        advanceUntilIdle()
+            repository.refreshPurchaseState()
+            advanceUntilIdle()
 
-        assertThat(repository.isPremiumFlow.value).isTrue()
-        val paramsSlot = slot<QueryPurchasesParams>()
-        verify { billingClient.queryPurchasesAsync(capture(paramsSlot), any()) }
-    }
+            assertThat(repository.isPremiumFlow.value).isTrue()
+            val paramsSlot = slot<QueryPurchasesParams>()
+            verify { billingClient.queryPurchasesAsync(capture(paramsSlot), any()) }
+        }
 
     @Test
-    fun `refreshPurchaseState sets isPremium false when no active matching subscription exists`() = testScope.runTest {
-        stubQueryPurchases(BillingClient.BillingResponseCode.OK, emptyList())
+    fun `refreshPurchaseState sets isPremium false when no active matching subscription exists`() =
+        testScope.runTest {
+            stubQueryPurchases(BillingClient.BillingResponseCode.OK, emptyList())
 
-        repository.refreshPurchaseState()
-        advanceUntilIdle()
+            repository.refreshPurchaseState()
+            advanceUntilIdle()
 
-        assertThat(repository.isPremiumFlow.value).isFalse()
-    }
+            assertThat(repository.isPremiumFlow.value).isFalse()
+        }
 
     @Test
     fun `refreshPurchaseState leaves isPremium unchanged when query fails`() = testScope.runTest {
@@ -424,15 +466,16 @@ class PremiumRepositoryImplTest {
     }
 
     @Test
-    fun `restorePurchases delegates to refreshPurchaseState and logs analytics`() = testScope.runTest {
-        val activePurchase = purchaseMock(state = Purchase.PurchaseState.PURCHASED)
-        stubQueryPurchases(BillingClient.BillingResponseCode.OK, listOf(activePurchase))
+    fun `restorePurchases delegates to refreshPurchaseState and logs analytics`() =
+        testScope.runTest {
+            val activePurchase = purchaseMock(state = Purchase.PurchaseState.PURCHASED)
+            stubQueryPurchases(BillingClient.BillingResponseCode.OK, listOf(activePurchase))
 
-        repository.restorePurchases()
-        advanceUntilIdle()
+            repository.restorePurchases()
+            advanceUntilIdle()
 
-        verify { analyticsManager.logRestoreClicked() }
-        verify { analyticsManager.logRestoreCompleted(true) }
-        assertThat(repository.isPremiumFlow.value).isTrue()
-    }
+            verify { analyticsManager.logRestoreClicked() }
+            verify { analyticsManager.logRestoreCompleted(true) }
+            assertThat(repository.isPremiumFlow.value).isTrue()
+        }
 }

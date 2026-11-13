@@ -84,10 +84,7 @@ private val darkScheme = darkColorScheme(
 )
 
 @Composable
-fun MTCQuizTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable () -> Unit
-) {
+fun MTCQuizTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
     val colorScheme = if (darkTheme) darkScheme else lightScheme
     val extendedColors = if (darkTheme) {
         ExtendedColors(

@@ -30,17 +30,18 @@ abstract class BillingModule {
     companion object {
         @Provides
         @Singleton
-        fun provideBillingClientFactory(@ApplicationContext context: Context): BillingClientFactory =
-            BillingClientFactory { listener ->
-                BillingClient.newBuilder(context)
-                    .setListener(listener)
-                    .enablePendingPurchases(
-                        PendingPurchasesParams.newBuilder()
-                            .enableOneTimeProducts()
-                            .build()
-                    )
-                    .enableAutoServiceReconnection()
-                    .build()
-            }
+        fun provideBillingClientFactory(
+            @ApplicationContext context: Context
+        ): BillingClientFactory = BillingClientFactory { listener ->
+            BillingClient.newBuilder(context)
+                .setListener(listener)
+                .enablePendingPurchases(
+                    PendingPurchasesParams.newBuilder()
+                        .enableOneTimeProducts()
+                        .build()
+                )
+                .enableAutoServiceReconnection()
+                .build()
+        }
     }
 }

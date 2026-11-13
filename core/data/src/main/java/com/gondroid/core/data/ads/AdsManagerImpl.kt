@@ -56,7 +56,10 @@ class AdsManagerImpl @Inject constructor(
     }
 
     override fun showPdfInterstitial(activity: Activity, onDismiss: (adWasShown: Boolean) -> Unit) {
-        if (isPremium) { onDismiss(false); return }
+        if (isPremium) {
+            onDismiss(false)
+            return
+        }
         val ad = interstitial
         if (ad == null) {
             onDismiss(false)
@@ -107,8 +110,14 @@ class AdsManagerImpl @Inject constructor(
         return count > 0 && count % 3 == 0
     }
 
-    override fun showEvaluationInterstitial(activity: Activity, onDismiss: (adWasShown: Boolean) -> Unit) {
-        if (isPremium) { onDismiss(false); return }
+    override fun showEvaluationInterstitial(
+        activity: Activity,
+        onDismiss: (adWasShown: Boolean) -> Unit
+    ) {
+        if (isPremium) {
+            onDismiss(false)
+            return
+        }
         val ad = evaluationInterstitial
         if (ad == null) {
             onDismiss(false)

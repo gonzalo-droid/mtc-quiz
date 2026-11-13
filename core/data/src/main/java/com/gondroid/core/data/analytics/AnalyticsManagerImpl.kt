@@ -6,9 +6,8 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class AnalyticsManagerImpl @Inject constructor(
-    private val firebaseAnalytics: FirebaseAnalytics
-) : AnalyticsManager {
+class AnalyticsManagerImpl @Inject constructor(private val firebaseAnalytics: FirebaseAnalytics) :
+    AnalyticsManager {
 
     override fun logPaywallViewed() {
         firebaseAnalytics.logEvent("paywall_viewed", null)

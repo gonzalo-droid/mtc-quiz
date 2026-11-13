@@ -31,11 +31,7 @@ import coil3.compose.SubcomposeAsyncImage
 import coil3.compose.SubcomposeAsyncImageScope
 import com.gondroid.core.presentation.designsystem.MTCQuizTheme
 
-data class AnswerOption(
-    val letter: String,
-    val text: String,
-    val state: AnswerOptionState
-)
+data class AnswerOption(val letter: String, val text: String, val state: AnswerOptionState)
 
 /**
  * Fill-in-the-blank questions carry their gap in the question text itself. The balotario
@@ -51,12 +47,11 @@ private val INVISIBLE_BLANK = Regex("[\u00a0]{4,}|_{4,}")
 private val BLANK_TIGHT_LEFT = Regex("([\\w,;:])$BLANK_MARKER")
 private val BLANK_TIGHT_RIGHT = Regex("$BLANK_MARKER(\\w)")
 
-private fun String.withVisibleBlanks(): String =
-    replace(INVISIBLE_BLANK, BLANK_MARKER)
-        // A run of non-breaking spaces can sit flush against the surrounding words; the
-        // marker that replaces it needs the spaces the run was standing in for.
-        .replace(BLANK_TIGHT_LEFT, "$1 $BLANK_MARKER")
-        .replace(BLANK_TIGHT_RIGHT, "$BLANK_MARKER $1")
+private fun String.withVisibleBlanks(): String = replace(INVISIBLE_BLANK, BLANK_MARKER)
+    // A run of non-breaking spaces can sit flush against the surrounding words; the
+    // marker that replaces it needs the spaces the run was standing in for.
+    .replace(BLANK_TIGHT_LEFT, "$1 $BLANK_MARKER")
+    .replace(BLANK_TIGHT_RIGHT, "$BLANK_MARKER $1")
 
 @Composable
 fun QuestionAnswerCard(
@@ -68,7 +63,9 @@ fun QuestionAnswerCard(
 ) {
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+        ),
         shape = RoundedCornerShape(16.dp)
     ) {
         Column {
@@ -83,7 +80,10 @@ fun QuestionAnswerCard(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 8.dp),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally)
+                        horizontalArrangement = Arrangement.spacedBy(
+                            12.dp,
+                            Alignment.CenterHorizontally
+                        )
                     ) {
                         items(questionImages) { name ->
                             QuestionImage(name = name)

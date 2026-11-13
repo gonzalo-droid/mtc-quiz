@@ -13,9 +13,9 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.CoroutineDispatcher
 import javax.inject.Named
 import javax.inject.Singleton
+import kotlinx.coroutines.CoroutineDispatcher
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -39,9 +39,8 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun providePreferenceRepository(
-        dataStore: DataStore<Preferences>
-    ): PreferenceRepository = PreferenceRepositoryImpl(
-        dataStore = dataStore
-    )
+    fun providePreferenceRepository(dataStore: DataStore<Preferences>): PreferenceRepository =
+        PreferenceRepositoryImpl(
+            dataStore = dataStore
+        )
 }

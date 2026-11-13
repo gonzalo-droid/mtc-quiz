@@ -4,12 +4,12 @@ import com.gondroid.core.database.entity.EvaluationEntity
 import com.gondroid.core.domain.model.Evaluation
 import com.gondroid.core.domain.model.EvaluationState
 import com.gondroid.core.domain.model.QuestionResult
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 @Serializable
 data class QuestionResultJson(

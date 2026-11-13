@@ -10,13 +10,13 @@ import com.gondroid.mtcquiz.util.MainDispatcherRule
 import com.google.common.truth.Truth
 import io.mockk.every
 import io.mockk.mockk
+import java.io.ByteArrayInputStream
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import java.io.ByteArrayInputStream
 
 class QuizRepositoryTest {
 
@@ -55,7 +55,8 @@ class QuizRepositoryTest {
         """.trimIndent()
 
         assetManager = mockk<AssetManager>()
-        every { assetManager.open("json/a1_questions_test.json") } returns ByteArrayInputStream(json.toByteArray())
+        every { assetManager.open("json/a1_questions_test.json") } returns
+            ByteArrayInputStream(json.toByteArray())
         every { mockContext.assets } returns assetManager
 
         preferenceRepositoryFake = PreferenceRepositoryFake()
@@ -102,23 +103,31 @@ class QuizRepositoryTest {
     }
 
     @Test
-    fun `getQuestionsByCategory returns a different selection across repeated evaluations`() = runTest {
-        val questionsJson = (1..20).joinToString(prefix = "[", postfix = "]", separator = ",") {
-            """{"id": $it, "title": "Q$it"}"""
-        }
-        val json = """{"data": $questionsJson}"""
-        // `answers` (not `returns`) so each of the repeated calls below gets a fresh, unread
-        // stream — reusing one instance would exhaust it after the first read and EOF the rest.
-        every { assetManager.open("json/many_questions_test.json") } answers { ByteArrayInputStream(json.toByteArray()) }
-        preferenceRepositoryFake.setNumberQuestions("5")
+    fun `getQuestionsByCategory returns a different selection across repeated evaluations`() =
+        runTest {
+            val questionsJson = (1..20).joinToString(prefix = "[", postfix = "]", separator = ",") {
+                """{"id": $it, "title": "Q$it"}"""
+            }
+            val json = """{"data": $questionsJson}"""
+            // `answers` (not `returns`) so each of the repeated calls below gets a fresh, unread
+            // stream — reusing one instance would exhaust it after the first read and EOF the rest.
+            every { assetManager.open("json/many_questions_test.json") } answers
+                { ByteArrayInputStream(json.toByteArray()) }
+            preferenceRepositoryFake.setNumberQuestions("5")
 
-        val selections = (1..20).map {
-            repository.getQuestionsByCategory("1", "many_questions_test.json", isTake = true).first().map { q -> q.title }
-        }
+            val selections = (1..20).map {
+                repository.getQuestionsByCategory(
+                    "1",
+                    "many_questions_test.json",
+                    isTake = true
+                ).first().map { q ->
+                    q.title
+                }
+            }
 
-        // Regression guard for the "same questions every evaluation" bug: with 20 questions and
-        // a random 5-question sample, seeing the identical selection on every one of 20 runs
-        // would only happen if the shuffle is missing (or broken), not by chance.
-        Truth.assertThat(selections.toSet().size).isGreaterThan(1)
-    }
+            // Regression guard for the "same questions every evaluation" bug: with 20 questions and
+            // a random 5-question sample, seeing the identical selection on every one of 20 runs
+            // would only happen if the shuffle is missing (or broken), not by chance.
+            Truth.assertThat(selections.toSet().size).isGreaterThan(1)
+        }
 }

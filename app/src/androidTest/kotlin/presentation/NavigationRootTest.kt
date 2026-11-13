@@ -30,9 +30,8 @@ class NavigationRootTest {
 
     private lateinit var navController: TestNavHostController
 
-
     @Test
-    fun navigationRoot_whenInitScreen_showLoginScreen(){
+    fun navigationRoot_whenInitScreen_showLoginScreen() {
         composeRule.setContent {
             navController = TestNavHostController(LocalContext.current)
             navController.navigatorProvider.addNavigator(ComposeNavigator())

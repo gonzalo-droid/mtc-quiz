@@ -29,10 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 
 @Composable
-fun WebViewWithOffline(
-    url: String,
-    modifier: Modifier = Modifier
-) {
+fun WebViewWithOffline(url: String, modifier: Modifier = Modifier) {
     var loadError by remember { mutableStateOf(false) }
 
     if (loadError) {

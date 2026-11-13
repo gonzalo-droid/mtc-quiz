@@ -19,9 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
 
 @Composable
-fun TarifasScreenRoot(
-    navigateBack: () -> Unit
-) {
+fun TarifasScreenRoot(navigateBack: () -> Unit) {
     TarifasScreen(
         onNavigateUp = navigateBack
     )
@@ -29,9 +27,7 @@ fun TarifasScreenRoot(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TarifasScreen(
-    onNavigateUp: () -> Unit
-) {
+fun TarifasScreen(onNavigateUp: () -> Unit) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -59,7 +55,9 @@ fun TarifasScreen(
                     settings.javaScriptEnabled = true
                     settings.domStorageEnabled = true
                     webViewClient = WebViewClient()
-                    loadUrl("https://www.gob.pe/196-obtener-licencia-de-conducir-brevete-por-primera-vez-rendir-examen-de-reglas-de-transito-para-obtener-licencia-de-conducir-brevete")
+                    loadUrl(
+                        "https://www.gob.pe/196-obtener-licencia-de-conducir-brevete-por-primera-vez-rendir-examen-de-reglas-de-transito-para-obtener-licencia-de-conducir-brevete"
+                    )
                 }
             }
         )

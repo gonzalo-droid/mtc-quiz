@@ -12,39 +12,35 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
 
-class PdfBitmapConverter(
-    private val context: Context
-) {
-    suspend fun pdfToBitmaps(contentUri: Uri): List<Bitmap> {
-        return withContext(Dispatchers.IO) {
-            context
-                .contentResolver
-                .openFileDescriptor(contentUri, "r")
-                ?.use { descriptor ->
-                    PdfRenderer(descriptor).use { renderer ->
-                        (0 until renderer.pageCount).map { index ->
-                            async {
-                                renderer.openPage(index).use { page ->
-                                    val bitmap = createBitmap(page.width, page.height)
+class PdfBitmapConverter(private val context: Context) {
+    suspend fun pdfToBitmaps(contentUri: Uri): List<Bitmap> = withContext(Dispatchers.IO) {
+        context
+            .contentResolver
+            .openFileDescriptor(contentUri, "r")
+            ?.use { descriptor ->
+                PdfRenderer(descriptor).use { renderer ->
+                    (0 until renderer.pageCount).map { index ->
+                        async {
+                            renderer.openPage(index).use { page ->
+                                val bitmap = createBitmap(page.width, page.height)
 
-                                    val canvas = Canvas(bitmap).apply {
-                                        drawColor(Color.WHITE)
-                                        drawBitmap(bitmap, 0f, 0f, null)
-                                    }
-
-                                    page.render(
-                                        bitmap,
-                                        null,
-                                        null,
-                                        PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY
-                                    )
-
-                                    bitmap
+                                val canvas = Canvas(bitmap).apply {
+                                    drawColor(Color.WHITE)
+                                    drawBitmap(bitmap, 0f, 0f, null)
                                 }
+
+                                page.render(
+                                    bitmap,
+                                    null,
+                                    null,
+                                    PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY
+                                )
+
+                                bitmap
                             }
-                        }.awaitAll()
-                    }
-                } ?: emptyList()
-        }
+                        }
+                    }.awaitAll()
+                }
+            } ?: emptyList()
     }
 }

@@ -153,10 +153,7 @@ fun ReviewErrorsScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun SwipeToDismissItem(
-    error: FrequentError,
-    onDismiss: () -> Unit
-) {
+private fun SwipeToDismissItem(error: FrequentError, onDismiss: () -> Unit) {
     val dismissState = rememberSwipeToDismissBoxState()
 
     LaunchedEffect(dismissState.currentValue) {

@@ -9,11 +9,7 @@ import kotlin.math.ceil
  * y 80 % hay que acertar 32, y eso el usuario lo calculaba de cabeza. Estas propiedades son
  * las que la pantalla muestra mientras se mueven los controles.
  */
-data class EvaluationSetup(
-    val minutes: Int,
-    val questions: Int,
-    val passPercentage: Int
-) {
+data class EvaluationSetup(val minutes: Int, val questions: Int, val passPercentage: Int) {
     /** Aciertos necesarios para aprobar. Se redondea hacia arriba: con 10 al 75 % son 8, no 7. */
     val correctToPass: Int
         get() = if (questions <= 0) 0 else ceil(questions * passPercentage / 100.0).toInt()

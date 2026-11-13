@@ -44,10 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
-fun StatsScreenRoot(
-    viewModel: StatsViewModel = hiltViewModel(),
-    navigateBack: () -> Unit
-) {
+fun StatsScreenRoot(viewModel: StatsViewModel = hiltViewModel(), navigateBack: () -> Unit) {
     val state by viewModel.state.collectAsState()
     StatsScreen(state = state, navigateBack = navigateBack)
 }
@@ -132,14 +129,18 @@ fun StatsScreen(state: StatsState, navigateBack: () -> Unit) {
                 item {
                     Card(
                         modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow)
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+                        )
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
                             Text("Tasa de aprobación", style = MaterialTheme.typography.titleSmall)
                             Spacer(Modifier.height(12.dp))
                             LinearProgressIndicator(
                                 progress = { state.approvalRate },
-                                modifier = Modifier.fillMaxWidth().height(8.dp).clip(RoundedCornerShape(4.dp)),
+                                modifier = Modifier.fillMaxWidth().height(
+                                    8.dp
+                                ).clip(RoundedCornerShape(4.dp)),
                                 color = Color(0xFF4CAF50),
                                 trackColor = MaterialTheme.colorScheme.surfaceVariant
                             )
@@ -158,14 +159,19 @@ fun StatsScreen(state: StatsState, navigateBack: () -> Unit) {
                 item {
                     Card(
                         modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow)
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+                        )
                     ) {
                         Row(
                             modifier = Modifier.fillMaxWidth().padding(16.dp),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Column {
-                                Text("Preguntas respondidas", style = MaterialTheme.typography.titleSmall)
+                                Text(
+                                    "Preguntas respondidas",
+                                    style = MaterialTheme.typography.titleSmall
+                                )
                                 Text(
                                     "${state.totalQuestionsAnswered}",
                                     style = MaterialTheme.typography.headlineSmall,
@@ -197,21 +203,39 @@ fun StatsScreen(state: StatsState, navigateBack: () -> Unit) {
                     items(state.categoryStats) { cat ->
                         Card(
                             modifier = Modifier.fillMaxWidth(),
-                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow)
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+                            )
                         ) {
                             Column(modifier = Modifier.padding(16.dp)) {
                                 Row(
                                     modifier = Modifier.fillMaxWidth(),
                                     horizontalArrangement = Arrangement.SpaceBetween
                                 ) {
-                                    Text(cat.categoryTitle, style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Medium)
-                                    Text("${(cat.approvalRate * 100).toInt()}%", style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Bold)
+                                    Text(
+                                        cat.categoryTitle,
+                                        style = MaterialTheme.typography.bodyLarge,
+                                        fontWeight = FontWeight.Medium
+                                    )
+                                    Text(
+                                        "${(cat.approvalRate * 100).toInt()}%",
+                                        style = MaterialTheme.typography.bodyLarge,
+                                        fontWeight = FontWeight.Bold
+                                    )
                                 }
                                 Spacer(Modifier.height(8.dp))
                                 LinearProgressIndicator(
                                     progress = { cat.approvalRate },
-                                    modifier = Modifier.fillMaxWidth().height(6.dp).clip(RoundedCornerShape(3.dp)),
-                                    color = if (cat.approvalRate >= 0.7f) Color(0xFF4CAF50) else MaterialTheme.colorScheme.error,
+                                    modifier = Modifier.fillMaxWidth().height(
+                                        6.dp
+                                    ).clip(RoundedCornerShape(3.dp)),
+                                    color = if (cat.approvalRate >=
+                                        0.7f
+                                    ) {
+                                        Color(0xFF4CAF50)
+                                    } else {
+                                        MaterialTheme.colorScheme.error
+                                    },
                                     trackColor = MaterialTheme.colorScheme.surfaceVariant
                                 )
                                 Spacer(Modifier.height(4.dp))
@@ -239,7 +263,9 @@ fun StatCard(
 ) {
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow)
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+        )
     ) {
         Column(
             modifier = Modifier.padding(12.dp),
@@ -247,8 +273,17 @@ fun StatCard(
         ) {
             Icon(icon, contentDescription = null, tint = color, modifier = Modifier.size(24.dp))
             Spacer(Modifier.height(8.dp))
-            Text(value, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = color)
-            Text(title, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(
+                value,
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+                color = color
+            )
+            Text(
+                title,
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         }
     }
 }

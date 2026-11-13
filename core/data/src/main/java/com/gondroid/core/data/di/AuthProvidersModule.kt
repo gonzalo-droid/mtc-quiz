@@ -15,9 +15,6 @@ object AuthProvidersModule {
 
     @Provides
     @Singleton
-    fun provideCredentialManager(
-        @ApplicationContext context: Context
-    ): CredentialManager {
-        return CredentialManager.create(context)
-    }
+    fun provideCredentialManager(@ApplicationContext context: Context): CredentialManager =
+        CredentialManager.create(context)
 }

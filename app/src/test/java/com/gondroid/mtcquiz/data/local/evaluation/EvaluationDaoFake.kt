@@ -20,17 +20,17 @@ class EvaluationDaoFake : EvaluationDao {
         )
     }.toMutableList()
 
-    override fun getAllEvaluations(): Flow<List<EvaluationEntity>> {
-        return flow { emit(evaluations.map { it.toEntity() }) }
+    override fun getAllEvaluations(): Flow<List<EvaluationEntity>> = flow {
+        emit(evaluations.map { it.toEntity() })
     }
 
-    override fun getAllEvaluations(categoryId: String): Flow<List<EvaluationEntity>> {
-        return flow { emit(evaluations.filter { it.categoryId == categoryId }.map { it.toEntity() }) }
+    override fun getAllEvaluations(categoryId: String): Flow<List<EvaluationEntity>> = flow {
+        emit(evaluations.filter { it.categoryId == categoryId }.map { it.toEntity() })
     }
 
-    override suspend fun getEvaluationById(id: String): EvaluationEntity? {
-        return evaluations.find { it.id == id }?.toEntity()
-    }
+    override suspend fun getEvaluationById(id: String): EvaluationEntity? = evaluations.find {
+        it.id == id
+    }?.toEntity()
 
     override suspend fun upsertEvaluation(evaluation: EvaluationEntity) {
         val element = evaluations.find { it.id == evaluation.id }

@@ -10,6 +10,8 @@ import com.gondroid.core.domain.repository.PreferenceRepository
 import com.gondroid.core.domain.repository.QuizRepository
 import com.gondroid.core.presentation.ui.EvaluationScreenRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.util.UUID
+import javax.inject.Inject
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,8 +19,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.util.UUID
-import javax.inject.Inject
 
 @HiltViewModel
 class EvaluationScreenViewModel
@@ -32,7 +32,7 @@ constructor(
     private var _state = MutableStateFlow(EvaluationState())
     val state = _state.asStateFlow()
 
-    private val _resultsList = mutableListOf<QuestionResult>()
+    private val resultsList = mutableListOf<QuestionResult>()
 
     private var eventChannel = Channel<EvaluationEvent>()
     val event = eventChannel.receiveAsFlow()
@@ -90,7 +90,7 @@ constructor(
     fun verifyAnswer(isCorrect: Boolean, option: String) {
         if (_state.value.answerWasVerified) return
         val currentQuestion = _state.value.question
-        _resultsList.add(
+        resultsList.add(
             QuestionResult(
                 id = UUID.randomUUID().toString(),
                 questionId = currentQuestion.id,
@@ -110,7 +110,7 @@ constructor(
     }
 
     fun saveExam() {
-        val correctAnswers = _resultsList.count { it.isCorrect }
+        val correctAnswers = resultsList.count { it.isCorrect }
         val totalTask = _state.value.questions.size
         val incorrectAnswers = totalTask - correctAnswers
 
@@ -122,7 +122,7 @@ constructor(
                 totalCorrect = correctAnswers,
                 totalIncorrect = incorrectAnswers,
                 totalQuestions = totalTask,
-                questionResults = _resultsList.toList()
+                questionResults = resultsList.toList()
             )
             repository.saveEvaluation(evaluation = evaluation)
             preferenceRepository.recordStudySession()

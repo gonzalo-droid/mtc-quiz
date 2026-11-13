@@ -24,6 +24,9 @@ import com.gondroid.core.data.di.ApplicationScope
 import com.gondroid.core.domain.model.BillingPeriod
 import com.gondroid.core.domain.model.SubscriptionPlan
 import com.gondroid.core.domain.repository.PremiumRepository
+import javax.inject.Inject
+import javax.inject.Singleton
+import kotlin.coroutines.resume
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,9 +37,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import timber.log.Timber
-import javax.inject.Inject
-import javax.inject.Singleton
-import kotlin.coroutines.resume
 
 @Singleton
 class PremiumRepositoryImpl @Inject constructor(
@@ -44,7 +44,8 @@ class PremiumRepositoryImpl @Inject constructor(
     private val analyticsManager: AnalyticsManager,
     @ApplicationScope private val scope: CoroutineScope,
     private val billingClientFactory: BillingClientFactory
-) : PremiumRepository, BillingLauncher {
+) : PremiumRepository,
+    BillingLauncher {
 
     companion object {
         const val PRODUCT_ID_MONTHLY = "mtcquiz_premium_monthly"
@@ -53,11 +54,12 @@ class PremiumRepositoryImpl @Inject constructor(
         val IS_PREMIUM_CACHED_KEY = booleanPreferencesKey("cached_is_premium")
     }
 
-    private val _isPremium = MutableStateFlow(false)
-    override val isPremiumFlow: StateFlow<Boolean> = _isPremium.asStateFlow()
+    private val _isPremiumFlow = MutableStateFlow(false)
+    override val isPremiumFlow: StateFlow<Boolean> = _isPremiumFlow.asStateFlow()
 
-    private val _availablePlans = MutableStateFlow<List<SubscriptionPlan>>(emptyList())
-    override val availablePlansFlow: Flow<List<SubscriptionPlan>> = _availablePlans.asStateFlow()
+    private val _availablePlansFlow = MutableStateFlow<List<SubscriptionPlan>>(emptyList())
+    override val availablePlansFlow: Flow<List<SubscriptionPlan>> =
+        _availablePlansFlow.asStateFlow()
 
     /** ProductDetails reales cacheados desde la última consulta a Play, para lanzar la compra sin re-consultar. */
     private val productDetailsCache = mutableMapOf<String, ProductDetails>()
@@ -69,7 +71,9 @@ class PremiumRepositoryImpl @Inject constructor(
             }
             BillingClient.BillingResponseCode.USER_CANCELED -> {
                 Timber.d("Billing: user canceled subscription flow")
-                analyticsManager.logPurchaseCanceled(purchases?.firstOrNull()?.products?.firstOrNull() ?: "unknown")
+                analyticsManager.logPurchaseCanceled(
+                    purchases?.firstOrNull()?.products?.firstOrNull() ?: "unknown"
+                )
             }
             else -> {
                 Timber.e("Billing: purchase failed with code ${billingResult.responseCode}")
@@ -85,7 +89,7 @@ class PremiumRepositoryImpl @Inject constructor(
 
     init {
         scope.launch {
-            _isPremium.value = dataStore.data.map { it[IS_PREMIUM_CACHED_KEY] ?: false }.first()
+            _isPremiumFlow.value = dataStore.data.map { it[IS_PREMIUM_CACHED_KEY] ?: false }.first()
         }
     }
 
@@ -121,7 +125,9 @@ class PremiumRepositoryImpl @Inject constructor(
         val result: ProductDetailsResult = billingClient.queryProductDetails(params)
 
         if (result.billingResult.responseCode != BillingClient.BillingResponseCode.OK) {
-            Timber.e("Billing: failed to query product details: ${result.billingResult.debugMessage}")
+            Timber.e(
+                "Billing: failed to query product details: ${result.billingResult.debugMessage}"
+            )
             return
         }
 
@@ -129,7 +135,7 @@ class PremiumRepositoryImpl @Inject constructor(
             productDetailsCache[details.productId] = details
             mapToSubscriptionPlan(details)
         }
-        _availablePlans.value = plans
+        _availablePlansFlow.value = plans
     }
 
     internal fun mapToSubscriptionPlan(details: ProductDetails): SubscriptionPlan? {
@@ -204,7 +210,7 @@ class PremiumRepositoryImpl @Inject constructor(
     }
 
     internal fun updateIsPremium(value: Boolean) {
-        _isPremium.value = value
+        _isPremiumFlow.value = value
         scope.launch {
             dataStore.edit { prefs -> prefs[IS_PREMIUM_CACHED_KEY] = value }
         }
@@ -233,6 +239,6 @@ class PremiumRepositoryImpl @Inject constructor(
     override suspend fun restorePurchases() {
         analyticsManager.logRestoreClicked()
         refreshPurchaseState()
-        analyticsManager.logRestoreCompleted(_isPremium.value)
+        analyticsManager.logRestoreCompleted(_isPremiumFlow.value)
     }
 }

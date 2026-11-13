@@ -15,7 +15,10 @@ class QuizRepositoryFake : QuizRepository {
             title = "CLASE A - CATEGORIA I",
             category = "A-I",
             classType = "A",
-            description = "Es el más común y te permite manejar carros como sedanes, coupé , hatchback, convertibles, station wagon, SUV, Areneros, Pickup y furgones. Es necesaria para obtener las demás licencias de Clase A.",
+            description =
+            "Es el más común y te permite manejar carros como sedanes, coupé , hatchback, " +
+                "convertibles, station wagon, SUV, Areneros, Pickup y furgones. Es necesaria " +
+                "para obtener las demás licencias de Clase A.",
             pdf = "CLASE_A_I.pdf"
         ),
         Category(
@@ -23,7 +26,10 @@ class QuizRepositoryFake : QuizRepository {
             title = "CLASE A - CATEGORIA II-A",
             category = "A-IIa",
             classType = "A",
-            description = "Los mismos que A-1 y también carros oficiales de transporte de pasajeros como Taxis, Buses, Ambulancias y Transporte Interprovincial. Primero debes obtener la Licencia A-I",
+            description =
+            "Los mismos que A-1 y también carros oficiales de transporte de pasajeros como " +
+                "Taxis, Buses, Ambulancias y Transporte Interprovincial. Primero debes obtener " +
+                "la Licencia A-I",
             pdf = "CLASE_A_I.pdf"
         )
     )
@@ -57,7 +63,12 @@ class QuizRepositoryFake : QuizRepository {
                 topic = "Informática",
                 title = "¿Qué es HTML?",
                 answer = "c",
-                options = listOf("Un lenguaje de backend", "Un compilador", "Un lenguaje de marcado", "Una base de datos")
+                options = listOf(
+                    "Un lenguaje de backend",
+                    "Un compilador",
+                    "Un lenguaje de marcado",
+                    "Una base de datos"
+                )
             )
         )
     )
@@ -67,8 +78,8 @@ class QuizRepositoryFake : QuizRepository {
     override val categoriesFlow: Flow<List<Category>>
         get() = flow { emit(fakeCategories) }
 
-    override suspend fun getCategoryById(categoryId: String): Category? {
-        return fakeCategories.find { it.id == categoryId }
+    override suspend fun getCategoryById(categoryId: String): Category? = fakeCategories.find {
+        it.id == categoryId
     }
 
     override suspend fun getQuestionsByCategory(
@@ -85,11 +96,12 @@ class QuizRepositoryFake : QuizRepository {
         fakeEvaluations.add(evaluation)
     }
 
-    override suspend fun getEvaluationById(evaluationId: String): Evaluation? {
-        return fakeEvaluations.find { it.id == evaluationId }
-    }
+    override suspend fun getEvaluationById(evaluationId: String): Evaluation? =
+        fakeEvaluations.find {
+            it.id == evaluationId
+        }
 
-    override fun getAllEvaluations(): Flow<List<Evaluation>> {
-        return flow { emit(fakeEvaluations.toList()) }
+    override fun getAllEvaluations(): Flow<List<Evaluation>> = flow {
+        emit(fakeEvaluations.toList())
     }
 }

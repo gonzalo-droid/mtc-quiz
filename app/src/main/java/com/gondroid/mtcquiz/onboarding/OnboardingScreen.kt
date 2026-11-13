@@ -45,26 +45,30 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun OnboardingScreen(
-    onFinish: () -> Unit
-) {
+fun OnboardingScreen(onFinish: () -> Unit) {
     val pages = listOf(
         OnboardingPage(
             icon = Icons.Default.School,
             title = "Practica para tu examen",
-            description = "Prepárate para el examen de licencia de conducir del MTC con cientos de preguntas actualizadas por categoría",
+            description =
+            "Prepárate para el examen de licencia de conducir del MTC con cientos de " +
+                "preguntas actualizadas por categoría",
             accentColor = Color(0xFF3949AB)
         ),
         OnboardingPage(
             icon = Icons.Default.BarChart,
             title = "Evalúa tu progreso",
-            description = "Simulacros cronometrados, historial de evaluaciones y estadísticas para saber en qué mejorar",
+            description =
+            "Simulacros cronometrados, historial de evaluaciones y estadísticas para saber " +
+                "en qué mejorar",
             accentColor = PremiumGold
         ),
         OnboardingPage(
             icon = Icons.Default.PhoneAndroid,
             title = "Estudia donde quieras",
-            description = "Todo el contenido disponible offline. Revisa el temario en PDF y repasa tus errores frecuentes",
+            description =
+            "Todo el contenido disponible offline. Revisa el temario en PDF y repasa tus " +
+                "errores frecuentes",
             accentColor = Color(0xFF4CAF50)
         )
     )

@@ -7,7 +7,6 @@ import com.gondroid.mtcquiz.domain.models.Category
 import com.gondroid.mtcquiz.domain.models.Question
 import com.gondroid.mtcquiz.presentation.screens.evaluation.EvaluationDataState
 import com.gondroid.mtcquiz.presentation.screens.evaluation.EvaluationScreen
-import com.gondroid.mtcquiz.presentation.screens.evaluation.EvaluationScreenRoot
 import org.junit.Rule
 import org.junit.Test
 import util.MainDispatcherRule
@@ -19,7 +18,6 @@ class EvaluationScreenRootTest {
 
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
-
 
     @Test
     fun evaluationScreen_whenInitScreen_showFirstQuestion() {
@@ -38,7 +36,6 @@ class EvaluationScreenRootTest {
         composeRule.onNodeWithText("1.- Pregunta 1").assertExists()
     }
 }
-
 
 fun previewEvaluationState() = EvaluationDataState(
     questions = (1..5).map {
@@ -62,7 +59,7 @@ fun previewEvaluationState() = EvaluationDataState(
     category = Category(
         id = "1",
         title = "Categoría 1",
-        description = "Descripción de la categoría 1",
+        description = "Descripción de la categoría 1"
     ),
     totalMinutes = 1
 )

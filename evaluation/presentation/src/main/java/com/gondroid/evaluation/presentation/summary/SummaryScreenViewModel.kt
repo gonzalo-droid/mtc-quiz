@@ -10,10 +10,10 @@ import androidx.navigation.toRoute
 import com.gondroid.core.domain.repository.QuizRepository
 import com.gondroid.core.presentation.ui.SummaryScreenRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import javax.inject.Inject
+import kotlinx.coroutines.launch
 
 @HiltViewModel
 class SummaryScreenViewModel

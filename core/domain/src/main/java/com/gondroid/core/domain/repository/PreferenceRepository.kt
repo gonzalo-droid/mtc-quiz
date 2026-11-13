@@ -12,53 +12,37 @@ interface PreferenceRepository {
     val darkModeFlow: Flow<Boolean>
     val themeModeFlow: Flow<String>
 
-    suspend fun setDarkMode(
-        enabled: Boolean
-    )
+    suspend fun setDarkMode(enabled: Boolean)
 
     suspend fun setThemeMode(mode: String)
 
     val userNameFlow: Flow<String>
 
-    suspend fun setUserName(
-        name: String
-    )
+    suspend fun setUserName(name: String)
 
     val photoUrlFlow: Flow<String>
 
-    suspend fun setPhotoUrl(
-        url: String
-    )
+    suspend fun setPhotoUrl(url: String)
 
     val isLoggedInFlow: Flow<Boolean>
 
-    suspend fun setIsLoggedIn(
-        isLoggedIn: Boolean
-    )
+    suspend fun setIsLoggedIn(isLoggedIn: Boolean)
 
     val isOnboardingShownFlow: Flow<Boolean>
 
-    suspend fun setIsOnboardingShown(
-        isOnboardingShown: Boolean
-    )
+    suspend fun setIsOnboardingShown(isOnboardingShown: Boolean)
 
     val numberQuestionsFlow: Flow<String>
 
-    suspend fun setNumberQuestions(
-        value: String
-    )
+    suspend fun setNumberQuestions(value: String)
 
     val percentageToApprovedEvaluationFlow: Flow<String>
 
-    suspend fun setPercentageToApprovedEvaluation(
-        value: String
-    )
+    suspend fun setPercentageToApprovedEvaluation(value: String)
 
     val timeToFinishEvaluationFlow: Flow<String>
 
-    suspend fun setTimeToFinishEvaluation(
-        value: String
-    )
+    suspend fun setTimeToFinishEvaluation(value: String)
 
     suspend fun getInitEvaluation(): PreferencesEvaluation
 

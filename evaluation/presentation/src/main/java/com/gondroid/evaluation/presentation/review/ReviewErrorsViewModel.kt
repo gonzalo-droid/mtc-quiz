@@ -6,12 +6,12 @@ import com.gondroid.core.database.dao.DismissedQuestionDao
 import com.gondroid.core.database.entity.DismissedQuestionEntity
 import com.gondroid.core.domain.repository.QuizRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
 class ReviewErrorsViewModel @Inject constructor(

@@ -125,7 +125,11 @@ fun EvaluationScreen(
     val progress by remember(state.indexQuestion) {
         derivedStateOf {
             if (state.questions.size > 1) {
-                (state.indexQuestion.toFloat() / (state.questions.size - 1).coerceAtLeast(1)).coerceIn(
+                (
+                    state.indexQuestion.toFloat() / (state.questions.size - 1).coerceAtLeast(
+                        1
+                    )
+                    ).coerceIn(
                     0f,
                     1f
                 )
@@ -233,9 +237,14 @@ fun EvaluationScreen(
                             val letter = ('a' + index).uppercaseChar().toString()
                             val optionState = when {
                                 state.answerWasSelected -> when {
-                                    option == selectedOption && isCorrectAnswerSelected -> AnswerOptionState.RevealedCorrect
-                                    option == selectedOption && !isCorrectAnswerSelected -> AnswerOptionState.RevealedIncorrect
-                                    !isCorrectAnswerSelected && state.question.isCorrectAnswer(index) -> AnswerOptionState.CorrectAnswerHint
+                                    option == selectedOption && isCorrectAnswerSelected ->
+                                        AnswerOptionState.RevealedCorrect
+                                    option == selectedOption && !isCorrectAnswerSelected ->
+                                        AnswerOptionState.RevealedIncorrect
+                                    !isCorrectAnswerSelected &&
+                                        state.question.isCorrectAnswer(
+                                            index
+                                        ) -> AnswerOptionState.CorrectAnswerHint
                                     else -> AnswerOptionState.Unselected
                                 }
                                 option == selectedOption -> AnswerOptionState.Selected
@@ -298,10 +307,10 @@ fun EvaluationScreen(
                     EvaluationAction.ConfirmCancel
                 )
             }, onDismiss = {
-                    onAction(
-                        EvaluationAction.DismissDialog
-                    )
-                })
+                onAction(
+                    EvaluationAction.DismissDialog
+                )
+            })
         }
     }
 }
@@ -364,10 +373,7 @@ fun FinishedTimeDialog(onDismiss: () -> Unit) {
 }
 
 @Composable
-fun CancelEvaluation(
-    onConfirmCancel: () -> Unit,
-    onDismiss: () -> Unit
-) {
+fun CancelEvaluation(onConfirmCancel: () -> Unit, onDismiss: () -> Unit) {
     AlertDialog(
         onDismissRequest = {},
         title = {

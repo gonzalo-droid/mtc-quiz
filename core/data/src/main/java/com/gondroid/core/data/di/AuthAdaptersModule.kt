@@ -15,9 +15,7 @@ abstract class AuthAdaptersModule {
 
     @Binds
     @IntoSet
-    abstract fun bindGoogleAuthAdapter(
-        googleAuthAdapter: GoogleAuthAdapter
-    ): AuthProviderAdapter
+    abstract fun bindGoogleAuthAdapter(googleAuthAdapter: GoogleAuthAdapter): AuthProviderAdapter
 
     @Binds
     @IntoSet

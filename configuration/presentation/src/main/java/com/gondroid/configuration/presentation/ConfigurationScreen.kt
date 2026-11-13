@@ -113,12 +113,7 @@ fun ConfigurationScreenRoot(
 }
 
 @Composable
-fun ItemList(
-    icon: ImageVector,
-    title: String,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
+fun ItemList(icon: ImageVector, title: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
     Surface(
         onClick = onClick,
         modifier = modifier.fillMaxWidth(),
@@ -248,22 +243,45 @@ fun ConfigurationScreen(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            listOf("system" to "Sistema", "light" to "Claro", "dark" to "Oscuro").forEach { (mode, label) ->
+                            listOf(
+                                "system" to "Sistema",
+                                "light" to "Claro",
+                                "dark" to "Oscuro"
+                            ).forEach { (mode, label) ->
                                 val selected = state.themeMode == mode
                                 Surface(
                                     onClick = { onAction(ConfigurationAction.SetThemeMode(mode)) },
                                     modifier = Modifier.weight(1f),
                                     shape = RoundedCornerShape(8.dp),
-                                    color = if (selected) MaterialTheme.colorScheme.primary else Color.Transparent,
-                                    border = if (!selected) BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant) else null
+                                    color = if (selected) {
+                                        MaterialTheme.colorScheme.primary
+                                    } else {
+                                        Color.Transparent
+                                    },
+                                    border = if (!selected) {
+                                        BorderStroke(
+                                            1.dp,
+                                            MaterialTheme.colorScheme.outlineVariant
+                                        )
+                                    } else {
+                                        null
+                                    }
                                 ) {
                                     Text(
                                         text = label,
                                         modifier = Modifier.padding(vertical = 8.dp),
                                         textAlign = TextAlign.Center,
                                         style = MaterialTheme.typography.labelMedium,
-                                        fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal,
-                                        color = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
+                                        fontWeight = if (selected) {
+                                            FontWeight.SemiBold
+                                        } else {
+                                            FontWeight.Normal
+                                        },
+                                        color = if (selected) {
+                                            MaterialTheme.colorScheme.onPrimary
+                                        } else {
+                                            MaterialTheme.colorScheme.onSurfaceVariant
+                                        }
                                     )
                                 }
                             }

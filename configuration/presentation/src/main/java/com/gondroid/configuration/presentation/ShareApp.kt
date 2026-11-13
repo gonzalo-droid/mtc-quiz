@@ -9,7 +9,10 @@ class ShareApp {
         val playStoreLink = "https://play.google.com/store/apps/details?id=${context.packageName}"
         val sendIntent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
-            putExtra(Intent.EXTRA_TEXT, "Prepárate para tu examen de manejo con MTCQuiz: $playStoreLink")
+            putExtra(
+                Intent.EXTRA_TEXT,
+                "Prepárate para tu examen de manejo con MTCQuiz: $playStoreLink"
+            )
         }
         context.startActivity(Intent.createChooser(sendIntent, "Compartir MTCQuiz"))
     }
