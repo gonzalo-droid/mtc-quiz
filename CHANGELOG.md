@@ -8,6 +8,9 @@ El formato sigue (aproximadamente) [Keep a Changelog](https://keepachangelog.com
 
 ## [1.2.5] - 2026-11-13 (versionCode 10)
 
+### Changed
+- **Upgrade del build a Gradle 9.9.1 y AGP 9.5.1** con el Kotlin integrado de AGP (KSP 2.3.13, Hilt 2.60.1, ktlint 1.x con estilo `android_studio`). Sin cambios visibles para el usuario; R8 pasa a su modo estricto de reglas de keep, y Firebase necesitó reglas propias para conservar los constructores de sus `ComponentRegistrar` (sin ellas el release se cerraba al abrir).
+
 ### Fixed
 - B-IIA, B-IIB y B-IIC, preguntas 13 a 15 (señales en imagen): las opciones decían el tipo de cada señal —"(informativa de ruta)", "(reguladora)", "preventiva"—, justo lo que la pregunta evalúa. El PDF solo trae las imágenes; ahora el texto describe lo que se ve en cada señal sin clasificarla. Las respuestas no cambian.
 - La pantalla de Estudio de A-IIIB y A-IIIC podía cerrarse sola al buscar: esos bancos repiten ids (el PDF reinicia la numeración en su segunda tabla) y la lista usaba el id como clave, así que dos resultados con el mismo id en pantalla —buscar "asiento" en A-IIIB— rompían la lista. Ahora la clave es la posición de la pregunta en el banco.
