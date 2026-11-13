@@ -73,8 +73,12 @@ fun QuestionsScreen(
 ) {
     var isSearchExpanded by remember { mutableStateOf(false) }
     var searchText by remember { mutableStateOf("") }
-    val filteredItems = state.questions.filter {
-        it.title.normalizeText().contains(searchText.normalizeText(), ignoreCase = true)
+    // Keep each question's position in the full bank: it is the LazyColumn key. question.id
+    // cannot be, because a3b/a3c restart their numbering for the PDF's second table (ids
+    // 1..71 / 1..139 appear twice), and two items with the same key on screen at once —
+    // e.g. searching "asiento" in a3b brings up both id 63s — crash the LazyColumn.
+    val filteredItems = state.questions.withIndex().filter { (_, question) ->
+        question.title.normalizeText().contains(searchText.normalizeText(), ignoreCase = true)
     }
 
     val scrollState = rememberLazyListState()
@@ -203,8 +207,8 @@ fun QuestionsScreen(
                 ) {
                     items(
                         items = filteredItems,
-                        key = { questions -> questions.id }
-                    ) { question ->
+                        key = { (position, _) -> position }
+                    ) { (_, question) ->
                         QuestionAnswerCard(
                             modifier = Modifier.fillMaxWidth(),
                             title = "${question.id}.- ${question.title}",

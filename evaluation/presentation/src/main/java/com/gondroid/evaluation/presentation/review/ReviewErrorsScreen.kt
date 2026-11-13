@@ -138,11 +138,11 @@ fun ReviewErrorsScreen(
                     }
                     items(
                         items = state.frequentErrors,
-                        key = { it.questionId }
+                        key = { it.key }
                     ) { error ->
                         SwipeToDismissItem(
                             error = error,
-                            onDismiss = { onDismissQuestion(error.questionId) }
+                            onDismiss = { onDismissQuestion(error.key) }
                         )
                     }
                 }

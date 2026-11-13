@@ -6,6 +6,8 @@ data class ReviewErrorsState(
 )
 
 data class FrequentError(
+    /** [errorKey] of the question: what the list is keyed by and what a dismissal stores. */
+    val key: Int,
     val questionId: Int,
     val question: String,
     val failCount: Int,
