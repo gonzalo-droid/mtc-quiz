@@ -2,6 +2,7 @@ package com.gondroid.mtcquiz
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gondroid.core.domain.repository.FeatureFlagsRepository
 import com.gondroid.core.domain.repository.PreferenceRepository
 import com.gondroid.core.domain.repository.PremiumRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +20,8 @@ class MainViewModel
 @Inject
 constructor(
     private val preferenceRepository: PreferenceRepository,
-    private val premiumRepository: PremiumRepository
+    private val premiumRepository: PremiumRepository,
+    private val featureFlagsRepository: FeatureFlagsRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(AuthState())
@@ -55,6 +57,10 @@ constructor(
 
         viewModelScope.launch {
             premiumRepository.refreshPurchaseState()
+        }
+
+        viewModelScope.launch {
+            featureFlagsRepository.refresh()
         }
     }
 }

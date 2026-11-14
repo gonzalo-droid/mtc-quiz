@@ -87,7 +87,7 @@ fun DetailScreenRoot(
                 val act = activity
                 if (act != null) {
                     viewModel.adsManager.showEvaluationInterstitial(act) { adWasShown ->
-                        if (adWasShown) showUpsellDialog = true
+                        if (adWasShown && state.isPremiumOfferEnabled) showUpsellDialog = true
                         viewModel.onInterstitialClosed(state.category.id)
                     }
                 } else {
@@ -97,7 +97,7 @@ fun DetailScreenRoot(
         }
     }
 
-    if (showUpsellDialog) {
+    if (showUpsellDialog && state.isPremiumOfferEnabled) {
         com.gondroid.core.presentation.designsystem.components.PremiumUpsellDialog(
             onGoToPremium = {
                 showUpsellDialog = false

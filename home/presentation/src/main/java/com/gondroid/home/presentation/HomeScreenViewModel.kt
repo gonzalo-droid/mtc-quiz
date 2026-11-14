@@ -2,6 +2,7 @@ package com.gondroid.home.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gondroid.core.domain.repository.FeatureFlagsRepository
 import com.gondroid.core.domain.repository.PreferenceRepository
 import com.gondroid.core.domain.repository.PremiumRepository
 import com.gondroid.core.domain.repository.QuizRepository
@@ -21,6 +22,7 @@ constructor(
     private val repository: QuizRepository,
     private val preferenceRepository: PreferenceRepository,
     private val premiumRepository: PremiumRepository,
+    private val featureFlagsRepository: FeatureFlagsRepository,
     @Named("admobBannerId") val bannerAdId: String
 ) : ViewModel() {
 
@@ -47,6 +49,12 @@ constructor(
         premiumRepository.isPremiumFlow.onEach { isPremium ->
             _state.update {
                 it.copy(isPremium = isPremium)
+            }
+        }.launchIn(viewModelScope)
+
+        featureFlagsRepository.isPremiumOfferEnabled.onEach { enabled ->
+            _state.update {
+                it.copy(isPremiumOfferEnabled = enabled)
             }
         }.launchIn(viewModelScope)
     }

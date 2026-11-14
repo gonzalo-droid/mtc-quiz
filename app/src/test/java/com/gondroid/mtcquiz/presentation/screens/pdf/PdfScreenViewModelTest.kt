@@ -3,6 +3,7 @@ package com.gondroid.mtcquiz.presentation.screens.pdf
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.gondroid.core.data.ads.AdsManager
+import com.gondroid.mtcquiz.presentation.screens.FeatureFlagsRepositoryFake
 import com.gondroid.mtcquiz.presentation.screens.QuizRepositoryFake
 import com.gondroid.mtcquiz.util.MainDispatcherRule
 import com.gondroid.pdf.presentation.PdfEvent
@@ -11,6 +12,7 @@ import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
 import org.junit.Test
@@ -30,12 +32,15 @@ class PdfScreenViewModelTest {
      * the "categoryId" key directly from the SavedStateHandle using kotlinx.serialization.
      * QuizRepositoryFake has categories with ids "1" and "2".
      */
-    private fun createViewModel(): PdfScreenViewModel {
+    private fun createViewModel(
+        featureFlagsRepository: FeatureFlagsRepositoryFake = FeatureFlagsRepositoryFake()
+    ): PdfScreenViewModel {
         val savedStateHandle = SavedStateHandle(mapOf("categoryId" to "1"))
         return PdfScreenViewModel(
             savedStateHandle = savedStateHandle,
             repository = QuizRepositoryFake(),
-            adsManager = adsManager
+            adsManager = adsManager,
+            featureFlagsRepository = featureFlagsRepository
         )
     }
 
@@ -68,5 +73,18 @@ class PdfScreenViewModelTest {
             vm.onInterstitialClosed()
             assertThat(awaitItem()).isEqualTo(PdfEvent.StartDownload)
         }
+    }
+
+    @Test
+    fun `state exposes the premium offer flag so the post-ad upsell can be hidden`() = runTest {
+        val flags = FeatureFlagsRepositoryFake(isPremiumOfferEnabled = true)
+        val vm = createViewModel(featureFlagsRepository = flags)
+        advanceUntilIdle()
+        assertThat(vm.state.value.isPremiumOfferEnabled).isTrue()
+
+        flags.premiumOfferEnabled.value = false
+        advanceUntilIdle()
+
+        assertThat(vm.state.value.isPremiumOfferEnabled).isFalse()
     }
 }

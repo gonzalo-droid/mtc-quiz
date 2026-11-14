@@ -7,6 +7,7 @@ import com.gondroid.core.data.analytics.AnalyticsManager
 import com.gondroid.core.data.billing.BillingLauncher
 import com.gondroid.core.domain.model.BillingPeriod
 import com.gondroid.core.domain.model.SubscriptionPlan
+import com.gondroid.core.domain.repository.FeatureFlagsRepository
 import com.gondroid.core.domain.repository.PremiumRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -14,6 +15,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -22,8 +24,25 @@ import kotlinx.coroutines.launch
 class PremiumViewModel @Inject constructor(
     private val premiumRepository: PremiumRepository,
     private val billingLauncher: BillingLauncher,
-    private val analyticsManager: AnalyticsManager
+    private val analyticsManager: AnalyticsManager,
+    featureFlagsRepository: FeatureFlagsRepository
 ) : ViewModel() {
+
+    /**
+     * False cuando la oferta Premium está apagada en Remote Config y el usuario no es premium: la
+     * pantalla se cierra sola. Quien ya pagó la sigue viendo ("¡Eres Premium!", restaurar compra).
+     * Eagerly y con valor inicial real, para no cerrar el paywall por un false transitorio.
+     */
+    val isPaywallAvailable: StateFlow<Boolean> = combine(
+        premiumRepository.isPremiumFlow,
+        featureFlagsRepository.isPremiumOfferEnabled
+    ) { isPremium, offerEnabled -> isPremium || offerEnabled }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.Eagerly,
+            premiumRepository.isPremiumFlow.value ||
+                featureFlagsRepository.isPremiumOfferEnabled.value
+        )
 
     val isPremium = premiumRepository.isPremiumFlow
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
@@ -41,7 +60,7 @@ class PremiumViewModel @Inject constructor(
     val restoreMessage = _restoreMessage.asStateFlow()
 
     init {
-        analyticsManager.logPaywallViewed()
+        if (isPaywallAvailable.value) analyticsManager.logPaywallViewed()
         viewModelScope.launch {
             premiumRepository.loadAvailablePlans()
         }
@@ -61,6 +80,7 @@ class PremiumViewModel @Inject constructor(
     }
 
     fun subscribe(activity: Activity) = viewModelScope.launch {
+        if (!isPaywallAvailable.value) return@launch
         val productId = _selectedPlan.value?.productId ?: return@launch
         _isLoading.value = true
         billingLauncher.launchSubscription(activity, productId)

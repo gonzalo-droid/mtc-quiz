@@ -5,6 +5,7 @@ import com.gondroid.core.domain.model.Category
 import com.gondroid.core.domain.model.SubscriptionPlan
 import com.gondroid.core.domain.repository.PremiumRepository
 import com.gondroid.home.presentation.HomeScreenViewModel
+import com.gondroid.mtcquiz.presentation.screens.FeatureFlagsRepositoryFake
 import com.gondroid.mtcquiz.presentation.screens.PreferenceRepositoryFake
 import com.gondroid.mtcquiz.presentation.screens.QuizRepositoryFake
 import com.gondroid.mtcquiz.util.MainDispatcherRule
@@ -42,13 +43,16 @@ class HomeScreenViewModelTest {
             override suspend fun restorePurchases() = Unit
         }
 
-    private fun createViewModel(premiumRepository: PremiumRepository = fakePremiumRepository()) =
-        HomeScreenViewModel(
-            repository = repository,
-            preferenceRepository = preferenceRepository,
-            premiumRepository = premiumRepository,
-            bannerAdId = "test-banner-id"
-        )
+    private fun createViewModel(
+        premiumRepository: PremiumRepository = fakePremiumRepository(),
+        featureFlagsRepository: FeatureFlagsRepositoryFake = FeatureFlagsRepositoryFake()
+    ) = HomeScreenViewModel(
+        repository = repository,
+        preferenceRepository = preferenceRepository,
+        premiumRepository = premiumRepository,
+        featureFlagsRepository = featureFlagsRepository,
+        bannerAdId = "test-banner-id"
+    )
 
     @Before
     fun setUp() {
@@ -128,5 +132,30 @@ class HomeScreenViewModelTest {
         advanceUntilIdle()
 
         Truth.assertThat(vm.state.value.isPremium).isTrue()
+    }
+
+    @Test
+    fun `state exposes the premium offer flag and follows remote changes`() = runTest {
+        val flags = FeatureFlagsRepositoryFake(isPremiumOfferEnabled = true)
+        val vm = createViewModel(featureFlagsRepository = flags)
+        advanceUntilIdle()
+        Truth.assertThat(vm.state.value.isPremiumOfferEnabled).isTrue()
+
+        flags.premiumOfferEnabled.value = false
+        advanceUntilIdle()
+
+        Truth.assertThat(vm.state.value.isPremiumOfferEnabled).isFalse()
+    }
+
+    @Test
+    fun `turning the premium offer off keeps a paying user premium`() = runTest {
+        val vm = createViewModel(
+            premiumRepository = fakePremiumRepository(MutableStateFlow(true)),
+            featureFlagsRepository = FeatureFlagsRepositoryFake(isPremiumOfferEnabled = false)
+        )
+        advanceUntilIdle()
+
+        Truth.assertThat(vm.state.value.isPremium).isTrue()
+        Truth.assertThat(vm.state.value.isPremiumOfferEnabled).isFalse()
     }
 }

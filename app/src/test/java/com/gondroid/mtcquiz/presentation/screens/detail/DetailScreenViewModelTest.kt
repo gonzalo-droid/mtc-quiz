@@ -7,6 +7,7 @@ import com.gondroid.core.domain.model.SubscriptionPlan
 import com.gondroid.core.domain.repository.PremiumRepository
 import com.gondroid.detail.presentation.DetailEvent
 import com.gondroid.detail.presentation.DetailScreenViewModel
+import com.gondroid.mtcquiz.presentation.screens.FeatureFlagsRepositoryFake
 import com.gondroid.mtcquiz.presentation.screens.QuizRepositoryFake
 import com.gondroid.mtcquiz.util.MainDispatcherRule
 import com.google.common.truth.Truth.assertThat
@@ -36,7 +37,8 @@ class DetailScreenViewModelTest {
 
     private fun createViewModel(
         isPremium: Boolean = false,
-        categoryId: String = "1"
+        categoryId: String = "1",
+        featureFlagsRepository: FeatureFlagsRepositoryFake = FeatureFlagsRepositoryFake()
     ): DetailScreenViewModel {
         val premiumRepository = object : PremiumRepository {
             override val isPremiumFlow: StateFlow<Boolean> = MutableStateFlow(isPremium)
@@ -50,6 +52,7 @@ class DetailScreenViewModelTest {
             savedStateHandle = savedStateHandle,
             repository = QuizRepositoryFake(),
             premiumRepository = premiumRepository,
+            featureFlagsRepository = featureFlagsRepository,
             adsManager = adsManager,
             bannerAdId = "test-banner-id"
         )
@@ -85,6 +88,7 @@ class DetailScreenViewModelTest {
             savedStateHandle = savedStateHandle,
             repository = QuizRepositoryFake(),
             premiumRepository = premiumRepository,
+            featureFlagsRepository = FeatureFlagsRepositoryFake(),
             adsManager = adsManager,
             bannerAdId = "test-banner-id"
         )
@@ -126,5 +130,18 @@ class DetailScreenViewModelTest {
             vm.onInterstitialClosed("1")
             assertThat(awaitItem()).isEqualTo(DetailEvent.NavigateToEvaluation("1"))
         }
+    }
+
+    @Test
+    fun `state exposes the premium offer flag so the post-ad upsell can be hidden`() = runTest {
+        val flags = FeatureFlagsRepositoryFake(isPremiumOfferEnabled = true)
+        val vm = createViewModel(featureFlagsRepository = flags)
+        advanceUntilIdle()
+        assertThat(vm.state.value.isPremiumOfferEnabled).isTrue()
+
+        flags.premiumOfferEnabled.value = false
+        advanceUntilIdle()
+
+        assertThat(vm.state.value.isPremiumOfferEnabled).isFalse()
     }
 }

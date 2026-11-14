@@ -27,6 +27,7 @@ class ConfigurationScreenViewModelTest {
     private val darkModeFlow = MutableStateFlow(false)
     private val themeModeFlow = MutableStateFlow("system")
     private val isPremiumFlow = MutableStateFlow(false)
+    private val featureFlagsRepository = FeatureFlagsRepositoryFake()
 
     private lateinit var authRepository: AuthRepository
     private lateinit var preferenceRepository: PreferenceRepository
@@ -53,7 +54,8 @@ class ConfigurationScreenViewModelTest {
     private fun createViewModel() = ConfigurationScreenViewModel(
         repository = authRepository,
         preferenceRepository = preferenceRepository,
-        premiumRepository = premiumRepository
+        premiumRepository = premiumRepository,
+        featureFlagsRepository = featureFlagsRepository
     )
 
     @Test
@@ -114,5 +116,26 @@ class ConfigurationScreenViewModelTest {
 
         assertThat(eventDeferred.await()).isEqualTo(ConfigurationEvent.Success)
         coVerify { authRepository.logout() }
+    }
+
+    @Test
+    fun `state exposes the premium offer flag and follows remote changes`() = runTest {
+        val vm = createViewModel()
+        assertThat(vm.state.value.isPremiumOfferEnabled).isTrue()
+
+        featureFlagsRepository.premiumOfferEnabled.value = false
+
+        assertThat(vm.state.value.isPremiumOfferEnabled).isFalse()
+    }
+
+    @Test
+    fun `turning the premium offer off does not touch isPremium of a paying user`() = runTest {
+        isPremiumFlow.value = true
+        featureFlagsRepository.premiumOfferEnabled.value = false
+
+        val vm = createViewModel()
+
+        assertThat(vm.state.value.isPremium).isTrue()
+        assertThat(vm.state.value.isPremiumOfferEnabled).isFalse()
     }
 }

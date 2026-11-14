@@ -6,6 +6,9 @@ El formato sigue (aproximadamente) [Keep a Changelog](https://keepachangelog.com
 
 ## [Unreleased]
 
+### Added
+- **Interruptor remoto de la oferta Premium** con Firebase Remote Config (parámetro booleano `premium_enabled`, `true` por defecto). En `false` se ocultan el ícono premium de la Home, la fila "Hazte Premium" de Configuración, el diálogo de upsell después de un anuncio (Detail y PDF) y el paywall, que se cierra solo si ya estaba abierto. Solo apaga la oferta: quien ya pagó sigue siendo premium, sin anuncios y con su fila "Premium ✓". Sin red o antes del primer fetch rige el valor por defecto local. La app consulta Remote Config al iniciar (en release, como máximo una vez por hora), así que el cambio llega en el siguiente arranque.
+
 ## [1.2.5] - 2026-11-13 (versionCode 10)
 
 ### Changed

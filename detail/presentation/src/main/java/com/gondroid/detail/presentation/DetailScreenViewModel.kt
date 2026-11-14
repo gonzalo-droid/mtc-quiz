@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.gondroid.core.data.ads.AdsManager
+import com.gondroid.core.domain.repository.FeatureFlagsRepository
 import com.gondroid.core.domain.repository.PremiumRepository
 import com.gondroid.core.domain.repository.QuizRepository
 import com.gondroid.core.presentation.ui.DetailScreenRoute
@@ -33,6 +34,7 @@ constructor(
     savedStateHandle: SavedStateHandle,
     private val repository: QuizRepository,
     private val premiumRepository: PremiumRepository,
+    private val featureFlagsRepository: FeatureFlagsRepository,
     val adsManager: AdsManager,
     @Named("admobBannerId") val bannerAdId: String
 ) : ViewModel() {
@@ -59,6 +61,12 @@ constructor(
         premiumRepository.isPremiumFlow.onEach { isPremium ->
             _state.update {
                 it.copy(isPremium = isPremium)
+            }
+        }.launchIn(viewModelScope)
+
+        featureFlagsRepository.isPremiumOfferEnabled.onEach { enabled ->
+            _state.update {
+                it.copy(isPremiumOfferEnabled = enabled)
             }
         }.launchIn(viewModelScope)
     }
