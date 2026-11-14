@@ -6,5 +6,6 @@ data class DetailState(
     val category: Category = Category(),
     val isLoading: Boolean = false,
     val error: String? = null,
-    val isPremium: Boolean = false
+    val isPremium: Boolean = false,
+    val isPremiumOfferEnabled: Boolean = true
 )

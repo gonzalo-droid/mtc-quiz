@@ -2,6 +2,7 @@ package com.gondroid.mtcquiz
 
 import app.cash.turbine.test
 import com.gondroid.core.domain.repository.PremiumRepository
+import com.gondroid.mtcquiz.presentation.screens.FeatureFlagsRepositoryFake
 import com.gondroid.mtcquiz.presentation.screens.PreferenceRepositoryFake
 import com.gondroid.mtcquiz.util.MainDispatcherRule
 import com.google.common.truth.Truth.assertThat
@@ -25,6 +26,7 @@ class MainViewModelTest {
     private lateinit var preferenceRepository: PreferenceRepositoryFake
     private lateinit var premiumRepository: PremiumRepository
     private val isPremiumFlow = MutableStateFlow(false)
+    private val featureFlagsRepository = FeatureFlagsRepositoryFake()
 
     @Before
     fun setUp() {
@@ -36,7 +38,8 @@ class MainViewModelTest {
 
     private fun createViewModel() = MainViewModel(
         preferenceRepository = preferenceRepository,
-        premiumRepository = premiumRepository
+        premiumRepository = premiumRepository,
+        featureFlagsRepository = featureFlagsRepository
     )
 
     @Test
@@ -130,4 +133,12 @@ class MainViewModelTest {
 
             coVerify { premiumRepository.refreshPurchaseState() }
         }
+
+    @Test
+    fun `init refreshes the remote feature flags on app start`() = runTest {
+        createViewModel()
+        advanceUntilIdle()
+
+        assertThat(featureFlagsRepository.refreshCount).isEqualTo(1)
+    }
 }

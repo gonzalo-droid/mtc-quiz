@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.gondroid.core.data.ads.AdsManager
+import com.gondroid.core.domain.repository.FeatureFlagsRepository
 import com.gondroid.core.domain.repository.QuizRepository
 import com.gondroid.core.presentation.ui.PdfScreenRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,6 +14,8 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -26,7 +29,8 @@ sealed interface PdfEvent {
 class PdfScreenViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val repository: QuizRepository,
-    val adsManager: AdsManager
+    val adsManager: AdsManager,
+    private val featureFlagsRepository: FeatureFlagsRepository
 ) : ViewModel() {
 
     private var _state = MutableStateFlow(PdfState())
@@ -47,6 +51,10 @@ class PdfScreenViewModel @Inject constructor(
                 }
             }
         }
+
+        featureFlagsRepository.isPremiumOfferEnabled.onEach { enabled ->
+            _state.update { it.copy(isPremiumOfferEnabled = enabled) }
+        }.launchIn(viewModelScope)
     }
 
     fun loading(isLoading: Boolean) {

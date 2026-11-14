@@ -83,6 +83,7 @@ fun PremiumScreenRoot(
     navigateToPrivacy: () -> Unit
 ) {
     val isPremium by viewModel.isPremium.collectAsState()
+    val isPaywallAvailable by viewModel.isPaywallAvailable.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val availablePlans by viewModel.availablePlans.collectAsState()
     val selectedPlan by viewModel.selectedPlan.collectAsState()
@@ -96,6 +97,12 @@ fun PremiumScreenRoot(
             viewModel.clearRestoreMessage()
         }
     }
+
+    // Oferta apagada desde Remote Config: no se muestra el paywall a quien no es premium.
+    LaunchedEffect(isPaywallAvailable) {
+        if (!isPaywallAvailable) navigateBack()
+    }
+    if (!isPaywallAvailable) return
 
     PremiumScreen(
         isPremium = isPremium,

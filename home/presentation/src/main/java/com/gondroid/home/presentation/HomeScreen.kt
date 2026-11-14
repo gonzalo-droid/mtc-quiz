@@ -91,7 +91,7 @@ fun HomeScreen(state: HomeState, bannerAdId: String, onAction: (HomeAction) -> U
                     )
                 },
                 actions = {
-                    if (!state.isPremium) {
+                    if (!state.isPremium && state.isPremiumOfferEnabled) {
                         IconButton(onClick = { onAction(HomeAction.GoToPremium) }) {
                             Icon(
                                 imageVector = Icons.Default.WorkspacePremium,

@@ -299,7 +299,8 @@ fun ConfigurationScreen(
                         title = "Premium ✓",
                         onClick = { onAction(ConfigurationAction.GoToPremium) }
                     )
-                } else {
+                } else if (state.isPremiumOfferEnabled) {
+                    // La oferta se apaga desde Remote Config; quien ya pagó sigue viendo "Premium ✓".
                     Surface(
                         onClick = { onAction(ConfigurationAction.GoToPremium) },
                         modifier = Modifier.fillMaxWidth(),

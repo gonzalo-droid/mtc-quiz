@@ -95,7 +95,7 @@ fun PdfScreenRoot(
                 val act = activity
                 if (act != null) {
                     viewModel.adsManager.showPdfInterstitial(act) { adWasShown ->
-                        if (adWasShown) showUpsellDialog = true
+                        if (adWasShown && state.isPremiumOfferEnabled) showUpsellDialog = true
                         viewModel.onInterstitialClosed()
                     }
                 } else {
@@ -106,7 +106,7 @@ fun PdfScreenRoot(
         }
     }
 
-    if (showUpsellDialog) {
+    if (showUpsellDialog && state.isPremiumOfferEnabled) {
         com.gondroid.core.presentation.designsystem.components.PremiumUpsellDialog(
             onGoToPremium = {
                 showUpsellDialog = false

@@ -4,5 +4,6 @@ data class ConfigurationState(
     val date: String = "",
     val isDarkMode: Boolean = false,
     val isPremium: Boolean = false,
+    val isPremiumOfferEnabled: Boolean = true,
     val themeMode: String = "system"
 )

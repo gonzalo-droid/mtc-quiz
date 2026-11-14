@@ -6,5 +6,7 @@ data class HomeState(
     val categories: List<Category> = emptyList(),
     val userName: String = "",
     val streak: Int = 0,
-    val isPremium: Boolean = false
+    val isPremium: Boolean = false,
+    // true por defecto, igual que el default local de Remote Config
+    val isPremiumOfferEnabled: Boolean = true
 )
