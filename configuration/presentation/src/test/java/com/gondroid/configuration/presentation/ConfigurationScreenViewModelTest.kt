@@ -1,5 +1,7 @@
 package com.gondroid.configuration.presentation
 
+import android.app.Activity
+import com.gondroid.core.data.ads.AdsConsentManager
 import com.gondroid.core.domain.repository.AuthRepository
 import com.gondroid.core.domain.repository.PreferenceRepository
 import com.gondroid.core.domain.repository.PremiumRepository
@@ -8,6 +10,7 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
@@ -28,6 +31,10 @@ class ConfigurationScreenViewModelTest {
     private val themeModeFlow = MutableStateFlow("system")
     private val isPremiumFlow = MutableStateFlow(false)
     private val featureFlagsRepository = FeatureFlagsRepositoryFake()
+    private val isPrivacyOptionsRequiredFlow = MutableStateFlow(false)
+    private val adsConsentManager: AdsConsentManager = mockk(relaxed = true) {
+        every { isPrivacyOptionsRequired } returns isPrivacyOptionsRequiredFlow
+    }
 
     private lateinit var authRepository: AuthRepository
     private lateinit var preferenceRepository: PreferenceRepository
@@ -55,7 +62,8 @@ class ConfigurationScreenViewModelTest {
         repository = authRepository,
         preferenceRepository = preferenceRepository,
         premiumRepository = premiumRepository,
-        featureFlagsRepository = featureFlagsRepository
+        featureFlagsRepository = featureFlagsRepository,
+        adsConsentManager = adsConsentManager
     )
 
     @Test
@@ -137,5 +145,24 @@ class ConfigurationScreenViewModelTest {
 
         assertThat(vm.state.value.isPremium).isTrue()
         assertThat(vm.state.value.isPremiumOfferEnabled).isFalse()
+    }
+
+    @Test
+    fun `ad privacy entry follows what UMP requires`() = runTest {
+        val vm = createViewModel()
+        assertThat(vm.state.value.isAdPrivacyOptionsRequired).isFalse()
+
+        isPrivacyOptionsRequiredFlow.value = true
+
+        assertThat(vm.state.value.isAdPrivacyOptionsRequired).isTrue()
+    }
+
+    @Test
+    fun `showAdPrivacyOptions opens the UMP privacy options form`() {
+        val activity = mockk<Activity>()
+
+        createViewModel().showAdPrivacyOptions(activity)
+
+        verify { adsConsentManager.showPrivacyOptionsForm(activity) }
     }
 }

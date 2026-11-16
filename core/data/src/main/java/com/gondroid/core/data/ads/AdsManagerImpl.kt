@@ -16,11 +16,15 @@ import javax.inject.Singleton
 class AdsManagerImpl @Inject constructor(
     private val prefs: AdsPreferences,
     @Named("admobInterstitialId") private val interstitialId: String,
-    private val premiumRepository: com.gondroid.core.domain.repository.PremiumRepository
+    private val premiumRepository: com.gondroid.core.domain.repository.PremiumRepository,
+    private val consentManager: AdsConsentManager
 ) : AdsManager {
 
     private val isPremium: Boolean
         get() = premiumRepository.isPremiumFlow.value
+
+    private val canRequestAds: Boolean
+        get() = consentManager.canRequestAds.value
 
     private var interstitial: InterstitialAd? = null
     private var isLoading: Boolean = false
@@ -29,7 +33,7 @@ class AdsManagerImpl @Inject constructor(
     private var isLoadingEvaluation: Boolean = false
 
     override fun preloadPdfInterstitial(context: Context) {
-        if (isPremium) return
+        if (isPremium || !canRequestAds) return
         if (interstitial != null || isLoading) return
         isLoading = true
         InterstitialAd.load(
@@ -84,7 +88,7 @@ class AdsManagerImpl @Inject constructor(
     }
 
     override fun preloadEvaluationInterstitial(context: Context) {
-        if (isPremium) return
+        if (isPremium || !canRequestAds) return
         if (evaluationInterstitial != null || isLoadingEvaluation) return
         isLoadingEvaluation = true
         InterstitialAd.load(

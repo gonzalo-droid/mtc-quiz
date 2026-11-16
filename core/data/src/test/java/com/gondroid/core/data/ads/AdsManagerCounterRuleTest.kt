@@ -17,7 +17,8 @@ class AdsManagerCounterRuleTest {
         manager = AdsManagerImpl(
             prefs = prefs,
             interstitialId = "test-id",
-            premiumRepository = FakePremiumRepository()
+            premiumRepository = FakePremiumRepository(),
+            consentManager = FakeAdsConsentManager()
         )
     }
 
@@ -79,13 +80,28 @@ class AdsManagerCounterRuleTest {
         assertThat(manager.shouldShowEvaluationInterstitial()).isTrue()
     }
 
+    // Consent gating — without UMP consent no ad may even be requested. Outside Robolectric the
+    // real InterstitialAd.load would throw, so returning normally proves nothing was requested.
+
+    @Test fun `preloads request no ad until consent allows it`() {
+        val noConsentManager = AdsManagerImpl(
+            prefs = prefs,
+            interstitialId = "test-id",
+            premiumRepository = FakePremiumRepository(),
+            consentManager = FakeAdsConsentManager(canRequestAds = false)
+        )
+        noConsentManager.preloadPdfInterstitial(mockk(relaxed = true))
+        noConsentManager.preloadEvaluationInterstitial(mockk(relaxed = true))
+    }
+
     // Premium gating — a premium user must never see an ad, regardless of counters.
 
     @Test fun `premium user never sees pdf interstitial regardless of counter`() = runTest {
         val premiumManager = AdsManagerImpl(
             prefs = prefs,
             interstitialId = "test-id",
-            premiumRepository = FakePremiumRepository(isPremium = true)
+            premiumRepository = FakePremiumRepository(isPremium = true),
+            consentManager = FakeAdsConsentManager()
         )
         repeat(6) { premiumManager.recordPdfDownload() }
         assertThat(premiumManager.shouldShowPdfInterstitial()).isFalse()
@@ -95,7 +111,8 @@ class AdsManagerCounterRuleTest {
         val premiumManager = AdsManagerImpl(
             prefs = prefs,
             interstitialId = "test-id",
-            premiumRepository = FakePremiumRepository(isPremium = true)
+            premiumRepository = FakePremiumRepository(isPremium = true),
+            consentManager = FakeAdsConsentManager()
         )
         repeat(6) { premiumManager.recordEvaluationStart() }
         assertThat(premiumManager.shouldShowEvaluationInterstitial()).isFalse()
@@ -105,7 +122,8 @@ class AdsManagerCounterRuleTest {
         val premiumManager = AdsManagerImpl(
             prefs = prefs,
             interstitialId = "test-id",
-            premiumRepository = FakePremiumRepository(isPremium = true)
+            premiumRepository = FakePremiumRepository(isPremium = true),
+            consentManager = FakeAdsConsentManager()
         )
         var adWasShown: Boolean? = null
         premiumManager.showPdfInterstitial(mockk<Activity>(relaxed = true)) { adWasShown = it }
@@ -116,7 +134,8 @@ class AdsManagerCounterRuleTest {
         val premiumManager = AdsManagerImpl(
             prefs = prefs,
             interstitialId = "test-id",
-            premiumRepository = FakePremiumRepository(isPremium = true)
+            premiumRepository = FakePremiumRepository(isPremium = true),
+            consentManager = FakeAdsConsentManager()
         )
         var adWasShown: Boolean? = null
         premiumManager.showEvaluationInterstitial(mockk<Activity>(relaxed = true)) {

@@ -6,6 +6,13 @@ plugins {
 
 android {
     namespace = "com.gondroid.core.data"
+
+    defaultConfig {
+        // Debug-only: `-PumpDebugGeography=EEA` forces the UMP consent form on any device or
+        // emulator, to test it from outside Europe. Ignored in release builds.
+        val umpDebugGeography = providers.gradleProperty("umpDebugGeography").getOrElse("")
+        buildConfigField("String", "UMP_DEBUG_GEOGRAPHY", "\"$umpDebugGeography\"")
+    }
 }
 
 dependencies {
@@ -33,6 +40,7 @@ dependencies {
 
     // AdMob
     implementation(libs.play.services.admob)
+    implementation(libs.ump)
 
     // Google Play Billing (suscripciones)
     implementation(libs.play.billing.ktx)

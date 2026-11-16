@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,9 +22,15 @@ import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.LoadAdError
 
 /**
+ * Whether UMP consent allows ad requests. Provided by `MainActivity`; false until the consent
+ * flow resolves, so no banner is requested before it.
+ */
+val LocalCanRequestAds = compositionLocalOf { false }
+
+/**
  * Creates, loads, and tears down a banner [AdView] for [bannerAdId], and
  * renders it centered at the bottom of whatever content this is placed in.
- * Renders nothing when [isPremium] is true.
+ * Renders nothing when [isPremium] is true, and loads nothing until [LocalCanRequestAds].
  */
 @Composable
 fun BannerAdSlot(bannerAdId: String, isPremium: Boolean, modifier: Modifier = Modifier) {
@@ -56,8 +63,9 @@ fun BannerAdSlot(bannerAdId: String, isPremium: Boolean, modifier: Modifier = Mo
     }
 
     val isInspectionMode = LocalInspectionMode.current
-    LaunchedEffect(Unit) {
-        if (!isInspectionMode) {
+    val canRequestAds = LocalCanRequestAds.current
+    LaunchedEffect(canRequestAds) {
+        if (!isInspectionMode && canRequestAds) {
             adView.loadAd(AdRequest.Builder().build())
         }
     }
