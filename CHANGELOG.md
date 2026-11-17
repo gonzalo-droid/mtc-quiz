@@ -6,9 +6,16 @@ El formato sigue (aproximadamente) [Keep a Changelog](https://keepachangelog.com
 
 ## [Unreleased]
 
+## [1.2.6] - 2026-11-16 (versionCode 11)
+
 ### Added
 - **Interruptor remoto de la oferta Premium** con Firebase Remote Config (parámetro booleano `premium_enabled`, `true` por defecto). En `false` se ocultan el ícono premium de la Home, la fila "Hazte Premium" de Configuración, el diálogo de upsell después de un anuncio (Detail y PDF) y el paywall, que se cierra solo si ya estaba abierto. Solo apaga la oferta: quien ya pagó sigue siendo premium, sin anuncios y con su fila "Premium ✓". Sin red o antes del primer fetch rige el valor por defecto local. La app consulta Remote Config al iniciar (en release, como máximo una vez por hora), así que el cambio llega en el siguiente arranque.
 - **Consentimiento de anuncios con UMP** (User Messaging Platform de Google, `user-messaging-platform` 3.2.0): al abrir la app se pide el consentimiento donde la ley lo exige (EEA, Reino Unido, Suiza) y el SDK de AdMob arranca solo cuando UMP permite pedir anuncios; antes arrancaba en `Application.onCreate()` sin consentimiento. Banners e intersticiales no se cargan hasta entonces. En esas regiones, Configuración muestra "Privacidad de anuncios" para cambiar la elección. Para probarlo fuera de Europa: `./gradlew installDebug -PumpDebugGeography=EEA` (solo debug).
+- **Banner en la pantalla de Estudio**, intercalado cada 10 preguntas. El intervalo se cambia desde Firebase Remote Config con el parámetro numérico `study_banner_interval` (0 lo apaga; menos de 5 sube a 5). No aparece para usuarios premium ni mientras se busca, reserva su alto antes de cargar para que la lista no salte, y cada banner se pide una sola vez por visita aunque se haga scroll de ida y vuelta. El contador "x/N" sigue contando solo preguntas. Usa la misma unidad de AdMob que los demás banners (`ADMOB_STUDY_BANNER_ID`) hasta que tenga una propia.
+- **Descarga de PDF con anuncio de recompensa**: al tocar Descargar aparece "Descarga gratis con un anuncio" (ver anuncio, ir a Premium si la oferta está activa, o cancelar). Se descarga al ganar la recompensa; si el usuario cierra el anuncio antes, no se descarga y se le avisa. Si no hay anuncio listo (premium, sin consentimiento, sin red o sin inventario) se descarga directo: un PDF nunca queda bloqueado.
+
+### Changed
+- La descarga de PDF ya no muestra un intersticial cada 3 descargas: lo reemplaza el anuncio de recompensa en cada descarga. Se eliminó el contador de descargas que usaba esa regla.
 
 ## [1.2.5] - 2026-11-13 (versionCode 10)
 

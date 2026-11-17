@@ -12,22 +12,6 @@ import kotlinx.coroutines.flow.map
 
 @Singleton
 open class AdsPreferences @Inject constructor(private val dataStore: DataStore<Preferences>) {
-    open val pdfDownloadCount: Flow<Int> by lazy {
-        dataStore.data.map { prefs -> prefs[PDF_DOWNLOAD_COUNT] ?: 0 }
-    }
-
-    open suspend fun incrementPdfDownloadCount(): Int {
-        var newValue = 0
-        dataStore.edit { prefs ->
-            val current = prefs[PDF_DOWNLOAD_COUNT] ?: 0
-            newValue = current + 1
-            prefs[PDF_DOWNLOAD_COUNT] = newValue
-        }
-        return newValue
-    }
-
-    open suspend fun currentPdfDownloadCount(): Int = pdfDownloadCount.first()
-
     open val evaluationStartCount: Flow<Int> by lazy {
         dataStore.data.map { prefs -> prefs[EVALUATION_START_COUNT] ?: 0 }
     }
@@ -45,7 +29,6 @@ open class AdsPreferences @Inject constructor(private val dataStore: DataStore<P
     open suspend fun currentEvaluationStartCount(): Int = evaluationStartCount.first()
 
     private companion object {
-        val PDF_DOWNLOAD_COUNT = intPreferencesKey("pdf_download_count")
         val EVALUATION_START_COUNT = intPreferencesKey("evaluation_start_count")
     }
 }

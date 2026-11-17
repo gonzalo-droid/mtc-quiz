@@ -1,5 +1,6 @@
 package com.gondroid.core.presentation.ui
 
+import android.view.ViewGroup
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.Text
@@ -23,7 +24,15 @@ internal fun BannerAdView(adView: AdView, modifier: Modifier = Modifier) {
         return
     }
 
-    AndroidView(modifier = modifier.wrapContentWidth(), factory = { adView })
+    // An AdView kept across list scrolling may still sit in the holder of its previous, disposed
+    // item; Android refuses to give a view a second parent.
+    AndroidView(
+        modifier = modifier.wrapContentWidth(),
+        factory = {
+            (adView.parent as? ViewGroup)?.removeView(adView)
+            adView
+        }
+    )
 
     // Pause and resume the AdView when the lifecycle is paused and resumed.
     LifecycleResumeEffect(adView) {

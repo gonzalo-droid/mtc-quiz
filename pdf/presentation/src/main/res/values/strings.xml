@@ -4,4 +4,10 @@
     <string name="download">Descargar</string>
     <string name="open_pdf_action">Abrir</string>
     <string name="no_pdf_viewer">No se encontró una app para abrir el PDF</string>
+    <string name="reward_dialog_title">Descarga gratis con un anuncio</string>
+    <string name="reward_dialog_body">Mira un anuncio corto y el balotario se guardará en tu carpeta Descargas.</string>
+    <string name="reward_dialog_watch">Ver anuncio y descargar</string>
+    <string name="reward_dialog_premium">Descargar sin anuncios con Premium</string>
+    <string name="reward_dialog_cancel">Cancelar</string>
+    <string name="reward_skipped">Mira el anuncio completo para descargar el PDF</string>
 </resources>

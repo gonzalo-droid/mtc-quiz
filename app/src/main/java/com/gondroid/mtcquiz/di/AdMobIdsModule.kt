@@ -21,4 +21,14 @@ object AdMobIdsModule {
     @Singleton
     @Named("admobInterstitialId")
     fun provideInterstitialId(): String = BuildConfig.ADMOB_INTERSTITIAL_ID
+
+    @Provides
+    @Singleton
+    @Named("admobPdfRewardedId")
+    fun providePdfRewardedId(): String = BuildConfig.ADMOB_PDF_REWARDED_ID
+
+    @Provides
+    @Singleton
+    @Named("admobStudyBannerId")
+    fun provideStudyBannerId(): String = BuildConfig.ADMOB_STUDY_BANNER_ID
 }
