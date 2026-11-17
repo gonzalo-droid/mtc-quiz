@@ -47,6 +47,8 @@ googleService = "4.4.4"
 googleFirebaseCrashlytics = "3.0.8"
 googleFirebasePerf = "2.0.2"
 playServicesAdMob = "24.9.0"
+# Same UMP version play-services-ads already pulls in; declared to call it directly.
+ump = "3.2.0"
 playReview = "2.0.2"
 playBilling = "9.1.0"
 
@@ -155,6 +157,7 @@ firebase-auth = { module = "com.google.firebase:firebase-auth" }
 firebase-config = { module = "com.google.firebase:firebase-config" }
 # adMob
 play-services-admob = { module = "com.google.android.gms:play-services-ads", version.ref = "playServicesAdMob" }
+ump = { module = "com.google.android.ump:user-messaging-platform", version.ref = "ump" }
 # In-App Review
 play-review = { module = "com.google.android.play:review", version.ref = "playReview" }
 play-review-ktx = { module = "com.google.android.play:review-ktx", version.ref = "playReview" }

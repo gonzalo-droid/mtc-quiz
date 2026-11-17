@@ -5,5 +5,6 @@ data class ConfigurationState(
     val isDarkMode: Boolean = false,
     val isPremium: Boolean = false,
     val isPremiumOfferEnabled: Boolean = true,
-    val themeMode: String = "system"
+    val themeMode: String = "system",
+    val isAdPrivacyOptionsRequired: Boolean = false
 )

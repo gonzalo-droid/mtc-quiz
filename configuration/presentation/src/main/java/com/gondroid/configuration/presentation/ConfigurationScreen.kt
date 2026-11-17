@@ -25,6 +25,7 @@ import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.LightMode
+import androidx.compose.material.icons.filled.Policy
 import androidx.compose.material.icons.filled.PrivacyTip
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Star
@@ -56,6 +57,7 @@ import com.gondroid.core.presentation.designsystem.MTCQuizTheme
 import com.gondroid.core.presentation.designsystem.OnPremiumGold
 import com.gondroid.core.presentation.designsystem.PremiumAmber
 import com.gondroid.core.presentation.designsystem.PremiumGold
+import com.gondroid.core.presentation.ui.findActivity
 
 @Composable
 fun ConfigurationScreenRoot(
@@ -94,6 +96,9 @@ fun ConfigurationScreenRoot(
                 ConfigurationAction.GoToSCustomize -> navigateToCustomize()
                 ConfigurationAction.GoToTerm -> navigateToTerm()
                 ConfigurationAction.GoToPrivacy -> navigateToPrivacy()
+                ConfigurationAction.OpenAdPrivacyOptions -> {
+                    context.findActivity()?.let(viewModel::showAdPrivacyOptions)
+                }
                 ConfigurationAction.GoToTarifas -> navigateToTarifas()
                 ConfigurationAction.GoToStats -> navigateToStats()
                 ConfigurationAction.GoToHistory -> navigateToHistory()
@@ -370,6 +375,14 @@ fun ConfigurationScreen(
                     title = "Política de privacidad",
                     onClick = { onAction(ConfigurationAction.GoToPrivacy) }
                 )
+                // Required by AdMob's consent rules wherever UMP reports it (EEA, UK...).
+                if (state.isAdPrivacyOptionsRequired) {
+                    ItemList(
+                        icon = Icons.Default.Policy,
+                        title = "Privacidad de anuncios",
+                        onClick = { onAction(ConfigurationAction.OpenAdPrivacyOptions) }
+                    )
+                }
                 ItemList(
                     icon = Icons.AutoMirrored.Filled.Assignment,
                     title = "Trámites asociados",

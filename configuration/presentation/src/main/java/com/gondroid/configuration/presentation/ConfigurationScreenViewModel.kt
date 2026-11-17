@@ -1,7 +1,9 @@
 package com.gondroid.configuration.presentation
 
+import android.app.Activity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gondroid.core.data.ads.AdsConsentManager
 import com.gondroid.core.domain.repository.AuthRepository
 import com.gondroid.core.domain.repository.FeatureFlagsRepository
 import com.gondroid.core.domain.repository.PreferenceRepository
@@ -23,7 +25,8 @@ class ConfigurationScreenViewModel
     private val repository: AuthRepository,
     private val preferenceRepository: PreferenceRepository,
     private val premiumRepository: PremiumRepository,
-    private val featureFlagsRepository: FeatureFlagsRepository
+    private val featureFlagsRepository: FeatureFlagsRepository,
+    private val adsConsentManager: AdsConsentManager
 ) : ViewModel() {
 
     private var _state = MutableStateFlow(ConfigurationState())
@@ -56,6 +59,16 @@ class ConfigurationScreenViewModel
                 _state.update { it.copy(isPremiumOfferEnabled = enabled) }
             }
             .launchIn(viewModelScope)
+
+        adsConsentManager.isPrivacyOptionsRequired
+            .onEach { required ->
+                _state.update { it.copy(isAdPrivacyOptionsRequired = required) }
+            }
+            .launchIn(viewModelScope)
+    }
+
+    fun showAdPrivacyOptions(activity: Activity) {
+        adsConsentManager.showPrivacyOptionsForm(activity)
     }
 
     fun onAction(action: ConfigurationAction) {
