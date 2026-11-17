@@ -17,33 +17,10 @@ class AdsManagerCounterRuleTest {
         manager = AdsManagerImpl(
             prefs = prefs,
             interstitialId = "test-id",
+            pdfRewardedId = "test-rewarded-id",
             premiumRepository = FakePremiumRepository(),
             consentManager = FakeAdsConsentManager()
         )
-    }
-
-    @Test fun `first download does not show interstitial`() = runTest {
-        manager.recordPdfDownload()
-        assertThat(manager.shouldShowPdfInterstitial()).isFalse()
-    }
-
-    @Test fun `second download does not show interstitial`() = runTest {
-        repeat(2) { manager.recordPdfDownload() }
-        assertThat(manager.shouldShowPdfInterstitial()).isFalse()
-    }
-
-    @Test fun `third download shows interstitial`() = runTest {
-        repeat(3) { manager.recordPdfDownload() }
-        assertThat(manager.shouldShowPdfInterstitial()).isTrue()
-    }
-
-    @Test fun `sixth download shows interstitial`() = runTest {
-        repeat(6) { manager.recordPdfDownload() }
-        assertThat(manager.shouldShowPdfInterstitial()).isTrue()
-    }
-
-    @Test fun `counter 0 never shows interstitial`() = runTest {
-        assertThat(manager.shouldShowPdfInterstitial()).isFalse()
     }
 
     // Evaluation counter tests
@@ -72,14 +49,6 @@ class AdsManagerCounterRuleTest {
         assertThat(manager.shouldShowEvaluationInterstitial()).isFalse()
     }
 
-    @Test fun `pdf and evaluation counters are independent`() = runTest {
-        repeat(3) { manager.recordPdfDownload() }
-        assertThat(manager.shouldShowEvaluationInterstitial()).isFalse()
-        repeat(3) { manager.recordEvaluationStart() }
-        assertThat(manager.shouldShowPdfInterstitial()).isTrue()
-        assertThat(manager.shouldShowEvaluationInterstitial()).isTrue()
-    }
-
     // Consent gating — without UMP consent no ad may even be requested. Outside Robolectric the
     // real InterstitialAd.load would throw, so returning normally proves nothing was requested.
 
@@ -87,30 +56,37 @@ class AdsManagerCounterRuleTest {
         val noConsentManager = AdsManagerImpl(
             prefs = prefs,
             interstitialId = "test-id",
+            pdfRewardedId = "test-rewarded-id",
             premiumRepository = FakePremiumRepository(),
             consentManager = FakeAdsConsentManager(canRequestAds = false)
         )
-        noConsentManager.preloadPdfInterstitial(mockk(relaxed = true))
+        noConsentManager.preloadPdfRewarded(mockk(relaxed = true))
         noConsentManager.preloadEvaluationInterstitial(mockk(relaxed = true))
     }
 
     // Premium gating — a premium user must never see an ad, regardless of counters.
 
-    @Test fun `premium user never sees pdf interstitial regardless of counter`() = runTest {
+    @Test fun `premium user never gets a pdf rewarded ad`() {
         val premiumManager = AdsManagerImpl(
             prefs = prefs,
             interstitialId = "test-id",
+            pdfRewardedId = "test-rewarded-id",
             premiumRepository = FakePremiumRepository(isPremium = true),
             consentManager = FakeAdsConsentManager()
         )
-        repeat(6) { premiumManager.recordPdfDownload() }
-        assertThat(premiumManager.shouldShowPdfInterstitial()).isFalse()
+        // Outside Robolectric RewardedAd.load would throw: returning proves nothing was requested.
+        premiumManager.preloadPdfRewarded(mockk(relaxed = true))
+        assertThat(premiumManager.isPdfRewardedReady()).isFalse()
+        var outcome: RewardedOutcome? = null
+        premiumManager.showPdfRewarded(mockk<Activity>(relaxed = true)) { outcome = it }
+        assertThat(outcome).isEqualTo(RewardedOutcome.UNAVAILABLE)
     }
 
     @Test fun `premium user never sees evaluation interstitial regardless of counter`() = runTest {
         val premiumManager = AdsManagerImpl(
             prefs = prefs,
             interstitialId = "test-id",
+            pdfRewardedId = "test-rewarded-id",
             premiumRepository = FakePremiumRepository(isPremium = true),
             consentManager = FakeAdsConsentManager()
         )
@@ -118,22 +94,11 @@ class AdsManagerCounterRuleTest {
         assertThat(premiumManager.shouldShowEvaluationInterstitial()).isFalse()
     }
 
-    @Test fun `showPdfInterstitial dismisses immediately for premium user without showing an ad`() {
-        val premiumManager = AdsManagerImpl(
-            prefs = prefs,
-            interstitialId = "test-id",
-            premiumRepository = FakePremiumRepository(isPremium = true),
-            consentManager = FakeAdsConsentManager()
-        )
-        var adWasShown: Boolean? = null
-        premiumManager.showPdfInterstitial(mockk<Activity>(relaxed = true)) { adWasShown = it }
-        assertThat(adWasShown).isFalse()
-    }
-
     @Test fun `showEvaluationInterstitial dismisses immediately for premium user without showing an ad`() {
         val premiumManager = AdsManagerImpl(
             prefs = prefs,
             interstitialId = "test-id",
+            pdfRewardedId = "test-rewarded-id",
             premiumRepository = FakePremiumRepository(isPremium = true),
             consentManager = FakeAdsConsentManager()
         )
@@ -144,12 +109,12 @@ class AdsManagerCounterRuleTest {
         assertThat(adWasShown).isFalse()
     }
 
-    // The flag is what decides whether "¿Cansado de los anuncios?" is offered: with no ad loaded
-    // the callback still runs (the caller has to proceed), but it must not claim an ad was shown.
-    @Test fun `showPdfInterstitial reports no ad shown when none is loaded`() {
-        var adWasShown: Boolean? = null
-        manager.showPdfInterstitial(mockk<Activity>(relaxed = true)) { adWasShown = it }
-        assertThat(adWasShown).isFalse()
+    // Without a loaded ad the download must go ahead: the caller treats UNAVAILABLE as "download".
+    @Test fun `showPdfRewarded reports unavailable when no ad is loaded`() {
+        assertThat(manager.isPdfRewardedReady()).isFalse()
+        var outcome: RewardedOutcome? = null
+        manager.showPdfRewarded(mockk<Activity>(relaxed = true)) { outcome = it }
+        assertThat(outcome).isEqualTo(RewardedOutcome.UNAVAILABLE)
     }
 
     @Test fun `showEvaluationInterstitial reports no ad shown when none is loaded`() {

@@ -16,6 +16,12 @@ interface FeatureFlagsRepository {
     val isPremiumOfferEnabled: StateFlow<Boolean>
 
     /**
+     * Cada cuántas preguntas se intercala un banner en la pantalla de Estudio. 0 apaga esos
+     * banners. Nunca baja de un mínimo, así un valor remoto mal escrito no llena la lista de anuncios.
+     */
+    val studyBannerInterval: StateFlow<Int>
+
+    /**
      * Descarga y activa los valores remotos y actualiza los flags. Nunca lanza: si falla (sin red,
      * throttling) se quedan los últimos valores activados o los por defecto. Llamar al iniciar la app.
      */

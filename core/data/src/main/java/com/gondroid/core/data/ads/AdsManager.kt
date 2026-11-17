@@ -6,30 +6,25 @@ import android.content.Context
 interface AdsManager {
 
     /**
-     * Precarga el intersticial para tenerlo listo. Idempotente: si ya hay uno cargado o
-     * una carga en curso, no hace nada.
+     * Precarga el anuncio con recompensa de la descarga de PDF. Idempotente: si ya hay uno
+     * cargado o una carga en curso, no hace nada. No pide nada a usuarios premium ni sin
+     * consentimiento UMP.
      */
-    fun preloadPdfInterstitial(context: Context)
+    fun preloadPdfRewarded(context: Context)
 
     /**
-     * Devuelve true si según la regla de frecuencia (cada 3 descargas) corresponde mostrar
-     * el intersticial en esta descarga.
+     * True si hay un anuncio con recompensa listo para mostrar. Si es false (premium, sin
+     * consentimiento, sin red o sin inventario) la descarga sigue sin anuncio: nunca se bloquea
+     * un PDF por falta de anuncio.
      */
-    suspend fun shouldShowPdfInterstitial(): Boolean
+    fun isPdfRewardedReady(): Boolean
 
     /**
-     * Muestra el intersticial precargado. Si está cargado, al cerrarse invoca [onDismiss].
-     * Si no está cargado o falla al mostrar, invoca [onDismiss] inmediatamente. Nunca bloquea.
-     * `adWasShown` es true sólo si el usuario llegó a ver el anuncio: sirve para no ofrecer
-     * "quita los anuncios" cuando no hubo ninguno.
+     * Muestra el anuncio con recompensa y avisa el resultado con [onResult]:
+     * [RewardedOutcome.EARNED] si lo vio completo, [RewardedOutcome.SKIPPED] si lo cerró antes
+     * y [RewardedOutcome.UNAVAILABLE] si no había anuncio o falló al mostrarse.
      */
-    fun showPdfInterstitial(activity: Activity, onDismiss: (adWasShown: Boolean) -> Unit)
-
-    /**
-     * Incrementa el contador persistente de descargas. Se llama ANTES de decidir si mostrar
-     * el intersticial.
-     */
-    suspend fun recordPdfDownload()
+    fun showPdfRewarded(activity: Activity, onResult: (RewardedOutcome) -> Unit)
 
     /**
      * Precarga el intersticial de evaluación para tenerlo listo. Idempotente.
@@ -53,4 +48,16 @@ interface AdsManager {
      * si mostrar el intersticial.
      */
     suspend fun recordEvaluationStart()
+}
+
+/** Cómo terminó un anuncio con recompensa. */
+enum class RewardedOutcome {
+    /** El usuario vio el anuncio completo y ganó la recompensa. */
+    EARNED,
+
+    /** El usuario cerró el anuncio antes de ganar la recompensa. */
+    SKIPPED,
+
+    /** No había anuncio que mostrar, o falló al mostrarse: el usuario no vio nada. */
+    UNAVAILABLE
 }

@@ -48,7 +48,6 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -64,6 +63,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.content.FileProvider
 import coil3.compose.AsyncImage
+import com.gondroid.core.data.ads.RewardedOutcome
 import com.gondroid.core.presentation.designsystem.MTCQuizTheme
 import com.gondroid.core.presentation.ui.ObserveAsEvents
 import com.gondroid.presentation.screens.util.Permissions.RequestPermissionIfNeeded
@@ -79,40 +79,43 @@ fun PdfScreenRoot(
     navigateToPremium: () -> Unit = {}
 ) {
     val state by viewModel.state.collectAsState()
-    var showUpsellDialog by rememberSaveable { mutableStateOf(false) }
 
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
-        viewModel.adsManager.preloadPdfInterstitial(context)
+        viewModel.adsManager.preloadPdfRewarded(context)
     }
 
     val activity = LocalContext.current as? Activity
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
     ObserveAsEvents(viewModel.events) { event ->
         when (event) {
-            PdfEvent.ShowInterstitial -> {
+            PdfEvent.ShowRewarded -> {
                 val act = activity
                 if (act != null) {
-                    viewModel.adsManager.showPdfInterstitial(act) { adWasShown ->
-                        if (adWasShown && state.isPremiumOfferEnabled) showUpsellDialog = true
-                        viewModel.onInterstitialClosed()
-                    }
+                    viewModel.adsManager.showPdfRewarded(act, viewModel::onRewardedResult)
                 } else {
-                    viewModel.onInterstitialClosed()
+                    viewModel.onRewardedResult(RewardedOutcome.UNAVAILABLE)
                 }
+            }
+            PdfEvent.RewardSkipped -> scope.launch {
+                snackbarHostState.showSnackbar(context.getString(R.string.reward_skipped))
             }
             PdfEvent.StartDownload -> viewModel.onDownloadStarting()
         }
     }
 
-    if (showUpsellDialog && state.isPremiumOfferEnabled) {
-        com.gondroid.core.presentation.designsystem.components.PremiumUpsellDialog(
+    if (state.showRewardDialog) {
+        RewardedDownloadDialog(
+            showPremiumOption = state.isPremiumOfferEnabled,
+            onWatchAd = viewModel::onWatchRewardedClicked,
             onGoToPremium = {
-                showUpsellDialog = false
+                viewModel.onRewardDialogDismissed()
                 navigateToPremium()
             },
-            onDismiss = { showUpsellDialog = false }
+            onDismiss = viewModel::onRewardDialogDismissed
         )
     }
 
@@ -125,8 +128,6 @@ fun PdfScreenRoot(
     var renderedPages by remember {
         mutableStateOf<List<Bitmap>>(emptyList())
     }
-
-    val scope = rememberCoroutineScope()
 
     LaunchedEffect(pdfUri) {
         pdfUri?.let { uri ->
@@ -145,8 +146,6 @@ fun PdfScreenRoot(
             viewModel.loading(false)
         }
     }
-
-    val snackbarHostState = remember { SnackbarHostState() }
 
     if (state.shouldDownload) {
         DownloadPdfIfPermitted(

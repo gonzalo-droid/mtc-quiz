@@ -8,14 +8,18 @@ import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
+import com.google.android.gms.ads.rewarded.RewardedAd
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
+import timber.log.Timber
 
 @Singleton
 class AdsManagerImpl @Inject constructor(
     private val prefs: AdsPreferences,
     @Named("admobInterstitialId") private val interstitialId: String,
+    @Named("admobPdfRewardedId") private val pdfRewardedId: String,
     private val premiumRepository: com.gondroid.core.domain.repository.PremiumRepository,
     private val consentManager: AdsConsentManager
 ) : AdsManager {
@@ -26,65 +30,56 @@ class AdsManagerImpl @Inject constructor(
     private val canRequestAds: Boolean
         get() = consentManager.canRequestAds.value
 
-    private var interstitial: InterstitialAd? = null
-    private var isLoading: Boolean = false
+    private var pdfRewarded: RewardedAd? = null
+    private var isLoadingPdfRewarded: Boolean = false
 
     private var evaluationInterstitial: InterstitialAd? = null
     private var isLoadingEvaluation: Boolean = false
 
-    override fun preloadPdfInterstitial(context: Context) {
+    override fun preloadPdfRewarded(context: Context) {
         if (isPremium || !canRequestAds) return
-        if (interstitial != null || isLoading) return
-        isLoading = true
-        InterstitialAd.load(
+        if (pdfRewarded != null || isLoadingPdfRewarded) return
+        isLoadingPdfRewarded = true
+        RewardedAd.load(
             context,
-            interstitialId,
+            pdfRewardedId,
             AdRequest.Builder().build(),
-            object : InterstitialAdLoadCallback() {
-                override fun onAdLoaded(ad: InterstitialAd) {
-                    interstitial = ad
-                    isLoading = false
+            object : RewardedAdLoadCallback() {
+                override fun onAdLoaded(ad: RewardedAd) {
+                    pdfRewarded = ad
+                    isLoadingPdfRewarded = false
                 }
                 override fun onAdFailedToLoad(err: LoadAdError) {
-                    interstitial = null
-                    isLoading = false
+                    pdfRewarded = null
+                    isLoadingPdfRewarded = false
                 }
             }
         )
     }
 
-    override suspend fun shouldShowPdfInterstitial(): Boolean {
-        if (isPremium) return false
-        val count = prefs.currentPdfDownloadCount()
-        return count > 0 && count % 3 == 0
-    }
+    override fun isPdfRewardedReady(): Boolean = !isPremium && pdfRewarded != null
 
-    override fun showPdfInterstitial(activity: Activity, onDismiss: (adWasShown: Boolean) -> Unit) {
-        if (isPremium) {
-            onDismiss(false)
+    override fun showPdfRewarded(activity: Activity, onResult: (RewardedOutcome) -> Unit) {
+        val ad = pdfRewarded
+        if (isPremium || ad == null) {
+            onResult(RewardedOutcome.UNAVAILABLE)
             return
         }
-        val ad = interstitial
-        if (ad == null) {
-            onDismiss(false)
-            return
-        }
+        var earned = false
         ad.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdDismissedFullScreenContent() {
-                interstitial = null
-                preloadPdfInterstitial(activity.applicationContext)
-                onDismiss(true)
+                pdfRewarded = null
+                preloadPdfRewarded(activity.applicationContext)
+                onResult(if (earned) RewardedOutcome.EARNED else RewardedOutcome.SKIPPED)
             }
             override fun onAdFailedToShowFullScreenContent(err: AdError) {
-                interstitial = null
-                onDismiss(false)
+                Timber.w("PDF rewarded ad failed to show: %s", err.message)
+                pdfRewarded = null
+                preloadPdfRewarded(activity.applicationContext)
+                onResult(RewardedOutcome.UNAVAILABLE)
             }
         }
-        ad.show(activity)
-    }
-
-    override suspend fun recordPdfDownload() {
-        prefs.incrementPdfDownloadCount()
+        ad.show(activity) { earned = true }
     }
 
     override fun preloadEvaluationInterstitial(context: Context) {

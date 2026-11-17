@@ -3,14 +3,14 @@ package com.gondroid.mtcquiz.presentation.screens.pdf
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.gondroid.core.data.ads.AdsManager
+import com.gondroid.core.data.ads.RewardedOutcome
 import com.gondroid.mtcquiz.presentation.screens.FeatureFlagsRepositoryFake
 import com.gondroid.mtcquiz.presentation.screens.QuizRepositoryFake
 import com.gondroid.mtcquiz.util.MainDispatcherRule
 import com.gondroid.pdf.presentation.PdfEvent
 import com.gondroid.pdf.presentation.PdfScreenViewModel
 import com.google.common.truth.Truth.assertThat
-import io.mockk.coEvery
-import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
@@ -45,38 +45,83 @@ class PdfScreenViewModelTest {
     }
 
     @Test
-    fun `onDownloadClicked records download and emits StartDownload when cap not met`() = runTest {
-        coEvery { adsManager.shouldShowPdfInterstitial() } returns false
+    fun `onDownloadClicked downloads directly when no rewarded ad is ready`() = runTest {
+        every { adsManager.isPdfRewardedReady() } returns false
         val vm = createViewModel()
         vm.events.test {
             vm.onDownloadClicked()
             assertThat(awaitItem()).isEqualTo(PdfEvent.StartDownload)
         }
-        coVerify { adsManager.recordPdfDownload() }
+        assertThat(vm.state.value.showRewardDialog).isFalse()
     }
 
     @Test
-    fun `onDownloadClicked emits ShowInterstitial when cap is met`() = runTest {
-        coEvery { adsManager.shouldShowPdfInterstitial() } returns true
+    fun `onDownloadClicked asks before the rewarded ad when one is ready`() = runTest {
+        every { adsManager.isPdfRewardedReady() } returns true
         val vm = createViewModel()
         vm.events.test {
             vm.onDownloadClicked()
-            assertThat(awaitItem()).isEqualTo(PdfEvent.ShowInterstitial)
+            advanceUntilIdle()
+            assertThat(vm.state.value.showRewardDialog).isTrue()
+            expectNoEvents()
         }
-        coVerify { adsManager.recordPdfDownload() }
     }
 
     @Test
-    fun `onInterstitialClosed emits StartDownload`() = runTest {
+    fun `watching the ad closes the dialog and shows the rewarded ad`() = runTest {
+        every { adsManager.isPdfRewardedReady() } returns true
+        val vm = createViewModel()
+        vm.onDownloadClicked()
+        advanceUntilIdle()
+        vm.events.test {
+            vm.onWatchRewardedClicked()
+            assertThat(awaitItem()).isEqualTo(PdfEvent.ShowRewarded)
+        }
+        assertThat(vm.state.value.showRewardDialog).isFalse()
+    }
+
+    @Test
+    fun `cancelling the dialog downloads nothing`() = runTest {
+        every { adsManager.isPdfRewardedReady() } returns true
         val vm = createViewModel()
         vm.events.test {
-            vm.onInterstitialClosed()
+            vm.onDownloadClicked()
+            advanceUntilIdle()
+            vm.onRewardDialogDismissed()
+            assertThat(vm.state.value.showRewardDialog).isFalse()
+            expectNoEvents()
+        }
+    }
+
+    @Test
+    fun `earning the reward starts the download`() = runTest {
+        val vm = createViewModel()
+        vm.events.test {
+            vm.onRewardedResult(RewardedOutcome.EARNED)
             assertThat(awaitItem()).isEqualTo(PdfEvent.StartDownload)
         }
     }
 
     @Test
-    fun `state exposes the premium offer flag so the post-ad upsell can be hidden`() = runTest {
+    fun `an ad that fails to show still lets the user download`() = runTest {
+        val vm = createViewModel()
+        vm.events.test {
+            vm.onRewardedResult(RewardedOutcome.UNAVAILABLE)
+            assertThat(awaitItem()).isEqualTo(PdfEvent.StartDownload)
+        }
+    }
+
+    @Test
+    fun `closing the ad early does not download`() = runTest {
+        val vm = createViewModel()
+        vm.events.test {
+            vm.onRewardedResult(RewardedOutcome.SKIPPED)
+            assertThat(awaitItem()).isEqualTo(PdfEvent.RewardSkipped)
+        }
+    }
+
+    @Test
+    fun `state exposes the premium offer flag so the dialog can hide Premium`() = runTest {
         val flags = FeatureFlagsRepositoryFake(isPremiumOfferEnabled = true)
         val vm = createViewModel(featureFlagsRepository = flags)
         advanceUntilIdle()

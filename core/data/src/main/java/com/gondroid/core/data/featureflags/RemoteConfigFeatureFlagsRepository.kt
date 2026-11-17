@@ -28,14 +28,27 @@ class RemoteConfigFeatureFlagsRepository @Inject constructor(
         const val KEY_PREMIUM_ENABLED = "premium_enabled"
         const val DEFAULT_PREMIUM_ENABLED = true
 
+        /** Nombre exacto del parámetro numérico en Firebase Console. 0 apaga el banner. */
+        const val KEY_STUDY_BANNER_INTERVAL = "study_banner_interval"
+        const val DEFAULT_STUDY_BANNER_INTERVAL = 10
+
+        /** Intervalo mínimo: con menos preguntas entre banners la lista sería casi solo anuncios. */
+        const val MIN_STUDY_BANNER_INTERVAL = 5
+
         /** Valores por defecto locales que se registran en Remote Config con `setDefaultsAsync`. */
-        val DEFAULTS: Map<String, Any> = mapOf(KEY_PREMIUM_ENABLED to DEFAULT_PREMIUM_ENABLED)
+        val DEFAULTS: Map<String, Any> = mapOf(
+            KEY_PREMIUM_ENABLED to DEFAULT_PREMIUM_ENABLED,
+            KEY_STUDY_BANNER_INTERVAL to DEFAULT_STUDY_BANNER_INTERVAL.toLong()
+        )
     }
 
     // Arranca con el último valor activado (Remote Config lo persiste entre sesiones), así un
     // "false" ya descargado se respeta desde el primer frame, antes del fetch de esta sesión.
     private val _isPremiumOfferEnabled = MutableStateFlow(readPremiumEnabled())
     override val isPremiumOfferEnabled: StateFlow<Boolean> = _isPremiumOfferEnabled.asStateFlow()
+
+    private val _studyBannerInterval = MutableStateFlow(readStudyBannerInterval())
+    override val studyBannerInterval: StateFlow<Int> = _studyBannerInterval.asStateFlow()
 
     override suspend fun refresh() {
         try {
@@ -46,6 +59,7 @@ class RemoteConfigFeatureFlagsRepository @Inject constructor(
             Timber.w(e, "Remote Config: fetch failed, keeping the last activated/default values")
         }
         _isPremiumOfferEnabled.value = readPremiumEnabled()
+        _studyBannerInterval.value = readStudyBannerInterval()
     }
 
     /**
@@ -60,5 +74,15 @@ class RemoteConfigFeatureFlagsRepository @Inject constructor(
         } else {
             value.asBoolean()
         }
+    }
+
+    /** Mismo cuidado con el valor estático (0 para un número): 0 apagaría el banner sin querer. */
+    private fun readStudyBannerInterval(): Int {
+        val value = remoteConfig.getValue(KEY_STUDY_BANNER_INTERVAL)
+        if (value.source == FirebaseRemoteConfig.VALUE_SOURCE_STATIC) {
+            return DEFAULT_STUDY_BANNER_INTERVAL
+        }
+        val interval = value.asLong().coerceIn(0L, Int.MAX_VALUE.toLong()).toInt()
+        return if (interval == 0) 0 else interval.coerceAtLeast(MIN_STUDY_BANNER_INTERVAL)
     }
 }

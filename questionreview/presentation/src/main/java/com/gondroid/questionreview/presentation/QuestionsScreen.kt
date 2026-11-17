@@ -31,6 +31,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -45,7 +46,9 @@ import com.gondroid.core.presentation.designsystem.components.AnswerOption
 import com.gondroid.core.presentation.designsystem.components.AnswerOptionState
 import com.gondroid.core.presentation.designsystem.components.LinearProgressComponent
 import com.gondroid.core.presentation.designsystem.components.QuestionAnswerCard
+import com.gondroid.core.presentation.ui.InlineBannerAdSlot
 import com.gondroid.core.presentation.ui.normalizeText
+import com.gondroid.core.presentation.ui.rememberInlineBannerAds
 import com.gondroid.core.presentation.ui.stripOptionLetterPrefix
 
 @Composable
@@ -54,6 +57,7 @@ fun QuestionsScreenRoot(viewModel: QuestionsScreenViewModel, navigateBack: () ->
 
     QuestionsScreen(
         state = state,
+        bannerAdId = viewModel.bannerAdId,
         onAction = { action ->
             when (action) {
                 QuestionsAction.Back -> navigateBack()
@@ -64,30 +68,41 @@ fun QuestionsScreenRoot(viewModel: QuestionsScreenViewModel, navigateBack: () ->
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun QuestionsScreen(state: QuestionsState, onAction: (QuestionsAction) -> Unit) {
+fun QuestionsScreen(
+    state: QuestionsState,
+    bannerAdId: String,
+    onAction: (QuestionsAction) -> Unit
+) {
     var isSearchExpanded by remember { mutableStateOf(false) }
     var searchText by remember { mutableStateOf("") }
-    // Keep each question's position in the full bank: it is the LazyColumn key. question.id
-    // cannot be, because a3b/a3c restart their numbering for the PDF's second table (ids
-    // 1..71 / 1..139 appear twice), and two items with the same key on screen at once —
-    // e.g. searching "asiento" in a3b brings up both id 63s — crash the LazyColumn.
+    // Keep each question's position in the full bank: it is the LazyColumn key (see
+    // StudyListEntry.QuestionEntry for why question.id cannot be).
     val filteredItems = state.questions.withIndex().filter { (_, question) ->
         question.title.normalizeText().contains(searchText.normalizeText(), ignoreCase = true)
     }
+    // No banners while searching: the results are a short list the user wants to scan at once.
+    val bannerInterval = if (searchText.isBlank()) state.effectiveBannerInterval else 0
+    val entries = filteredItems.withBanners(bannerInterval)
+    val questionsBefore by rememberUpdatedState(entries.questionsBefore())
+    val questionCount by rememberUpdatedState(filteredItems.size)
+    // The list has 16.dp of padding on each side.
+    val banners = rememberInlineBannerAds(bannerAdId, horizontalInset = 32.dp)
 
     val scrollState = rememberLazyListState()
     var startItemVisible by remember { mutableIntStateOf(1) }
+    // Progress counts questions, not list rows: the banners in between would inflate it.
     val progress by remember {
         derivedStateOf {
-            val totalItems = scrollState.layoutInfo.totalItemsCount
             val firstVisibleItem = scrollState.firstVisibleItemIndex
             val lastVisibleItem =
                 scrollState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
+            val before = questionsBefore
 
-            if (totalItems > 1) {
-                startItemVisible = firstVisibleItem.toInt() + 2
+            if (questionCount > 1) {
+                startItemVisible = before.getOrElse(firstVisibleItem) { firstVisibleItem } + 2
+                val lastQuestion = before.getOrElse(lastVisibleItem) { lastVisibleItem }
                 val normalizedProgress =
-                    lastVisibleItem.toFloat() / (totalItems - 1).coerceAtLeast(1)
+                    lastQuestion.toFloat() / (questionCount - 1).coerceAtLeast(1)
                 normalizedProgress.coerceIn(0f, 1f)
             } else {
                 0f
@@ -202,31 +217,45 @@ fun QuestionsScreen(state: QuestionsState, onAction: (QuestionsAction) -> Unit) 
                     modifier = Modifier.weight(1f)
                 ) {
                     items(
-                        items = filteredItems,
-                        key = { (position, _) -> position }
-                    ) { (_, question) ->
-                        QuestionAnswerCard(
-                            modifier = Modifier.fillMaxWidth(),
-                            title = "${question.id}.- ${question.title}",
-                            questionImages = question.imagens,
-                            options = question.options.mapIndexed { index, option ->
-                                val letter = ('a' + index).uppercaseChar().toString()
-                                val optionState = if (question.isCorrectAnswer(index)) {
-                                    AnswerOptionState.RevealedCorrect
-                                } else {
-                                    AnswerOptionState.Unselected
-                                }
-                                val cleanText = option.stripOptionLetterPrefix()
-                                AnswerOption(letter = letter, text = cleanText, state = optionState)
+                        items = entries,
+                        key = { entry -> entry.key },
+                        contentType = { entry -> entry::class }
+                    ) { entry ->
+                        when (entry) {
+                            is StudyListEntry.BannerEntry ->
+                                InlineBannerAdSlot(banners = banners, slot = entry.slot)
+                            is StudyListEntry.QuestionEntry -> {
+                                StudyQuestionCard(entry.question)
+                                Spacer(modifier = Modifier.height(16.dp))
                             }
-                        )
-
-                        Spacer(modifier = Modifier.height(16.dp))
+                        }
                     }
                 }
             }
         }
     }
+}
+
+@Composable
+private fun StudyQuestionCard(question: Question) {
+    QuestionAnswerCard(
+        modifier = Modifier.fillMaxWidth(),
+        title = "${question.id}.- ${question.title}",
+        questionImages = question.imagens,
+        options = question.options.mapIndexed { index, option ->
+            val letter = ('a' + index).uppercaseChar().toString()
+            val optionState = if (question.isCorrectAnswer(index)) {
+                AnswerOptionState.RevealedCorrect
+            } else {
+                AnswerOptionState.Unselected
+            }
+            AnswerOption(
+                letter = letter,
+                text = option.stripOptionLetterPrefix(),
+                state = optionState
+            )
+        }
+    )
 }
 
 @Preview(
@@ -271,6 +300,7 @@ fun PreviewQuestionsScreenRoot() {
     MTCQuizTheme {
         QuestionsScreen(
             state = QuestionsState(questions = questions),
+            bannerAdId = "test-banner-id",
             onAction = {}
         )
     }
