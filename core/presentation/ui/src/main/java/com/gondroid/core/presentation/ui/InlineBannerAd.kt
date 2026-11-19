@@ -83,6 +83,7 @@ fun rememberInlineBannerAds(adUnitId: String, horizontalInset: Dp = 0.dp): Inlin
  */
 @Composable
 fun InlineBannerAdSlot(banners: InlineBannerAds, slot: Int, modifier: Modifier = Modifier) {
+    if (!LocalAdsEnabled.current) return
     val isInspectionMode = LocalInspectionMode.current
     val canRequestAds = LocalCanRequestAds.current
     LaunchedEffect(slot, canRequestAds) {

@@ -27,6 +27,9 @@ import com.google.android.gms.ads.LoadAdError
  */
 val LocalCanRequestAds = compositionLocalOf { false }
 
+/** False in a debug build run with `-Pmtc.showAds=false`: banners take no space at all. */
+val LocalAdsEnabled = compositionLocalOf { true }
+
 /**
  * Creates, loads, and tears down a banner [AdView] for [bannerAdId], and
  * renders it centered at the bottom of whatever content this is placed in.
@@ -34,7 +37,7 @@ val LocalCanRequestAds = compositionLocalOf { false }
  */
 @Composable
 fun BannerAdSlot(bannerAdId: String, isPremium: Boolean, modifier: Modifier = Modifier) {
-    if (isPremium) return
+    if (isPremium || !LocalAdsEnabled.current) return
 
     val context = LocalContext.current
     val adView = remember {
