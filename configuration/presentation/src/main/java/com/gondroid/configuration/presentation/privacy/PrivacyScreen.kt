@@ -45,7 +45,7 @@ fun PrivacyScreen(onNavigateUp: () -> Unit) {
         }
     ) { paddingValues ->
         WebViewWithOffline(
-            url = "https://gonzalo-lozg.me/apps-docs/mtcquiz/politics/",
+            url = "https://nekodojo.app/apps/mtcquiz/privacy",
             modifier = Modifier.padding(paddingValues)
         )
     }

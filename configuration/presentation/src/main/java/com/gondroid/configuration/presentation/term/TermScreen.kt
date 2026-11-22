@@ -45,7 +45,7 @@ fun TermScreen(onNavigateUp: () -> Unit) {
         }
     ) { paddingValues ->
         WebViewWithOffline(
-            url = "https://gonzalo-lozg.me/apps-docs/mtcquiz/term/",
+            url = "https://nekodojo.app/apps/mtcquiz/terms",
             modifier = Modifier.padding(paddingValues)
         )
     }
