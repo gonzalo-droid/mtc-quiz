@@ -27,3 +27,7 @@ fastlane/test_output
 # Python bytecode from skill scripts
 __pycache__/
 *.pyc
+
+# Capturas de tienda: solo locales, no se suben (regenerables con docs/tienda/guion.json)
+docs/tienda/capturas/
+docs/tienda/salida/
