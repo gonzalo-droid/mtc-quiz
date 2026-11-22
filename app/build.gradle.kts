@@ -62,6 +62,12 @@ android {
     }
     buildTypes {
         debug {
+            // ./gradlew installDebug -Pmtc.showAds=false hides every ad (store screenshots).
+            buildConfigField(
+                "boolean",
+                "SHOW_ADS",
+                providers.gradleProperty("mtc.showAds").getOrElse("true")
+            )
             buildConfigField(
                 "String",
                 "ADMOB_BANNER_ID",
@@ -86,6 +92,7 @@ android {
         }
         getByName("release") {
             signingConfig = signingConfigs.findByName("release")
+            buildConfigField("boolean", "SHOW_ADS", "true")
             buildConfigField(
                 "String",
                 "ADMOB_BANNER_ID",

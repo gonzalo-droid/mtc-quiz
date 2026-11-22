@@ -1,0 +1,33 @@
+{
+  "app": "Examen Brevete Perú",
+  "tiendas": ["play"],
+  "aviso": "App independiente, no afiliada al MTC",
+  "marca": {
+    "claro": "#FBF8FF", "oscuro": "#1A1F4A", "acento": "#3949AB",
+    "acentoSobreOscuro": "#8C9EFF", "detalle": "#FFC940",
+    "fuenteTitulo": "../../core/presentation/designsystem/src/main/res/font/inter_bold.ttf",
+    "fuenteEtiqueta": "../../core/presentation/designsystem/src/main/res/font/inter_medium.ttf",
+    "icono": "../../app/src/main/ic_launcher-playstore.png"
+  },
+  "laminas": [
+    {"tipo": "portada", "fondo": "oscuro", "etiqueta": "01 · 9 categorías",
+     "titular": "Llega listo\nal *examen del MTC*", "sub": "Las preguntas del balotario de tu licencia.", "aviso": true,
+     "captura": {"play": "capturas/01-inicio.webp"}},
+    {"tipo": "telefono-abajo", "etiqueta": "02 · Estudiar",
+     "titular": "Cada pregunta\ncon su *respuesta*", "sub": "Todo el balotario, señales incluidas.",
+     "captura": {"play": "capturas/03-estudio-b.webp"}},
+    {"tipo": "destacado", "fondo": "oscuro", "etiqueta": "03 · Simulacro",
+     "titular": "Practica\n*contra el reloj*", "sub": "Preguntas al azar, como en el examen.",
+     "captura": {"play": "capturas/04-evaluacion-b.webp"},
+     "zona": {"play": [1060, 190, 220, 125]}},
+    {"tipo": "telefono-abajo", "etiqueta": "04 · Resultado",
+     "titular": "Sabe si ya\n*apruebas*", "sub": "Tu nota y tus aciertos al terminar.",
+     "captura": {"play": "capturas/05-resultado.webp"}},
+    {"tipo": "dos-telefonos", "fondo": "oscuro", "etiqueta": "05 · Progreso",
+     "titular": "Mira cómo\n*mejoras*", "sub": "Estadísticas e historial de tus simulacros.",
+     "captura": {"play": "capturas/06-estadisticas.webp"}, "captura2": {"play": "capturas/06-historial.webp"}},
+    {"tipo": "lista", "fondo": "oscuro", "titular": "*Y además*", "aviso": true,
+     "items": ["Simulacro a tu medida", "PDF del balotario", "Sin crear cuenta", "Modo oscuro"]}
+  ],
+  "grafico": {"titular": "Examen Brevete Perú", "sub": "Practica el balotario del MTC por categoría."}
+}

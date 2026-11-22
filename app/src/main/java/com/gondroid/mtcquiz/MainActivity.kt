@@ -16,6 +16,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
 import com.gondroid.core.data.ads.AdsConsentManager
 import com.gondroid.core.presentation.designsystem.MTCQuizTheme
+import com.gondroid.core.presentation.ui.LocalAdsEnabled
 import com.gondroid.core.presentation.ui.LocalCanRequestAds
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -33,7 +34,8 @@ class MainActivity : ComponentActivity() {
         val splashScreen = installSplashScreen()
         enableEdgeToEdge()
         // UMP first: the Mobile Ads SDK only starts once consent allows ad requests.
-        adsConsentManager.gatherConsent(this)
+        // Without consent the SDK never starts, so no interstitial or rewarded ad loads either.
+        if (BuildConfig.SHOW_ADS) adsConsentManager.gatherConsent(this)
         setContent {
             var keepSplashScreen by remember { mutableStateOf(true) }
             splashScreen.setKeepOnScreenCondition { keepSplashScreen }
@@ -48,7 +50,10 @@ class MainActivity : ComponentActivity() {
             }
 
             MTCQuizTheme(darkTheme = isDark) {
-                CompositionLocalProvider(LocalCanRequestAds provides canRequestAds) {
+                CompositionLocalProvider(
+                    LocalCanRequestAds provides canRequestAds,
+                    LocalAdsEnabled provides BuildConfig.SHOW_ADS
+                ) {
                     if (!authState.isLoading) {
                         keepSplashScreen = false
                         val navController = rememberNavController()

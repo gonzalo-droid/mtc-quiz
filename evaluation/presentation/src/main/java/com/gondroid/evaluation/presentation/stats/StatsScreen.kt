@@ -240,7 +240,11 @@ fun StatsScreen(state: StatsState, navigateBack: () -> Unit) {
                                 )
                                 Spacer(Modifier.height(4.dp))
                                 Text(
-                                    "${cat.evaluationCount} evaluaciones",
+                                    if (cat.evaluationCount == 1) {
+                                        "1 evaluación"
+                                    } else {
+                                        "${cat.evaluationCount} evaluaciones"
+                                    },
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
