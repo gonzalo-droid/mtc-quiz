@@ -6,6 +6,16 @@ El formato sigue (aproximadamente) [Keep a Changelog](https://keepachangelog.com
 
 ## [Unreleased]
 
+## [1.2.7] - 2026-11-23 (versionCode 12)
+
+### Changed
+- Términos y condiciones y la política de privacidad se abren en el nuevo dominio: `https://nekodojo.app/apps/mtcquiz/terms` y `https://nekodojo.app/apps/mtcquiz/privacy` (antes `gonzalo-lozg.me`).
+- Solo debug: `./gradlew installDebug -Pmtc.showAds=false` oculta todos los anuncios, para pruebas internas y capturas de tienda. Release siempre muestra anuncios.
+
+### Fixed
+- Estadísticas: una categoría con una sola evaluación dice "1 evaluación" en singular.
+- Inicio: "Prepárate para tu evaluación" con tilde.
+
 ## [1.2.6] - 2026-11-16 (versionCode 11)
 
 ### Added
