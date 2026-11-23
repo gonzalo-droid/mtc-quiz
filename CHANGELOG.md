@@ -14,6 +14,7 @@ El formato sigue (aproximadamente) [Keep a Changelog](https://keepachangelog.com
 
 ### Fixed
 - Estadísticas: una categoría con una sola evaluación dice "1 evaluación" en singular.
+- Inicio: "Prepárate para tu evaluación" con tilde.
 
 ## [1.2.6] - 2026-11-16 (versionCode 11)
 
