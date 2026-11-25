@@ -11,6 +11,7 @@ El formato sigue (aproximadamente) [Keep a Changelog](https://keepachangelog.com
 ### Changed
 - Términos y condiciones y la política de privacidad se abren en el nuevo dominio: `https://nekodojo.app/apps/mtcquiz/terms` y `https://nekodojo.app/apps/mtcquiz/privacy` (antes `gonzalo-lozg.me`).
 - Solo debug: `./gradlew installDebug -Pmtc.showAds=false` oculta todos los anuncios, para pruebas internas y capturas de tienda. Release siempre muestra anuncios.
+- Crashlytics y Analytics solo reportan desde builds release, como en iOS: los fallos y eventos de los builds debug (desarrollo y pruebas) ya no llegan a Firebase.
 
 ### Fixed
 - Estadísticas: una categoría con una sola evaluación dice "1 evaluación" en singular.
