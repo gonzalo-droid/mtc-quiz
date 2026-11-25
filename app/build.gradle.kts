@@ -62,7 +62,7 @@ android {
     }
     buildTypes {
         debug {
-            manifestPlaceholders["crashlyticsEnabled"] = false
+            manifestPlaceholders["firebaseCollectionEnabled"] = false
             // ./gradlew installDebug -Pmtc.showAds=false hides every ad (store screenshots).
             buildConfigField(
                 "boolean",
@@ -93,7 +93,7 @@ android {
         }
         getByName("release") {
             signingConfig = signingConfigs.findByName("release")
-            manifestPlaceholders["crashlyticsEnabled"] = true
+            manifestPlaceholders["firebaseCollectionEnabled"] = true
             buildConfigField("boolean", "SHOW_ADS", "true")
             buildConfigField(
                 "String",
